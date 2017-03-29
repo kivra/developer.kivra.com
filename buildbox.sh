@@ -5,4 +5,4 @@ echo '--- building'
 docker build -t developerkivracom_app .
 
 echo '--- deploying'
-./deploy.sh
+GIT_DEPLOY_EMAIL=$BUILDKITE_BUILD_CREATOR_EMAIL GIT_DEPLOY_USERNAME=$BUILDKITE_BUILD_CREATOR ./deploy.sh
