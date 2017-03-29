@@ -1,2 +1,1 @@
-# developer.kivra.com
-API Documentation, etc
+Kivra Documentation
