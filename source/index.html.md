@@ -1,15 +1,11 @@
 ---
-title: API Reference
+title: Kivra Integration Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -19,11 +15,14 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Kivra Integration Reference! Get familiar with the Kivra Integraion products and explore their features:
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+# The service
+Kivra is a secure digital mailbox tied to your social security number or VAT-number to which you receive documents from companies, organizations and government agencies that are connected to Kivra. With Kivra you can receive, manage and archive your content wherever you are and on every platform as long as you have an internet connection.
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Over one billion window envelopes are sent every year in Sweden alone, so by choosing to use Kivra you contribute to a reduced carbon footprint!
+
+Kivra acts as a digital postman between Sender and Recipients which is also reflected in the allocation of responsibilities. Concretely, this means that the Sender is responsible for the design and content whereas Recipients are responsible for reading and processing the received content.
 
 # Authentication
 
