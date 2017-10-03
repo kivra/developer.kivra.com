@@ -24,125 +24,38 @@ Over one billion window envelopes are sent every year in Sweden alone, so by cho
 
 Kivra acts as a digital postman between Sender and Recipients which is also reflected in the allocation of responsibilities. Concretely, this means that the Sender is responsible for the design and content whereas Recipients are responsible for reading and processing the received content.
 
-# Kittens
+# Tenant Users
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Get accepting users
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "http://api.kivra.com/v1/tenant/${TENANT_KEY}/users" \
+    -H "Authorization: token ${API_TOKEN}"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
 
 > The above command returns JSON structured like this:
 
 ```json
 [
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
+  {"key": "some_key", "ssn": "some_ssn"},
+  {"key": "another_key", "ssn": "another_ssn"}
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all users that accepts the tenant as a sender.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://api.kivra.com/v1/tenant/${TENANT_KEY}/users`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+reject | false | If set to true, the result will contain all users that rejects the tenant
+ssn | null | If set, the result will include only the user with the ssn provided. An empty response indicates that the user doesn't exist in Kivra or that the tenant isn't accepted as a sender.
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
