@@ -12,8 +12,10 @@ curl -i -X POST
 
 > The above command returns JSON structured like this:
 
-```
-
+```json
+{
+    "todo": "todo"
+}
 ```
 
 This endpoints tries to pay a content
