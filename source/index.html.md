@@ -9,6 +9,7 @@ toc_footers:
 
 includes:
   - paciolipayments
+  - tenant
 
 search: true
 ---
@@ -55,7 +56,3 @@ Parameter | Default | Description
 --------- | ------- | -----------
 reject | false | If set to true, the result will contain all users that rejects the tenant
 ssn | null | If set, the result will include only the user with the ssn provided. An empty response indicates that the user doesn't exist in Kivra or that the tenant isn't accepted as a sender.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
