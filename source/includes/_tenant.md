@@ -47,7 +47,7 @@ This endpoints creates new tenants.
 
 ### Request payload
 
-> Example of a tenant creation request
+> Example of a tenant creation json payload
 
 ```json
 {
