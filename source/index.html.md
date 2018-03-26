@@ -4,9 +4,6 @@ title: Kivra Integration Reference
 language_tabs:
   - shell: cURL
 
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-
 includes:
   - tenant
 
