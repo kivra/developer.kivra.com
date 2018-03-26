@@ -8,7 +8,6 @@ toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
 
 includes:
-  - paciolipayments
   - tenant
 
 search: true
