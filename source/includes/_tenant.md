@@ -6,6 +6,7 @@ Creation of tenants via API allows clients to create new tenants in an efficient
 
 The endpoint to create a new tenant is:
 
+`https://api.kivra.com/v1/tenant/`
 
 Additional metadata, specified as JSON, is also required containing company name, company VAT number, and display name. The display name is shown in the user inbox whenever they receive content from this tenant.
 
@@ -70,7 +71,7 @@ In some particular configuration, for instance when a centralized service wants 
 
 To retrieve this access token, the client performs a new authorization with some extra parameters specifying the limited scope.
 
-```
+```shell
 curl -X POST \
   https://api.kivra.com/v1/auth \
   -d grant_type=client_credentials \
@@ -81,7 +82,7 @@ curl -X POST \
 
 > The answer will look like the following:
 
-```
+```shell
 {
     "state": "",
     "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
