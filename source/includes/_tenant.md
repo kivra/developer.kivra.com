@@ -6,7 +6,6 @@ Creation of tenants via API allows clients to create new tenants in an efficient
 
 The endpoint to create a new tenant is:
 
-`https://api.kivra.com/v1/tenant/`
 
 Additional metadata, specified as JSON, is also required containing company name, company VAT number, and display name. The display name is shown in the user inbox whenever they receive content from this tenant.
 
