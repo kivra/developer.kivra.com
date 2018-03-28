@@ -4,7 +4,7 @@ Creation of tenants via API allows clients to create new tenants in an efficient
 
 ## Create new tenant
 
-The endpoint to create a new tenant is: 
+The endpoint to create a new tenant is:
 
 `https://api.kivra.com/v1/tenant/`
 
@@ -32,7 +32,7 @@ curl -i -X POST \
 }
 ```
 
-Example of response:
+> Example of response:
 
 ```
 HTTP/1.1 201 Created
