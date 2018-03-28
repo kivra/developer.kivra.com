@@ -50,5 +50,7 @@ This endpoint retrieves all users that accepts the tenant as a sender.
 
 Parameter | Default | Description
 --------- | ------- | -----------
-reject | false | If set to true, the result will contain all users that rejects the tenant
 ssn | null | If set, the result will include only the user with the ssn provided. An empty response indicates that the user doesn't exist in Kivra or that the tenant isn't accepted as a sender.
+
+Example of usage of ssn query parameter:
+`GET http://api.kivra.com/v1/tenant/${TENANT_KEY}/users?ssn=yyyymmddnnnn`
