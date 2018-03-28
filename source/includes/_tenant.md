@@ -18,7 +18,7 @@ curl -i -X POST \
      https://api.kivra.com/v1/tenant/
 ```
 
-With the following JSON payload:
+> With the following JSON payload:
 
 ```json
 {
@@ -65,7 +65,7 @@ location: http://localhost:8000/v1/tenant/${TENANT_ID}
 
 ```
 
-# Authorization with limited access scope
+## Authorization with limited access scope
 
 In some particular configuration, for instance when a centralized service wants to provide a satellite service with possibility to only send content to Kivra for a specific tenant, but not allowing any other operation, the centralized service may request an access token for a specific tenant with a limited scope. This access token can be safely provided to the satellite service.
 
@@ -80,7 +80,7 @@ curl -X POST \
 
 ```
 
-The answer will look like the following:
+> The answer will look like the following:
 
 ```
 {
