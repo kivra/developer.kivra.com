@@ -34,7 +34,7 @@ curl -i -X POST \
 
 > Example of response:
 
-```
+```shell
 HTTP/1.1 201 Created
 server: Cowboy
 date: Mon, 26 Mar 2018 09:50:09 GMT
@@ -82,7 +82,7 @@ curl -X POST \
 
 > The answer will look like the following:
 
-```shell
+```json
 {
     "state": "",
     "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
