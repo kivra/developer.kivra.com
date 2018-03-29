@@ -85,7 +85,7 @@ curl -X POST \
 ```json
 {
     "state": "",
-    "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
+    "access_token": "${API_TOKEN}",
     "expires_in": 28800,
     "scope": "post:kivra.v1.tenant.${TENANT_ID}.content",
     "token_type": "bearer"
