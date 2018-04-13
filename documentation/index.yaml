@@ -1,0 +1,720 @@
+---
+openapi: 3.0.1
+
+servers:
+  - url: https://api.kivra.com/v1
+    description: Production environment
+  - url: https://sandbox.kivra.com/v1
+    description: Staging environment
+
+basePath: /v1
+
+schemes:
+  - https
+
+info:
+  title: Kivra API
+  description: |
+    # Overview
+
+    The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
+    resource-oriented URLs, and uses HTTP response codes to indicate API errors.
+
+    ## The service
+    Kivra is a secure digital mailbox tied to your social security number or
+    VAT-number to which you receive documents from companies, organizations
+    and government agencies that are connected to Kivra. With Kivra you can
+    receive, manage and archive your content wherever you are and on every
+    platform as long as you have an internet connection.
+
+    Over one billion window envelopes are sent every year in Sweden alone, so
+    by choosing to use Kivra you contribute to a reduced carbon footprint!
+
+    Kivra acts as a digital postman between Sender and Recipients which is
+    also reflected in the allocation of responsibilities. Concretely, this
+    means that the Sender is responsible for the design and content whereas
+    Recipients are responsible for reading and processing the received content.
+
+
+    ## Changelog
+    We will list any changes to the current version of the API here.
+
+    | Date        | Details of changes                                         |
+    | ----------- | ---------------------------------------------------------- |
+    | 2016-10-14  | Release of Kivra API Version 1                             |
+
+    # Terminology
+    ### User
+    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. A user can become `dormant` or deactivate themselves and be put under a `grace period`. Both these states is to aid the Tenant in making sure that only active Users are available for receiving Content. See below for more information on Dormant and Grace period.
+
+    ### Company
+    A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for more information on Dormant and Grace period.
+
+    ### Recipient
+    A Company or a User in the context of being a receiver. Throughout this document Recipient is used to interchangeably mean a User or Company being a receiver.
+
+    ### Tenant / Partner / Integrator
+    Tenant is a sender that is integrated with Kivra. They need not be integrated directly, but can go through a partner. This partner is acting as intermediary for the tenant at integration and can handle multiple tenants.
+
+    ### Content
+    The information sent by Tenants to Recipients, i.e. Documents, Invoices, etc.
+
+    ### Dormant Recipient
+    Recipient who can’t be reached by email and sms-notifications are put in a "dormant"-state. During this dormant state the Recipient won’t show up in any of user or company files but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again they are awaken from dormant state and will start appearing in user files again.
+
+    ### Grace period
+    Kivra employs a 45 day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company files and the Tenant can still send Content which the Recipient will receive.
+
+    ### User object
+    is a data object that contains all the available information about a user
+
+    ### Company object
+    is a data object that contains all the available information about a company
+
+    ### Tenant object
+    is a data object that contains all the available information about a sender.
+
+    ### Content object
+    is a data object that contains information about the document and the document itself
+
+    ### Tenant key
+    Is a unique key that identifies a Tenant. The tenant key is not related to the VAT identifier and as such can be used to address a specific Tenant when a Sender might wish to setup multiple Tenants for one VAT identifier.
+
+    ### Metadata
+    is data about data or information about data. Originally, the concept of meta-information, ie information about information. Normally metadata or metadata to describe the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a consignment is to and other information that may be relevant for a shipment. as such payment information.
+
+    ### Json
+    Json or JavaScript Object Notation is a structured approach to data management. Similar to XML but much simpler and easier to read. JSON is the default serialization format  within the Kivra system. JSON have a limited set of types and close attention needs to be paid to the correct JSON-type for metadata when sending Content to Kivra.
+
+    # Conventions
+    ## Date & Time
+    KIVRA encodes and decodes all dates and times as [ISO 8601](http://www.w3.org/TR/NOTE-datetime) values. The format looks like YYYY-MM-DDThh:mm:ss.sTZD, example 1970-01-01T23:25:10.0330000+01:00 where:
+
+    * YYYY, The year including century
+    * MM, Month
+    * DD, Day
+    * T, Separator
+    * hh, Zero-padded hour between 00 and 24 (where 24 is only used to notate midnight at the end of a calendar day)
+    * mm, Zero-padded minutes between 00 and 59
+    * ss, Zero-padded second between 00 and 60 (where 60 is only used to notate an added leap second)
+    * s, one or more digits representing a decimal fraction of a second
+    * TZD, Time zone designator (Z or +hh:mm or -hh:mm)
+
+    ## UTC
+    If the time is in UTC, add a 'Z' directly after the time without a space. 'Z' is the zone designator for the zero UTC offset. "09:30 UTC" is therefore represented as "09:30Z" or "0930Z". "14:45:15 UTC" would be "14:45:15Z" or "144515Z". UTC time is also known as 'Zulu' time, since 'Zulu' is the NATO phonetic alphabet word for 'Z'.
+
+    The offset from UTC is given in the format ±[hh]:[mm], ±[hh][mm], or ±[hh]. So if the time being described is one hour ahead of UTC (such as the time in Stockholm during the winter), the zone designator would be "+01:00", "+0100", or simply "+01". This is appended to the time in the same way that 'Z' was above. The offset from UTC changes with daylight saving time, e.g. a time offset in Chicago, would be "-06:00" for the winter (Central Standard Time) and "-05:00" for the summer (Central Daylight Time).
+
+    ## Media types
+    The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type, e.g. "application/pdf"
+
+    ## UTF-8 encoding
+    All data sent to Kivra needs to be [UTF-8](http://en.wikipedia.org/wiki/UTF-8) encoded.
+
+    ## Currency
+    All places where currency is specified [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) should be used.
+
+    ## Country code
+    Where applicable KIVRA uses a country code to determine certain formats. The country code should always be supplied using the [ISO 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) alpha-2 two-letter code.
+
+    ## Email address
+    Email addresses needs to be specified using [E.123](https://en.wikipedia.org/wiki/E.123)
+
+    ## Phone numbers (mobile, land line)
+    All phone numbers needs to be specified using [E.123](https://en.wikipedia.org/wiki/E.123)
+
+    ## Identifying users
+    Kivra uses the social security number/personal-number as key when accepting content. The format must adhere to the format "YYYYMMDDnnnn" that is including century-digits, i.e. "191212121212".
+
+    ## VAT identifier
+    In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT identifier may reflect the grouping by e.g. suffixing the number.
+
+    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between 2 and 12 characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters. For instance, Kivra’s VAT Id would be: SE556840226601.
+
+    # Limits
+    Kivra handles millions of documents. We put limits to protect the system from receiving more data than it can handle, and to ensure an equitable distribution of system resources. There’s also various practical reasons for this, such as reducing Head-of-line blocking and providing a optimal experience for the enduser.
+
+    Our policies are as follows and are subject to change.
+
+    ## Content File-size
+    1 MB per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than 1 MB.
+
+    # Introduction
+    This document is intended for developers and others who are interested in integrating with Kivra to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
+
+    Integration in its simplest form consists of two steps. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to, the second step is to send the contents itself.
+
+    There are also optional steps that explain additional services Kivra provides. Currently these additional integrations exist:
+
+    ### Inactive Content
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
+
+    *Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.*
+
+    # Interacting with the API
+    All API access is performed over HTTPS through [api, sandbox].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox, reachable through sandbox.kivra.com.
+    In order to ensure data privacy the following choices have been made, to name some that directly impact API workflows:
+    Unencrypted HTTP is not supported, you will be redirected to the resource you tried to reach, with http replaced by https, if you attempt to use plain HTTP.
+    Resources you have no right to see will either give you a describing status code or a 404. 404 statuses are returned if the case is such that you don’t even have the right to know, according to the system's current state, if an object exists.
+
+    ## URL Components
+    When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
+
+    ### Endpoint
+    https://TYPE.kivra.com/VERSION
+
+    ### Tenant resource
+    /tenant/TENANTKEY
+
+    ### Parameters
+    /?QUERYSTRING
+
+    ## Unit Fields
+    The units have parameterized fields, which allow you to change their respective meanings, those fields are briefly described below.
+
+    ### TYPE
+    sandbox for development and test or api for production purposes.
+
+    ### VERSION
+    Current and only API version is v1.
+
+    ### KEY
+    The identifier of an object in a collection, its ID, if you will.
+
+    ### QUERYSTRING
+    A set of key-value pairs, used for filtering and setting options on collections.
+
+    ## HTTP Verbs
+    Where possible, the KIVRA API strives to use appropriate HTTP verbs for each action. The terms verb and method are used interchangingly.
+
+    ### Idempotency
+    The API supports idempotency for safely retrying requests without accidentally performing the same operation twice. For example, if a request that is idempotent fails due to a network connection error, you can safely retry the request.
+
+    `GET` and `DELETE` requests are idempotent by definition, meaning that the same backend work will occur no matter how many times the same request is issued. You shouldn't send an idempotency key with these verbs because it will have no effect.
+
+    In short, this means that making a request with an idempotent verb only changes the state of the data the first time the request is made.
+
+    ## Methods
+    Read more about HTTP/1.1 Method Definitions online.
+
+    | Method      | Details                                                    |
+    | ----------- | ---------------------------------------------------------- |
+    | GET         | Used to read a resource, be it a collection or an object. That is, it can be performed repeatedly without changing the state of the resource |
+    | POST        | Used for creating resources, or performing custom or batch type actions |
+    | PUT         | Used for updating resources or collections, but can also be used to create a resource when the key has been predetermined. Note that `PUT` apply to the entire resource and not just parts of it. So, when doing a `PUT` operation, the entire resource is replaced |
+    | DELETE      | Used for deleting resources. Delete is atomic and acts on the whole resource, that is it can not be used to delete a part or alter the state of a resource. Use `PUT` for that |
+
+    # Resource Types
+    There are two main types of resources – objects and collections of objects, they are individually outlined in the following sections.
+    It can generally be said that if a URL ends with a unique identifier (also known as a key), it is an object or a sub-object. Resources ending with collection names are collection resources.
+
+    ## Object Resources
+    Objects are mostly real-world things, such as a user, tenant to name a few, but they can also be abstract things, like a sendrequest.
+
+    An example: */v1/tenant/13443459078e31ba8630e2e9842906c7baf38b131e*
+
+    ### Allowed Methods
+    **GET**
+    Read the representation of an object as it is accessible and viewable by you.
+
+    **PUT**
+    Update the object. If the object doesn’t already exist, it is created.
+
+    **PATCH**
+    Update the object with the specified attributes. If the object doesn’t already exist, it is created.
+
+    **DELETE**
+    Irreversably delete the designated resource from the entire system. This operation will in most cases be illegal for regular API consumers.
+
+    ## Collection Resources
+    Collections are conceptually lists of objects, that can be queried. Queries without any parameters will cause a listing of the keys that are used to identify the objects within the collection; adding parameters will either filter which keys show up or decorate the keys with the object they identify (in part or entirely).
+
+    When a collection resource is queried it will only return the list of keys that identify the objects it contains. If you want to see the actual objects you have to append the query parameter include=body to the URI, more on this below.
+
+    ## Filters and Flags
+    In order to facilitate filtering/searching amongst the API objects, we provide the possibility to pass certain query string parameters that indicate which objects to include in the response and how they should be treated.
+
+    ### Filters
+    When searching for an object, it is suggested that you list the appropriate collection and add query parameters for the features of the object(s) you are trying to find in the URI. For example, when looking for if a user exists and is addressable for this Tenant, the resulting URL would be as follows `/tenant/TKEY/user/?ssn=SSN`
+
+    ### Flags
+    As mentioned, collections only list the keys of their member objects, which might inconvenience you by forcing you to make individual GET requests for each key in the list. In order to not waste bandwidth or time from setup and teardown of connections we supply the include flag. The include parameter currently accepts one of two values, body and fields, which indicate that you want the entire object or that you want a specific subset of the available fields, respectively.
+
+    **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
+
+    # Integration
+    ## User types
+    Opt-out
+    Kivra uses a method called opt-out to make the service as easy as possible for Recipients and Senders. Opt-out means that when a Recipient register with Kivra they’ll automatically receive documents from all Tenants connected to Kivra. Recipients do not need to enable individual Tenants to start receiving Content.
+
+    ### Meaning of Opt-out for:
+    #### Tenant
+    Can start sending Content to all Recipients in Kivra
+    When Tenant signs up new customers they can match that customers SSN or VAT-number to the user- or companies_accept-file respectively and start sending Content directly.
+    A Recipient can choose to disable a Tenant. In that case, that user or company will no longer show up in the Tenant’s user- or companies_accept-file respectively and a 45-day grace period will take effect. During this grace period the Tenant can still post Content.
+
+    #### Recipients
+    Recipients will automatically start receiving Content from new Tenants
+    Recipients can choose to disable a Tenant. In that case, that Recipient will no longer show up in the Tenant’s  user- or companies_accept-file respectively and a 45-day grace period will take effect. During this grace period the Tenant can still post Content.
+
+    ## Step 1: Synchronize Recipients
+    The first thing in every integration is to synchronize which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not found when synchronizing will be automatically denied unless that Recipient is in a 45 days’ grace period with that Tenant.
+
+    This means that for each Tenant the Recipient-request is unique and therefore partners integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
+
+    Synchronization of Recipients is done via the [User Resource](#list_users)
+
+    ## Step 2: Send Content
+    Metadata is data that Kivra needs to send the Content to the right Recipient. It may also determine how a Recipient can interact with the Content.
+
+    Sending of Content is done via the [Tenant Content Resource](#send_content)
+
+  version: v1
+
+tags:
+  - name: Tenant
+    description: Tenant endpoint
+
+paths:
+  /tenant:
+    post:
+      tags:
+        - Tenant
+      summary: Create Tenant
+      operationId: Create Tenant
+      description: |
+        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope.
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}'
+      responses:
+        201:
+          description: |
+            Tenant Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: 'hexadecimal value'
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant'
+  /tenant/{tenantKey}/user:
+    get:
+      tags:
+        - Tenant
+      summary: Resource to list available users for a Tenant
+      operationId: List Users
+      description: |
+        This resource is used to list all or search for users that eligible for receiving Content from the specific Tenant.
+        The response is a JSON list of Objects containing the User’s key and SSN.
+
+        <aside class="notice">
+        If a search is done and the User doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: ssn
+          in: query
+          description: Perform a search to see if a specific User is available
+          required: false
+          schema:
+            description: User's unique SSN
+            type: string
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v1.tenant.{tenantKey}.user'
+      responses:
+        200:
+          description: |
+            List of available users
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of available users, can be empty
+                items:
+                  $ref: '#/components/schemas/User'
+  /tenant/{tenantKey}/company:
+    get:
+      tags:
+        - Tenant
+      summary: Resource to list available companies for a Tenant
+      operationId: List Companies
+      description: |
+        This resource is used to list all or search for companies that eligible for receiving Content from the specific Tenant.
+        The response is a JSON list of Objects containing the Companies key and Vat Number.
+
+        <aside class="notice">
+        If a search is done and the Company doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: vat_number
+          in: query
+          description: Perform a search to see if a specific Company is available
+          required: false
+          schema:
+            description: Companies unique Vat Number
+            type: string
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v1.tenant.{tenantKey}.company'
+      responses:
+        200:
+          description: |
+            List of available companies
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of available companies, can be empty
+                items:
+                  $ref: '#/components/schemas/Company'
+  /tenant/{tenantKey}/content:
+    post:
+      tags:
+        - Tenant
+      summary: Send Content
+      operationId: Send Content
+      description: |
+        Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
+
+        #### Minimum Metadata
+        As a minimum a valid `ssn` or `vat_number` is required.
+
+        <aside class="notice">
+        Note that Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
+        </aside>
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.content'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        201:
+          description: |
+            Content Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: 'hexadecimal value'
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Content'
+
+components:
+  schemas:
+    Content:
+      type: object
+      required:
+        - ssn
+        - vat_number
+      properties:
+        ssn:
+          description: User's unique SSN
+          type: string
+          format: YYYYMMDD-nnnn
+          writeOnly: true
+          example: 191212121212
+        vat_number:
+          description: |
+            A valid VAT-identifier
+            Swedish format:
+            SE[xxxxxxxxxx]01
+          type: string
+          writeOnly: true
+          example: SE556840226601
+        subject:
+          description: This Subject/Title will be visibile in the Recipients Inbox.
+          type: string
+          example: "Sample Invoice"
+        files:
+          description: Array of file Objects
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/File'
+        context:
+          type: object
+          writeOnly: true
+          description: Optionally specify payment information
+          properties:
+            invoice:
+              type: object
+              properties:
+                payment:
+                  type: object
+                  required:
+                    - payable
+                    - currency
+                    - due_date
+                    - total_owed
+                    - type
+                    - method
+                    - account
+                    - reference
+                  properties:
+                    payable:
+                      type: boolean
+                      description: Toggles whether this Content is to be payable through Kivra’s payment platform
+                    status:
+                      type: string
+                      description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
+                      enum: [paid, unpaid]
+                    currency:
+                      type: string
+                      format: ISO4217
+                      description: Currency used in specifying total_owed
+                    due_date:
+                      type: string
+                      format: ISO8601
+                      description: Date when this Invoice is due
+                    total_owed:
+                      type: string
+                      format: float
+                      description: The total amount owed according to the invoice. **If payable equals true this must be a non negative number that’s greater than "0"**
+                    type:
+                      type: string
+                      description: Type of format for the reference
+                      enum: [SE_OCR, TENANT_REF]
+                    method:
+                      type: string
+                      description: 1 = BG and 2 = PG
+                      enum: [1, 2]
+                    account:
+                      type: string
+                      description: Tenant’s account number
+                    reference:
+                      type: string
+                      description: The reference number used for paying
+                invoice_reference:
+                  type: string
+                  description: Tenant’s own Invoice Reference
+                  example: "Invoice Nr #123"
+
+    Company:
+      type: object
+      properties:
+        key:
+          description: Company's unique Key
+          type: string
+          example: 15236156848eefa1dc75364af2be38c98eb3aae223
+        vat_number:
+          description: Company's unique Vat Number
+          type: string
+          example: SE556840226601
+    User:
+      type: object
+      properties:
+        key:
+          description: User's unique Key
+          type: string
+          example: 15236156848eefa1dc75364af2be38c98eb3aae223
+        ssn:
+          description: User's unique SSN
+          type: string
+          example: 191212121212
+    Tenant:
+      type: object
+      required:
+        - name
+        - company_id
+      properties:
+        name:
+          description: Name of the Tenant, this name shows up in the Users Inbox
+          type: string
+          example: "Kivra"
+        company_id:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyId'
+        edit_security_level:
+          description: Security level needed for an enduser to `opt_out` from this Tenant
+          type: integer
+          readOnly: true
+          example: 25
+        groups:
+          type: array
+          readOnly: true
+          description: List of groups this Tenant belongs to
+          example: []
+        visibility:
+          description: Determines if this Tenant is visible for the enduser
+          type: string
+          readOnly: true
+          enum: [visible, hidden]
+    CompanyId:
+      type: object
+      required:
+        - name
+        - orgnr
+      properties:
+        name:
+          description: Legal name of Company
+          type: string
+          example: "Kivra AB"
+        orgnr:
+          description: Vat number of Company
+          type: string
+          example: "SE556840226601"
+    File:
+      type: object
+      required:
+        - name
+        - data
+        - content_type
+      properties:
+        name:
+          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          type: string
+          example: filename.pdf
+        data:
+          description: Base64-encoded data
+          type: string
+          format: 'Base64-encoded data'
+          example: REVBREJFRUY=
+        content_type:
+          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+          type: string
+          example: "application/pdf"
+  securitySchemes:
+    oAuth2Client:
+      type: oauth2
+      description: |
+        Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
+
+        > Create the RFC 2045 base64 encoding to be used for tenant registration, replace `client_id` and `client_secret` with real values and make sure there are no trailing newlines (echo -n) and that the string is encoded literally (use single quotes and no escaping)
+
+        ```bash
+        $ echo -n 'client_id:client_secret' | base64
+        Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+        ```
+
+        > Then perform the authentication which will respond with an access token.
+
+        > ### REQUEST: Authentication
+
+        ```bash
+        curl -i -X POST { basePath }/auth \
+           -d "grant_type=client_credentials" \
+           -H "Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ="
+        ```
+
+        > ### RESPONSE: Authentication
+
+        ```bash
+        HTTP/1.1 200 OK
+        Server: nginx
+        Date: Thu, 02 Oct 2014 12:43:25 GMT
+        Content-Type: application/json
+        Content-Length: 124
+        Connection: keep-alive
+        Vary: Accept-Encoding
+        Strict-Transport-Security: max-age=31536000;
+
+        {
+          "state":"",
+          "access_token":"H6Zq08rF5fjQttd6fTKepWb3FQNptcip",
+          "expires_in":28800,
+          "scope":"kivra.v1.tenant.TKEY.*",
+          "token_type":"bearer"
+        }
+        ```
+
+        An access_token is valid for **eight(8) hours**. A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
+
+        > ### Example request with `access_token`
+
+        ```bash
+        curl -i -X GET -H "Authorization: token <access_token>" <api-url-to-object>
+        ```
+        ## Authorization with limited access scope
+
+        In some particular configuration, for instance when a centralized service wants to provide a satellite service with possibility to only send content to Kivra for a specific tenant, but not allowing any other operation, the centralized service may request an access token for a specific tenant with a limited scope. This access token can be safely provided to the satellite service.
+
+        To retrieve this access token, the client performs a new authorization with some extra parameters specifying the limited scope.
+
+        ```shell
+        curl -X POST \
+          https://api.kivra.com/v1/auth \
+          -d grant_type=client_credentials \
+          -d scope=post:kivra.v1.tenant.${TENANT_ID}.content \
+          -H "Authorization: Basic ${ENCODED_CLIENT_ID_AND_SECRET}"
+        ```
+
+        > The answer will look like the following:
+
+        ```json
+        {
+            "state": "",
+            "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
+            "expires_in": 28800,
+            "scope": "post:kivra.v1.tenant.${TENANT_ID}.content",
+            "token_type": "bearer"
+        }
+        ```
+        ### Scope
+        Scopes are specified as one or a commaseparated list of methods with a path appended and separated by `:`.
+
+        Method is a lower case string of one or more of the allowed methods, valid examples:
+
+        | Example        | Details                                                    |
+        | -----------    | ---------------------------------------------------------- |
+        | `post:path`    | Allows `POST` for the given path                           |
+        | `get,put:path` | Allows `GET` and `PUT` for the given path                  |
+
+        Path is a lower case string starting with the keyword `kivra` and the path appended and interspersed with `.` instead
+        of the path-separator `/` such as: `kivra.v1.example`. There is also the possibility to use wildcards:
+
+        | Wildcard       | Details                                                        |
+        | -----------    | -------------------------------------------------------------- |
+        | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
+        | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
+
+      flows:
+        clientCredentials:
+          authorizationUrl: 'https://api.kivra.com/v1/auth'
