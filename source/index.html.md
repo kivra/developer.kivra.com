@@ -6,6 +6,7 @@ language_tabs:
 
 includes:
   - tenant
+  - partner
 
 search: true
 ---
