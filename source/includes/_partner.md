@@ -1,6 +1,6 @@
 # Partner API
 
-The Partner API allows authorized partners to access and retrieve documents from the kivra inbox of companies. 
+The Partner API allows authorized partners to access and retrieve documents from the Kivra inbox of companies. 
 This is typically done to allow for further processing of the documents like for instance bookkeeping.
 
 A company must explicitly provide a partner with the right to access its documents, by switching on a corresponding option 
@@ -46,7 +46,6 @@ curl -X POST \
   -d grant_type=client_credentials \
   -d scope=get:kivra.v1.partner.company \
   -H "Authorization: Basic ${ENCODED_CLIENT_ID_AND_SECRET}"
-
 ```
 
 > The answer will look like the following:
@@ -91,7 +90,7 @@ for one specific company. The access token has a limited validity and is used to
 curl -X POST \
   https://TYPE.kivra.com/VERSION/auth \
   -d grant_type=client_credentials \
-  -d scope=get:kivra.v1.partner.company.<company_key>.** \
+  -d scope="get:kivra.v1.partner.company.<company_key>.**" \
   -H "Authorization: Basic ${ENCODED_CLIENT_ID_AND_SECRET}"
 
 ```
@@ -117,8 +116,7 @@ Each content is uniquely identified from a ```key``` that may be used later to r
 The sender of the document is provided by name but also by a unique identifier ```sender``` that may be used by the
 partner to create automated processing. 
 
-If the company hasn't provided access to the partner via the Kivra setting page, this request will return a 401 
-response with error code ???.
+If the company hasn't provided access to the partner via the Kivra setting page, this request will return an error code.
 
 ```shell
 curl -i -X GET -H "Authorization: token <access_token>" \
@@ -145,8 +143,8 @@ curl -i -X GET -H "Authorization: token <access_token>" \
 After partner has downloaded the complete list of documents, it may want to get more information about a specific content. 
 To do this the partner needs to use the ```key``` information that was received with the document list.
 
-The answer to this call will also include another ```key``` (under ```parts```) that identifies the file itself that was 
-received by the company. This key could be used later to retrieve the document file.
+The answer to this call will also include one or several ```key``` (under ```parts```) that identifies the file(s) that were 
+received by the company. This key(s) could be used later to retrieve the document file.
 
 ```shell
 curl -i -X GET -H "Authorization: token <access_token>" \
