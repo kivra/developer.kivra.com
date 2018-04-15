@@ -459,7 +459,7 @@ components:
           type: string
           format: YYYYMMDD-nnnn
           writeOnly: true
-          example: 191212121212
+          example: "191212121212"
         vat_number:
           description: |
             A valid VAT-identifier
@@ -524,7 +524,7 @@ components:
                     method:
                       type: string
                       description: 1 = BG and 2 = PG
-                      enum: [1, 2]
+                      enum: ["1", "2"]
                     account:
                       type: string
                       description: Tenant’s account number
@@ -557,7 +557,7 @@ components:
         ssn:
           description: User's unique SSN
           type: string
-          example: 191212121212
+          example: "191212121212"
     Tenant:
       type: object
       required:
