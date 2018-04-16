@@ -28,8 +28,8 @@ $examples-bg: #2b4c56 !default;
 $code-bg: #2d3033 !default;
 $code-annotation-bg: #244048 !default;
 $nav-subitem-bg: #ffffff !default;
-$nav-active-bg: #2b4c56 !default;
-$nav-active-parent-bg: #2b4c56 !default; // parent links of the current section
+$nav-active-bg: lighten(#3c5d6a, 10%);
+$nav-active-parent-bg: #3c5d6a !default; // parent links of the current section
 $lang-select-border: #000 !default;
 $lang-select-bg: #1E2224 !default;
 $lang-select-active-bg: $examples-bg !default; // feel free to change this to blue or something

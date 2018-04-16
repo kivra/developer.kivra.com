@@ -566,6 +566,8 @@ html, body {
   }
 
   blockquote {
+    h1, h2, h3, h4, h5, h6 { padding-left: 13px; }
+
     &>p {
       background-color: $code-annotation-bg;
       padding: $code-annotation-padding 2em;

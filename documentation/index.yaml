@@ -161,22 +161,22 @@ info:
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
 
     ### Endpoint
-    https://TYPE.kivra.com/VERSION
+    `https://TYPE.kivra.com/VERSION`
 
     ### Tenant resource
-    /tenant/TENANTKEY
+    `/tenant/TENANTKEY`
 
     ### Parameters
-    /?QUERYSTRING
+    `/?QUERYSTRING`
 
     ## Unit Fields
     The units have parameterized fields, which allow you to change their respective meanings, those fields are briefly described below.
 
     ### TYPE
-    sandbox for development and test or api for production purposes.
+    `sandbox` for development and test or `api` for production purposes.
 
     ### VERSION
-    Current and only API version is v1.
+    Current and only API version is `v1.`
 
     ### KEY
     The identifier of an object in a collection, its ID, if you will.
@@ -268,6 +268,76 @@ info:
     Metadata is data that Kivra needs to send the Content to the right Recipient. It may also determine how a Recipient can interact with the Content.
 
     Sending of Content is done via the [Tenant Content Resource](#send_content)
+
+    # Errors
+    Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
+
+    ## Error handling
+    The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
+
+    ### Recipient-file synchronization:
+    Common errors that can occur and need to be handled gracefully.
+
+    * Network problem that hinders the integrator from communicating with Kivra
+    * Problem on Kivra’s end that hinders the integrator from querying the state of **Recipients**
+
+    These errors should be handled gracefully such that the last working download of a **Recipient**-file is used until the problem has been solved and a new **Recipient**-file can be downloaded and used.
+
+    ### Content Delivery:
+    Common errors that can occur and need to be handled gracefully.
+
+    * Network problem that hinders the integrator from communicating with Kivra resulting in either not being able to reach Kivra or a non-successful response-code
+    * Problem with the **input**-file either due to above(network problem) or other such as corrupt data or invalid metadata.
+
+    ## Error Messages
+    When the KIVRA API returns error messages, it does so in a extended JSON format.
+
+    > ### Example error response
+
+    ```bash
+    { "code"          : 40400
+    , "short_message" : "Resource not found"
+    , "long_message"  : "There's no resource at the given URI."
+    }
+    ```
+
+    ### An error has four properties:
+
+    | Property      | Description                                                |
+    | ------------- | ---------------------------------------------------------- |
+    | code          | The Kivra [error code](#error-codes)                       |
+    | short_message | A short description of the error                           |
+    | long_message  | A longer and more verbose error message                    |
+
+    ## Error codes
+    In addition to descriptive error text, error messages contain machine-parseable codes. While the text for an error message may change, the codes will stay the same. The following table describes the codes which may appear when working with the API:
+
+    | Code | Short Message | Long Message |
+    | ---- | ------------- | ------------ |
+    |40000 |Invalid Token |Could not authenticate with OAuth2 using the supplied token |
+    |40001 |Invalid Request |The request was invalid |
+    |40002 |Redirect URI Mismatch |The redirect_uri does not match the registered redirect_uri |
+    |40003 |Email adress in use |The email adress supplied is already in use |
+    |40004 |Already registered |This user is already registered |
+    |40005 |Error in phonenumber |The request can't be processed due to phonenumber not meeting the required format |
+    |40006 |Error in password |The request can't be processed due to password not meeting the required format |
+    |40007 |Error in email |The request can't be processed due to email not meeting the required format |
+    |40008 |Unprocessable Entity |The JSON payload was malformed. The client should not resend the same payload without first correcting the erroneous JSON payload. |
+    |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
+    |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
+    |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
+    |40100 |Unauthorized |Supplied credentials was invalid |
+    |40101 |Access Denied |The resource owner or authorization server denied the request |
+    |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
+    |40103 |Invalid Grant |The provided authorization grant (e.g. authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client. |
+    |40104 |Invalid Client |Client authentication failed (e.g. unknown client, no client authentication included, or unsupported authentication method). |
+    |40105 |Invalid Sendrequest |No sendrequest exists between sender and receiver, or sendrequest is not accepted. |
+    |40106 |Email in use |This email adress is already in use and can not be used. |
+    |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
+    |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
+    |40400 |Not found |The resource was not found at the given URI at this time |
+    |40500 | Method Not Allowed | The method specified in is not allowed for the resource at the requested URI |
+    |40601 | Invalid Accept Header | The Accept Header contains a non valid or unknown Content-Type |
 
   version: v1
 
@@ -457,7 +527,7 @@ components:
         ssn:
           description: User's unique SSN
           type: string
-          format: YYYYMMDD-nnnn
+          format: YYYYMMDDnnnn
           writeOnly: true
           example: "191212121212"
         vat_number:
@@ -555,7 +625,7 @@ components:
           type: string
           example: 15236156848eefa1dc75364af2be38c98eb3aae223
         ssn:
-          description: User's unique SSN
+          description: User's unique SSN in the form `YYYYMMDDnnnn`
           type: string
           example: "191212121212"
     Tenant:
