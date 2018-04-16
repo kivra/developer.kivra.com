@@ -446,7 +446,7 @@ html, body {
     }
 
     tr:nth-child(even)>td {
-      background-color: lighten($main-bg,2.4%);
+      background-color: darken($main-bg,2%);
     }
   }
 
@@ -513,6 +513,11 @@ html, body {
 
   aside.success:before {
     @extend %icon-ok-sign;
+  }
+
+  a {
+    color: #0099e5;
+    text-decoration: none;
   }
 
   .search-highlight {
