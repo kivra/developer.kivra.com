@@ -28,12 +28,37 @@ html, body {
   color: $main-text;
   padding: 0;
   margin: 0;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @extend %default-font;
   background-color: $main-bg;
   height: 100%;
   -webkit-text-size-adjust: none; /* Never autoresize text */
+}
+
+.top-navbar-wrapper {
+  height: 50px;
+
+  .top-navbar {
+    background-color: #ffffff;
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    border-style: none none solid none;
+    border-color: #aaaaaa;
+    border-width: 1px;
+
+    &>img {
+      margin-left: 20px;
+      margin-top: 12px;
+      height: 24px;
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +79,7 @@ html, body {
   overflow-x: hidden;
   position: fixed;
   z-index: 30;
-  top: 0;
+  top: 50px;
   left: 0;
   bottom: 0;
   width: $nav-width;
@@ -69,13 +94,6 @@ html, body {
       padding-top: 0.5em;
       padding-bottom: 0.5em;
     }
-  }
-
-  // This is the logo at the top of the ToC
-  .logo {
-    display: block;
-    max-width: 100%;
-    margin-bottom: $logo-margin;
   }
 
   &>.search {
@@ -105,6 +123,7 @@ html, body {
 
   .search-results {
     margin-top: 0;
+    padding-top: 15px;
     box-sizing: border-box;
     height: 0;
     overflow-y: auto;
