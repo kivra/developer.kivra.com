@@ -24,17 +24,17 @@ under the License.
 // BACKGROUND COLORS
 ////////////////////
 $nav-bg: #ffffff !default;
-$examples-bg: #2b4c56 !default;
-$code-bg: #2d3033 !default;
-$code-annotation-bg: #244048 !default;
+$examples-bg: #292e31 !default;
+$code-bg: #000000 !default;
+$code-annotation-bg: #292e31 !default;
 $nav-subitem-bg: #ffffff !default;
 $nav-active-bg: lighten(#3c5d6a, 10%);
 $nav-active-parent-bg: #3c5d6a !default; // parent links of the current section
 $lang-select-border: #000 !default;
-$lang-select-bg: #1E2224 !default;
+$lang-select-bg: lighten(#292e31, 10%);
 $lang-select-active-bg: $examples-bg !default; // feel free to change this to blue or something
 $lang-select-pressed-bg: #111 !default; // color of language tab bg when mouse is pressed
-$main-bg: #F3F7F9 !default;
+$main-bg: #ffffff !default;
 $aside-notice-bg: lighten(#8fbcd4, 20%);
 $aside-warning-bg: lighten(#c97a7e, 25%);
 $aside-success-bg: lighten(#6ac174, 30%);
@@ -69,14 +69,18 @@ $phone-width: $tablet-width - $nav-width !default; // min width before reverting
 
 // FONTS
 ////////////////////
-%default-font {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+%base-font {
   font-size: 14px;
 }
 
+%default-font {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei","微软雅黑", STXihei, "华文细黑", sans-serif;
+  @extend %base-font;
+}
+
 %header-font {
-  @extend %default-font;
-  font-weight: bold;
+  font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei","微软雅黑", STXihei, "华文细黑", sans-serif;
+  font-weight: 300;
 }
 
 %code-font {
@@ -88,8 +92,8 @@ $phone-width: $tablet-width - $nav-width !default; // min width before reverting
 
 // OTHER
 ////////////////////
-$nav-footer-border-color: #666 !default;
-$search-box-border-color: #666 !default;
+$nav-footer-border-color: #f0f4f7 !default;
+$search-box-border-color: #f0f4f7 !default;
 
 
 ////////////////////////////////////////////////////////////////////////////////

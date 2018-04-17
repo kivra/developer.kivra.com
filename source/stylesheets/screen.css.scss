@@ -50,7 +50,7 @@ html, body {
     z-index: 100;
 
     border-style: none none solid none;
-    border-color: #aaaaaa;
+    border-color: #f0f4f7;
     border-width: 1px;
 
     &>img {
@@ -83,7 +83,8 @@ html, body {
   left: 0;
   bottom: 0;
   width: $nav-width;
-  background-color: $nav-bg;
+  background: #fafcfc;
+  border-right: 1px solid #f0f4f7;
   font-size: 13px;
   font-weight: bold;
 
@@ -172,14 +173,12 @@ html, body {
 
   // This is the currently selected ToC entry
   .toc-link.active {
-    background-color: $nav-active-bg;
-    color: $nav-active-text;
+    color: #0099e5;
   }
 
   // this is parent links of the currently selected ToC entry
   .toc-link.active-parent {
-    background-color: $nav-active-parent-bg;
-    color: $nav-active-parent-text;
+    color: #0099e5;
   }
 
   .toc-list-h2 {
@@ -196,7 +195,7 @@ html, body {
   .toc-footer {
     padding: 1em 0;
     margin-top: 1em;
-    border-top: 1px dashed $nav-footer-border-color;
+    border-top: 1px dashed #f0f4f7;
 
     li,a {
       color: $nav-text;
@@ -366,13 +365,10 @@ html, body {
   h1 {
     @extend %header-font;
     font-size: 25px;
-    padding-top: 0.5em;
+    padding-top: 1.5em;
     padding-bottom: 0.5em;
     margin-bottom: $h1-margin-bottom;
     margin-top: 2em;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background-color: #fdfdfd;
   }
 
   h1:first-child, div:first-child + h1 {
@@ -383,12 +379,11 @@ html, body {
   h2 {
     @extend %header-font;
     font-size: 19px;
-    margin-top: 4em;
+    margin-top: 2em;
     margin-bottom: 0;
-    border-top: 1px solid #ccc;
-    padding-top: 1.2em;
+    border-top: 1px solid #f0f4f7;
+    padding-top: 1.5em;
     padding-bottom: 1.2em;
-    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
   }
 
   // h2s right after h1s should bump right up
@@ -401,6 +396,7 @@ html, body {
   h3, h4, h5, h6 {
     @extend %header-font;
     font-size: 15px;
+    font-weight: bold;
     margin-top: 2.5em;
     margin-bottom: 0.8em;
   }
@@ -429,25 +425,24 @@ html, body {
 
     th {
       padding: 5px 10px;
-      border-bottom: 1px solid #ccc;
       vertical-align: bottom;
     }
 
     td {
       padding: 10px;
     }
+  }
 
-    tr:last-child {
-      border-bottom: 1px solid #ccc;
-    }
+  thead tr {
+    border-bottom: 1px solid #e1e8ed;
+  }
 
-    tr:nth-child(odd)>td {
-      background-color: lighten($main-bg,4.2%);
-    }
+  tbody tr:not(:last-child) {
+    border-bottom: 1px solid #f0f4f7;
+  }
 
-    tr:nth-child(even)>td {
-      background-color: darken($main-bg,2%);
-    }
+  tbody tr:last-child {
+    border-bottom: 1px solid #e1e8ed;
   }
 
   dt {
@@ -596,6 +591,7 @@ html, body {
   }
 
   #nav-button {
+    padding-top: 50px;
     display: block;
   }
 
