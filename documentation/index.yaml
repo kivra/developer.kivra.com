@@ -15,10 +15,26 @@ schemes:
 info:
   title: Kivra API
   description: |
-    # Overview
+    This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
 
+    If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
+
+    # Introduction
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
+
+    Integration in its simplest form consists of two steps:
+
+      1. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
+      2. The second step is to send the contents itself.
+
+    There are also optional steps that explain additional services Kivra provides. Currently these additional integrations exist:
+
+    ### Inactive Content
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
+
+    *Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.*
+
 
     ## The service
     Kivra is a secure digital mailbox tied to your social security number or
@@ -139,23 +155,28 @@ info:
     ## Content File-size
     1 MB per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than 1 MB.
 
-    # Introduction
-    This document is intended for developers and others who are interested in integrating with Kivra to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
-
-    Integration in its simplest form consists of two steps. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to, the second step is to send the contents itself.
-
-    There are also optional steps that explain additional services Kivra provides. Currently these additional integrations exist:
-
-    ### Inactive Content
-    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
-
-    *Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.*
-
     # Interacting with the API
     All API access is performed over HTTPS through [api, sandbox].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox, reachable through sandbox.kivra.com.
     In order to ensure data privacy the following choices have been made, to name some that directly impact API workflows:
     Unencrypted HTTP is not supported, you will be redirected to the resource you tried to reach, with http replaced by https, if you attempt to use plain HTTP.
     Resources you have no right to see will either give you a describing status code or a 404. 404 statuses are returned if the case is such that you don’t even have the right to know, according to the system's current state, if an object exists.
+
+    ## API Endpoints
+    Kivra uses different endpoints for production and testing described below.
+
+    <aside class="notice">
+    All interaction with Kivra's APIs must be done over HTTPS.
+    </aside>
+
+    ### Production environment
+    The API endpoint for the production environment can be found at
+
+    `https://api.kivra.com`
+
+    ### Sandbox environment
+    The API for the sandbox environment can be found at
+
+    `https://sandbox.kivra.com`
 
     ## URL Components
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
@@ -230,6 +251,15 @@ info:
     Collections are conceptually lists of objects, that can be queried. Queries without any parameters will cause a listing of the keys that are used to identify the objects within the collection; adding parameters will either filter which keys show up or decorate the keys with the object they identify (in part or entirely).
 
     When a collection resource is queried it will only return the list of keys that identify the objects it contains. If you want to see the actual objects you have to append the query parameter include=body to the URI, more on this below.
+
+    An example: */v1/tenant*
+
+    ### Allowed Methods
+    **GET**
+    List objects under the Collection, either all or using filters to search.
+
+    **POST**
+    Create a new object under the Collection.
 
     ## Filters and Flags
     In order to facilitate filtering/searching amongst the API objects, we provide the possibility to pass certain query string parameters that indicate which objects to include in the response and how they should be treated.
@@ -735,7 +765,11 @@ components:
         }
         ```
 
-        An access_token is valid for **eight(8) hours**. A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
+        <aside class="notice">
+        An access_token is valid for **eight(8) hours**.
+        </aside>
+
+        A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
 
         > ### Example request with `access_token`
 
