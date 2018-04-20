@@ -58,6 +58,7 @@ info:
     | Date        | Details of changes                                         |
     | ----------- | ---------------------------------------------------------- |
     | 2016-10-14  | Release of Kivra API Version 1                             |
+    | 2018-04-20  | Clarify [Environments and API Endpoints](#api-endpoints) |
 
     # Terminology
     ### User
@@ -162,7 +163,11 @@ info:
     Resources you have no right to see will either give you a describing status code or a 404. 404 statuses are returned if the case is such that you don’t even have the right to know, according to the system's current state, if an object exists.
 
     ## API Endpoints
-    Kivra uses different endpoints for production and testing described below.
+    Kivra uses different endpoints for production and testing described below. We also provide the current IP addresses that *could* serve API requests, the current DNS-record will provide an up-to-date list with active endpoints. This is not meant to be a complete list of Kivra-maintained IP addresses. Please make sure to **always** access the Kivra API using the correct domain-name and environment instead of relying on IP addresses.
+
+    Kivra maintains a infrastructure, which grows dynamically to accommodate increasing demand. As a result, Kivra API servers use a range of IP addresses, and the addresses often change.
+
+    *Please note that we do not recommend managing firewall restrictions by IP address, as the IPs associated with these domains are not static.*
 
     <aside class="notice">
     All interaction with Kivra's APIs must be done over HTTPS.
@@ -173,10 +178,31 @@ info:
 
     `https://api.kivra.com`
 
+    IP adresses that may host the API endpoint:
+
+    * 5.178.78.52
+    * 5.178.78.53
+    * 46.21.99.50
+    * 46.21.99.51
+
+    <aside class="notice">
+    This is the live production environment, for testing, please use Sandbox.
+    </aside>
+
     ### Sandbox environment
     The API for the sandbox environment can be found at
 
     `https://sandbox.kivra.com`
+
+    IP adresses that may host the Sandbox endpoint:
+
+    * 104.199.61.8
+
+    <aside class="warning">
+    This is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
+    </aside>
+
+    *We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.*
 
     ## URL Components
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
@@ -216,7 +242,7 @@ info:
     In short, this means that making a request with an idempotent verb only changes the state of the data the first time the request is made.
 
     ## Methods
-    Read more about HTTP/1.1 Method Definitions online.
+    Read more about [HTTP/1.1 Method Definitions](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).
 
     | Method      | Details                                                    |
     | ----------- | ---------------------------------------------------------- |
