@@ -598,6 +598,12 @@ components:
           description: This Subject/Title will be visibile in the Recipients Inbox.
           type: string
           example: "Sample Invoice"
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2016-12-12"
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/partner’s site. Kivra will sort on this in the user interface which effectively makes it possible for a tenant or partner to control the sorting in the user interface.
         files:
           description: Array of file Objects
           type: array
@@ -792,10 +798,14 @@ components:
         ```
 
         <aside class="notice">
-        An access_token is valid for **eight(8) hours**.
+        An access_token is valid for eight(8) hours.
         </aside>
 
         A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
+
+        <aside class="warning">
+        Note: Client Credentials and Access Tokens needs to be treated securely, It is how you securely identify your application's rights and identity when accessing the Kivra API. Do not distribute Client Credentials or Access Tokens in email, distributed native applications, client-side javascript, or public code repositories.
+        </aside>
 
         > ### Example request with `access_token`
 
