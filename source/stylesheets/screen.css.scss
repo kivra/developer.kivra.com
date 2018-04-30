@@ -414,6 +414,7 @@ html, body {
   table {
     margin-bottom: 1em;
     overflow: auto;
+
     th,td {
       text-align: left;
       vertical-align: top;
@@ -430,6 +431,27 @@ html, body {
 
     td {
       padding: 10px;
+    }
+
+    td>span.property-title {
+      display: block;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    td>span.property-type {
+      display: block;
+      font-size: 10px;
+      text-align: right;
+      color: #939da3;
+    }
+
+    td>span.property-badge {
+      display: block;
+      font-size: 10px;
+      text-align: right;
+      text-transform: uppercase;
+      color: #ffae54;
     }
   }
 
