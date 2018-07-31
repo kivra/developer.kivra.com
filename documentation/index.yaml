@@ -33,8 +33,9 @@ info:
     ### Inactive Content
     For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
 
-    *Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.*
-
+    <aside class="notice">
+    Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+    </aside>
 
     ## The service
     Kivra is a secure digital mailbox tied to your social security number or
@@ -158,7 +159,7 @@ info:
     1 MB per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than 1 MB.
     
     ## Rate limit
-    20 **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up tp 20 to the same recipient.
+    20 **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up to 20 to the same recipient.
 
     # Interacting with the API
     All API access is performed over HTTPS through [api, sandbox].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox, reachable through sandbox.kivra.com.
@@ -398,7 +399,7 @@ info:
     |40400 |Not found |The resource was not found at the given URI at this time |
     |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
-    |42900 |Rate limit exceeded |The rate limit was exceeded, the request should be tried again after the time window expired |
+    |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
 
   version: v1
 
@@ -415,6 +416,9 @@ paths:
       operationId: Create Tenant
       description: |
         Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope.
+        <aside class="notice">
+        Note: Creation of tenants via API is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        </aside>
       security:
         - oAuth2Client:
           - 'post:kivra.v1.tenant.{tenantKey}'
@@ -535,14 +539,14 @@ paths:
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
-        #### Minimum Metadata
+        ### Minimum Metadata
         As a minimum a valid `ssn` or `vat_number` is required.
 
         <aside class="notice">
         Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
         </aside>
 
-        #### Inactive Content
+        ### Inactive Content
         An inactive Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Inactive Content has a time limit for how long they can be Inactive before being deleted, ie removed unless the Recipient activates their account within a given period of time.
 
         <aside class="notice">
@@ -550,7 +554,7 @@ paths:
         </aside>
 
         Sending inactive Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
-        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the default amount of time(*30 days*). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
+        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the default amount of time (*30 days*). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
 
         If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
 
@@ -640,6 +644,7 @@ components:
           writeOnly: true
           readOnly: true
           example: "30"
+          enum: ["30","390"]
         tenant_info:
           description: |
             An arbitrary string defined by the tenant, used to group content for administrative tasks
@@ -656,13 +661,15 @@ components:
           type: object
           writeOnly: true
           readOnly: true
-          description: Optionally specify payment information
+          description: Optionally specify additional information
           properties:
             invoice:
               type: object
+              description: Optionally specify invoice information
               properties:
                 payment:
                   type: object
+                  description: Optionally specify payment information
                   required:
                     - payable
                     - currency
