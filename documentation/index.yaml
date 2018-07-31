@@ -156,6 +156,9 @@ info:
 
     ## Content File-size
     1 MB per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than 1 MB.
+    
+    ## Rate limit
+    20 **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up tp 20 to the same recipient.
 
     # Interacting with the API
     All API access is performed over HTTPS through [api, sandbox].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox, reachable through sandbox.kivra.com.
@@ -393,8 +396,9 @@ info:
     |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
     |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
     |40400 |Not found |The resource was not found at the given URI at this time |
-    |40500 | Method Not Allowed | The method specified in is not allowed for the resource at the requested URI |
-    |40601 | Invalid Accept Header | The Accept Header contains a non valid or unknown Content-Type |
+    |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
+    |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
+    |42900 |Rate limit exceeded |The rate limit was exceeded, the request should be tried again after the time window expired |
 
   version: v1
 
