@@ -330,6 +330,28 @@ info:
 
     Sending of Content is done via the [Tenant Content Resource](#send_content)
 
+    # Typical flows
+    The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
+    
+    ## Daily document sending
+    In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
+    
+    The sender uses the API to synchronize the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
+    
+    Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically 40105). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
+    
+    ## Payslips and smaller sending batches
+    Payslips are typically small batches of documents sent once a month and will be used as example for all low-volume applications. Low-volume applications can be handled using the standard flow (first synchronization of recipients and then sending), but it is also possible to use a more minimalistic approach.
+    
+    In this approach the sender skips synchronisation of the complete recipient database (which may grow pretty large due to the opt-out method used by Kivra) and instead loops through all documents using the query search parameter of the API to check if the recipient is available via Kivra and if yes, send the document immediately. 
+    
+    This approach may be useful for senders that only need to send small batches of documents and wish to avoid handling larger amount of data, but senders handling larger volume of documents should follow the typical flow of synchronizing the complete recipient database and then send content.
+    
+    ## Payments and invoices
+    Kivra allows to send both payable invoices (that might be paid via Kivra applications) or payment notifications that cannot be paid via Kivra, as for instance notification of autogiro payments. 
+    
+    "payable" is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the "payment" section is correct.
+    
     # Errors
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
 
