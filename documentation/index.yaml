@@ -686,7 +686,7 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company'      
+          - 'get:kivra.v1.partner.company.{companyKey}'      
       responses:
         200:
           description:
@@ -721,7 +721,7 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company'      
+          - 'get:kivra.v1.partner.company.{companyKey}'      
       responses:
         200:
           description:
@@ -730,47 +730,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompanyContent'     
-  /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}:
-    get:
-      tags:
-      - Partner
-      summary: Get base64 encoded file and metadata
-      operationId: Get base64 encoded file
-      description:
-        This resource allows to get a file that is part of a content as base64 encoded data with metadata.
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-        - name: contentKey
-          in: path
-          description: The unique key for a specific content
-          required: true
-          schema:
-            description: Content's unique key
-            type: string
-        - name: fileKey
-          in: path
-          description: The unique key for a specific file
-          required: true
-          schema:
-            description: File's unique key
-            type: string
-      security:
-        - oAuth2Client:
-          - 'get:kivra.v1.partner.company'      
-      responses:
-        200:
-          description:
-            metadata and base64 encoded data for the specific file
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileCompany'     
   /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
@@ -803,7 +762,7 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company'      
+          - 'get:kivra.v1.partner.company.{companyKey}'      
       responses:
         200:
           description:
@@ -813,55 +772,7 @@ paths:
               schema:
                 type: string
                 format: binary
-  /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw/{fileName}:
-    get:
-      tags:
-      - Partner
-      summary: Get raw file by filename
-      operationId: Get raw file by filename
-      description:
-        This resource allows to get the raw file in binary format by providing a filename.
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-        - name: contentKey
-          in: path
-          description: The unique key for a specific content
-          required: true
-          schema:
-            description: Content's unique key
-            type: string
-        - name: fileKey
-          in: path
-          description: The unique key for a specific file
-          required: true
-          schema:
-            description: File's unique key
-            type: string
-        - name: fileName
-          in: path
-          description: The file name
-          required: true
-          schema:
-            description: File name
-            type: string
-      security:
-        - oAuth2Client:
-          - 'get:kivra.v1.partner.company'      
-      responses:
-        200:
-          description:
-            raw binary file
-          content:
-            application/json:
-              schema:
-                type: string
-                format: binary                  
+           
 components:
   schemas:
     Content:
@@ -1199,63 +1110,7 @@ components:
           type: integer
           description: size of the document in bytes
           example: 163414
-    FileCompany:
-      type: object
-      properties:
-        content_type:
-          type: string
-          description: The Iana Media type corresponding to the file, e.g. "application/pdf"
-          example: "application/pdf"
-        filechunks:
-          $ref: '#/components/schemas/FileChunk'
-        created_at:
-          description: Date and time when the content was delivered to the recipient
-          type: string
-          example: "2018-06-19T11:54:10Z"
-        checksum: 
-          type: string
-          description: The cheksum of the document calculated with md5
-          example: "9209c7eebdd283a4c4bd7555e73e6064"
-        sha256:
-          type: string
-          description: hash of the document calculated with SHA-256
-          example: "287f2fe67a8a76a10169aa6a885d21e1f83416c4831294ea5c4b0a38bda5c78d"
-        size:
-          type: integer
-          description: size of the content in bytes
-          example: 163414
-        sender:
-          description: Unique key for the tenant that posted the content
-          type: string
-          example: "tenant_1341573157b3a133f220f4217b2e32989d2efa015"
-        receiver:
-          description: Unique Key for the company that received the content
-          type: string
-          example: "company_1498823799dd2ded8a43d045cea92e1a8495f3e9f6"
-        name:
-          description: Name of the file
-          type: string
-          example: "1493500000004.pdf"
-        data:
-          description: The content as base64 encoded file
-          type: string
-          format: base64
-          example: "JVBERi0xLjQKJeLjz9MNCjYgMCBvYmoKPDwKL1R5cGUvWE9iamVjdAovU3..."
-    FileChunk:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: size of the chunk in bytes
-          example: 163414
-        checksum: 
-          type: string
-          description: The cheksum of the chunk calculated with md5
-          example: "9209c7eebdd283a4c4bd7555e73e6064"
-        key:
-          type: string
-          description: unique key for the chunk
-          example: "15117839404f7b521a44564dd198fbfaec75f7f5c0"
+  
           
   securitySchemes:
     oAuth2Client:
