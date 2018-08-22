@@ -358,11 +358,11 @@ info:
     # Partners integration (BETA)
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
     
-    Company recipients need to explicitly authorize a partner to access their mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
+    Company recipients needs to explicitly authorize a partner to access their mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
     
     Partners will use the `partner` endpoint to integrate with Kivra. 
     
-    The Partner endpoint is currently in BETA, so changes to the endpoint might occur before the final release 
+    The Partner endpoint is currently in BETA, so changes to the endpoint might occurr before the final release 
     
     # Errors
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
@@ -642,9 +642,9 @@ paths:
       summary: Lookup a specific company
       operationId: Find Company
       description: |
-        This resource allows a partner to look if a specific company have granted access to its mailbox.
+        This resource allow a partner to look if a specific company have granted access to its mailbox.
         <aside class="notice">
-        If a search is done and the Company doesn’t exist in Kivra or has not granted access to the partner, an empty list will be returned.
+        If a search is done and the Company doesn’t exist in Kivra or have not granted access to the partner, an empty list will be returned.
         </aside>
       parameters:
         - name: vat_number
@@ -654,6 +654,7 @@ paths:
           schema:
             description: Company's unique VAT number
             type: string
+            example: SE556840226601
       security:
         - oAuth2Client:
           - 'get:kivra.v1.partner.company'      
@@ -701,7 +702,7 @@ paths:
         Get metadata for a content.
       operationId: Get content metadata
       description:
-        This resource allows to get complete metadata information for a particular content.
+        This resource allows to get complete metadata information for a particolar content.
         <aside class="notice">
         Depending on "content_type" for each of the parts of the content, Kivra will return either a "key" to a binary file to be retrieved or (for text based contents) the "body" of the content itself.
         </aside>
@@ -722,7 +723,7 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}'      
+          - 'get:kivra.v1.partner.company.{companyKey}.**'      
       responses:
         200:
           description:
@@ -764,11 +765,11 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}'      
+          - 'get:kivra.v1.partner.company.{companyKey}.**'      
       responses:
         200:
           description:
-            raw binary file
+            The content type will the same as the file, so for a typical pdf it will be "application/pdf"
           content:
             application/json:
               schema:
@@ -804,6 +805,9 @@ paths:
           schema:
             description: The new state to be set for the content
             type: string
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v1.partner.company.{companyKey}.**'      
       responses:
         204:
           description:
@@ -839,7 +843,7 @@ components:
           format: ISO8601
           example: "2016-12-12"
           description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. Kivra will sort on this in the user interface which effectively makes it possible for a tenant or integrator to control the sorting in the user interface.
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`
@@ -1154,7 +1158,7 @@ components:
           example: "<!doctype html>\n<html class=\"...."
         key:
           type: string
-          description: The unique key for the content file (present only if content_type is "application/pdf")
+          description: The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
   securitySchemes:
     oAuth2Client:
