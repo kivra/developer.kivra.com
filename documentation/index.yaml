@@ -704,7 +704,7 @@ paths:
       description:
         This resource allows to get complete metadata information for a particolar content.
         <aside class="notice">
-        Depending on "content_type" for each of the parts of the content, Kivra will return either a "key" to a binary file to be retrieved or (for text based contents) the "body" of the content itself.
+        Depending on "content_type" for each parts of the content, Kivra will return either a "key" to a binary file to be retrieved or (for text based contents) the "body" of the content itself.
         </aside>
       parameters:
         - name: companyKey
