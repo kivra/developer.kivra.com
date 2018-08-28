@@ -451,7 +451,7 @@ paths:
       summary: Create Tenant
       operationId: Create Tenant
       description: |
-        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope.
+        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. A new authorization token needs to be requested before the created tenant can be accessed.
         <aside class="notice">
         Note: Creation of tenants via API is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
         </aside>
