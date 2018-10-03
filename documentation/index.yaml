@@ -497,7 +497,7 @@ paths:
         </aside>
 
         <aside class="notice">
-        Access to this resource might be enabled or disabled via agreement. For matchning of a list of users, please use
+        Access to this resource might be enabled or disabled via agreement. For matchning a given list of users, please use
           the `usermatch` resource.
         </aside>
         
@@ -511,7 +511,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.tenant.{tenantKey}.usermatch'
+          - 'get:kivra.v1.tenant.{tenantKey}.user'
       responses:
         200:
           description: |
@@ -560,6 +560,9 @@ paths:
               $ref: '#/components/schemas/UserMatch'
             example: '{"ssns":["191212121212","197701032380","198112172385"]}'
         required: true
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v1.tenant.{tenantKey}.usermatch'        
       responses:
         200:
           description: Filtered list of SSNs 
