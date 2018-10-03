@@ -506,6 +506,14 @@ paths:
           schema:
             type: string
             format: hexadecimal
+        - name: ssn
+          in: query
+          description: Perform a search to see if a specific User is available
+          required: false
+          schema:
+            description: User's unique SSN
+            type: string
+            example: "191212121212"            
       security:
         - oAuth2Client:
           - 'get:kivra.v1.tenant.{tenantKey}.user'
