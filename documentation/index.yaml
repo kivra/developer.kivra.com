@@ -491,16 +491,13 @@ paths:
       description: |
         This resource is used to list all or search for users that eligible for receiving Content from the specific Tenant.
         The response is a JSON list of Objects containing the User’s key and SSN.
-
         <aside class="notice">
         If a search is done with a query string and the user doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
         </aside>
-
         <aside class="notice">
         Access to this resource might be enabled or disabled via agreement. For matchning a given list of users, please use
           the `usermatch` resource.
         </aside>
-        
       parameters:
         - name: tenantKey
           in: path
@@ -544,9 +541,6 @@ paths:
           schema:
             type: string
             format: hexadecimal
-      security:
-        - oAuth2Client:
-          - 'get:kivra.v1.tenant.{tenantKey}.user'
       requestBody:
         description: List of SSNs to be matched
         content:
