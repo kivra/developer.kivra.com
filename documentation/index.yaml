@@ -495,7 +495,7 @@ paths:
         If a search is done with a query string and the user doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
         </aside>
         <aside class="notice">
-        Access to this resource might be enabled or disabled via agreement. For matchning a given list of users, please use
+        Access to this resource might be enabled or disabled via agreement. To match a specific list of users, please use
           the `usermatch` resource.
         </aside>
       parameters:
