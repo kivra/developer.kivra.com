@@ -326,12 +326,12 @@ info:
 
     This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
 
-    Synchronization of Recipients is done via the [User Resource](#list_users)
+    Synchronization of Recipients is done via the `user` and `usermatch` resources.
 
     ## Step 2: Send Content
     Metadata is data that Kivra needs to send the Content to the right Recipient. It may also determine how a Recipient can interact with the Content.
 
-    Sending of Content is done via the [Tenant Content Resource](#send_content)
+    Sending of Content is done via the `content` resource.
 
     ## Typical integration flows
     The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
@@ -491,9 +491,12 @@ paths:
       description: |
         This resource is used to list all or search for users that eligible for receiving Content from the specific Tenant.
         The response is a JSON list of Objects containing the User’s key and SSN.
-
         <aside class="notice">
-        If a search is done and the User doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
+        If a search is done with a query string and the user doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
+        </aside>
+        <aside class="notice">
+        Access to this resource might be enabled or disabled via agreement. To match a specific list of users, please use
+          the `usermatch` resource.
         </aside>
       parameters:
         - name: tenantKey
@@ -510,7 +513,7 @@ paths:
           schema:
             description: User's unique SSN
             type: string
-            example: 191212121212
+            example: "191212121212"            
       security:
         - oAuth2Client:
           - 'get:kivra.v1.tenant.{tenantKey}.user'
@@ -525,6 +528,46 @@ paths:
                 description: List of available users, can be empty
                 items:
                   $ref: '#/components/schemas/User'
+  /tenant/{tenantKey}/usermatch:
+    post:
+      tags:
+        - Tenant
+      summary: Resource to match a list of users for a specific tenant
+      operationId: Match Users
+      description: |
+        This resource is used to match a list of users to check that they are eligible for receiving Content from 
+          the specific Tenant.
+        The request contains a list of SSNs to be matched, and the response is a filtered list containing only the SSNs that are eligible to receive content from the tenant.
+        <aside class="notice">
+          If none of the provided SSNs are eligible to receive content from this tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: List of SSNs to be matched
+        content:
+          application/json:
+            schema:
+              example:
+                ssns:
+                - "191212121212"
+                - "197701032380"
+                - "198112172385"
+              $ref: '#/components/schemas/UserMatch'
+            example: '{"ssns":["191212121212","197701032380","198112172385"]}'
+        required: true
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v1.tenant.{tenantKey}.usermatch'        
+      responses:
+        200:
+          description: Filtered list of SSNs 
   /tenant/{tenantKey}/company:
     get:
       tags:
@@ -962,6 +1005,26 @@ components:
           description: User's unique SSN in the form `YYYYMMDDnnnn`
           type: string
           example: "191212121212"
+    UserMatch:
+      title: usermatchRequest
+      required:
+      - ssns
+      type: object
+      properties:
+        ssns:
+          type: array
+          items:
+            type: string
+            example:
+              - "191212121212"
+              - "197701032380"
+              - "198112172385"
+          description: list of SSNs to be matched
+      example:
+        ssns:
+          - "191212121212"
+          - "197701032380"
+          - "198112172385"
     Tenant:
       type: object
       required:
