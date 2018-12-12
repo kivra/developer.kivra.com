@@ -344,7 +344,7 @@ info:
     Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically 40105). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
     
     ### Payslips and retain functionality
-    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matchning step but using the retain functionality instead.
+    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matching step but using the retain functionality instead.
     
     In this approach the sender sends all documents without checking if the user is a Kivra user or not, relying on the retain functionality instead. Content sent to non-Kivra users will be retained for a period of time (typically 390 days for payslips), meaning that it is kept by Kivra but not delivered. If the user creates a Kivra account before the retention period expires, the user will get all retained content. If the user does not create a Kivra account before the retention period expires, the content will be removed from Kivra.
     
@@ -493,7 +493,7 @@ paths:
         If a search is done with a query string and the user doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
         </aside>
         <aside class="notice">
-        Access to this resource might be enabled or disabled via agreement. For matchning a given list of users, please use
+        Access to this resource might be enabled or disabled via agreement. To match a given list of users, please use the
           the `usermatch` resource.
         </aside>
       parameters:
