@@ -343,12 +343,10 @@ info:
     
     Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically 40105). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
     
-    ### Payslips and smaller sending batches
-    Payslips are typically small batches of documents sent once a month and will be used as example for all low-volume applications. Low-volume applications can be handled using the standard flow (first synchronization of recipients and then sending), but it is also possible to use a more minimalistic approach.
+    ### Payslips and retain functionality
+    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matching step but using the retain functionality instead.
     
-    In this approach the sender skips synchronisation of the complete recipient database (which may grow pretty large due to the opt-out method used by Kivra) and instead loops through all documents using the query search parameter of the API to check if the recipient is available via Kivra and if yes, send the document immediately. 
-    
-    This approach may be useful for senders that only need to send small batches of documents and wish to avoid handling larger amount of data, but senders handling larger volume of documents should follow the typical flow of synchronizing the complete recipient database and then send content.
+    In this approach the sender sends all documents without checking if the user is a Kivra user or not, relying on the retain functionality instead. Content sent to non-Kivra users will be retained for a period of time (typically 390 days for payslips), meaning that it is kept by Kivra but not delivered. If the user creates a Kivra account before the retention period expires, the user will get all retained content. If the user does not create a Kivra account before the retention period expires, the content will be removed from Kivra.
     
     ### Payments and invoices
     Kivra allows to send both payable invoices (that might be paid via Kivra applications) or payment notifications that cannot be paid via Kivra, as for instance notification of autogiro payments. 
@@ -358,7 +356,7 @@ info:
     # Partners integration (BETA)
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
     
-    Company recipients need to explicitly authorize a partner to access their mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
+    Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
     
     Partners will use the `partner` endpoint to integrate with Kivra. 
     
@@ -495,7 +493,7 @@ paths:
         If a search is done with a query string and the user doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
         </aside>
         <aside class="notice">
-        Access to this resource might be enabled or disabled via agreement. To match a specific list of users, please use
+        Access to this resource might be enabled or disabled via agreement. To match a given list of users, please use the
           the `usermatch` resource.
         </aside>
       parameters:
