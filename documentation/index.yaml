@@ -6,12 +6,10 @@ servers:
     description: Production environment
   - url: https://sandbox.kivra.com/v1
     description: Staging environment
-
 info:
   title: Kivra API
   description: |
     This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
-
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
     ### Introduction
@@ -66,9 +64,12 @@ info:
     ### Company
     A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for more information on Dormant and Grace period.
 
-    ### Recipient
-    A Company or a User in the context of being a receiver. Throughout this document Recipient is used to interchangeably mean a User or Company being a receiver.
+    ### Non-user
+    A non-user is an individual who is not a customer of Kivra but could be addressed by tenants in specific flows like the *retain functionality* or *signatures*.
 
+    ### Recipient
+    A Company, a User or a non-user in the context of being a receiver. Throughout this document Recipient is used to interchangeably mean a User or Company being a receiver.
+    
     ### Tenant / Integrator
     Tenant is a sender that is integrated with Kivra. They need not be integrated directly, but can go through an integrator. The integrator acts as intermediary for the tenant at integration and can handle multiple tenants.
     
@@ -353,15 +354,59 @@ info:
     
     "payable" is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the "payment" section is correct.
     
-    # Partners integration (BETA)
+    # Partners integration
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
     
     Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
     
     Partners will use the `partner` endpoint to integrate with Kivra. 
     
-    The Partner endpoint is currently in BETA, so changes to the endpoint might occur before the final release 
+    # Signatures (BETA, only available in sandbox)
+    Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](http://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
     
+    Kivra's signature service is not directly connected to Kivra's mailbox, and participants in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.  
+    
+    ## Signers and delegates
+    Each individual signing an agreement is categorized as either `signer`or `delegate`:
+    - a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
+    - a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
+    
+    ## Agreement states
+    During its lifetime, an agreement can go through various states. The current state can be accessed by getting the agreement via the signature API:
+    
+    ### State active
+    This is the inital state of the agreement after a successful create. During user actions on the agreement the state remains as `active`. The states that an active agreement can transition to are referred to as *terminal* states, meaning it's the end of the agreement lifecycle.
+    
+    If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
+
+    The terminal states in which an agreement can transition to, are described here below.
+    
+    ### State completed
+    Agreements automatically transitions to the state `completed` at the time when the last of all participants sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party.
+    
+    When an agreement becomes completed, a covenant file is created (see below). The covenant file will be availabe to the tenant via the signature API, and to the signers and delegates via the graphical interface.
+    
+    No one can change a signed agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services after 30 days from the date it became completed.
+    
+    ### State revoked
+    This state can be triggered by a tenant who owns the agreement. If the agreement is unsigned on behalf of the delegate, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within 30 days after the date it was created.
+    
+      ## Agreement verification and covenant file
+    
+    When the agreement transitions to the `completed` state, a few more things happen. An additional PDF file, a signed version of the original agreement, is created. This file is called the `covenant file`. The covenant file includes the original agreement and some additional pages including Bank ID data for the signatures and additional information about the signing events. The covenant file is accessible for 30 days to the tenant and participants, after that it is removed from all services, together with the initial descriptive data for the original agreement. However, we construct a new data structure that we store persistently and that will be used for verification: a 256bit string value constructed through an internal algorithm that we refer to as `verification value`.
+    
+    The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
+    
+    ## Notifications
+    After creating the agreement, the tenant is responsible to inform the participants that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/). 
+    After the users access the Kivra signature service and agree to its terms of service, Kivra will take care of notify the participants about events concerning the agreement lifecycle using the contact information provided by the tenant.
+
+    ## Signature flow
+    1. The tenant posts an agreement providing the PDF document to be signed and the list of participants, and gets back an `agreement id`. Each participant is specified by its role, a SSN number, an email and a mobile phone. The agreement is made available by Kivra to the participants.
+    2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not been signed by the delegate.
+    3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while signers have two options: if the signer is a Kivra user, the covenant file will be automatically transferred to his/her Kivra mailbox, if the signer is not a Kivra user, he/she will have 30 days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
+    4. The agreement is removed from all our services 30 days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services 30 days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
+
     # Errors
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
 
@@ -438,10 +483,14 @@ info:
 tags:
   - name: Tenant
     description: Tenant endpoint
-  - name: Partner (BETA)
-    description: Partner endpoint (BETA)
+  - name: Partner
+    description: Partner endpoint
 
 paths:
+
+# ##############################################
+# POST tenant
+# ##############################################
   /tenant:
     post:
       tags:
@@ -480,6 +529,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Tenant'
+
+# ##############################################
+# GET tenant/TKEY/user
+# ##############################################
   /tenant/{tenantKey}/user:
     get:
       tags:
@@ -526,6 +579,10 @@ paths:
                 description: List of available users, can be empty
                 items:
                   $ref: '#/components/schemas/User'
+
+# ##############################################
+# POST tenant/TKEY/usermatch
+# ##############################################
   /tenant/{tenantKey}/usermatch:
     post:
       tags:
@@ -566,6 +623,10 @@ paths:
       responses:
         200:
           description: Filtered list of SSNs 
+
+# ##############################################
+# GET tenant/TKEY/company
+# ##############################################
   /tenant/{tenantKey}/company:
     get:
       tags:
@@ -609,6 +670,10 @@ paths:
                 description: List of available companies, can be empty
                 items:
                   $ref: '#/components/schemas/Company'
+
+# ##############################################
+# POST tenant/TKEY/content
+# ##############################################
   /tenant/{tenantKey}/content:
     post:
       tags:
@@ -678,14 +743,55 @@ paths:
             schema:
               $ref: '#/components/schemas/Content'
 
+# ##############################################
+# POST tenant/TKEY/agreement
+# ##############################################
+  /tenant/{tenantKey}/agreement:
+    post:
+      tags:
+        - Tenant
+      summary: Post an agreement to be signed
+      operationId: Post Agreement
+      description: 
+        This resource is used to post an agreement to be signed by the recipients
+        listed in the metadata. An Agreement ID will be returned.
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.agreement'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        201:
+          description:
+            Agreement created succesfully
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "\"15544700816b7d63c83d6e476493879b5043ec9d7b\""
+      requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'      
+
+# ##############################################
+# GET partner/company
+# ##############################################
   /partner/company:
     get: 
       tags: 
-        - Partner (BETA)
+        - Partner
       summary: Lookup a specific company
       operationId: Find Company
       description: |
-        This resource allow a partner to look if a specific company has granted access to its mailbox.
+        This resource allows a partner to look if a specific company has granted access to its mailbox.
         <aside class="notice">
         If a search is done and the Company doesn’t exist in Kivra or has not granted access to the partner, an empty list will be returned.
         </aside>
@@ -710,10 +816,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CompanyKey'     
 
+# ##############################################
+# GET partner/company/COMPKEY/content
+# ##############################################
   /partner/company/{companyKey}/content:
     get:
       tags:
-        - Partner (BETA)
+        - Partner
       summary: Get the company inbox
       operationId: Get company inbox
       description:
@@ -736,11 +845,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyInbox'     
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompanyInbox'     
+
+# ##############################################
+# GET partner/company/COMPKEY/content/CONTKEY
+# ##############################################
   /partner/company/{companyKey}/content/{contentKey}:
     get:
       tags:
-        - Partner (BETA)
+        - Partner
       summary: 
         Get metadata for a content.
       operationId: Get content metadata
@@ -776,10 +891,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CompanyContent'
                   
+# ##############################################
+# GET partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
+# ##############################################
   /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
-        - Partner (BETA)
+        - Partner
       summary: Get raw file in binary format
       operationId: Get raw file 
       description:
@@ -818,10 +936,14 @@ paths:
               schema:
                 type: string
                 format: binary
+
+# ##############################################
+# POST partner/company/COMPKEY/content/CONTKEY/STATUS
+# ##############################################
   /partner/company/{companyKey}/content/{contentKey}/{status}:
     post:
       tags:
-        - Partner (BETA)
+        - Partner
       summary: Set status for content
       operationId: Set status for content 
       description:
@@ -858,6 +980,10 @@ paths:
            
 components:
   schemas:
+
+# ##############################################
+# SCHEMA Content
+# ##############################################
     Content:
       type: object
       required:
@@ -925,236 +1051,28 @@ components:
               description: Optionally specify invoice information
               properties:
                 payment:
-                  type: object
-                  description: Optionally specify payment information
-                  required:
-                    - payable
-                    - currency
-                    - due_date
-                    - total_owed
-                    - type
-                    - method
-                    - account
-                    - reference
-                  properties:
-                    payable:
-                      type: boolean
-                      description: Toggles whether this Content is to be payable through Kivra’s payment platform
-                    status:
-                      type: string
-                      description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
-                      enum: [paid, unpaid]
-                    currency:
-                      type: string
-                      format: ISO4217
-                      example: "SEK"
-                      description: Currency used in specifying total_owed
-                    due_date:
-                      type: string
-                      format: ISO8601
-                      example: "2017-01-01"
-                      description: Date when this Invoice is due
-                    total_owed:
-                      type: string
-                      format: float
-                      example: "123.50"
-                      description: The total amount owed according to the invoice. **If payable equals true this must be a non negative number that’s greater than "0"**
-                    type:
-                      type: string
-                      description: Type of format for the reference
-                      example: "SE_OCR"
-                      enum: [SE_OCR, TENANT_REF]
-                    method:
-                      type: string
-                      description: 1 = BG and 2 = PG
-                      example: "1"
-                      enum: ["1", "2"]
-                    account:
-                      type: string
-                      example: "12345"
-                      description: Tenant’s account number
-                    reference:
-                      type: string
-                      example: "123OCRNUMBER456"
-                      description: The reference number used for paying
+                  $ref: '#/components/schemas/Payment'
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
-    Company:
+                  
+# ##############################################
+# SCHEMA Payment
+# ##############################################
+    Payment:
       type: object
-      properties:
-        key:
-          description: Company's unique Key
-          type: string
-          example: 15236156848eefa1dc75364af2be38c98eb3aae223
-        vatnr:
-          description: Company's unique Vat Number
-          type: string
-          example: SE556840226601
-    User:
-      type: object
-      properties:
-        key:
-          description: User's unique Key
-          type: string
-          example: 15236156848eefa1dc75364af2be38c98eb3aae223
-        ssn:
-          description: User's unique SSN in the form `YYYYMMDDnnnn`
-          type: string
-          example: "191212121212"
-    UserMatch:
-      title: usermatchRequest
+      description: Optionally specify payment information
       required:
-      - ssns
-      type: object
-      properties:
-        ssns:
-          type: array
-          items:
-            type: string
-            example:
-              - "191212121212"
-              - "197701032380"
-              - "198112172385"
-          description: list of SSNs to be matched
-      example:
-        ssns:
-          - "191212121212"
-          - "197701032380"
-          - "198112172385"
-    Tenant:
-      type: object
-      required:
-        - name
-        - company_id
-      properties:
-        name:
-          description: Name of the Tenant, this name shows up in the Users Inbox
-          type: string
-          example: "Kivra"
-        company_id:
-          type: array
-          items:
-            $ref: '#/components/schemas/CompanyId'
-        edit_security_level:
-          description: Security level needed for an enduser to `opt_out` from this Tenant
-          type: integer
-          readOnly: true
-          example: 25
-        groups:
-          type: array
-          items:
-            type: string
-          readOnly: true
-          description: List of groups this Tenant belongs to
-          example: []
-        visibility:
-          description: Determines if this Tenant is visible for the enduser
-          type: string
-          readOnly: true
-          enum: [visible, hidden]
-    CompanyId:
-      type: object
-      required:
-        - name
-        - orgnr
-      properties:
-        name:
-          description: Legal name of Company
-          type: string
-          example: "Kivra AB"
-        orgnr:
-          description: Vat number of Company
-          type: string
-          example: "SE556840226601"
-    File:
-      type: object
-      required:
-        - name
-        - data
-        - content_type
-      properties:
-        name:
-          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
-          type: string
-          example: filename.pdf
-        data:
-          description: Base64-encoded data
-          type: string
-          format: 'Base64-encoded data'
-          example: REVBREJFRUY=
-        content_type:
-          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
-          type: string
-          example: "application/pdf"
-    CompanyKey:
-      type: object
-      properties:
-        key:
-          description: Company's unique Key
-          type: string
-          example: 15236156848eefa1dc75364af2be38c98eb3aae223
-    CompanyInbox:
-      type: object
-      properties:
-        key: 
-          description: Content's unique key
-          type: string
-          example: "15294092505b9cfab3f79d233f8eca6fbc5385fa61"
-        sender:
-          description: Unique key for the tenant that posted the content
-          type: string
-          example: "1341573157b3a133f220f4217b2e32989d2efa015"
-        sender_name:
-          description: Name of the tenant that posted the content
-          type: string
-          example: "Kivra"
-        created_at:
-          description: Date and time when the content was delivered to the recipient
-          type: string
-          example: "2018-06-19T11:54:10Z"
-        subject:
-          description: Subject of the content, as set by the sender
-          type: string
-          example: "Invoice 4512 from Local Bank"          
-        status:
-          description: Whether the content has been read (opened) or not
-          type: string
-          enum: ["read","unread"]
-          example: "read"
-    CompanyContent:
-      type: object
-      properties:
-        sender:
-          description: Unique key for the tenant that posted the content
-          type: string
-          example: "1341573157b3a133f220f4217b2e32989d2efa015"
-        sender_name:
-          description: Name of the tenant that posted the content
-          type: string
-          example: "Kivra"
-        created_at:
-          description: Date and time when the content was delivered to the recipient
-          type: string
-          example: "2018-06-19T11:54:10Z"
-        subject:
-          description: Subject of the content, as set by the sender
-          type: string
-          example: "Invoice 4512 from Local Bank"          
-        receiver_name:
-          description: Name of the company that received the content
-          type: string
-          example: "Digital Hero AB"
-        payment:
-          $ref: '#/components/schemas/CompanyPayment'
-        parts:
-          description: files composing the content
-          type: array
-          items:
-            $ref: '#/components/schemas/Parts'
-    CompanyPayment:
-      type: object
+        - payable
+        - currency
+        - due_date
+        - total_owed
+        - type
+        - method
+        - account
+        - reference
+      example: true
       properties:
         payable:
           type: boolean
@@ -1196,6 +1114,298 @@ components:
           type: string
           example: "123OCRNUMBER456"
           description: The reference number used for paying
+          
+# ##############################################
+# SCHEMA Agreement
+# ##############################################
+    Agreement:
+      type: object
+      properties:
+        subject:
+          description: Name of the agreement
+          type: string
+          example: "Employment agreement"
+        type: 
+          description: the type of content, for agreements always use 'agreement'
+          type: string
+          example: "agreement"
+        vat_number:
+          description: The VAT number for the company sending the contract, it will appear on the signature log
+          type: string
+          example: "SE556913262701"
+        original:
+          type: object
+          properties:
+            name:
+              description: Name of the document file
+              type: string
+              example: "agreement1025.pdf"
+            content_type:
+              description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+              type: string
+              example: "application/pdf"
+            data:
+              description: Base64-encoded data for the agreement PDF
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
+        parties:
+          description: list of signers and delegates that are requested to sign the agreement
+          type: array
+          items: 
+            $ref: '#/components/schemas/AgreementParties'
+          example:
+            - ssn: "197701032380"
+              name: "Roy Orbinsson"
+              email: "roy@orbinsson.com"
+              phone: "+46705050505"
+              role: "signer"
+            - ssn: "198112172385"
+              name: "Dolly Parton"
+              email: "dolly@parton.se"
+              phone: "+46705212121"
+              role: "delegate"                    
+
+# ##############################################
+# SCHEMA AgreementParties
+# ##############################################
+    AgreementParties:
+      type: object
+      properties:
+        ssn:
+          description: |
+            User's unique SSN, format: `YYYYMMDDnnnn`
+          type: string
+          example: "191212121212"
+        name:
+          description: Name of the user
+          type: string
+          example: "Roy Orbinsson"
+        email:
+          description: email to be used to contact the user
+          type: string
+          example: "roy@orbinsson.com"
+        phone:
+          description: mobile phone to be used to contact the user (via SMS)
+          type: string
+          example: "+46706222666"
+        role:
+          description: the role of the user in this signature flow
+          type: string
+          enum: ["signer", "delegate"]
+          example: "signer"
+
+# ##############################################
+# SCHEMA Company
+# ##############################################
+    Company:
+      type: object
+      properties:
+        key:
+          description: Company's unique Key
+          type: string
+          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
+        vatnr:
+          description: Company's unique Vat Number
+          type: string
+          example: "SE556840226601"
+
+# ##############################################
+# SCHEMA User
+# ##############################################
+    User:
+      type: object
+      properties:
+        key:
+          description: User's unique Key
+          type: string
+          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
+        ssn:
+          description: User's unique SSN in the form `YYYYMMDDnnnn`
+          type: string
+          example: "191212121212"
+
+# ##############################################
+# SCHEMA UserMatch
+# ##############################################
+    UserMatch:
+      title: usermatchRequest
+      required:
+      - ssns
+      type: object
+      properties:
+        ssns:
+          type: array
+          items:
+            type: string
+            example:
+              - "191212121212"
+              - "197701032380"
+              - "198112172385"
+          description: list of SSNs to be matched
+      example:
+        ssns:
+          - "191212121212"
+          - "197701032380"
+          - "198112172385"
+
+# ##############################################
+# SCHEMA Tenant
+# ##############################################
+    Tenant:
+      type: object
+      required:
+        - name
+        - company_id
+      properties:
+        name:
+          description: Name of the Tenant, this name shows up in the Users Inbox
+          type: string
+          example: "Kivra"
+        company_id:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyId'
+        edit_security_level:
+          description: Security level needed for an enduser to `opt_out` from this Tenant
+          type: integer
+          readOnly: true
+          example: 25
+        groups:
+          type: array
+          items:
+            type: string
+          readOnly: true
+          description: List of groups this Tenant belongs to
+          example: []
+        visibility:
+          description: Determines if this Tenant is visible for the enduser
+          type: string
+          readOnly: true
+          enum: [visible, hidden]
+
+# ##############################################
+# SCHEMA CompanyId
+# ##############################################
+    CompanyId:
+      type: object
+      required:
+        - name
+        - orgnr
+      properties:
+        name:
+          description: Legal name of Company
+          type: string
+          example: "Kivra AB"
+        orgnr:
+          description: Vat number of Company
+          type: string
+          example: "SE556840226601"
+
+# ##############################################
+# SCHEMA File
+# ##############################################
+    File:
+      type: object
+      required:
+        - name
+        - data
+        - content_type
+      properties:
+        name:
+          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          type: string
+          example: filename.pdf
+        data:
+          description: Base64-encoded data
+          type: string
+          format: 'Base64-encoded data'
+          example: REVBREJFRUY=
+        content_type:
+          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+          type: string
+          example: "application/pdf"
+
+# ##############################################
+# SCHEMA CompanyKey
+# ##############################################
+    CompanyKey:
+      type: object
+      properties:
+        key:
+          description: Company's unique Key
+          type: string
+          example: 15236156848eefa1dc75364af2be38c98eb3aae223
+
+# ##############################################
+# SCHEMA CompanyInbox
+# ##############################################
+    CompanyInbox:
+      type: object
+      properties:
+        key: 
+          description: Content's unique key
+          type: string
+          example: "15294092505b9cfab3f79d233f8eca6fbc5385fa61"
+        sender:
+          description: Unique key for the tenant that posted the content
+          type: string
+          example: "1341573157b3a133f220f4217b2e32989d2efa015"
+        sender_name:
+          description: Name of the tenant that posted the content
+          type: string
+          example: "Kivra"
+        created_at:
+          description: Date and time when the content was delivered to the recipient
+          type: string
+          example: "2018-06-19T11:54:10Z"
+        subject:
+          description: Subject of the content, as set by the sender
+          type: string
+          example: "Invoice 4512 from Local Bank"          
+        status:
+          description: Whether the content has been read (opened) or not
+          type: string
+          enum: ["read","unread"]
+          example: "read"
+
+# ##############################################
+# SCHEMA CompanyContent
+# ##############################################
+    CompanyContent:
+      type: object
+      properties:
+        sender:
+          description: Unique key for the tenant that posted the content
+          type: string
+          example: "1341573157b3a133f220f4217b2e32989d2efa015"
+        sender_name:
+          description: Name of the tenant that posted the content
+          type: string
+          example: "Kivra"
+        created_at:
+          description: Date and time when the content was delivered to the recipient
+          type: string
+          example: "2018-06-19T11:54:10Z"
+        subject:
+          description: Subject of the content, as set by the sender
+          type: string
+          example: "Invoice 4512 from Local Bank"          
+        receiver_name:
+          description: Name of the company that received the content
+          type: string
+          example: "Digital Hero AB"
+        payment:
+          $ref: '#/components/schemas/Payment'
+        parts:
+          description: files composing the content
+          type: array
+          items:
+            $ref: '#/components/schemas/Parts'
+
+# ##############################################
+# SCHEMA Parts
+# ##############################################
     Parts:
       type: object
       properties:
@@ -1223,6 +1433,10 @@ components:
           type: string
           description: The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
+          
+# ##############################################
+# SECURITY oAuth2Client
+# ##############################################
   securitySchemes:
     oAuth2Client:
       type: oauth2
