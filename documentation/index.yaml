@@ -389,7 +389,7 @@ info:
     No one can change a signed agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services after 30 days from the date it became completed.
     
     ### State revoked
-    This state can be triggered by a tenant who owns the agreement. If the agreement is unsigned on behalf of the delegate, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within 30 days after the date it was created.
+    This state can be triggered by a tenant who owns the agreement. If the agreement is *active*, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within 30 days after the date it was created.
     
       ## Agreement verification and covenant file
     
@@ -482,9 +482,11 @@ info:
 
 tags:
   - name: Tenant
-    description: Tenant endpoint
+    description: Endpoints for tenant management and content
   - name: Partner
-    description: Partner endpoint
+    description: Endpoints for partner access
+  - name: Tenant Agreement
+    description: Endpoints for agreements management 
 
 paths:
 
@@ -537,7 +539,7 @@ paths:
     get:
       tags:
         - Tenant
-      summary: Resource to list available users for a Tenant
+      summary: List available recipient users for a tenant
       operationId: List Users
       description: |
         This resource is used to list all or search for users that eligible for receiving Content from the specific Tenant.
@@ -587,7 +589,7 @@ paths:
     post:
       tags:
         - Tenant
-      summary: Resource to match a list of users for a specific tenant
+      summary: Match a list of recipient users for a specific tenant
       operationId: Match Users
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from 
@@ -609,11 +611,6 @@ paths:
         content:
           application/json:
             schema:
-              example:
-                ssns:
-                - "191212121212"
-                - "197701032380"
-                - "198112172385"
               $ref: '#/components/schemas/UserMatch'
             example: '{"ssns":["191212121212","197701032380","198112172385"]}'
         required: true
@@ -623,6 +620,11 @@ paths:
       responses:
         200:
           description: Filtered list of SSNs 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMatch'
+              example: '{"ssns":["191212121212", "198112172385"]}'
 
 # ##############################################
 # GET tenant/TKEY/company
@@ -631,7 +633,7 @@ paths:
     get:
       tags:
         - Tenant
-      summary: Resource to list available companies for a Tenant
+      summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
         This resource is used to list all or search for companies that eligible for receiving Content from the specific Tenant.
@@ -678,8 +680,8 @@ paths:
     post:
       tags:
         - Tenant
-      summary: Send Content
-      operationId: Send Content
+      summary: Send content to a recipient (user or company)
+      operationId: Send content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
@@ -749,7 +751,7 @@ paths:
   /tenant/{tenantKey}/agreement:
     post:
       tags:
-        - Tenant
+        - Tenant Agreement
       summary: Post an agreement to be signed
       operationId: Post Agreement
       description: 
@@ -780,7 +782,160 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Agreement'      
+                
+# ##############################################
+# GET tenant/TKEY/agreement
+# ##############################################
+    get:
+      tags:
+        - Tenant Agreement
+      summary: List all agreements for a tenant, with their current status
+      operationId: List agreements
+      description: List all agreements created by a tenant, with their current status.
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.agreement'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        '200':
+          description: List of agreements and their status
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list
+                items:
+                  $ref: '#/components/schemas/AgreementStateShort' 
+                example:
+                  - key: '1527232009ba54f8186d8c43e2a3c8092b57ca2739'
+                    state: active
+                  - key: '155265136911763308f2514ff3aa6dacc8211a2107'
+                    state: revoked
+                  - key: '15100645203cff9f19d92443848c8a2f1cbf257510'
+                    state: completed
+                  
+# ##############################################
+# GET tenant/TKEY/agreement/AKEY
+# ##############################################
+  /tenant/{tenantKey}/agreement/{agreementKey}:
+    get:
+      tags:
+        - Tenant Agreement
+      summary: Agreement object with current status and updated metadata
+      operationId: Get agreement
+      description: Get an agreement with current status and updated metadata
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: agreementKey
+          in: path
+          description: The unique Key for an Agreement
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        '200':
+          description: Agreement object with current status and updated metadata
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list
+                items:
+                  $ref: '#/components/schemas/AgreementStateDetailed'
+ 
+# ##############################################
+# GET tenant/TKEY/agreement/AKEY/revoke
+# ##############################################
+  /tenant/{tenantKey}/agreement/{agreementKey}/revoke:
+    post:
+      tags:
+        - Tenant Agreement
+      summary: Revoke an agreement
+      operationId: Revoke agreement
+      description: |
+        Revoke an agreement. An agreement once revoked can no longer be accessed or signed by any of the parties. An agreement can only be rekoved if in state *active*, and after revoke will be put in state *revoked*. A revoked agreement can never become active again.
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.revoke'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: agreementKey
+          in: path
+          description: The unique Key for an Agreement
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        '204':
+          description: empty response confirming that the revoke operation was successful
 
+# ##############################################
+# GET tenant/TKEY/agreement/AKEY/covenant
+# ##############################################
+  /tenant/{tenantKey}/agreement/{agreementKey}/covenant:
+    get:
+      tags:
+        - Tenant Agreement
+      summary: Get the covenant file (signed agreement)
+      operationId: Get covenant agreement
+      description: |
+        Get the covenant file (the signed version of the agreement).
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.covenant'
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: agreementKey
+          in: path
+          description: The unique Key for an Agreement
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        '200':
+          description: The covenant file as a PDF file with base64 encoding
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+                properties:
+                  data:
+                    description: The covenant file as a PDF file with base64 encoding
+                    type: string
+                    format: base64
+                    example: "REVBREJFRUY="
+                
 # ##############################################
 # GET partner/company
 # ##############################################
@@ -1116,86 +1271,6 @@ components:
           description: The reference number used for paying
           
 # ##############################################
-# SCHEMA Agreement
-# ##############################################
-    Agreement:
-      type: object
-      properties:
-        subject:
-          description: Name of the agreement
-          type: string
-          example: "Employment agreement"
-        type: 
-          description: the type of content, for agreements always use 'agreement'
-          type: string
-          example: "agreement"
-        vat_number:
-          description: The VAT number for the company sending the contract, it will appear on the signature log
-          type: string
-          example: "SE556913262701"
-        original:
-          type: object
-          properties:
-            name:
-              description: Name of the document file
-              type: string
-              example: "agreement1025.pdf"
-            content_type:
-              description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
-              type: string
-              example: "application/pdf"
-            data:
-              description: Base64-encoded data for the agreement PDF
-              type: string
-              format: 'Base64-encoded data'
-              example: REVBREJFRUY=
-        parties:
-          description: list of signers and delegates that are requested to sign the agreement
-          type: array
-          items: 
-            $ref: '#/components/schemas/AgreementParties'
-          example:
-            - ssn: "197701032380"
-              name: "Roy Orbinsson"
-              email: "roy@orbinsson.com"
-              phone: "+46705050505"
-              role: "signer"
-            - ssn: "198112172385"
-              name: "Dolly Parton"
-              email: "dolly@parton.se"
-              phone: "+46705212121"
-              role: "delegate"                    
-
-# ##############################################
-# SCHEMA AgreementParties
-# ##############################################
-    AgreementParties:
-      type: object
-      properties:
-        ssn:
-          description: |
-            User's unique SSN, format: `YYYYMMDDnnnn`
-          type: string
-          example: "191212121212"
-        name:
-          description: Name of the user
-          type: string
-          example: "Roy Orbinsson"
-        email:
-          description: email to be used to contact the user
-          type: string
-          example: "roy@orbinsson.com"
-        phone:
-          description: mobile phone to be used to contact the user (via SMS)
-          type: string
-          example: "+46706222666"
-        role:
-          description: the role of the user in this signature flow
-          type: string
-          enum: ["signer", "delegate"]
-          example: "signer"
-
-# ##############################################
 # SCHEMA Company
 # ##############################################
     Company:
@@ -1285,6 +1360,198 @@ components:
           enum: [visible, hidden]
 
 # ##############################################
+# SCHEMA Agreement
+# ##############################################
+    Agreement:
+      type: object
+      required:
+        - subject
+        - type
+        - vat_number
+        - original
+        - parties
+      properties:
+        subject:
+          description: Name of the agreement
+          type: string
+          example: "Employment agreement"
+        type: 
+          description: the type of content, for agreements always use 'agreement'
+          type: string
+          example: "agreement"
+        vat_number:
+          description: The VAT number for the company sending the contract, it will appear on the signature log
+          type: string
+          example: "SE556913262701"
+        original:
+          type: object
+          properties:
+            name:
+              description: Name of the document file
+              type: string
+              example: "agreement1025.pdf"
+            content_type:
+              description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+              type: string
+              example: "application/pdf"
+            data:
+              description: Base64-encoded data for the agreement PDF
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
+        parties:
+          description: list of signers and delegates that are requested to sign the agreement
+          type: array
+          items: 
+            $ref: '#/components/schemas/AgreementParties'
+          example:
+            - ssn: "197701032380"
+              name: "Jan-Erik Karlsson"
+              email: "je.karlsson@email.nu"
+              phone: "+46705050505"
+              role: "signer"
+            - ssn: "198112172385"
+              name: "Gustav Larsson"
+              email: "gustav123@mymail.com"
+              phone: "+46705212121"
+              role: "delegate"                    
+
+# ##############################################
+# SCHEMA AgreementParties
+# ##############################################
+    AgreementParties:
+      type: object
+      properties:
+        ssn:
+          description: |
+            User's unique SSN, format: `YYYYMMDDnnnn`
+          type: string
+          example: "197701032380"
+        name:
+          description: Name of the user
+          type: string
+          example: "Jan-Erik Karlsson"
+        email:
+          description: email to be used to contact the user
+          type: string
+          example: "je.karlsson.hem@email.nu"
+        phone:
+          description: mobile phone to be used to contact the user (via SMS)
+          type: string
+          example: "+46705050505"
+        role:
+          description: the role of the user in this signature flow
+          type: string
+          enum: ["signer", "delegate"]
+          example: "signer"
+
+# ##############################################
+# SCHEMA AgreementStateShort
+# ##############################################
+    AgreementStateShort:
+      type: object
+      properties:
+        key:
+          description: unique agreement id
+          type: string
+          example: '1544707148d73a3e84a216427724637fc207cba2ab'
+        state:
+          description: current state for the agreement
+          type: string
+          example: 'active'
+
+# ##############################################
+# SCHEMA AgreementStateDetailed
+# ##############################################
+    AgreementStateDetailed:
+      type: object
+      properties:
+        created_at: 
+          description: The time when the agreement was created
+          type: string
+          example: "2019-04-09T13:42:26Z"
+          readOnly: true
+        signatures:
+          description: |
+            List of signatures
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/AgreementSignature'
+          example:
+            - ssn: "197701032380"
+              real_name: "Jan-Erik Karlsson"
+              created_at: "2019-04-12T08:23:29Z"
+              order_ref: "d4ace777-6b91-4172-903e-39371ede89f1"
+            - ssn: "198112172385"
+              real_name: "Gustav Johan Larsson"
+              created_at: "2019-04-11T18:53:03Z"
+              order_ref: "f5bce777-0b42-4222-1f3e-ab523ede7a5f"
+        state:
+          description: The current state of the agreement
+          type: string
+          example: completed
+          enum: [active, completed, revoked]
+          readOnly: true
+        expires_at:
+          description: |
+            The expiration time for the agreement, if the agreement is not completed before this date, it will no longer be available for signature
+          type: string
+          example: "2019-05-09T13:42:26Z"
+          readOnly: true
+        trashed_at:
+          description: |
+            The time when the signed agreement will no longer be available for download or via the API. This field is relevant only when state is "completed"
+          type: string
+          example: "2019-05-12T08:23:29Z"
+          readOnly: true
+        parties:
+          description: list of signers and delegates that are requested to sign the agreement
+          type: array
+          readOnly: true
+          items: 
+            $ref: '#/components/schemas/AgreementParties'
+          example:
+            - ssn: "197701032380"
+              name: "Jan-Erik Karlsson"
+              email: "je.karlsson.hem@email.nu"
+              phone: "+46705050505"
+              role: "signer"
+            - ssn: "198112172385"
+              name: "Gustav Larsson"
+              email: "gustav123@mymail.com"
+              phone: "+46705212121"
+              role: "delegate"
+        subject:
+          description: Name of the agreement
+          type: string
+          example: "Employment agreement"
+
+# ##############################################
+# SCHEMA AgreementSignature
+# ##############################################
+    AgreementSignature:
+      type: object
+      properties:
+        ssn:
+          description: |
+            Signer's unique SSN, format: `YYYYMMDDnnnn`
+          type: string
+          example: "191212121212"
+        real_name:
+          description: The real name of the signer, as provided by Mobile BankID service
+          type: string
+          example: "Jan-Erik Karlsson"
+        created_at:
+          description: The time when the signature was created
+          type: string
+          example: "2019-04-12T08:23:29Z"
+        order_ref: 
+          description: The unique ID of the signature
+          type: string
+          example: "d4ace777-6b91-4172-903e-39371ede89f1"
+          
+# ##############################################
 # SCHEMA CompanyId
 # ##############################################
     CompanyId:
@@ -1335,7 +1602,7 @@ components:
         key:
           description: Company's unique Key
           type: string
-          example: 15236156848eefa1dc75364af2be38c98eb3aae223
+          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
 
 # ##############################################
 # SCHEMA CompanyInbox
@@ -1431,7 +1698,8 @@ components:
           example: "<!doctype html>\n<html class=\"...."
         key:
           type: string
-          description: The unique key for the content file (present for all content that is not "text/html" or "text/plain")
+          description: |
+            The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
           
 # ##############################################
