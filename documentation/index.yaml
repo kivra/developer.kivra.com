@@ -362,14 +362,15 @@ info:
     Partners will use the `partner` endpoint to integrate with Kivra. 
     
     # Signatures (BETA, only available in sandbox)
-    Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](http://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
+    Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
     
-    Kivra's signature service is not directly connected to Kivra's mailbox, and participants in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.  
+    Kivra's signature service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.  
     
-    ## Signers and delegates
+    ## Signers, Delegates and Parties
     Each individual signing an agreement is categorized as either `signer`or `delegate`:
     - a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
     - a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
+    - 'parties' refers to the `signers` and `delegates` in an agreement. 
     
     ## Agreement states
     During its lifetime, an agreement can go through various states. The current state can be accessed by getting the agreement via the signature API:
@@ -382,7 +383,7 @@ info:
     The terminal states in which an agreement can transition to, are described here below.
     
     ### State completed
-    Agreements automatically transitions to the state `completed` at the time when the last of all participants sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party.
+    Agreements automatically transitions to the state `completed` at the time when the last of all parties sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party. In other words, no one can change a completed agreement.
     
     When an agreement becomes completed, a covenant file is created (see below). The covenant file will be availabe to the tenant via the signature API, and to the signers and delegates via the graphical interface.
     
@@ -393,18 +394,18 @@ info:
     
       ## Agreement verification and covenant file
     
-    When the agreement transitions to the `completed` state, a few more things happen. An additional PDF file, a signed version of the original agreement, is created. This file is called the `covenant file`. The covenant file includes the original agreement and some additional pages including Bank ID data for the signatures and additional information about the signing events. The covenant file is accessible for 30 days to the tenant and participants, after that it is removed from all services, together with the initial descriptive data for the original agreement. However, we construct a new data structure that we store persistently and that will be used for verification: a 256bit string value constructed through an internal algorithm that we refer to as `verification value`.
+    When the agreement transitions to the `completed` state, a few more things happen. An additional PDF file, a signed version of the original agreement, is created. This file is called the `covenant file`. The covenant file includes the original agreement and some additional pages including Bank ID data for the signatures and additional information about the signing events. The covenant file is accessible for 30 days to the tenant and all parties, after that it is removed from all services, together with the initial descriptive data for the original agreement. However, we construct a new data structure that we store persistently and that will be used for verification: a 256bit string value constructed through an internal algorithm that we refer to as `verification value`.
     
     The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
     
     ## Notifications
-    After creating the agreement, the tenant is responsible to inform the participants that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/). 
-    After the users access the Kivra signature service and agree to its terms of service, Kivra will take care of notify the participants about events concerning the agreement lifecycle using the contact information provided by the tenant.
+    After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/). 
+    After the users access the Kivra signature service and agree to its terms of service, Kivra will take care of notify the parties about events concerning the agreement lifecycle using the contact information provided by the tenant.
 
     ## Signature flow
-    1. The tenant posts an agreement providing the PDF document to be signed and the list of participants, and gets back an `agreement id`. Each participant is specified by its role, a SSN number, an email and a mobile phone. The agreement is made available by Kivra to the participants.
-    2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not been signed by the delegate.
-    3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while signers have two options: if the signer is a Kivra user, the covenant file will be automatically transferred to his/her Kivra mailbox, if the signer is not a Kivra user, he/she will have 30 days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
+    1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number, an email and a mobile phone. The agreement is made available by Kivra to the parties.
+    2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
+    3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have 30 days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
     4. The agreement is removed from all our services 30 days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services 30 days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
 
     # Errors
@@ -769,7 +770,7 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        201:
+        200:
           description:
             Agreement created succesfully
           content:
