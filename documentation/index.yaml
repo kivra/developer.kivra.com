@@ -1228,7 +1228,6 @@ components:
         - method
         - account
         - reference
-      example: true
       properties:
         payable:
           type: boolean
