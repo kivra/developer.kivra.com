@@ -1232,16 +1232,17 @@ components:
       properties:
         payable:
           type: boolean
-          description: Toggles whether this Content is to be payable through Kivra’s payment platform
+          description: Toggles whether this content should be payable through Kivra’s payment platform
         status:
           type: string
           description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
+          default: "unpaid"
           enum: ["paid", "unpaid"]
         currency:
           type: string
           format: ISO4217
           example: "SEK"
-          description: Currency used in specifying total_owed
+          description: Currency used in specifying `total_owed`
         due_date:
           type: string
           format: ISO8601
@@ -1251,7 +1252,7 @@ components:
           type: string
           format: float
           example: "123.50"
-          description: The total amount owed according to the invoice. **If payable equals true this must be a non negative number that’s greater than "0"**
+          description: The total amount owed according to the invoice. **If `payable` equals `true` this must be a non negative number that’s greater than "0"**
         type:
           type: string
           description: Type of format for the reference
@@ -1270,6 +1271,15 @@ components:
           type: string
           example: "123OCRNUMBER456"
           description: The reference number used for paying
+        variable_amount:
+          type: boolean
+          default: false
+          description: Toggles whether the user may choose to pay only a portion of the total_owed amount or whether the user must always pay the complete total_owed amount
+        min_amount:
+          type: string
+          format: float
+          example: "50.00"
+          description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`
           
 # ##############################################
 # SCHEMA Company
