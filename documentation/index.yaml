@@ -482,11 +482,11 @@ info:
   version: v1
 
 tags:
-  - name: Tenant
+  - name: Tenant API
     description: Endpoints for tenant management and content
-  - name: Partner
+  - name: Partner API
     description: Endpoints for partner access
-  - name: Tenant Agreement
+  - name: Tenant Agreement API
     description: Endpoints for agreements management (BETA)
 
 paths:
@@ -497,7 +497,7 @@ paths:
   /tenant:
     post:
       tags:
-        - Tenant
+        - Tenant API
       summary: Create Tenant
       operationId: Create Tenant
       description: |
@@ -539,7 +539,7 @@ paths:
   /tenant/{tenantKey}/user:
     get:
       tags:
-        - Tenant
+        - Tenant API
       summary: List available recipient users for a tenant
       operationId: List Users
       description: |
@@ -589,7 +589,7 @@ paths:
   /tenant/{tenantKey}/usermatch:
     post:
       tags:
-        - Tenant
+        - Tenant API
       summary: Match a list of recipient users for a specific tenant
       operationId: Match Users
       description: |
@@ -633,7 +633,7 @@ paths:
   /tenant/{tenantKey}/company:
     get:
       tags:
-        - Tenant
+        - Tenant API
       summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
@@ -680,7 +680,7 @@ paths:
   /tenant/{tenantKey}/content:
     post:
       tags:
-        - Tenant
+        - Tenant API
       summary: Send content to a recipient (user or company)
       operationId: Send content
       description: |
@@ -752,7 +752,7 @@ paths:
   /tenant/{tenantKey}/agreement:
     post:
       tags:
-        - Tenant Agreement
+        - Tenant Agreement API
       summary: Post an agreement to be signed
       operationId: Post Agreement
       description: 
@@ -789,7 +789,7 @@ paths:
 # ##############################################
     get:
       tags:
-        - Tenant Agreement
+        - Tenant Agreement API
       summary: List all agreements for a tenant, with their current status
       operationId: List agreements
       description: List all agreements created by a tenant, with their current status.
@@ -828,7 +828,7 @@ paths:
   /tenant/{tenantKey}/agreement/{agreementKey}:
     get:
       tags:
-        - Tenant Agreement
+        - Tenant Agreement API
       summary: Agreement object with current status and updated metadata
       operationId: Get agreement
       description: Get an agreement with current status and updated metadata
@@ -867,7 +867,7 @@ paths:
   /tenant/{tenantKey}/agreement/{agreementKey}/revoke:
     post:
       tags:
-        - Tenant Agreement
+        - Tenant Agreement API
       summary: Revoke an agreement
       operationId: Revoke agreement
       description: |
@@ -900,7 +900,7 @@ paths:
   /tenant/{tenantKey}/agreement/{agreementKey}/covenant:
     get:
       tags:
-        - Tenant Agreement
+        - Tenant Agreement API
       summary: Get the covenant file (signed agreement)
       operationId: Get covenant agreement
       description: |
@@ -943,7 +943,7 @@ paths:
   /partner/company:
     get: 
       tags: 
-        - Partner
+        - Partner API
       summary: Lookup a specific company
       operationId: Find Company
       description: |
@@ -978,7 +978,7 @@ paths:
   /partner/company/{companyKey}/content:
     get:
       tags:
-        - Partner
+        - Partner API
       summary: Get the company inbox
       operationId: Get company inbox
       description:
@@ -1011,7 +1011,7 @@ paths:
   /partner/company/{companyKey}/content/{contentKey}:
     get:
       tags:
-        - Partner
+        - Partner API
       summary: 
         Get metadata for a content.
       operationId: Get content metadata
@@ -1053,7 +1053,7 @@ paths:
   /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
-        - Partner
+        - Partner API
       summary: Get raw file in binary format
       operationId: Get raw file 
       description:
@@ -1099,7 +1099,7 @@ paths:
   /partner/company/{companyKey}/content/{contentKey}/{status}:
     post:
       tags:
-        - Partner
+        - Partner API
       summary: Set status for content
       operationId: Set status for content 
       description:
