@@ -2,9 +2,9 @@
 openapi: 3.0.1
 
 servers:
-  - url: https://api.kivra.com/v1
+  - url: https://api.kivra.com
     description: Production environment
-  - url: https://sandbox.kivra.com/v1
+  - url: https://sandbox.kivra.com
     description: Staging environment
 info:
   title: Kivra API
@@ -12,7 +12,7 @@ info:
     This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
-    ### Introduction
+    ## Introduction
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
 
@@ -20,15 +20,9 @@ info:
 
       1. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
       2. The second step is to send the contents itself.
-
-    There are also optional steps that explain additional services Kivra provides. Currently these additional integrations exist:
-
-    ### Inactive Content
-    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
-
-    <aside class="notice">
-    Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
-    </aside>
+    
+    A prerequisite for these two steps is to have client credentials, to be authorized to use the Kivra API, and a tenant ID to specify who is the sender of the content.
+  
 
     ## The service
     Kivra is a secure digital mailbox tied to your social security number or
@@ -45,9 +39,16 @@ info:
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
 
+    ## Change Mangement
+    The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
+    via the [KivraStatus](https://www.kivrastatus.se).
+    
+    Disruptive changes in the API that may break existing integrations, as for instance removal of an older version of an API endpoint, are announced via [KivraStatus](https://www.kivrastatus.se) at least 6 months before the change becomes operative.
+    
+    We strongly recommend to subscribe to [KivraStatus](https://www.kivrastatus.se) in order to get updates for the API.
 
     ## Changelog
-    We will list any changes to the current version of the API here.
+    List changes to the API documentation.
 
     | Date         | Details of changes 2    2                                          |
     | ------------ | ------------------------------------------------------------------ |
@@ -56,7 +57,10 @@ info:
     | `2018-04-27` | Document optional Content-fields and response-headers              |
     | `2018-08-20` | Added description of `partner` endpoint (BETA).                    |
     | `2018-08-20` | Correction in Company scheme                                       |
+    | `2019-04-30` | Added Tenant Agreement API as (BETA) |
+    | `2019-05-10` | Added `variable_amount`and `min_amount`in Payment scheme |
     | `2019-05-10` | Removed deprecated `token` bearer. `Bearer` should be used instead |
+    | `2019-06-04` | Added Tenant API v2 |
 
     # Terminology
     ### User
@@ -97,6 +101,13 @@ info:
 
     ### Content object
     is a data object that contains information about the document and the document itself
+
+    ### Retained functionality
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
+
+    <aside class="notice">
+    Note: Usage of retained functionality is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+    </aside>
 
     ### Tenant key
     Is a unique key that identifies a Tenant. The tenant key is not related to the VAT identifier and as such can be used to address a specific Tenant when a Sender might wish to setup multiple Tenants for one VAT identifier.
@@ -230,7 +241,7 @@ info:
     `sandbox` for development and test or `api` for production purposes.
 
     ### VERSION
-    Current and only API version is `v1.`
+    Current API version is `v1` but some endpoint are already available as `v2`
 
     ### KEY
     The identifier of an object in a collection, its ID, if you will.
@@ -285,7 +296,7 @@ info:
 
     When a collection resource is queried it will only return the list of keys that identify the objects it contains. If you want to see the actual objects you have to append the query parameter include=body to the URI, more on this below.
 
-    An example: */v1/tenant*
+    An example: */v2/tenant*
 
     ### Allowed Methods
     **GET**
@@ -305,7 +316,7 @@ info:
 
     **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
 
-    # Tenants integration
+    # Tenants integration: Send content
     Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
@@ -355,14 +366,9 @@ info:
 
     `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
 
-    # Partners integration
-    Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
+    # Tenant integration: Tenant management
 
-    Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
-
-    Partners will use the `partner` endpoint to integrate with Kivra.
-
-    # Signatures (BETA, only available in sandbox)
+    # Tenant integration: Agreements and signatures (BETA, only available in sandbox)
     Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
 
     Kivra's signature service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
@@ -409,6 +415,13 @@ info:
     2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
     3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
     4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
+
+    # Partners integration
+    Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
+
+    Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
+
+    Partners will use the `partner` endpoint to integrate with Kivra.
 
     # Errors
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
@@ -481,31 +494,35 @@ info:
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
 
-  version: v1
+  version: v1 and v2
 
 tags:
-  - name: Tenant API
-    description: Endpoints for tenant management and content
+  - name: "Tenant API: Content management"
+    description: Endpoints for matching users and sending content
+  - name: "Tenant API: Tenants management v1"
+    description: Endpoint for creation of tenants. Please use v2 instead, v1 will be discontinued 2019-12-31.
+  - name: "Tenant API: Tenants management v2"
+    description: Endpoints for creation and administration of tenants
+  - name: "Tenant API: Agreements management"
+    description: Endpoints for managing signatures and agreements (BETA)
   - name: Partner API
-    description: Endpoints for partner access
-  - name: Tenant Agreement API
-    description: Endpoints for agreements management (BETA)
+    description: Endpoints for partner access to company mailboxes
 
 paths:
 
 # ##############################################
-# POST tenant
+# POST /v1/tenant
 # ##############################################
-  /tenant:
+  /v1/tenant:
     post:
       tags:
-        - Tenant API
+        - "Tenant API: Tenants management v1"
       summary: Create Tenant
       operationId: Create Tenant
       description: |
         Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. The client needs to re-authenticate to have the new scope in effect.
         <aside class="notice">
-        Note: Creation of tenants via API is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        Note: Please use v2 of this endpoint, v1 will be discontinued 2019-12-31.
         </aside>
       security:
         - oAuth2Client:
@@ -517,7 +534,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant'
+                $ref: '#/components/schemas/Tenant_v1'
           headers:
             kivra-objkey:
               description: Object Key
@@ -533,15 +550,295 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tenant'
+              $ref: '#/components/schemas/Tenant_v1'
 
 # ##############################################
-# GET tenant/TKEY/user
+# POST, GET /v2/tenant
 # ##############################################
-  /tenant/{tenantKey}/user:
+  /v2/tenant:
+    post:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Create Tenant
+      operationId: Create Tenant
+      description: |
+        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. The client needs to re-authenticate to have the new scope in effect.
+        <aside class="notice">
+        Note: Creation of tenants via API is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        </aside>
+      security:
+        - oAuth2Client:
+          - 'post:kivra.v2.tenant'
+      responses:
+        201:
+          description: |
+            Tenant Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant_v2'
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: 'hexadecimal value'
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+        409:
+          description: |
+            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists, but it is outside the scope of the client that posted the request. The client may use the `request_access` endpoint to request access to this tenant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error40915'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant_v2'
     get:
       tags:
-        - Tenant API
+        - "Tenant API: Tenants management v2"
+      summary: List tenants
+      operationId: List all tenants accessible to the client
+      description: Lists all tenants that are manageable by the current client
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v2.tenant'
+      responses:
+        200:
+          description: |
+            List of available users
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of tenants, can be empty
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: Tenant ID
+                  example: [ { "key": "155748793356fa20e402ae472e51019cf723d7fe35" }, { "key": "150231793356fa88a88eae472e51019cf723d7d13a"  } ]
+
+# ##############################################
+# GET /v2/tenant/TKEY
+# ##############################################
+  /v2/tenant/{tenantKey}:
+    get:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Tenant information
+      operationId: Get information on tenant
+      description: Get detaild information on a tenant
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'get:kivra.v2.tenant.{tenantKey}'
+      responses:
+        200:
+          description: |
+            Tenant Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant_v2'
+      
+# ##############################################
+# PUT /v2/tenant/TKEY/name
+# ##############################################
+  /v2/tenant/{tenantKey}/name:
+    put:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Update tenant name
+      operationId: Update tenant name
+      description: Update display name for the tenant. The updated name will be visible to the end-users only after they have received a new content.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'put:kivra.v2.tenant.{tenantKey}.name'
+      responses:
+        200:
+          description: empty response confirming that the put operation was successful
+          
+# ##############################################
+# POST /v2/tenant/TKEY/company_id
+# ##############################################
+  /v2/tenant/{tenantKey}/company_id:
+    post:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Associate company ID to tenant
+      operationId: Add company ID
+      description: |
+        Add a new company ID for a tenant. A tenant can be associated with one or several company ids (Vat number and company name)
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'put:kivra.v2.tenant.{tenantKey}.company_id'
+      responses:
+        204:
+          description: empty response confirming that the put operation was successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company_id:
+                  $ref: '#/components/schemas/CompanyId'
+
+# ##############################################
+# DELETE /v2/tenant/TKEY/company_id/{orgnr}
+# ##############################################
+  /v2/tenant/{tenantKey}/company_id/{orgNr}:
+    delete:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Delete company ID from tenant
+      operationId: Delete company ID
+      description: |
+        Delete a  company ID from a tenant. A tenant can be associated with one or several company ids (Vat number and company name)
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: orgNr
+          in: path
+          description: The VAT number of the company_id to be removed from the tenant, for instance `SE556840226601`
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'delete:kivra.v2.tenant.{tenantKey}.company_id.{orgnr}'
+      responses:
+        204:
+          description: empty response confirming that the put operation was successful
+
+# ##############################################
+# POST /v2/tenant/TKEY/icon
+# ##############################################
+  /v2/tenant/{tenantKey}/icon:
+    post:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Provide an icon for a tenant
+      operationId: Provide icon
+      description: |
+        Add or update the tenant icon. If an icon already exists, it will be changed.
+        
+        To check the current icon associated to a tenant you can simply check the following address:
+        - sandbox: https://sandbox-static.kivra.com/img/tenant/{tenantKey}/icon.png
+        - production: https://static.kivra.com/img/tenant/{tenantKey}/icon.png
+        
+        The icon needs to be provided according to the following format:
+        - Dimensions: 512 x 512 px
+        - Alpha Channel: 32-bits
+        - Format: PNG
+
+        We recommend to leave a little white area around the logo, to provide the best experience for the users.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'put:kivra.v2.tenant.{tenantKey}.icon'
+      responses:
+        204:
+          description: empty response confirming that the put operation was successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company_id:
+                  $ref: '#/components/schemas/File'
+            example: { "company_id": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
+         
+# ##############################################
+# POST /v2/tenant/request_access
+# ##############################################
+  /v2/tenant/request_access:
+    post:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Request access to a tenant
+      operationId: request access
+      description: |
+        Request access to an existing tenant that is outside the client scope. Typically this request follows an unsuccessful attempt to create a tenant that resulted in a conflict error (error 409).
+        The meaning of the conflict error is that a tenant is already associated to a `company_id` including the same `orgnr` as in the tenant that the client attempted to post, and the tenant who owns the òrgnr`is outside the scope for the client.
+        
+        In this case the client can request access to a tenant. It is allowed in Kivra to have several different flows on the same tenant, as for instance one flow for invoices and one flow for payment slips. As this flows can be managed by different clients, we need a mechanism to allow sharing a tenant between clients.
+        
+        The `request_access` endpoint provide this functionality. As the request may be granted (or denied) asynchronously, after a successfull call to `request_access` the client will need to poll by getting the corresponding tenant until a positive response is provided.
+        
+        As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed before polling the tenant resource, in order to get an uodated token.
+      security:
+        - oAuth2Client:
+          - 'put:kivra.v2.tenant.request_access'
+      responses:
+        201:
+          description: Data about the requested tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAccess'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vat_number:
+                  type: string
+                  example: "SE556840226601"
+
+# ##############################################
+# GET /v1/tenant/TKEY/user
+# ##############################################
+  /v1/tenant/{tenantKey}/user:
+    get:
+      tags:
+        - "Tenant API: Content management"
       summary: List available recipient users for a tenant
       operationId: List Users
       description: |
@@ -586,12 +883,12 @@ paths:
                   $ref: '#/components/schemas/User'
 
 # ##############################################
-# POST tenant/TKEY/usermatch
+# POST /v1/tenant/TKEY/usermatch
 # ##############################################
-  /tenant/{tenantKey}/usermatch:
+  /v1/tenant/{tenantKey}/usermatch:
     post:
       tags:
-        - Tenant API
+        - "Tenant API: Content management"
       summary: Match a list of recipient users for a specific tenant
       operationId: Match Users
       description: |
@@ -630,12 +927,12 @@ paths:
               example: '{"ssns":["191212121212", "198112172385"]}'
 
 # ##############################################
-# GET tenant/TKEY/company
+# GET /v1/tenant/TKEY/company
 # ##############################################
-  /tenant/{tenantKey}/company:
+  /v1/tenant/{tenantKey}/company:
     get:
       tags:
-        - Tenant API
+        - "Tenant API: Content management"
       summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
@@ -677,12 +974,12 @@ paths:
                   $ref: '#/components/schemas/Company'
 
 # ##############################################
-# POST tenant/TKEY/content
+# POST /v1/tenant/TKEY/content
 # ##############################################
-  /tenant/{tenantKey}/content:
+  /v1/tenant/{tenantKey}/content:
     post:
       tags:
-        - Tenant API
+        - "Tenant API: Content management"
       summary: Send content to a recipient (user or company)
       operationId: Send content
       description: |
@@ -695,14 +992,14 @@ paths:
         Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
         </aside>
 
-        ### Inactive Content
-        An inactive Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Inactive Content has a time limit for how long they can be Inactive before being deleted, ie removed unless the Recipient activates their account within a given period of time.
+        ### Retained Content
+        A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of inactive content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        Note: Usage of retained content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
         </aside>
 
-        Sending inactive Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
+        Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
         By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the default amount of time (*30 days*). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
 
         If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
@@ -749,12 +1046,12 @@ paths:
               $ref: '#/components/schemas/Content'
 
 # ##############################################
-# POST tenant/TKEY/agreement
+# POST /v1/tenant/TKEY/agreement
 # ##############################################
-  /tenant/{tenantKey}/agreement:
+  /v1/tenant/{tenantKey}/agreement:
     post:
       tags:
-        - Tenant Agreement API
+        - "Tenant API: Agreements management"
       summary: Post an agreement to be signed
       operationId: Post Agreement
       description:
@@ -787,11 +1084,12 @@ paths:
                 $ref: '#/components/schemas/Agreement'
 
 # ##############################################
-# GET tenant/TKEY/agreement
+# GET /v1/tenant/TKEY/agreement
 # ##############################################
+  /v1/tenant/TKEY/agreement:
     get:
       tags:
-        - Tenant Agreement API
+        - "Tenant API: Agreements management"
       summary: List all agreements for a tenant, with their current status
       operationId: List agreements
       description: List all agreements created by a tenant, with their current status.
@@ -825,12 +1123,12 @@ paths:
                     state: completed
 
 # ##############################################
-# GET tenant/TKEY/agreement/AKEY
+# GET /v1/tenant/TKEY/agreement/AKEY
 # ##############################################
-  /tenant/{tenantKey}/agreement/{agreementKey}:
+  /v1/tenant/{tenantKey}/agreement/{agreementKey}:
     get:
       tags:
-        - Tenant Agreement API
+        - "Tenant API: Agreements management"
       summary: Agreement object with current status and updated metadata
       operationId: Get agreement
       description: Get an agreement with current status and updated metadata
@@ -864,12 +1162,12 @@ paths:
                   $ref: '#/components/schemas/AgreementStateDetailed'
 
 # ##############################################
-# GET tenant/TKEY/agreement/AKEY/revoke
+# GET /v1/tenant/TKEY/agreement/AKEY/revoke
 # ##############################################
-  /tenant/{tenantKey}/agreement/{agreementKey}/revoke:
+  /v1/tenant/{tenantKey}/agreement/{agreementKey}/revoke:
     post:
       tags:
-        - Tenant Agreement API
+        - "Tenant API: Agreements management"
       summary: Revoke an agreement
       operationId: Revoke agreement
       description: |
@@ -897,12 +1195,12 @@ paths:
           description: empty response confirming that the revoke operation was successful
 
 # ##############################################
-# GET tenant/TKEY/agreement/AKEY/covenant
+# GET /v1/tenant/TKEY/agreement/AKEY/covenant
 # ##############################################
-  /tenant/{tenantKey}/agreement/{agreementKey}/covenant:
+  /v1/tenant/{tenantKey}/agreement/{agreementKey}/covenant:
     get:
       tags:
-        - Tenant Agreement API
+        - "Tenant API: Agreements management"
       summary: Get the covenant file (signed agreement)
       operationId: Get covenant agreement
       description: |
@@ -940,9 +1238,9 @@ paths:
                     example: "REVBREJFRUY="
 
 # ##############################################
-# GET partner/company
+# GET /v1/partner/company
 # ##############################################
-  /partner/company:
+  /v1/partner/company:
     get:
       tags:
         - Partner API
@@ -975,9 +1273,9 @@ paths:
                 $ref: '#/components/schemas/CompanyKey'
 
 # ##############################################
-# GET partner/company/COMPKEY/content
+# GET /v1/partner/company/COMPKEY/content
 # ##############################################
-  /partner/company/{companyKey}/content:
+  /v1/partner/company/{companyKey}/content:
     get:
       tags:
         - Partner API
@@ -1008,9 +1306,9 @@ paths:
                   $ref: '#/components/schemas/CompanyInbox'
 
 # ##############################################
-# GET partner/company/COMPKEY/content/CONTKEY
+# GET /v1/partner/company/COMPKEY/content/CONTKEY
 # ##############################################
-  /partner/company/{companyKey}/content/{contentKey}:
+  /v1/partner/company/{companyKey}/content/{contentKey}:
     get:
       tags:
         - Partner API
@@ -1050,9 +1348,9 @@ paths:
                 $ref: '#/components/schemas/CompanyContent'
 
 # ##############################################
-# GET partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
+# GET /v1/partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
 # ##############################################
-  /partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
+  /v1/partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
         - Partner API
@@ -1096,9 +1394,9 @@ paths:
                 format: binary
 
 # ##############################################
-# POST partner/company/COMPKEY/content/CONTKEY/STATUS
+# POST /v1/partner/company/COMPKEY/content/CONTKEY/STATUS
 # ##############################################
-  /partner/company/{companyKey}/content/{contentKey}/{status}:
+  /v1/partner/company/{companyKey}/content/{contentKey}/{status}:
     post:
       tags:
         - Partner API
@@ -1337,9 +1635,9 @@ components:
           - "198112172385"
 
 # ##############################################
-# SCHEMA Tenant
+# SCHEMA Tenant_v1
 # ##############################################
-    Tenant:
+    Tenant_v1:
       type: object
       required:
         - name
@@ -1371,6 +1669,117 @@ components:
           readOnly: true
           enum: [visible, hidden]
 
+
+# ##############################################
+# SCHEMA Tenant_v2
+# ##############################################
+    Tenant_v2:
+      type: object
+      required:
+        - name
+        - company_id
+      properties:
+        name:
+          description: Name of the Tenant, this name shows up in the Users Inbox
+          type: string
+          example: "Kivra"
+        company_id:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyId'
+        edit_security_level:
+          description: Security level needed for an enduser to `opt_out` from this Tenant
+          type: integer
+          readOnly: true
+          example: 50
+          enum: [25, 50]
+        groups:
+          type: array
+          items:
+            type: string
+          readOnly: true
+          description: List of groups this Tenant belongs to
+          example: []
+        visibility:
+          description: Determines if this Tenant is visible for the enduser
+          type: string
+          readOnly: true
+          enum: [visible, hidden]
+        created_at:
+          description: Datum when the tenant was created in UTC format
+          type: string
+          readOnly: true
+          example: "2019-05-20T12:42:29Z"
+        created_by:
+          description: ID of client that created the tenant
+          type: string
+          readOnly: true
+          example: "client_15063298495eafd2749bb78e2f991af3ab023d13df"
+        status:
+          description: internal field describing whether the user can opt-out the tenant
+          type: string
+          readOnly: true
+          example: "optional"
+        class:
+          description: internal field
+          type: string
+          readOnly: true
+          example: "opt_out"
+          
+# ##############################################
+# SCHEMA Error40915
+# ##############################################
+    Error40915:
+      type: object
+      properties:
+        code: 
+          type: string
+          example: 40915
+        short_message:
+          type: string
+          example: Orgnumber already exist
+        long_message:
+          type: string
+          description: A text message explaining the conflict
+          example: "One or more of the organisation numbers within the company_id's you provided, already exist in existing tenants. Tenants outside your scope: {Name: TestBolag, Tenant key: 1424780396902ee9278b16417f8e3252c3ced28c38, Organisation number: SE556840226601}"
+
+# ##############################################
+# SCHEMA RequestAccess
+# ##############################################
+    RequestAccess:
+      type: object
+      properties:
+        created_at:
+          description: Datum when the request was created in UTC format
+          type: string
+          readOnly: true
+          example: "2019-05-20T12:42:29Z"
+        created_by:
+          description: ID of client that created the request
+          type: string
+          readOnly: true
+          example: "client_15063298495eafd2749bb78e2f991af3ab023d13df"
+        status:
+          description: internal field describing whether the user can opt-out the tenant
+          type: string
+          readOnly: true
+          example: "pending"
+        client_name:
+          description: Name of the client who created the requested tenant 
+          type: string
+          readOnly: true
+          example: "Client XYZ"
+        tenant_name:
+          description: Name of the requested tenant 
+          type: string
+          readOnly: true
+          example: "Tenant ABC"
+        tenant_key:
+          description: Key of the requested tenant 
+          type: string
+          readOnly: true
+          example: "1424780396902ee9278b16417f8e3252c3ced28c38"
+      
 # ##############################################
 # SCHEMA Agreement
 # ##############################################
