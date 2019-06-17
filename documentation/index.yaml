@@ -821,7 +821,7 @@ paths:
         
         As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed once the request has been accepted, to retrieve an access token with the new scope.
         
-        If the client post a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated state, in practice identical to the corresponding `get` request.
+        If the client posts a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated status.
       security:
         - oAuth2Client:
           - 'put:kivra.v2.tenant.request_access'
