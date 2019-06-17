@@ -316,7 +316,7 @@ info:
 
     **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
 
-    # Tenants integration: Send content
+    # Tenants integration: Content management
     Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
@@ -340,6 +340,8 @@ info:
     This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
 
     Synchronization of Recipients is done via the `user` and `usermatch` resources.
+    
+    This is an optional step, in some case the client may prefer to send content directly and manage the error message in case the content cannot be delivered, either because the user is not a Kivra user or because the user has opted-out the sender.
 
     ## Step 2: Send Content
     Metadata is data that Kivra needs to send the Content to the right Recipient. It may also determine how a Recipient can interact with the Content.
@@ -367,6 +369,12 @@ info:
     `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
 
     # Tenant integration: Tenant management
+    With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
+    - Create a tenant
+    - List all tenants that the client has currently access to
+    - Update and manage which companies the tenant represents
+    - Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
+    - Request access to a tenant that is currently managed by some other client
 
     # Tenant integration: Agreements and signatures (BETA, only available in sandbox)
     Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
@@ -805,13 +813,15 @@ paths:
       operationId: request access
       description: |
         Request access to an existing tenant that is outside the client scope. Typically this request follows an unsuccessful attempt to create a tenant that resulted in a conflict error (error 409).
-        The meaning of the conflict error is that a tenant is already associated to a `company_id` including the same `orgnr` as in the tenant that the client attempted to post, and the tenant who owns the òrgnr`is outside the scope for the client.
         
-        In this case the client can request access to a tenant. It is allowed in Kivra to have several different flows on the same tenant, as for instance one flow for invoices and one flow for payment slips. As this flows can be managed by different clients, we need a mechanism to allow sharing a tenant between clients.
+        The meaning of the conflict error is that a tenant is already associated to a `company_id` including the same `orgnr` as in the tenant that the client attempted to post, and the tenant who owns the `orgnr` is outside the scope for the client.
         
-        The `request_access` endpoint provide this functionality. As the request may be granted (or denied) asynchronously, after a successfull call to `request_access` the client will need to poll by getting the corresponding tenant until a positive response is provided.
+        In Kivra it is allowed to have several different flows on the same tenant, as for instance one flow for invoices and one flow for payment slips. As this flows could be managed by different clients, we need a mechanism to allow sharing a tenant between clients. 
+        The `request_access` endpoint provide this functionality. As the request may be granted (or denied) asynchronously, after a successfull call to `request_access` the client will need to poll the request until it becomes `accepted` or `rejected`.
         
-        As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed before polling the tenant resource, in order to get an uodated token.
+        As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed once the request has been accepted, to retrieve an access token with the new scope.
+        
+        If the client post a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated state, in practice identical to the corresponding `get` request.
       security:
         - oAuth2Client:
           - 'put:kivra.v2.tenant.request_access'
@@ -822,6 +832,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RequestAccess'
+          headers:
+            kivra-objkey:
+              description: Object Key for the Request
+              schema:
+                type: string
+                format: 'hexadecimal value'
       requestBody:
         content:
           application/json:
@@ -831,7 +847,43 @@ paths:
                 vat_number:
                   type: string
                   example: "SE556840226601"
-
+                  
+# ##############################################
+# POST /v2/tenant/request_access
+# ##############################################
+  /v2/tenant/request_access/{requestKey}:
+    get:
+      tags:
+        - "Tenant API: Tenants management v2"
+      summary: Request access to a tenant
+      operationId: request access
+      description: |
+        Gets the updated status for a request generate using the `request_access` endpoint.
+      parameters:
+        - name: requestKey
+          in: path
+          description: The unique Key for a request
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+          - 'put:kivra.v2.tenant.request_access.{requestKey}'
+      responses:
+        200:
+          description: Data about the requested tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAccess'
+          headers:
+            kivra-objkey:
+              description: Object Key for the Request
+              schema:
+                type: string
+                format: 'hexadecimal value'
+    
 # ##############################################
 # GET /v1/tenant/TKEY/user
 # ##############################################
