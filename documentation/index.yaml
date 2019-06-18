@@ -855,8 +855,8 @@ paths:
     get:
       tags:
         - "Tenant API - Tenants v2"
-      summary: Request access to a tenant
-      operationId: Request access
+      summary: Status of an access request
+      operationId: Request access status
       description: |
         Gets the updated status for a request generate using the `request_access` endpoint.
       parameters:
