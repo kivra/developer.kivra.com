@@ -505,13 +505,13 @@ info:
   version: v1 and v2
 
 tags:
-  - name: "Tenant API: Content management"
+  - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API: Tenants management v1"
+  - name: "Tenant API - Tenants v1"
     description: Endpoint for creation of tenants. Please use v2 instead, v1 will be discontinued 2019-12-31.
-  - name: "Tenant API: Tenants management v2"
+  - name: "Tenant API - Tenants v2"
     description: Endpoints for creation and administration of tenants
-  - name: "Tenant API: Agreements management"
+  - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements (BETA)
   - name: Partner API
     description: Endpoints for partner access to company mailboxes
@@ -524,7 +524,7 @@ paths:
   /v1/tenant:
     post:
       tags:
-        - "Tenant API: Tenants management v1"
+        - "Tenant API - Tenants v1"
       summary: Create Tenant
       operationId: Create Tenant
       description: |
@@ -566,7 +566,7 @@ paths:
   /v2/tenant:
     post:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Create Tenant
       operationId: Create Tenant
       description: |
@@ -610,7 +610,7 @@ paths:
               $ref: '#/components/schemas/Tenant_v2'
     get:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: List tenants
       operationId: List all tenants accessible to the client
       description: Lists all tenants that are manageable by the current client
@@ -640,7 +640,7 @@ paths:
   /v2/tenant/{tenantKey}:
     get:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Tenant information
       operationId: Get information on tenant
       description: Get detaild information on a tenant
@@ -670,7 +670,7 @@ paths:
   /v2/tenant/{tenantKey}/name:
     put:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Update tenant name
       operationId: Update tenant name
       description: Update display name for the tenant. The updated name will be visible to the end-users only after they have received a new content.
@@ -695,7 +695,7 @@ paths:
   /v2/tenant/{tenantKey}/company_id:
     post:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Associate company ID to tenant
       operationId: Add company ID
       description: |
@@ -729,7 +729,7 @@ paths:
   /v2/tenant/{tenantKey}/company_id/{orgNr}:
     delete:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Delete company ID from tenant
       operationId: Delete company ID
       description: |
@@ -762,7 +762,7 @@ paths:
   /v2/tenant/{tenantKey}/icon:
     post:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Provide an icon for a tenant
       operationId: Provide icon
       description: |
@@ -808,7 +808,7 @@ paths:
   /v2/tenant/request_access:
     post:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Request access to a tenant
       operationId: request access
       description: |
@@ -854,7 +854,7 @@ paths:
   /v2/tenant/request_access/{requestKey}:
     get:
       tags:
-        - "Tenant API: Tenants management v2"
+        - "Tenant API - Tenants v2"
       summary: Request access to a tenant
       operationId: request access
       description: |
@@ -890,7 +890,7 @@ paths:
   /v1/tenant/{tenantKey}/user:
     get:
       tags:
-        - "Tenant API: Content management"
+        - "Tenant API - Content"
       summary: List available recipient users for a tenant
       operationId: List Users
       description: |
@@ -940,7 +940,7 @@ paths:
   /v1/tenant/{tenantKey}/usermatch:
     post:
       tags:
-        - "Tenant API: Content management"
+        - "Tenant API - Content"
       summary: Match a list of recipient users for a specific tenant
       operationId: Match Users
       description: |
@@ -984,7 +984,7 @@ paths:
   /v1/tenant/{tenantKey}/company:
     get:
       tags:
-        - "Tenant API: Content management"
+        - "Tenant API - Content"
       summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
@@ -1031,7 +1031,7 @@ paths:
   /v1/tenant/{tenantKey}/content:
     post:
       tags:
-        - "Tenant API: Content management"
+        - "Tenant API - Content"
       summary: Send content to a recipient (user or company)
       operationId: Send content
       description: |
@@ -1103,7 +1103,7 @@ paths:
   /v1/tenant/{tenantKey}/agreement:
     post:
       tags:
-        - "Tenant API: Agreements management"
+        - "Tenant API - Agreements"
       summary: Post an agreement to be signed
       operationId: Post Agreement
       description:
@@ -1141,7 +1141,7 @@ paths:
   /v1/tenant/TKEY/agreement:
     get:
       tags:
-        - "Tenant API: Agreements management"
+        - "Tenant API - Agreements"
       summary: List all agreements for a tenant, with their current status
       operationId: List agreements
       description: List all agreements created by a tenant, with their current status.
@@ -1180,7 +1180,7 @@ paths:
   /v1/tenant/{tenantKey}/agreement/{agreementKey}:
     get:
       tags:
-        - "Tenant API: Agreements management"
+        - "Tenant API - Agreements"
       summary: Agreement object with current status and updated metadata
       operationId: Get agreement
       description: Get an agreement with current status and updated metadata
@@ -1219,7 +1219,7 @@ paths:
   /v1/tenant/{tenantKey}/agreement/{agreementKey}/revoke:
     post:
       tags:
-        - "Tenant API: Agreements management"
+        - "Tenant API - Agreements"
       summary: Revoke an agreement
       operationId: Revoke agreement
       description: |
@@ -1252,7 +1252,7 @@ paths:
   /v1/tenant/{tenantKey}/agreement/{agreementKey}/covenant:
     get:
       tags:
-        - "Tenant API: Agreements management"
+        - "Tenant API - Agreements"
       summary: Get the covenant file (signed agreement)
       operationId: Get covenant agreement
       description: |
@@ -1840,7 +1840,6 @@ components:
       required:
         - subject
         - type
-        - vat_number
         - original
         - parties
       properties:
@@ -1852,10 +1851,6 @@ components:
           description: the type of content, for agreements always use 'agreement'
           type: string
           example: "agreement"
-        vat_number:
-          description: The VAT number for the company sending the contract, it will appear on the signature log
-          type: string
-          example: "SE556913262701"
         original:
           type: object
           properties:
