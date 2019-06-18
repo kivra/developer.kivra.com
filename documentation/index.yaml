@@ -788,7 +788,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'put:kivra.v2.tenant.{tenantKey}.icon'
+          - 'post:kivra.v2.tenant.{tenantKey}.icon'
       responses:
         204:
           description: empty response confirming that the put operation was successful
@@ -810,7 +810,7 @@ paths:
       tags:
         - "Tenant API - Tenants v2"
       summary: Request access to a tenant
-      operationId: request access
+      operationId: Request access
       description: |
         Request access to an existing tenant that is outside the client scope. Typically this request follows an unsuccessful attempt to create a tenant that resulted in a conflict error (error 409).
         
@@ -849,14 +849,14 @@ paths:
                   example: "SE556840226601"
                   
 # ##############################################
-# POST /v2/tenant/request_access
+# GET /v2/tenant/request_access/{requestKey}
 # ##############################################
   /v2/tenant/request_access/{requestKey}:
     get:
       tags:
         - "Tenant API - Tenants v2"
       summary: Request access to a tenant
-      operationId: request access
+      operationId: Request access
       description: |
         Gets the updated status for a request generate using the `request_access` endpoint.
       parameters:
