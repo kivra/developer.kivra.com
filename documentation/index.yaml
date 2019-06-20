@@ -20,9 +20,9 @@ info:
 
       1. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
       2. The second step is to send the contents itself.
-    
+
     A prerequisite for these two steps is to have client credentials, to be authorized to use the Kivra API, and a tenant ID to specify who is the sender of the content.
-  
+
 
     ## The service
     Kivra is a secure digital mailbox tied to your social security number or
@@ -42,9 +42,9 @@ info:
     ## Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
     via the [KivraStatus](https://www.kivrastatus.se).
-    
+
     Disruptive changes in the API that may break existing integrations, as for instance removal of an older version of an API endpoint, are announced via [KivraStatus](https://www.kivrastatus.se) at least 6 months before the change becomes operative.
-    
+
     We strongly recommend to subscribe to [KivraStatus](https://www.kivrastatus.se) in order to get updates for the API.
 
     ## Changelog
@@ -340,7 +340,7 @@ info:
     This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
 
     Synchronization of Recipients is done via the `user` and `usermatch` resources.
-    
+
     This is an optional step, in some case the client may prefer to send content directly and manage the error message in case the content cannot be delivered, either because the user is not a Kivra user or because the user has opted-out the sender.
 
     ## Step 2: Send Content
@@ -479,7 +479,7 @@ info:
     |40000 |Invalid Token |Could not authenticate with OAuth2 using the supplied token |
     |40001 |Invalid Request |The request was invalid |
     |40002 |Redirect URI Mismatch |The redirect_uri does not match the registered redirect_uri |
-    |40003 |Email adress in use |The email adress supplied is already in use |
+    |40003 |Invalid Scope | An invalid or insufficient scope was used |
     |40004 |Already registered |This user is already registered |
     |40005 |Error in phonenumber |The request can't be processed due to phonenumber not meeting the required format |
     |40006 |Error in password |The request can't be processed due to password not meeting the required format |
