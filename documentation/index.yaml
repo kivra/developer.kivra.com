@@ -798,9 +798,9 @@ paths:
             schema:
               type: object
               properties:
-                company_id:
+                file:
                   $ref: '#/components/schemas/File'
-            example: { "company_id": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
+            example: { "file": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
          
 # ##############################################
 # POST /v2/tenant/request_access
