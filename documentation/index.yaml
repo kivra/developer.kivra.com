@@ -617,6 +617,15 @@ paths:
       security:
         - oAuth2Client:
           - 'get:kivra.v2.tenant'
+      parameters:
+        - name: orgnr
+          in: query
+          description: Perform a search to see if a specific Company is available
+          required: false
+          schema:
+            description: Companies unique Vat Number
+            type: string
+            example: SE556840226601
       responses:
         200:
           description: |
