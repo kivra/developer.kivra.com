@@ -568,7 +568,7 @@ paths:
       tags:
         - "Tenant API - Tenants v2"
       summary: Create Tenant
-      operationId: Create Tenant
+      operationId: Create Tenant (v2)
       description: |
         Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. The client needs to re-authenticate to have the new scope in effect.
         <aside class="notice">
@@ -1254,6 +1254,11 @@ paths:
       responses:
         '204':
           description: empty response confirming that the revoke operation was successful
+      requestBody:
+          description: empty JSON body
+          content:
+            application/json:
+              schema: { }
 
 # ##############################################
 # GET /v1/tenant/TKEY/agreement/AKEY/covenant
@@ -1494,6 +1499,11 @@ paths:
         204:
           description:
             empty response confirming that the operation was successful
+      requestBody:
+          description: empty JSON body
+          content:
+            application/json:
+              schema: { }
 
 components:
   schemas:
@@ -1860,6 +1870,11 @@ components:
           description: the type of content, for agreements always use 'agreement'
           type: string
           example: "agreement"
+        vat_number:
+          description: |
+            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
+          type: string
+          example: SE556840226601
         original:
           type: object
           properties:
