@@ -61,6 +61,7 @@ info:
     | `2019-05-10` | Added `variable_amount`and `min_amount`in Payment scheme |
     | `2019-05-10` | Removed deprecated `token` bearer. `Bearer` should be used instead |
     | `2019-06-04` | Added Tenant API v2 |
+    | `2019-08-08` | Updated size for icons and agreement schema |
 
     # Terminology
     ### User
@@ -370,11 +371,11 @@ info:
 
     # Tenant integration: Tenant management
     With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
-    - Create a tenant
-    - List all tenants that the client has currently access to
-    - Update and manage which companies the tenant represents
-    - Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
-    - Request access to a tenant that is currently managed by some other client
+    * Create a tenant
+    * List all tenants that the client has currently access to
+    * Update and manage which companies the tenant represents
+    * Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
+    * Request access to a tenant that is currently managed by some other client
 
     # Tenant integration: Agreements and signatures (BETA, only available in sandbox)
     Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
@@ -384,9 +385,9 @@ info:
     ## Signers, Delegates and Parties
     Each individual signing an agreement is categorized as either `signer`or `delegate`:
 
-    - a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
-    - a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
-    - 'parties' refers to the `signers` and `delegates` in an agreement.
+    * a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
+    * a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
+    * 'parties' refers to the `signers` and `delegates` in an agreement.
 
     ## Agreement states
     During its lifetime, an agreement can go through various states. The current state can be accessed by getting the agreement via the signature API:
@@ -778,13 +779,13 @@ paths:
         Add or update the tenant icon. If an icon already exists, it will be changed.
         
         To check the current icon associated to a tenant you can simply check the following address:
-        - sandbox: https://sandbox-static.kivra.com/img/tenant/{tenantKey}/icon.png
-        - production: https://static.kivra.com/img/tenant/{tenantKey}/icon.png
+        * sandbox: https://sandbox-static.kivra.com/img/tenant/{tenantKey}/icon.png
+        * production: https://static.kivra.com/img/tenant/{tenantKey}/icon.png
         
         The icon needs to be provided according to the following format:
-        - Dimensions: 512 x 512 px
-        - Alpha Channel: 32-bits
-        - Format: PNG
+        * Dimensions: squared icon with size between 256x256 px and 512x512 px
+        * Alpha Channel: 32-bits
+        * Format: PNG
 
         We recommend to leave a little white area around the logo, to provide the best experience for the users.
       parameters:
