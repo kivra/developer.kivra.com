@@ -700,7 +700,16 @@ paths:
       responses:
         200:
           description: empty response confirming that the put operation was successful
-          
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Lenas Konditori AB"
+            
 # ##############################################
 # POST /v2/tenant/TKEY/company_id
 # ##############################################
@@ -813,7 +822,7 @@ paths:
               type: object
               properties:
                 file:
-                  $ref: '#/components/schemas/File'
+                  $ref: '#/components/schemas/Icon'
             example: { "file": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
          
 # ##############################################
@@ -2089,6 +2098,30 @@ components:
           description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
           type: string
           example: "application/pdf"
+
+# ##############################################
+# SCHEMA Icon
+# ##############################################
+    Icon:
+      type: object
+      required:
+        - name
+        - data
+        - content_type
+      properties:
+        name:
+          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          type: string
+          example: filename.pdf
+        data:
+          description: Base64-encoded data
+          type: string
+          format: 'Base64-encoded data'
+          example: REVBREJFRUY=
+        content_type:
+          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "image/png"
+          type: string
+          example: "image/png"
 
 # ##############################################
 # SCHEMA CompanyKey
