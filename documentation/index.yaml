@@ -1097,7 +1097,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Content'
+                oneOf:
+                  - $ref: '#/components/schemas/Content_user'
+                  - $ref: '#/components/schemas/Content_company'
           headers:
             kivra-objkey:
               description: Object Key
@@ -1118,7 +1120,62 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Content'
+              oneOf:
+                - $ref: '#/components/schemas/Content_user'
+                - $ref: '#/components/schemas/Content_company'
+            examples:
+              user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Invoice to User
+                  generated_at: '2016-12-12'
+                  retain: true
+                  retention_time: '30'
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        status: unpaid
+                        currency: SEK
+                        due_date: '2017-01-01'
+                        total_owed: '123.50'
+                        type: SE_OCR
+                        method: '1'
+                        account: '12345'
+                        reference: 123OCRNUMBER456
+                        variable_amount: false
+                        min_amount: '50.00'
+                      invoice_reference: 'Invoice Nr #123'
+              company:
+                value:
+                  vat_number: SE556840226601
+                  subject: Sample Invoice to Company
+                  generated_at: '2016-12-12'
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        status: unpaid
+                        currency: SEK
+                        due_date: '2017-01-01'
+                        total_owed: '123.50'
+                        type: SE_OCR
+                        method: '1'
+                        account: '12345'
+                        reference: 123OCRNUMBER456
+                        variable_amount: false
+                        min_amount: '50.00'
+                      invoice_reference: 'Invoice Nr #123'
 
 # ##############################################
 # POST /v1/tenant/TKEY/agreement
@@ -1523,13 +1580,12 @@ components:
   schemas:
 
 # ##############################################
-# SCHEMA Content
+# SCHEMA Content_user
 # ##############################################
-    Content:
+    Content_user:
       type: object
       required:
         - ssn
-        - vat_number
       properties:
         ssn:
           description: |
@@ -1537,13 +1593,6 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        vat_number:
-          description: |
-            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
-          type: string
-          readOnly: true
-          writeOnly: true
-          example: SE556840226601
         subject:
           description: This Subject/Title will be visibile in the Recipients Inbox.
           type: string
@@ -1569,6 +1618,60 @@ components:
           readOnly: true
           example: "30"
           enum: ["30","390"]
+        tenant_info:
+          description: |
+            An arbitrary string defined by the tenant, used to group content for administrative tasks
+          type: string
+          writeOnly: true
+          readOnly: true
+        files:
+          description: Array of file Objects
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/File'
+        context:
+          type: object
+          writeOnly: true
+          readOnly: true
+          description: Optionally specify additional information
+          properties:
+            invoice:
+              type: object
+              description: Optionally specify invoice information
+              properties:
+                payment:
+                  $ref: '#/components/schemas/Payment'
+                invoice_reference:
+                  type: string
+                  description: Tenant’s own Invoice Reference
+                  example: "Invoice Nr #123"
+
+# ##############################################
+# SCHEMA Content_company
+# ##############################################
+    Content_company:
+      type: object
+      required:
+        - vat_number
+      properties:
+        vat_number:
+          description: |
+            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
+          type: string
+          readOnly: true
+          writeOnly: true
+          example: SE556840226601
+        subject:
+          description: This Subject/Title will be visibile in the Recipients Inbox.
+          type: string
+          example: "Sample Invoice"
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2016-12-12"
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         tenant_info:
           description: |
             An arbitrary string defined by the tenant, used to group content for administrative tasks
