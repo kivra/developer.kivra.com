@@ -62,6 +62,7 @@ info:
     | `2019-05-10` | Removed deprecated `token` bearer. `Bearer` should be used instead |
     | `2019-06-04` | Added Tenant API v2 |
     | `2019-08-08` | Updated size for icons and agreement schema |
+    | `2019-09-05` | Multiple Examples for content, removed TelNumber from AgreementParty  |
 
     # Terminology
     ### User
@@ -955,7 +956,7 @@ paths:
                 type: array
                 description: List of available users, can be empty
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserList'
 
 # ##############################################
 # POST /v1/tenant/TKEY/usermatch
@@ -1046,7 +1047,7 @@ paths:
                 type: array
                 description: List of available companies, can be empty
                 items:
-                  $ref: '#/components/schemas/Company'
+                  $ref: '#/components/schemas/CompanyList'
 
 # ##############################################
 # POST /v1/tenant/TKEY/content
@@ -1097,9 +1098,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Content_user'
-                  - $ref: '#/components/schemas/Content_company'
+                $ref: '#/components/schemas/Content'
           headers:
             kivra-objkey:
               description: Object Key
@@ -1120,11 +1119,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/Content_user'
-                - $ref: '#/components/schemas/Content_company'
+              $ref: '#/components/schemas/Content'
             examples:
-              user:
+              invoice to user:
                 value:
                   ssn: '191212121212'
                   subject: Sample Invoice to User
@@ -1151,31 +1148,28 @@ paths:
                         variable_amount: false
                         min_amount: '50.00'
                       invoice_reference: 'Invoice Nr #123'
-              company:
+              content to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Invoice to User
+                  generated_at: '2016-12-12'
+                  retain: true
+                  retention_time: '30'
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+              content to company:
                 value:
                   vat_number: SE556840226601
-                  subject: Sample Invoice to Company
+                  subject: Sample Content to Company
                   generated_at: '2016-12-12'
                   tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
-                  context:
-                    invoice:
-                      payment:
-                        payable: true
-                        status: unpaid
-                        currency: SEK
-                        due_date: '2017-01-01'
-                        total_owed: '123.50'
-                        type: SE_OCR
-                        method: '1'
-                        account: '12345'
-                        reference: 123OCRNUMBER456
-                        variable_amount: false
-                        min_amount: '50.00'
-                      invoice_reference: 'Invoice Nr #123'
 
 # ##############################################
 # POST /v1/tenant/TKEY/agreement
@@ -1407,7 +1401,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyKey'
+                type: object
+                properties:
+                  key:
+                    description: Company's unique Key
+                    type: string
+                    example: "15236156848eefa1dc75364af2be38c98eb3aae223"
 
 # ##############################################
 # GET /v1/partner/company/COMPKEY/content
@@ -1580,9 +1579,9 @@ components:
   schemas:
 
 # ##############################################
-# SCHEMA Content_user
+# SCHEMA Content
 # ##############################################
-    Content_user:
+    Content:
       type: object
       required:
         - ssn
@@ -1593,6 +1592,13 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
+        vat_number:
+          description: |
+            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
+          type: string
+          readOnly: true
+          writeOnly: true
+          example: SE556840226601
         subject:
           description: This Subject/Title will be visibile in the Recipients Inbox.
           type: string
@@ -1618,60 +1624,6 @@ components:
           readOnly: true
           example: "30"
           enum: ["30","390"]
-        tenant_info:
-          description: |
-            An arbitrary string defined by the tenant, used to group content for administrative tasks
-          type: string
-          writeOnly: true
-          readOnly: true
-        files:
-          description: Array of file Objects
-          type: array
-          writeOnly: true
-          items:
-            $ref: '#/components/schemas/File'
-        context:
-          type: object
-          writeOnly: true
-          readOnly: true
-          description: Optionally specify additional information
-          properties:
-            invoice:
-              type: object
-              description: Optionally specify invoice information
-              properties:
-                payment:
-                  $ref: '#/components/schemas/Payment'
-                invoice_reference:
-                  type: string
-                  description: Tenant’s own Invoice Reference
-                  example: "Invoice Nr #123"
-
-# ##############################################
-# SCHEMA Content_company
-# ##############################################
-    Content_company:
-      type: object
-      required:
-        - vat_number
-      properties:
-        vat_number:
-          description: |
-            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
-          type: string
-          readOnly: true
-          writeOnly: true
-          example: SE556840226601
-        subject:
-          description: This Subject/Title will be visibile in the Recipients Inbox.
-          type: string
-          example: "Sample Invoice"
-        generated_at:
-          type: string
-          format: ISO8601
-          example: "2016-12-12"
-          description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         tenant_info:
           description: |
             An arbitrary string defined by the tenant, used to group content for administrative tasks
@@ -1769,9 +1721,9 @@ components:
           description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`
 
 # ##############################################
-# SCHEMA Company
+# SCHEMA CompanyList
 # ##############################################
-    Company:
+    CompanyList:
       type: object
       properties:
         key:
@@ -1784,15 +1736,15 @@ components:
           example: "SE556840226601"
 
 # ##############################################
-# SCHEMA User
+# SCHEMA UserList
 # ##############################################
-    User:
+    UserList:
       type: object
       properties:
         key:
-          description: User's unique Key
+          description: This field is no longer used
           type: string
-          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
+          example: ""
         ssn:
           description: User's unique SSN in the form `YYYYMMDDnnnn`
           type: string
@@ -1802,7 +1754,6 @@ components:
 # SCHEMA UserMatch
 # ##############################################
     UserMatch:
-      title: usermatchRequest
       required:
       - ssns
       type: object
@@ -2044,10 +1995,6 @@ components:
           description: email to be used to contact the user
           type: string
           example: "je.karlsson.hem@email.nu"
-        phone:
-          description: mobile phone to be used to contact the user (via SMS)
-          type: string
-          example: "+46705050505"
         role:
           description: the role of the user in this signature flow
           type: string
@@ -2225,17 +2172,6 @@ components:
           description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "image/png"
           type: string
           example: "image/png"
-
-# ##############################################
-# SCHEMA CompanyKey
-# ##############################################
-    CompanyKey:
-      type: object
-      properties:
-        key:
-          description: Company's unique Key
-          type: string
-          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
 
 # ##############################################
 # SCHEMA CompanyInbox
