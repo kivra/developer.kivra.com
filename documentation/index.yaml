@@ -8,10 +8,16 @@ servers:
     description: Staging environment
 info:
   title: Kivra API
+  version: v1 and v2
   description: |
     This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
-
+    
+    ## Api version: v1 and v2
+    We currently have some endpoints in v1 and some endpoints in v2. Each endpoint documented here specifies in the URL whether the endpoint requires v1 or v2.
+    
+    Authentication is the same for both v1 and v2.
+    
     ## Introduction
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
@@ -63,6 +69,7 @@ info:
     | `2019-06-04` | Added Tenant API v2 |
     | `2019-08-08` | Updated size for icons and agreement schema |
     | `2019-09-05` | Multiple Examples for content, removed TelNumber from AgreementParty  |
+    | `2019-09-23` | v1 and v2 description. Corrections in the agreement endpoints. Agreements now available in production. |
 
     # Terminology
     ### User
@@ -379,13 +386,13 @@ info:
     * Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
     * Request access to a tenant that is currently managed by some other client
 
-    # Tenant integration: Agreements and signatures (BETA, only available in sandbox)
-    Signatures integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
+    # Tenant integration: Agreements
+    Agreements integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
 
-    Kivra's signature service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
+    Kivra's agreement service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
 
     ## Signers, Delegates and Parties
-    Each individual signing an agreement is categorized as either `signer`or `delegate`:
+    Each individual signer in an agreement is categorized as either `signer`or `delegate`:
 
     * a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
     * a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
@@ -419,11 +426,11 @@ info:
 
     ## Notifications
     After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/).
-    After the users access the Kivra signature service and agree to its terms of service, Kivra will take care of notify the parties about events concerning the agreement lifecycle using the contact information provided by the tenant.
+    After the users access the Kivra signature service and agree to its terms of service, Kivra will notify signers when the document has been signed by all and is ready to be downloaded or transferred to the Kivra mailbox, using the contact information provided by the tenant.
 
     ## Signature flow
     
-    1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number, an email and a mobile phone. The agreement is made available by Kivra to the parties.
+    1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number and an email. The agreement is made available by Kivra to the parties.
     2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
     3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
     4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
@@ -505,8 +512,6 @@ info:
     |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
-
-  version: v1 and v2
 
 tags:
   - name: "Tenant API - Content"
@@ -1098,7 +1103,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Content'
+                oneOf:
+                  - $ref: '#/components/schemas/Content_user'
+                  - $ref: '#/components/schemas/Content_company'
           headers:
             kivra-objkey:
               description: Object Key
@@ -1119,7 +1126,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Content'
+              oneOf:
+                - $ref: '#/components/schemas/Content_user'
+                - $ref: '#/components/schemas/Content_company'
             examples:
               invoice to user:
                 value:
@@ -1358,15 +1367,23 @@ paths:
         '200':
           description: The covenant file as a PDF file with base64 encoding
           content:
-            application/octet-stream:
+            application/json:
               schema:
                 type: object
                 properties:
+                  name:
+                    description: The name of the file
+                    type: string
+                    example: "agreement7456_completed.pdf"
                   data:
                     description: The covenant file as a PDF file with base64 encoding
                     type: string
                     format: base64
                     example: "REVBREJFRUY="
+                  sha256:
+                    description: the signature to verify the file's authenticity
+                    type: string
+                    
 
 # ##############################################
 # GET /v1/partner/company
@@ -1579,9 +1596,9 @@ components:
   schemas:
 
 # ##############################################
-# SCHEMA Content
+# SCHEMA Content_user
 # ##############################################
-    Content:
+    Content_user:
       type: object
       required:
         - ssn
@@ -1592,13 +1609,6 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        vat_number:
-          description: |
-            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
-          type: string
-          readOnly: true
-          writeOnly: true
-          example: SE556840226601
         subject:
           description: This Subject/Title will be visibile in the Recipients Inbox.
           type: string
@@ -1653,6 +1663,60 @@ components:
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
 
+# ##############################################
+# SCHEMA Content_company
+# ##############################################
+    Content_company:
+      type: object
+      required:
+        - vat_number
+      properties:
+        vat_number:
+          description: |
+            A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
+          type: string
+          readOnly: true
+          writeOnly: true
+          example: SE556840226601
+        subject:
+          description: This Subject/Title will be visibile in the Recipients Inbox.
+          type: string
+          example: "Sample Invoice"
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2016-12-12"
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+        tenant_info:
+          description: |
+            An arbitrary string defined by the tenant, used to group content for administrative tasks
+          type: string
+          writeOnly: true
+          readOnly: true
+        files:
+          description: Array of file Objects
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/File'
+        context:
+          type: object
+          writeOnly: true
+          readOnly: true
+          description: Optionally specify additional information
+          properties:
+            invoice:
+              type: object
+              description: Optionally specify invoice information
+              properties:
+                payment:
+                  $ref: '#/components/schemas/Payment'
+                invoice_reference:
+                  type: string
+                  description: Tenant’s own Invoice Reference
+                  example: "Invoice Nr #123"
+                  
 # ##############################################
 # SCHEMA Payment
 # ##############################################
@@ -1968,12 +2032,10 @@ components:
             - ssn: "197701032380"
               name: "Jan-Erik Karlsson"
               email: "je.karlsson@email.nu"
-              phone: "+46705050505"
               role: "signer"
             - ssn: "198112172385"
               name: "Gustav Larsson"
               email: "gustav123@mymail.com"
-              phone: "+46705212121"
               role: "delegate"
 
 # ##############################################
@@ -2022,11 +2084,39 @@ components:
     AgreementStateDetailed:
       type: object
       properties:
+        subject:
+          description: Name of the agreement
+          type: string
+          example: "Employment agreement"
         created_at:
           description: The time when the agreement was created
           type: string
           example: "2019-04-09T13:42:26Z"
           readOnly: true
+        expires_at:
+          description: |
+            The expiration time for the agreement, if the agreement is not completed before this date, it will no longer be available for signature
+          type: string
+          example: "2019-05-09T13:42:26Z"
+          readOnly: true
+        state:
+          description: The current state of the agreement
+          type: string
+          example: completed
+          enum: [active, completed, revoked]
+          readOnly: true
+        tenant_name:
+          description: The name of the tenant that created the agreement
+          type: string
+          example: "Sender AB"
+        tenant:
+          description: The tenant key that created the agreement
+          type: string
+          example: "tenant_154442474745511bbaaa5b44b391eae0513e2c55a0"
+        type:
+          description: The type of agreement as provided by the sender when the agreement was created
+          type: string
+          example: "agreement"
         signatures:
           description: |
             List of signatures
@@ -2043,24 +2133,6 @@ components:
               real_name: "Gustav Johan Larsson"
               created_at: "2019-04-11T18:53:03Z"
               order_ref: "f5bce777-0b42-4222-1f3e-ab523ede7a5f"
-        state:
-          description: The current state of the agreement
-          type: string
-          example: completed
-          enum: [active, completed, revoked]
-          readOnly: true
-        expires_at:
-          description: |
-            The expiration time for the agreement, if the agreement is not completed before this date, it will no longer be available for signature
-          type: string
-          example: "2019-05-09T13:42:26Z"
-          readOnly: true
-        trashed_at:
-          description: |
-            The time when the signed agreement will no longer be available for download or via the API. This field is relevant only when state is "completed"
-          type: string
-          example: "2019-05-12T08:23:29Z"
-          readOnly: true
         parties:
           description: list of signers and delegates that are requested to sign the agreement
           type: array
@@ -2071,17 +2143,11 @@ components:
             - ssn: "197701032380"
               name: "Jan-Erik Karlsson"
               email: "je.karlsson.hem@email.nu"
-              phone: "+46705050505"
               role: "signer"
             - ssn: "198112172385"
               name: "Gustav Larsson"
               email: "gustav123@mymail.com"
-              phone: "+46705212121"
               role: "delegate"
-        subject:
-          description: Name of the agreement
-          type: string
-          example: "Employment agreement"
 
 # ##############################################
 # SCHEMA AgreementSignature
