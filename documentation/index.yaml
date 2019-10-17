@@ -12,12 +12,12 @@ info:
   description: |
     This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
-    
+
     ## Api version: v1 and v2
     We currently have some endpoints in v1 and some endpoints in v2. Each endpoint documented here specifies in the URL whether the endpoint requires v1 or v2.
-    
+
     Authentication is the same for both v1 and v2.
-    
+
     ## Introduction
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
@@ -379,7 +379,7 @@ info:
 
     # Tenant integration: Tenant management
     With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
-    
+
     * Create a tenant
     * List all tenants that the client has currently access to
     * Update and manage which companies the tenant represents
@@ -429,7 +429,7 @@ info:
     After the users access the Kivra signature service and agree to its terms of service, Kivra will notify signers when the document has been signed by all and is ready to be downloaded or transferred to the Kivra mailbox, using the contact information provided by the tenant.
 
     ## Signature flow
-    
+
     1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number and an email. The agreement is made available by Kivra to the parties.
     2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
     3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
@@ -681,7 +681,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tenant_v2'
-      
+
 # ##############################################
 # PUT /v2/tenant/TKEY/name
 # ##############################################
@@ -715,7 +715,7 @@ paths:
                 name:
                   type: string
                   example: "Lenas Konditori AB"
-            
+
 # ##############################################
 # POST /v2/tenant/TKEY/company_id
 # ##############################################
@@ -794,14 +794,14 @@ paths:
       operationId: Provide icon
       description: |
         Add or update the tenant icon. If an icon already exists, it will be changed.
-        
+
         To check the current icon associated to a tenant you can simply check the following address:
-        
+
         * sandbox: https://sandbox-static.kivra.com/img/tenant/{tenantKey}/icon.png
         * production: https://static.kivra.com/img/tenant/{tenantKey}/icon.png
-        
+
         The icon needs to be provided according to the following format:
-        
+
         * Dimensions: squared icon with size between 256x256 px and 512x512 px
         * Alpha Channel: 32-bits
         * Format: PNG
@@ -830,7 +830,7 @@ paths:
                 file:
                   $ref: '#/components/schemas/Icon'
             example: { "file": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
-         
+
 # ##############################################
 # POST /v2/tenant/request_access
 # ##############################################
@@ -842,14 +842,14 @@ paths:
       operationId: Request access
       description: |
         Request access to an existing tenant that is outside the client scope. Typically this request follows an unsuccessful attempt to create a tenant that resulted in a conflict error (error 409).
-        
+
         The meaning of the conflict error is that a tenant is already associated to a `company_id` including the same `orgnr` as in the tenant that the client attempted to post, and the tenant who owns the `orgnr` is outside the scope for the client.
-        
-        In Kivra it is allowed to have several different flows on the same tenant, as for instance one flow for invoices and one flow for payment slips. As this flows could be managed by different clients, we need a mechanism to allow sharing a tenant between clients. 
+
+        In Kivra it is allowed to have several different flows on the same tenant, as for instance one flow for invoices and one flow for payment slips. As this flows could be managed by different clients, we need a mechanism to allow sharing a tenant between clients.
         The `request_access` endpoint provide this functionality. As the request may be granted (or denied) asynchronously, after a successfull call to `request_access` the client will need to poll the request until it becomes `accepted` or `rejected`.
-        
+
         As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed once the request has been accepted, to retrieve an access token with the new scope.
-        
+
         If the client posts a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated status.
       security:
         - oAuth2Client:
@@ -876,7 +876,7 @@ paths:
                 vat_number:
                   type: string
                   example: "SE556840226601"
-                  
+
 # ##############################################
 # GET /v2/tenant/request_access/{requestKey}
 # ##############################################
@@ -912,7 +912,7 @@ paths:
               schema:
                 type: string
                 format: 'hexadecimal value'
-    
+
 # ##############################################
 # GET /v1/tenant/TKEY/user
 # ##############################################
@@ -973,7 +973,7 @@ paths:
       summary: Match a list of recipient users for a specific tenant
       operationId: Match Users
       description: |
-        This resource is used to match a list of users to check that they are eligible for receiving Content from 
+        This resource is used to match a list of users to check that they are eligible for receiving Content from
           the specific Tenant.
         The request contains a list of SSNs to be matched, and the response is a filtered list containing only the SSNs that are eligible to receive content from the tenant.
         <aside class="notice">
@@ -1380,7 +1380,6 @@ paths:
                   sha256:
                     description: the signature to verify the file's authenticity
                     type: string
-                    
 
 # ##############################################
 # GET /v1/partner/company
@@ -1713,7 +1712,7 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
-                  
+
 # ##############################################
 # SCHEMA Payment
 # ##############################################
@@ -1925,7 +1924,7 @@ components:
           type: string
           readOnly: true
           example: "opt_out"
-          
+
 # ##############################################
 # SCHEMA Error40915
 # ##############################################
@@ -1965,21 +1964,21 @@ components:
           readOnly: true
           example: "pending"
         client_name:
-          description: Name of the client who created the requested tenant 
+          description: Name of the client who created the requested tenant
           type: string
           readOnly: true
           example: "Client XYZ"
         tenant_name:
-          description: Name of the requested tenant 
+          description: Name of the requested tenant
           type: string
           readOnly: true
           example: "Tenant ABC"
         tenant_key:
-          description: Key of the requested tenant 
+          description: Key of the requested tenant
           type: string
           readOnly: true
           example: "1424780396902ee9278b16417f8e3252c3ced28c38"
-      
+
 # ##############################################
 # SCHEMA Agreement
 # ##############################################
