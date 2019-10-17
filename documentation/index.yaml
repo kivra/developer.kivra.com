@@ -487,7 +487,7 @@ info:
 
     | Code | Short Message | Long Message |
     | ---- | ------------- | ------------ |
-    |40000 |Invalid Token |Could not authenticate with OAuth2 using the supplied token |
+    |40000 |Request validation failed |The request payload does not pass required validation |
     |40001 |Invalid Request |The request was invalid |
     |40002 |Redirect URI Mismatch |The redirect_uri does not match the registered redirect_uri |
     |40003 |Invalid Scope | An invalid or insufficient scope was used |
