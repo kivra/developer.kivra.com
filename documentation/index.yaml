@@ -1769,7 +1769,7 @@ components:
         reference:
           type: string
           example: "123OCRNUMBER456"
-          description: The reference number used for paying
+          description: The reference number used for paying. This can be maximum 25 characters long
         variable_amount:
           type: boolean
           default: false
