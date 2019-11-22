@@ -277,7 +277,7 @@ info:
     | POST        | Used for creating resources, or performing custom or batch type actions |
     | PUT         | Used for updating resources or collections, but can also be used to create a resource when the key has been predetermined. Note that `PUT` apply to the entire resource and not just parts of it. So, when doing a `PUT` operation, the entire resource is replaced |
     | DELETE      | Used for deleting resources. Delete is atomic and acts on the whole resource, that is it can not be used to delete a part or alter the state of a resource. Use `PUT` for that |
-
+    
     # Resource Types
     There are two main types of resources – objects and collections of objects, they are individually outlined in the following sections.
     It can generally be said that if a URL ends with a unique identifier (also known as a key), it is an object or a sub-object. Resources ending with collection names are collection resources.
@@ -1085,6 +1085,17 @@ paths:
 
         If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
 
+        ### Duplicate control
+        If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
+        
+        <aside class="notice">
+        Note: Duplicate control is only available in production, not in sandbox. This allows senders to reuse the same payload several times in the test environment.
+        </aside>
+
+        It's important to underline that the duplicate control is made by checking the complete payload (beside `generated_at`), not only the attached content. This means that any change in the payload will cause the duplicate check to fail and the corresponding content to be delivered.
+        
+        Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
+        
       security:
         - oAuth2Client:
           - 'post:kivra.v1.tenant.{tenantKey}.content'
