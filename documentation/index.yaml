@@ -181,7 +181,7 @@ info:
     `1 MB` per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than `1 MB`.
 
     ## Rate limit
-    `20` **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up to `20` to the same recipient.
+    `50` **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up to `50` to the same recipient.
 
     # Interacting with the API
     All API access is performed over HTTPS through [api, sandbox].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox, reachable through sandbox.kivra.com.
