@@ -70,6 +70,7 @@ info:
     | `2019-08-08` | Updated size for icons and agreement schema |
     | `2019-09-05` | Multiple Examples for content, removed TelNumber from AgreementParty  |
     | `2019-09-23` | v1 and v2 description. Corrections in the agreement endpoints. Agreements now available in production. |
+    | `2020-01-08` | Removed v1 of POST tenant |
 
     # Terminology
     ### User
@@ -516,58 +517,14 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API - Tenants v1"
-    description: Endpoint for creation of tenants. Please use v2 instead, v1 will be discontinued 2019-12-31.
-  - name: "Tenant API - Tenants v2"
-    description: Endpoints for creation and administration of tenants
+  - name: "Tenant API - Tenant Management"
+    description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
-    description: Endpoints for managing signatures and agreements (BETA)
+    description: Endpoints for managing signatures and agreements
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
 
 paths:
-
-# ##############################################
-# POST /v1/tenant
-# ##############################################
-  /v1/tenant:
-    post:
-      tags:
-        - "Tenant API - Tenants v1"
-      summary: Create Tenant
-      operationId: Create Tenant
-      description: |
-        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. The client needs to re-authenticate to have the new scope in effect.
-        <aside class="notice">
-        Note: Please use v2 of this endpoint, v1 will be discontinued 2019-12-31.
-        </aside>
-      security:
-        - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}'
-      responses:
-        201:
-          description: |
-            Tenant Created succesfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant_v1'
-          headers:
-            kivra-objkey:
-              description: Object Key
-              schema:
-                type: string
-                format: 'hexadecimal value'
-            location:
-              description: URL to created Object
-              schema:
-                type: string
-                format: url
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tenant_v1'
 
 # ##############################################
 # POST, GET /v2/tenant
@@ -575,7 +532,7 @@ paths:
   /v2/tenant:
     post:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Create Tenant
       operationId: Create Tenant (v2)
       description: |
@@ -619,7 +576,7 @@ paths:
               $ref: '#/components/schemas/Tenant_v2'
     get:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: List tenants
       operationId: List all tenants accessible to the client
       description: Lists all tenants that are manageable by the current client
@@ -658,7 +615,7 @@ paths:
   /v2/tenant/{tenantKey}:
     get:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Tenant information
       operationId: Get information on tenant
       description: Get detailed information on a tenant
@@ -688,7 +645,7 @@ paths:
   /v2/tenant/{tenantKey}/name:
     put:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Update tenant name
       operationId: Update tenant name
       description: Update display name for the tenant. The updated name will be visible to the end-users only after they have received a new content.
@@ -722,7 +679,7 @@ paths:
   /v2/tenant/{tenantKey}/company_id:
     post:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Associate company ID to tenant
       operationId: Add company ID
       description: |
@@ -756,7 +713,7 @@ paths:
   /v2/tenant/{tenantKey}/company_id/{orgNr}:
     delete:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Delete company ID from tenant
       operationId: Delete company ID
       description: |
@@ -789,7 +746,7 @@ paths:
   /v2/tenant/{tenantKey}/icon:
     post:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Provide an icon for a tenant
       operationId: Provide icon
       description: |
@@ -837,7 +794,7 @@ paths:
   /v2/tenant/request_access:
     post:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Request access to a tenant
       operationId: Request access
       description: |
@@ -883,7 +840,7 @@ paths:
   /v2/tenant/request_access/{requestKey}:
     get:
       tags:
-        - "Tenant API - Tenants v2"
+        - "Tenant API - Tenant Management"
       summary: Status of an access request
       operationId: Request access status
       description: |
@@ -1843,42 +1800,6 @@ components:
           - "191212121212"
           - "197701032380"
           - "198112172385"
-
-# ##############################################
-# SCHEMA Tenant_v1
-# ##############################################
-    Tenant_v1:
-      type: object
-      required:
-        - name
-        - company_id
-      properties:
-        name:
-          description: Name of the Tenant, this name shows up in the Users Inbox
-          type: string
-          example: "Kivra"
-        company_id:
-          type: array
-          items:
-            $ref: '#/components/schemas/CompanyId'
-        edit_security_level:
-          description: Security level needed for an enduser to `opt_out` from this Tenant
-          type: integer
-          readOnly: true
-          example: 25
-        groups:
-          type: array
-          items:
-            type: string
-          readOnly: true
-          description: List of groups this Tenant belongs to
-          example: []
-        visibility:
-          description: Determines if this Tenant is visible for the enduser
-          type: string
-          readOnly: true
-          enum: [visible, hidden]
-
 
 # ##############################################
 # SCHEMA Tenant_v2
