@@ -1746,7 +1746,7 @@ components:
           type: string
           format: float
           example: "50.00"
-          description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`
+          description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
 
 # ##############################################
 # SCHEMA CompanyList
