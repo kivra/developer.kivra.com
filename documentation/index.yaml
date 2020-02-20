@@ -13,7 +13,7 @@ info:
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
-    ## National versions of Vivra APIs
+    ## National versions of Kivra APIs
     As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate. 
     
     This version of the API is about **Kivra Sweden**.
