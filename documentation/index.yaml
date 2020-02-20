@@ -7,12 +7,17 @@ servers:
   - url: https://sandbox.kivra.com
     description: Staging environment
 info:
-  title: Kivra API
+  title: Kivra Sweden API
   version: v1 and v2
   description: |
-    This document is intended for developers and others who are interested in integrating with [Kivra](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
+    This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
+    ## National versions of Vivra APIs
+    As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate. 
+    
+    This version of the API is about **Kivra Sweden**.
+    
     ## Api version: v1 and v2
     We currently have some endpoints in v1 and some endpoints in v2. Each endpoint documented here specifies in the URL whether the endpoint requires v1 or v2.
 
