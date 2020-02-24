@@ -1108,8 +1108,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Invoice to User
                   generated_at: '2016-12-12'
-                  retain: true
-                  retention_time: '30'
+                  retained: false
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1133,10 +1132,21 @@ paths:
               content to user:
                 value:
                   ssn: '191212121212'
-                  subject: Sample Invoice to User
+                  subject: Sample Content to User
                   generated_at: '2016-12-12'
-                  retain: true
-                  retention_time: '30'
+                  retained: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+              payslip to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Payslip to User
+                  generated_at: '2016-12-12'
+                  retained: true
+                  retention_time: '390'
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1594,7 +1604,7 @@ components:
           type: boolean
           writeOnly: true
           readOnly: true
-          example: true
+          example: false
         retention_time:
           description: |
             How long to retain a Content. Supported values: `"30"` and `"390"`
