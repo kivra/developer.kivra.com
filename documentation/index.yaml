@@ -1588,9 +1588,9 @@ components:
           example: "2016-12-12"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
-        retain:
+        retained:
           description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retained should never be `true` for payable content.
           type: boolean
           writeOnly: true
           readOnly: true
