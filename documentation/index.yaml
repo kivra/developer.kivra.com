@@ -517,6 +517,7 @@ info:
     |40400 |Not found |The resource was not found at the given URI at this time |
     |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
+    |40915 |Conflict |An attempt was made to create an object that already exists |
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
 
 tags:
@@ -569,7 +570,7 @@ paths:
                 format: url
         409:
           description: |
-            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists, but it is outside the scope of the client that posted the request. The client may use the `request_access` endpoint to request access to this tenant.
+            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists. In the body of the answer there will be information on whether the existing tenant is already in the scope of the client or not. The client may use the `request_access` endpoint to request access to this tenant.
           content:
             application/json:
               schema:
@@ -1880,9 +1881,11 @@ components:
       properties:
         code: 
           type: string
+          description: The 5-digits error code
           example: 40915
         short_message:
           type: string
+          description: A short message explaining the conflict
           example: Orgnumber already exist
         long_message:
           type: string
