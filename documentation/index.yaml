@@ -331,37 +331,46 @@ info:
 
     **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
 
+
     # Tenants integration: Content management
     Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
+    
+    Before looking at the details of the integration, let's look at the concept of "opt-out" and its implication for tenant integration.
 
     ## Opt-out
     Kivra uses a method called opt-out to make the service as easy as possible for Recipients and Senders. Opt-out means that when a Recipient register with Kivra they’ll automatically receive documents from all Tenants connected to Kivra. Recipients do not need to enable individual Tenants to start receiving Content.
 
     ### Meaning of Opt-out for:
     #### Tenant
-    Can start sending Content to all Recipients in Kivra
-    When Tenant signs up new customers they can match that customers `SSN` or `VAT`-number to the user- or companies_accept-file respectively and start sending Content directly.
-    A Recipient can choose to disable a Tenant. In that case, that user or company will no longer show up in the Tenant’s user- or companies_accept-file respectively and a `45`-day grace period will take effect. During this grace period the Tenant can still post Content.
+    Tenants can start sending Content to all Recipients in Kivra.
+    When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
+    
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
-    Recipients will automatically start receiving Content from new Tenants
-    Recipients can choose to disable a Tenant. In that case, that Recipient will no longer show up in the Tenant’s  user- or companies_accept-file respectively and a `45`-day grace period will take effect. During this grace period the Tenant can still post Content.
-
-    ## Step 1: Synchronize Recipients
-    The first thing in every integration is to synchronize which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not found when synchronizing will be automatically denied unless that Recipient is in a `45` days’ grace period with that Tenant.
+    Recipients will automatically start receiving Content from new Tenants.
+    
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    
+    ## Typical flow for content management
+    The typical flow for sending content to recipients is illustrated here:
+    
+    ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
+    
+    ## Step 1: Synchronize Recipients (optional)
+    An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
 
     This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
 
-    Synchronization of Recipients is done via the `user` and `usermatch` resources.
+    Synchronization of Recipients is done via the `usermatch` resource.
 
-    This is an optional step, in some case the client may prefer to send content directly and manage the error message in case the content cannot be delivered, either because the user is not a Kivra user or because the user has opted-out the sender.
+    This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
 
     ## Step 2: Send Content
-    Metadata is data that Kivra needs to send the Content to the right Recipient. It may also determine how a Recipient can interact with the Content.
-
-    Sending of Content is done via the `content` resource.
+    
+    Sending of Content is done via the `content` resource. The metadata in the `content` resource identifies the user and also determines how the recipient can interact with the content.
 
     ## Typical integration flows
     The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
