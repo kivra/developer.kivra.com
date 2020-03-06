@@ -1,6 +1,8 @@
-app:
-  build: .
-  ports:
-    - 4567:4567
-  volumes:
-    - ./source:/usr/src/app/source
+version: '3'
+services:
+  developer.kivra.com:
+    build: .
+    volumes:
+      - "./:/usr/share/nginx/html/:ro"
+    ports:
+      - "8080:8080"
