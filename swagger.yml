@@ -450,6 +450,8 @@ info:
     3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
     4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
 
+    ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
+    
     # Partners integration
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
 
