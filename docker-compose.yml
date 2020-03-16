@@ -1,8 +1,0 @@
-version: '3'
-services:
-  developer.kivra.com:
-    build: .
-    volumes:
-      - "./:/usr/share/nginx/html/:ro"
-    ports:
-      - "8080:8080"
