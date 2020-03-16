@@ -1,18 +1,3 @@
 steps:
-  # Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'eu.gcr.io/${PROJECT_ID}/developer.kivra.com', '.']
-
-  # Push Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'eu.gcr.io/${PROJECT_ID}/developer.kivra.com']
-
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'run', 'deploy', 'internal-api-doc',
-           '--platform', 'managed',
-           '--image', 'eu.gcr.io/$PROJECT_ID/developer.kivra.com',
-           '--region', 'europe-west1',
-           '--allow-unauthenticated']
-
-images: ['eu.gcr.io/${PROJECT_ID}/developer.kivra.com']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'index.html', 'swagger.yml', 'gs://developer.kivra.com']
