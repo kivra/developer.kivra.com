@@ -2,9 +2,9 @@
 openapi: 3.0.1
 
 servers:
-  - url: https://api.kivra.com
+  - url: https://sender.api.kivra.com
     description: Production environment
-  - url: https://sandbox.kivra.com
+  - url: https://sender.sandbox-api.kivra.com
     description: Staging environment
 info:
   title: Kivra Sweden API
@@ -63,19 +63,20 @@ info:
 
     | Date         | Details of changes 2    2                                          |
     | ------------ | ------------------------------------------------------------------ |
-    | `2016-10-14` | Release of Kivra API Version 1                                     |
-    | `2018-04-20` | Clarify [Environments and API Endpoints](#api-endpoints)           |
-    | `2018-04-27` | Document optional Content-fields and response-headers              |
-    | `2018-08-20` | Added description of `partner` endpoint (BETA).                    |
-    | `2018-08-20` | Correction in Company scheme                                       |
-    | `2019-04-30` | Added Tenant Agreement API as (BETA) |
-    | `2019-05-10` | Added `variable_amount`and `min_amount`in Payment scheme |
-    | `2019-05-10` | Removed deprecated `token` bearer. `Bearer` should be used instead |
-    | `2019-06-04` | Added Tenant API v2 |
-    | `2019-08-08` | Updated size for icons and agreement schema |
-    | `2019-09-05` | Multiple Examples for content, removed TelNumber from AgreementParty  |
-    | `2019-09-23` | v1 and v2 description. Corrections in the agreement endpoints. Agreements now available in production. |
-    | `2020-01-08` | Removed v1 of POST tenant |
+    | 2016-10-14 | Release of Kivra API Version 1                                     |
+    | 2018-04-20 | Clarify [Environments and API Endpoints](#api-endpoints)           |
+    | 2018-04-27 | Document optional Content-fields and response-headers              |
+    | 2018-08-20 | Added description of `partner` endpoint (BETA).                    |
+    | 2018-08-20 | Correction in Company scheme                                       |
+    | 2019-04-30 | Added Tenant Agreement API as (BETA) |
+    | 2019-05-10 | Added `variable_amount`and `min_amount`in Payment scheme |
+    | 2019-05-10 | Removed deprecated `token` bearer. `Bearer` should be used instead |
+    | 2019-06-04 | Added Tenant API v2 |
+    | 2019-08-08 | Updated size for icons and agreement schema |
+    | 2019-09-05 | Multiple Examples for content, removed TelNumber from AgreementParty  |
+    | 2019-09-23 | v1 and v2 description. Corrections in the agreement endpoints. Agreements now available in production. |
+    | 2020-01-08 | Removed v1 of POST tenant |
+    | 2020-03-31 | Announcing of new endpoints and removal of old ones in 6 months |
 
     # Terminology
     ### User
@@ -209,33 +210,26 @@ info:
     ### Production environment
     The API endpoint for the production environment can be found at
 
-    `https://api.kivra.com`
-
-    IP adresses that may host the API endpoint:
-
-    * 5.178.78.52
-    * 5.178.78.53
-    * 46.21.99.50
-    * 46.21.99.51
-
+    `https://sender.api.kivra.com`
+    
     <aside class="notice">
-    This is the live production environment, for testing, please use Sandbox.
+    <i>Note: The older endpoint for production <b>api.kivra.com</b> will be removed on September 30th 2020</i>
     </aside>
 
+    The production environment should only be used for sending real data, not for testing of any sort. For testing, please refer to Sandbox.
+   
     ### Sandbox environment
     The API for the sandbox environment can be found at
 
-    `https://sandbox.kivra.com`
+    `https://sender.sandbox-api.kivra.com`
 
-    IP adresses that may host the Sandbox endpoint:
-
-    * 104.199.61.8
-
-    <aside class="warning">
-    This is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
+    <aside class="notice">
+    <i>Note: The older endpoint for sandbox <b>sandbox.kivra.com</b> will be removed on September 30th 2020</i>
     </aside>
+    
+    The sandbox is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
 
-    *We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.*
+    We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.
 
     ## URL Components
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
@@ -331,6 +325,104 @@ info:
 
     **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
 
+    # Authentication for API
+      Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
+
+      Create the RFC 2045 base64 encoding to be used for tenant registration, replace `client_id` and `client_secret` with real values and make sure there are no trailing newlines (echo -n) and that the string is encoded literally (use single quotes and no escaping)
+
+      ```bash
+      $ echo -n 'client_id:client_secret' | base64
+      Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+      ```
+
+      Then perform the authentication which will respond with an access token.
+
+      ### REQUEST: Authentication
+
+      ```bash
+      curl -i -X POST https://api.kivra.com/v1/auth \
+         -d "grant_type=client_credentials" \
+         -H "Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ="
+      ```
+
+      ### RESPONSE: Authentication
+
+      ```bash
+      HTTP/1.1 200 OK
+      Server: nginx
+      Date: Thu, 02 Oct 2014 12:43:25 GMT
+      Content-Type: application/json
+      Content-Length: 124
+      Connection: keep-alive
+      Vary: Accept-Encoding
+      Strict-Transport-Security: max-age=31536000;
+
+      {
+        "state":"",
+        "access_token":"H6Zq08rF5fjQttd6fTKepWb3FQNptcip",
+        "expires_in":28800,
+        "scope":"kivra.v1.tenant.{tenant-key}.*",
+        "token_type":"bearer"
+      }
+      ```
+
+      <aside class="notice">
+      An access_token is valid for eight(8) hours.
+      </aside>
+
+      A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
+
+      <aside class="warning">
+      Note: Client Credentials and Access Tokens needs to be treated securely, It is how you securely identify your application's rights and identity when accessing the Kivra API. Do not distribute Client Credentials or Access Tokens in email, distributed native applications, client-side javascript, or public code repositories.
+      </aside>
+
+      ### Example request with access_token
+
+      ```bash
+      curl -i -X GET -H "Authorization: Bearer <access_token>" <api-url-to-object>
+      ```
+      ## Authorization with limited access scope
+
+      In some particular configuration, for instance when a centralized service wants to provide a satellite service with possibility to only send content to Kivra for a specific tenant, but not allowing any other operation, the centralized service may request an access token for a specific tenant with a limited scope. This access token can be safely provided to the satellite service.
+
+      To retrieve this access token, the client performs a new authorization with some extra parameters specifying the limited scope.
+
+      ```shell
+      curl -X POST \
+        https://api.kivra.com/v1/auth \
+        -d grant_type=client_credentials \
+        -d scope=post:kivra.v1.tenant.{tenant-key}.content \
+        -H "Authorization: Basic {base64-auth}"
+      ```
+
+      The answer will look like the following:
+
+      ```json
+      {
+          "state": "",
+          "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
+          "expires_in": 28800,
+          "scope": "post:kivra.v1.tenant.{tenant-key}.content",
+          "token_type": "bearer"
+      }
+      ```
+      ### Scope
+      Scopes are specified as one or a commaseparated list of methods with a path appended and separated by `:`.
+
+      Method is a lower case string of one or more of the allowed methods, valid examples:
+
+      | Example        | Details                                                    |
+      | -----------    | ---------------------------------------------------------- |
+      | `post:path`    | Allows `POST` for the given path                           |
+      | `get,put:path` | Allows `GET` and `PUT` for the given path                  |
+
+      Path is a lower case string starting with the keyword `kivra` and the path appended and interspersed with `.` instead
+      of the path-separator `/` such as: `kivra.v1.example`. There is also the possibility to use wildcards:
+
+      | Wildcard       | Details                                                        |
+      | -----------    | -------------------------------------------------------------- |
+      | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
+      | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
 
     # Tenants integration: Content management
     Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
