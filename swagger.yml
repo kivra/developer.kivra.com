@@ -1212,7 +1212,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Invoice to User
                   generated_at: '2016-12-12'
-                  retained: false
+                  retain: false
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1238,7 +1238,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Content to User
                   generated_at: '2016-12-12'
-                  retained: false
+                  retain: false
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1249,7 +1249,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Payslip to User
                   generated_at: '2016-12-12'
-                  retained: true
+                  retain: true
                   retention_time: '390'
                   tenant_info: string
                   files:
@@ -1702,9 +1702,9 @@ components:
           example: "2016-12-12"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
-        retained:
+        retain:
           description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retained should never be `true` for payable content.
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
           writeOnly: true
           readOnly: true
