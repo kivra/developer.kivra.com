@@ -2389,107 +2389,109 @@ components:
 # ##############################################
 # SECURITY oAuth2Client
 # ##############################################
-  securitySchemes:
-    oAuth2Client:
-      type: oauth2
-      description: |
-        Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
 
-        > Create the RFC 2045 base64 encoding to be used for tenant registration, replace `client_id` and `client_secret` with real values and make sure there are no trailing newlines (echo -n) and that the string is encoded literally (use single quotes and no escaping)
+  # securitySchemes:
+  #   oAuth2Client:
+  #     type: oauth2
+  #     description: |
+  #       Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
 
-        ```bash
-        $ echo -n 'client_id:client_secret' | base64
-        Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
-        ```
+  #       > Create the RFC 2045 base64 encoding to be used for tenant registration, replace `client_id` and `client_secret` with real values and make sure there are no trailing newlines (echo -n) and that the string is encoded literally (use single quotes and no escaping)
 
-        > Then perform the authentication which will respond with an access token.
+  #       ```bash
+  #       $ echo -n 'client_id:client_secret' | base64
+  #       Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+  #       ```
 
-        > ### REQUEST: Authentication
+  #       > Then perform the authentication which will respond with an access token.
 
-        ```bash
-        curl -i -X POST https://api.kivra.com/v1/auth \
-           -d "grant_type=client_credentials" \
-           -H "Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ="
-        ```
+  #       > ### REQUEST: Authentication
 
-        > ### RESPONSE: Authentication
+  #       ```bash
+  #       curl -i -X POST https://api.kivra.com/v1/auth \
+  #          -d "grant_type=client_credentials" \
+  #          -H "Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ="
+  #       ```
 
-        ```bash
-        HTTP/1.1 200 OK
-        Server: nginx
-        Date: Thu, 02 Oct 2014 12:43:25 GMT
-        Content-Type: application/json
-        Content-Length: 124
-        Connection: keep-alive
-        Vary: Accept-Encoding
-        Strict-Transport-Security: max-age=31536000;
+  #       > ### RESPONSE: Authentication
 
-        {
-          "state":"",
-          "access_token":"H6Zq08rF5fjQttd6fTKepWb3FQNptcip",
-          "expires_in":28800,
-          "scope":"kivra.v1.tenant.{tenant-key}.*",
-          "token_type":"bearer"
-        }
-        ```
+  #       ```bash
+  #       HTTP/1.1 200 OK
+  #       Server: nginx
+  #       Date: Thu, 02 Oct 2014 12:43:25 GMT
+  #       Content-Type: application/json
+  #       Content-Length: 124
+  #       Connection: keep-alive
+  #       Vary: Accept-Encoding
+  #       Strict-Transport-Security: max-age=31536000;
 
-        <aside class="notice">
-        An access_token is valid for eight(8) hours.
-        </aside>
+  #       {
+  #         "state":"",
+  #         "access_token":"H6Zq08rF5fjQttd6fTKepWb3FQNptcip",
+  #         "expires_in":28800,
+  #         "scope":"kivra.v1.tenant.{tenant-key}.*",
+  #         "token_type":"bearer"
+  #       }
+  #       ```
 
-        A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
+  #       <aside class="notice">
+  #       An access_token is valid for eight(8) hours.
+  #       </aside>
 
-        <aside class="warning">
-        Note: Client Credentials and Access Tokens needs to be treated securely, It is how you securely identify your application's rights and identity when accessing the Kivra API. Do not distribute Client Credentials or Access Tokens in email, distributed native applications, client-side javascript, or public code repositories.
-        </aside>
+  #       A new `access_token` can be requested any time. If a request to the API is issued with a non valid `access_token` a http-response with the HTTP-header 401 is returned such as `HTTP/1.1 401 Unauthorized`. With the use of a `valid access_token` request to the API can be done as the example below.
 
-        > ### Example request with `access_token`
+  #       <aside class="warning">
+  #       Note: Client Credentials and Access Tokens needs to be treated securely, It is how you securely identify your application's rights and identity when accessing the Kivra API. Do not distribute Client Credentials or Access Tokens in email, distributed native applications, client-side javascript, or public code repositories.
+  #       </aside>
 
-        ```bash
-        curl -i -X GET -H "Authorization: Bearer <access_token>" <api-url-to-object>
-        ```
-        ## Authorization with limited access scope
+  #       > ### Example request with `access_token`
 
-        In some particular configuration, for instance when a centralized service wants to provide a satellite service with possibility to only send content to Kivra for a specific tenant, but not allowing any other operation, the centralized service may request an access token for a specific tenant with a limited scope. This access token can be safely provided to the satellite service.
+  #       ```bash
+  #       curl -i -X GET -H "Authorization: Bearer <access_token>" <api-url-to-object>
+  #       ```
+  #       ## Authorization with limited access scope
 
-        To retrieve this access token, the client performs a new authorization with some extra parameters specifying the limited scope.
+  #       In some particular configuration, for instance when a centralized service wants to provide a satellite service with possibility to only send content to Kivra for a specific tenant, but not allowing any other operation, the centralized service may request an access token for a specific tenant with a limited scope. This access token can be safely provided to the satellite service.
 
-        ```shell
-        curl -X POST \
-          https://api.kivra.com/v1/auth \
-          -d grant_type=client_credentials \
-          -d scope=post:kivra.v1.tenant.{tenant-key}.content \
-          -H "Authorization: Basic {base64-auth}"
-        ```
+  #       To retrieve this access token, the client performs a new authorization with some extra parameters specifying the limited scope.
 
-        > The answer will look like the following:
+  #       ```shell
+  #       curl -X POST \
+  #         https://api.kivra.com/v1/auth \
+  #         -d grant_type=client_credentials \
+  #         -d scope=post:kivra.v1.tenant.{tenant-key}.content \
+  #         -H "Authorization: Basic {base64-auth}"
+  #       ```
 
-        ```json
-        {
-            "state": "",
-            "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
-            "expires_in": 28800,
-            "scope": "post:kivra.v1.tenant.{tenant-key}.content",
-            "token_type": "bearer"
-        }
-        ```
-        ### Scope
-        Scopes are specified as one or a commaseparated list of methods with a path appended and separated by `:`.
+  #       > The answer will look like the following:
 
-        Method is a lower case string of one or more of the allowed methods, valid examples:
+  #       ```json
+  #       {
+  #           "state": "",
+  #           "access_token": "DMWmtGWe9YpXep6FTgVEwWttxLR6D53z",
+  #           "expires_in": 28800,
+  #           "scope": "post:kivra.v1.tenant.{tenant-key}.content",
+  #           "token_type": "bearer"
+  #       }
+  #       ```
+  #       ### Scope
+  #       Scopes are specified as one or a commaseparated list of methods with a path appended and separated by `:`.
 
-        | Example        | Details                                                    |
-        | -----------    | ---------------------------------------------------------- |
-        | `post:path`    | Allows `POST` for the given path                           |
-        | `get,put:path` | Allows `GET` and `PUT` for the given path                  |
+  #       Method is a lower case string of one or more of the allowed methods, valid examples:
 
-        Path is a lower case string starting with the keyword `kivra` and the path appended and interspersed with `.` instead
-        of the path-separator `/` such as: `kivra.v1.example`. There is also the possibility to use wildcards:
+  #       | Example        | Details                                                    |
+  #       | -----------    | ---------------------------------------------------------- |
+  #       | `post:path`    | Allows `POST` for the given path                           |
+  #       | `get,put:path` | Allows `GET` and `PUT` for the given path                  |
 
-        | Wildcard       | Details                                                        |
-        | -----------    | -------------------------------------------------------------- |
-        | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
-        | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
-      flows:
-        clientCredentials:
-          tokenUrl: 'https://api.kivra.com/v1/auth'
+  #       Path is a lower case string starting with the keyword `kivra` and the path appended and interspersed with `.` instead
+  #       of the path-separator `/` such as: `kivra.v1.example`. There is also the possibility to use wildcards:
+
+  #       | Wildcard       | Details                                                        |
+  #       | -----------    | -------------------------------------------------------------- |
+  #       | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
+  #       | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
+  #     flows:
+  #       clientCredentials:
+  #         tokenUrl: 'https://api.kivra.com/v1/auth'
+
