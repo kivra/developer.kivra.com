@@ -1194,7 +1194,7 @@ paths:
         Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
         
         ### Dynamic Content Lifecycle
-        When sending html content it's recommended to provide an archivable version of the same document using `archive_part`, preferably PDF.
+        When sending html content it's required to provide a PDF version of the document as the base `Part`. Inside this base `Part` you can then assign the responsive html version of the document as a `ResponsivePart` under the key: `responsive_part`.
       security:
         - oAuth2Client:
           - 'post:kivra.v2.tenant.{tenantKey}.content'
@@ -1248,13 +1248,13 @@ paths:
                   retain: false
                   tenant_info: string
                   parts:
-                    - name: filename.html
-                      content_type: text/html
-                      data: PCFkb2N0eXBlIGh0bWw+CjxoZWFkPgogIDxtZXRhIGNoYXJzZXQ94oCddXRmLTjigJ0+CiAgPHRpdGxlPlRlc3Q8L3RpdGxlPgo8L2hlYWQ+Cjxib2R5PgogIDxwPlRoaXMgaXMgb25seSBhIHRlc3QuPC9wPgo8L2JvZHk+
-                      archive_part:
-                        name: filename.pdf
-                        content_type: application/pdf
-                        data: JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+                    - name: filename.pdf
+                      content_type: application/pdf
+                      data: JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+                      responsive_part:
+                        name: filename.html
+                        content_type: text/html
+                        data: PCFkb2N0eXBlIGh0bWw+CjxoZWFkPgogIDxtZXRhIGNoYXJzZXQ94oCddXRmLTjigJ0+CiAgPHRpdGxlPlRlc3Q8L3RpdGxlPgo8L2hlYWQ+Cjxib2R5PgogIDxwPlRoaXMgaXMgb25seSBhIHRlc3QuPC9wPgo8L2JvZHk+
               invoice to user:
                 value:
                   ssn: '191212121212'
@@ -1916,8 +1916,7 @@ components:
           writeOnly: true
           items:
             oneOf:
-              - $ref: '#/components/schemas/DynamicPart'
-              - $ref: '#/components/schemas/Part'
+              $ref: '#/components/schemas/Part'
         payment:
           $ref: '#/components/schemas/Payment'
 
@@ -1957,9 +1956,7 @@ components:
           type: array
           writeOnly: true
           items:
-            oneOf:
-              - $ref: '#/components/schemas/DynamicPart'
-              - $ref: '#/components/schemas/Part'
+            $ref: '#/components/schemas/Part'
         payment:
           $ref: '#/components/schemas/Payment'
 
@@ -2515,15 +2512,14 @@ components:
           example: "SE556840226601"
 
 # ##############################################
-# SCHEMA Dynamic Part
+# SCHEMA Responsive Part
 # ##############################################
-    DynamicPart:
+    ResponsivePart:
       type: object
       required:
         - name
         - data
         - content_type
-        - archive_part
       properties:
         name:
           description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
@@ -2538,9 +2534,11 @@ components:
           description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "text/html"
           type: string
           example: "text/html"
-        archive_part:
-          $ref: '#/components/schemas/Part'
-
+        expires_at:
+          readOnly: true
+          description: Date and time after which the responsive part no longer will be recommended for default presentation.
+          type: string
+          example: "2020-08-22T01:30:00Z"
 
 # ##############################################
 # SCHEMA Part
@@ -2565,10 +2563,8 @@ components:
           description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
           type: string
           example: "application/pdf"
-        checksum:
-          description: The cheksum of the document calculated with md5
-          type: string
-
+        responsive_part:
+          $ref: '#/components/schemas/ResponsivePart'
 
 # ##############################################
 # SCHEMA File
