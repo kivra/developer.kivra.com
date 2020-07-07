@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Kivra API docs</title>
-    <meta charset="utf-8">
-     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3.25.0/swagger-ui.css">
-</head>
-<body>
-	<div id="swagger-ui"></div>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
 
-	<script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js"></script>
-	<script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
-
-	<script type="text/javascript">
-		window.onload = function() {
-			SwaggerUIBundle({
-			    url: "swagger.yml",
-			    dom_id: '#swagger-ui',
-			    deepLinking: true,
-			    presets: [
-			      SwaggerUIBundle.presets.apis,
-			      SwaggerUIStandalonePreset
-			    ],
-			    layout: "StandaloneLayout"
-			  })
-		}
-	</script>
-</body>
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <redoc spec-url='swagger.yml'></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+  </body>
 </html>
