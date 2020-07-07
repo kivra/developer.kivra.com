@@ -52,7 +52,7 @@ info:
 
     ## Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
-    via the [KivraStatus](https://www.kivrastatus.se).
+    via the [KivraStatus](https://www.kivrastatus.se) service.
 
     Disruptive changes in the API that may break existing integrations, as for instance removal of an older version of an API endpoint, are announced via [KivraStatus](https://www.kivrastatus.se) at least 6 months before the change becomes operative.
 
@@ -77,6 +77,7 @@ info:
     | 2019-09-23 | v1 and v2 description. Corrections in the agreement endpoints. Agreements now available in production. |
     | 2020-01-08 | Removed v1 of POST tenant |
     | 2020-03-31 | Announcing of new endpoints and removal of old ones in 6 months |
+    | 2020-07-07 | New layout and text adjustments |
 
     # Terminology
     ### User
@@ -101,10 +102,10 @@ info:
     The information sent by Tenants to Recipients, i.e. Documents, Invoices, etc.
 
     ### Dormant Recipient
-    Recipient who can’t be reached by email and sms-notifications are put in a "dormant"-state. During this dormant state the Recipient won’t show up in any of user or company files but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again they are awaken from dormant state and will start appearing in user files again.
+    Recipient who can’t be reached by email and sms-notifications are put in a "dormant"-state. During this dormant state the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again they are awaken from dormant state and will start appearing in the matching functionalities again.
 
     ### Grace period
-    Kivra employs a `45` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company files and the Tenant can still send Content which the Recipient will receive.
+    Kivra employs a `45` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive.
 
     ### User object
     is a data object that contains all the available information about a user
@@ -126,10 +127,10 @@ info:
     </aside>
 
     ### Tenant key
-    Is a unique key that identifies a Tenant. The tenant key is not related to the VAT identifier and as such can be used to address a specific Tenant when a Sender might wish to setup multiple Tenants for one VAT identifier.
+    Is a unique key that identifies a Tenant.
 
     ### Metadata
-    is data about data or information about data. Originally, the concept of meta-information, ie information about information. Normally metadata or metadata to describe the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a consignment is to and other information that may be relevant for a shipment. as such payment information.
+    is data about data or information about data. Originally, the concept of meta-information, ie information about information. Normally metadata describes the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a content is to be sent to and other information that may be relevant for a shipment, as for instance payment information.
 
     ### Json
     Json or JavaScript Object Notation is a structured approach to data management. Similar to XML but much simpler and easier to read. JSON is the default serialization format  within the Kivra system. JSON have a limited set of types and close attention needs to be paid to the correct JSON-type for metadata when sending Content to Kivra.
@@ -177,17 +178,19 @@ info:
     ## VAT identifier
     In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT identifier may reflect the grouping by e.g. suffixing the number.
 
-    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters. For instance, Kivra’s VAT Id would be: `SE556840226601`.
+    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters. 
+
+    Kivra only uses and recognizes the Swedish VAT number which is composed of the prefix `SE` followed by 12 digits. For instance, Kivra’s VAT Id would be: `SE556840226601`.
 
     # Limits
     Kivra handles millions of documents. We put limits to protect the system from receiving more data than it can handle, and to ensure an equitable distribution of system resources. There’s also various practical reasons for this, such as reducing Head-of-line blocking and providing a optimal experience for the enduser.
 
     Our policies are as follows and are subject to change.
 
-    ## Content File-size
+    ### Content File-size
     `1 MB` per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than `1 MB`.
 
-    ## Rate limit
+    ### Rate limit
     `50` **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up to `50` to the same recipient.
 
     # Interacting with the API
@@ -197,7 +200,7 @@ info:
     Resources you have no right to see will either give you a describing status code or a `404`. `404` statuses are returned if the case is such that you don’t even have the right to know, according to the system's current state, if an object exists.
 
     ## API Endpoints
-    Kivra uses different endpoints for production and testing described below. We also provide the current IP addresses that *could* serve API requests, the current DNS-record will provide an up-to-date list with active endpoints. This is not meant to be a complete list of Kivra-maintained IP addresses. Please make sure to **always** access the Kivra API using the correct domain-name and environment instead of relying on IP addresses.
+    Kivra uses different endpoints for production and testing as described below. We also provide the current IP addresses that *could* serve API requests, the current DNS-record will provide an up-to-date list with active endpoints. This is not meant to be a complete list of Kivra-maintained IP addresses. Please make sure to **always** access the Kivra API using the correct domain-name and environment instead of relying on IP addresses.
 
     Kivra maintains a infrastructure, which grows dynamically to accommodate increasing demand. As a result, Kivra API servers use a range of IP addresses, and the addresses often change.
 
@@ -235,7 +238,10 @@ info:
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
 
     ### Endpoint
-    `https://TYPE.kivra.com/VERSION`
+    `https://sender.TYPE.kivra.com
+
+    ### Version
+    `/VERSION`
 
     ### Tenant resource
     `/tenant/TENANTKEY`
@@ -247,7 +253,7 @@ info:
     The units have parameterized fields, which allow you to change their respective meanings, those fields are briefly described below.
 
     ### TYPE
-    `sandbox` for development and test or `api` for production purposes.
+    `sandbox-api` for development and test or `api` for production purposes.
 
     ### VERSION
     Current API version is `v1` but some endpoint are already available as `v2`
@@ -325,7 +331,231 @@ info:
 
     **Note:** When the include parameter is set to fields it is assumed that you will also pass a fields parameter with a comma-separated list of names, declaring which fields you want to view.
 
-    # Authentication for API
+    # Tenants integration: Content management
+
+    Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
+
+    Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
+    
+    Before looking at the details of the integration, let's look at the concept of "opt-out" and its implication for tenant integration.
+
+    ## Opt-out
+    Kivra uses a method called opt-out to make the service as easy as possible for Recipients and Senders. Opt-out means that when a Recipient register with Kivra they’ll automatically receive documents from all Tenants connected to Kivra. Recipients do not need to enable individual Tenants to start receiving Content.
+
+    ### Meaning of Opt-out for:
+
+    #### Tenant
+
+    Tenants can start sending Content to all Recipients in Kivra.
+    When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
+    
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+
+    #### Recipients
+
+    Recipients will automatically start receiving Content from new Tenants.
+    
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    
+    ## Typical flow for content management
+
+    The typical flow for sending content to recipients is illustrated here:
+    
+    ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
+    
+    ## Step 1: Synchronize Recipients (optional)
+
+    An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
+
+    This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
+
+    Synchronization of Recipients is done via the `usermatch` resource.
+
+    This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
+
+    ## Step 2: Send Content
+    
+    Sending of Content is done via the `content` resource. The metadata in the `content` resource identifies the user and also determines how the recipient can interact with the content.
+
+    ## Typical integration flows
+
+    The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
+
+    ### Daily document sending
+
+    In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
+
+    The sender uses the API to synchronize the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
+
+    Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
+
+    ### Payslips and retain functionality
+
+    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matching step but using the retain functionality instead.
+
+    In this approach the sender sends all documents without checking if the user is a Kivra user or not, relying on the retain functionality instead. Content sent to non-Kivra users will be retained for a period of time (typically `390` days for payslips), meaning that it is kept by Kivra but not delivered. If the user creates a Kivra account before the retention period expires, the user will get all retained content. If the user does not create a Kivra account before the retention period expires, the content will be removed from Kivra.
+
+    ### Payments and invoices
+
+    Kivra allows to send both payable invoices (that might be paid via Kivra applications) or payment notifications that cannot be paid via Kivra, as for instance notification of autogiro payments.
+
+    `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
+
+    # Tenant integration: Tenant management
+
+    With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
+
+    * Create a tenant
+    * List all tenants that the client has currently access to
+    * Update and manage which companies the tenant represents
+    * Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
+    * Request access to a tenant that is currently managed by some other client
+
+    # Tenant integration: Agreements
+
+    Agreements integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
+
+    Kivra's agreement service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
+
+    ## Signers, Delegates and Parties
+
+    Each individual signer in an agreement is categorized as either `signer`or `delegate`:
+
+    * a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
+    * a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
+    * 'parties' refers to the `signers` and `delegates` in an agreement.
+
+    ## Agreement states
+
+    During its lifetime, an agreement can go through various states. The current state can be accessed by getting the agreement via the signature API:
+
+    ### State active
+
+    This is the inital state of the agreement after a successful create. During user actions on the agreement the state remains as `active`. The states that an active agreement can transition to are referred to as *terminal* states, meaning it's the end of the agreement lifecycle.
+
+    If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
+
+    The terminal states in which an agreement can transition to, are described here below.
+
+    ### State completed
+
+    Agreements automatically transitions to the state `completed` at the time when the last of all parties sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party. In other words, no one can change a completed agreement.
+
+    When an agreement becomes completed, a covenant file is created (see below). The covenant file will be availabe to the tenant via the signature API, and to the signers and delegates via the graphical interface.
+
+    No one can change a signed agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services after `30` days from the date it became completed.
+
+    ### State revoked
+
+    This state can be triggered by a tenant who owns the agreement. If the agreement is *active*, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within `30` days after the date it was created.
+
+    ## Agreement verification and covenant file
+
+    When the agreement transitions to the `completed` state, a few more things happen. An additional PDF file, a signed version of the original agreement, is created. This file is called the `covenant file`. The covenant file includes the original agreement and some additional pages including Bank ID data for the signatures and additional information about the signing events. The covenant file is accessible for `30` days to the tenant and all parties, after that it is removed from all services, together with the initial descriptive data for the original agreement. However, we construct a new data structure that we store persistently and that will be used for verification: a `256bit` string value constructed through an internal algorithm that we refer to as `verification value`.
+
+    The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
+
+    ## Notifications
+
+    After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/).
+    After the users access the Kivra signature service and agree to its terms of service, Kivra will notify signers when the document has been signed by all and is ready to be downloaded or transferred to the Kivra mailbox, using the contact information provided by the tenant.
+
+    ## Signature flow
+
+    1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number and an email. The agreement is made available by Kivra to the parties.
+    2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
+    3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
+    4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
+
+    ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
+    
+    # Partners integration
+
+    Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
+
+    Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
+
+    Partners will use the `partner` endpoint to integrate with Kivra.
+
+    # Errors
+
+    Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
+
+    ## Error handling
+
+    The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
+
+    ### Recipient-file synchronization:
+
+    Common errors that can occur and need to be handled gracefully.
+
+    * Network problem that hinders the integrator from communicating with Kivra
+    * Problem on Kivra’s end that hinders the integrator from querying the state of **Recipients**
+
+    These errors should be handled gracefully such that the last working download of a **Recipient**-file is used until the problem has been solved and a new **Recipient**-file can be downloaded and used.
+
+    ### Content Delivery:
+
+    Common errors that can occur and need to be handled gracefully.
+
+    * Network problem that hinders the integrator from communicating with Kivra resulting in either not being able to reach Kivra or a non-successful response-code
+    * Problem with the **input**-file either due to above(network problem) or other such as corrupt data or invalid metadata.
+
+    ## Error Messages
+
+    When the KIVRA API returns error messages, it does so in a extended JSON format.
+
+    > ### Example error response
+
+    ```bash
+    { "code"          : 40400
+    , "short_message" : "Resource not found"
+    , "long_message"  : "There's no resource at the given URI."
+    }
+    ```
+
+    ### An error has four properties:
+
+    | Property      | Description                                                |
+    | ------------- | ---------------------------------------------------------- |
+    | code          | The Kivra [error code](#error-codes)                       |
+    | short_message | A short description of the error                           |
+    | long_message  | A longer and more verbose error message                    |
+
+    ## Error codes
+
+    In addition to descriptive error text, error messages contain machine-parseable codes. While the text for an error message may change, the codes will stay the same. The following table describes the codes which may appear when working with the API:
+
+    | Code | Short Message | Long Message |
+    | ---- | ------------- | ------------ |
+    |40000 |Request validation failed |The request payload does not pass required validation |
+    |40001 |Invalid Request |The request was invalid |
+    |40002 |Redirect URI Mismatch |The redirect_uri does not match the registered redirect_uri |
+    |40003 |Invalid Scope | An invalid or insufficient scope was used |
+    |40004 |Already registered |This user is already registered |
+    |40005 |Error in phonenumber |The request can't be processed due to phonenumber not meeting the required format |
+    |40006 |Error in password |The request can't be processed due to password not meeting the required format |
+    |40007 |Error in email |The request can't be processed due to email not meeting the required format |
+    |40008 |Unprocessable Entity |The JSON payload was malformed. The client should not resend the same payload without first correcting the erroneous JSON payload. |
+    |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
+    |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
+    |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
+    |40100 |Unauthorized |Supplied credentials was invalid |
+    |40101 |Access Denied |The resource owner or authorization server denied the request |
+    |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
+    |40103 |Invalid Grant |The provided authorization grant (e.g. authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client. |
+    |40104 |Invalid Client |Client authentication failed (e.g. unknown client, no client authentication included, or unsupported authentication method). |
+    |40105 |Invalid Sendrequest |No sendrequest exists between sender and receiver, or sendrequest is not accepted. |
+    |40106 |Email in use |This email adress is already in use and can not be used. |
+    |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
+    |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
+    |40400 |Not found |The resource was not found at the given URI at this time |
+    |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
+    |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
+    |40915 |Conflict |An attempt was made to create an object that already exists |
+    |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
+
+ # API - Authentication
       Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
 
       Create the RFC 2045 base64 encoding to be used for tenant registration, replace `client_id` and `client_secret` with real values and make sure there are no trailing newlines (echo -n) and that the string is encoded literally (use single quotes and no escaping)
@@ -423,206 +653,7 @@ info:
       | -----------    | -------------------------------------------------------------- |
       | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
       | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
-
-    # Tenants integration: Content management
-    Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
-
-    Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
-    
-    Before looking at the details of the integration, let's look at the concept of "opt-out" and its implication for tenant integration.
-
-    ## Opt-out
-    Kivra uses a method called opt-out to make the service as easy as possible for Recipients and Senders. Opt-out means that when a Recipient register with Kivra they’ll automatically receive documents from all Tenants connected to Kivra. Recipients do not need to enable individual Tenants to start receiving Content.
-
-    ### Meaning of Opt-out for:
-    #### Tenant
-    Tenants can start sending Content to all Recipients in Kivra.
-    When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
-    
-    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
-
-    #### Recipients
-    Recipients will automatically start receiving Content from new Tenants.
-    
-    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
-    
-    ## Typical flow for content management
-    The typical flow for sending content to recipients is illustrated here:
-    
-    ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
-    
-    ## Step 1: Synchronize Recipients (optional)
-    An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
-
-    This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
-
-    Synchronization of Recipients is done via the `usermatch` resource.
-
-    This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
-
-    ## Step 2: Send Content
-    
-    Sending of Content is done via the `content` resource. The metadata in the `content` resource identifies the user and also determines how the recipient can interact with the content.
-
-    ## Typical integration flows
-    The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
-
-    ### Daily document sending
-    In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
-
-    The sender uses the API to synchronize the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
-
-    Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
-
-    ### Payslips and retain functionality
-    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matching step but using the retain functionality instead.
-
-    In this approach the sender sends all documents without checking if the user is a Kivra user or not, relying on the retain functionality instead. Content sent to non-Kivra users will be retained for a period of time (typically `390` days for payslips), meaning that it is kept by Kivra but not delivered. If the user creates a Kivra account before the retention period expires, the user will get all retained content. If the user does not create a Kivra account before the retention period expires, the content will be removed from Kivra.
-
-    ### Payments and invoices
-    Kivra allows to send both payable invoices (that might be paid via Kivra applications) or payment notifications that cannot be paid via Kivra, as for instance notification of autogiro payments.
-
-    `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
-
-    # Tenant integration: Tenant management
-    With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
-
-    * Create a tenant
-    * List all tenants that the client has currently access to
-    * Update and manage which companies the tenant represents
-    * Manage and update the display information of a tenant, meaning the sender name and the icon displayed in the Kivra apps to represent the sender
-    * Request access to a tenant that is currently managed by some other client
-
-    # Tenant integration: Agreements
-    Agreements integration allows *tenants* and *integrators* to send content to be signed via Kivra's signature service. Content to be signed is sent to a list of receivers (signers or delegates, see below) who may login to [signatures.kivra.com](https://signatures.kivra.com/), identify themselves and sign the document via BankId. Upon signature by all parties, the agreement is completed and a new content is created (the covenant file, see below) including the original content plus a signing log listing all signers and information about the signature. Covenant files can be verified cryptographically to make sure that the information included (both original content and signing log) is correct and has not been altered after creation.
-
-    Kivra's agreement service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
-
-    ## Signers, Delegates and Parties
-    Each individual signer in an agreement is categorized as either `signer`or `delegate`:
-
-    * a `signer` signs an agreement as an individual, for instance in the scenario of an employment agreement, the `signer` is the person receiving an employment offer. Each agreement must have at least one `signer`. Signer(s) do not need to be users of Kivra.
-    * a `delegate` signs an agreement as representative for a company, for instance in the scenario of an employment agreement the `delegate` is typically the HR manager sending the employment offer. To have a `delegate` in an agreement is not mandatory, in case the agreement only requires to be signed by the signer(s). Delegate(s) do not need to be users of Kivra.
-    * 'parties' refers to the `signers` and `delegates` in an agreement.
-
-    ## Agreement states
-    During its lifetime, an agreement can go through various states. The current state can be accessed by getting the agreement via the signature API:
-
-    ### State active
-    This is the inital state of the agreement after a successful create. During user actions on the agreement the state remains as `active`. The states that an active agreement can transition to are referred to as *terminal* states, meaning it's the end of the agreement lifecycle.
-
-    If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
-
-    The terminal states in which an agreement can transition to, are described here below.
-
-    ### State completed
-    Agreements automatically transitions to the state `completed` at the time when the last of all parties sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party. In other words, no one can change a completed agreement.
-
-    When an agreement becomes completed, a covenant file is created (see below). The covenant file will be availabe to the tenant via the signature API, and to the signers and delegates via the graphical interface.
-
-    No one can change a signed agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services after `30` days from the date it became completed.
-
-    ### State revoked
-    This state can be triggered by a tenant who owns the agreement. If the agreement is *active*, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within `30` days after the date it was created.
-
-    ## Agreement verification and covenant file
-
-    When the agreement transitions to the `completed` state, a few more things happen. An additional PDF file, a signed version of the original agreement, is created. This file is called the `covenant file`. The covenant file includes the original agreement and some additional pages including Bank ID data for the signatures and additional information about the signing events. The covenant file is accessible for `30` days to the tenant and all parties, after that it is removed from all services, together with the initial descriptive data for the original agreement. However, we construct a new data structure that we store persistently and that will be used for verification: a `256bit` string value constructed through an internal algorithm that we refer to as `verification value`.
-
-    The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
-
-    ## Notifications
-    After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/).
-    After the users access the Kivra signature service and agree to its terms of service, Kivra will notify signers when the document has been signed by all and is ready to be downloaded or transferred to the Kivra mailbox, using the contact information provided by the tenant.
-
-    ## Signature flow
-
-    1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number and an email. The agreement is made available by Kivra to the parties.
-    2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
-    3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
-    4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
-
-    ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
-    
-    # Partners integration
-    Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
-
-    Company recipients need to explicitly authorize a partner to access their content via a setting in their Kivra Company mailbox, and they can revoke access at any time. Both granting and revoking of access are performed via the Kivra app.
-
-    Partners will use the `partner` endpoint to integrate with Kivra.
-
-    # Errors
-    Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). Codes in the `5xx` range indicate an error with Kivra's servers (these are rare).
-
-    ## Error handling
-    The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
-
-    ### Recipient-file synchronization:
-    Common errors that can occur and need to be handled gracefully.
-
-    * Network problem that hinders the integrator from communicating with Kivra
-    * Problem on Kivra’s end that hinders the integrator from querying the state of **Recipients**
-
-    These errors should be handled gracefully such that the last working download of a **Recipient**-file is used until the problem has been solved and a new **Recipient**-file can be downloaded and used.
-
-    ### Content Delivery:
-    Common errors that can occur and need to be handled gracefully.
-
-    * Network problem that hinders the integrator from communicating with Kivra resulting in either not being able to reach Kivra or a non-successful response-code
-    * Problem with the **input**-file either due to above(network problem) or other such as corrupt data or invalid metadata.
-
-    ## Error Messages
-    When the KIVRA API returns error messages, it does so in a extended JSON format.
-
-    > ### Example error response
-
-    ```bash
-    { "code"          : 40400
-    , "short_message" : "Resource not found"
-    , "long_message"  : "There's no resource at the given URI."
-    }
-    ```
-
-    ### An error has four properties:
-
-    | Property      | Description                                                |
-    | ------------- | ---------------------------------------------------------- |
-    | code          | The Kivra [error code](#error-codes)                       |
-    | short_message | A short description of the error                           |
-    | long_message  | A longer and more verbose error message                    |
-
-    ## Error codes
-    In addition to descriptive error text, error messages contain machine-parseable codes. While the text for an error message may change, the codes will stay the same. The following table describes the codes which may appear when working with the API:
-
-    | Code | Short Message | Long Message |
-    | ---- | ------------- | ------------ |
-    |40000 |Request validation failed |The request payload does not pass required validation |
-    |40001 |Invalid Request |The request was invalid |
-    |40002 |Redirect URI Mismatch |The redirect_uri does not match the registered redirect_uri |
-    |40003 |Invalid Scope | An invalid or insufficient scope was used |
-    |40004 |Already registered |This user is already registered |
-    |40005 |Error in phonenumber |The request can't be processed due to phonenumber not meeting the required format |
-    |40006 |Error in password |The request can't be processed due to password not meeting the required format |
-    |40007 |Error in email |The request can't be processed due to email not meeting the required format |
-    |40008 |Unprocessable Entity |The JSON payload was malformed. The client should not resend the same payload without first correcting the erroneous JSON payload. |
-    |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
-    |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
-    |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
-    |40100 |Unauthorized |Supplied credentials was invalid |
-    |40101 |Access Denied |The resource owner or authorization server denied the request |
-    |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
-    |40103 |Invalid Grant |The provided authorization grant (e.g. authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client. |
-    |40104 |Invalid Client |Client authentication failed (e.g. unknown client, no client authentication included, or unsupported authentication method). |
-    |40105 |Invalid Sendrequest |No sendrequest exists between sender and receiver, or sendrequest is not accepted. |
-    |40106 |Email in use |This email adress is already in use and can not be used. |
-    |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
-    |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
-    |40400 |Not found |The resource was not found at the given URI at this time |
-    |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
-    |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
-    |40915 |Conflict |An attempt was made to create an object that already exists |
-    |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
-
+      
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
@@ -2494,4 +2525,3 @@ components:
   #     flows:
   #       clientCredentials:
   #         tokenUrl: 'https://api.kivra.com/v1/auth'
-
