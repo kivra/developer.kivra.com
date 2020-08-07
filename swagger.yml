@@ -1718,8 +1718,7 @@ components:
         - ssn
       properties:
         ssn:
-          description: |
-            User's unique SSN, format: `YYYYMMDDnnnn`
+          description: User's unique SSN, format: `YYYYMMDDnnnn`
           type: string
           writeOnly: true
           example: "191212121212"
@@ -1731,29 +1730,22 @@ components:
           type: string
           format: ISO8601
           example: "2016-12-12"
-          description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+          description: Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         retain:
-          description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
+          description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
           writeOnly: true
-          readOnly: true
           example: false
         retention_time:
-          description: |
-            How long to retain a Content. Supported values: `"30"` and `"390"`
+          description: How long to retain a Content. Supported values: `"30"` and `"390"`
           type: string
           writeOnly: true
-          readOnly: true
           example: "30"
           enum: ["30","390"]
         tenant_info:
-          description: |
-            An arbitrary string defined by the tenant, used to group content for administrative tasks
+          description: An arbitrary string defined by the tenant, used to group content for administrative tasks
           type: string
           writeOnly: true
-          readOnly: true
         files:
           description: Array of file Objects
           type: array
@@ -1763,7 +1755,6 @@ components:
         context:
           type: object
           writeOnly: true
-          readOnly: true
           description: Optionally specify additional information
           properties:
             invoice:
@@ -1789,7 +1780,6 @@ components:
           description: |
             A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
           type: string
-          readOnly: true
           writeOnly: true
           example: SE556840226601
         subject:
@@ -1807,7 +1797,6 @@ components:
             An arbitrary string defined by the tenant, used to group content for administrative tasks
           type: string
           writeOnly: true
-          readOnly: true
         files:
           description: Array of file Objects
           type: array
@@ -1817,7 +1806,6 @@ components:
         context:
           type: object
           writeOnly: true
-          readOnly: true
           description: Optionally specify additional information
           properties:
             invoice:
@@ -2216,7 +2204,6 @@ components:
         parties:
           description: list of signers and delegates that are requested to sign the agreement
           type: array
-          readOnly: true
           items:
             $ref: '#/components/schemas/AgreementParties'
           example:
