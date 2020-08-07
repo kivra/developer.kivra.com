@@ -1718,7 +1718,8 @@ components:
         - ssn
       properties:
         ssn:
-          description: User's unique SSN, format: `YYYYMMDDnnnn`
+          description: |
+            User's unique SSN, according to the `YYYYMMDDnnnn` format
           type: string
           writeOnly: true
           example: "191212121212"
