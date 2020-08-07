@@ -1738,7 +1738,8 @@ components:
           writeOnly: true
           example: false
         retention_time:
-          description: How long to retain a Content. Supported values: `"30"` and `"390"`
+          description: |
+            How long to retain a Content. Supported values: `"30"` and `"390"`
           type: string
           writeOnly: true
           example: "30"
