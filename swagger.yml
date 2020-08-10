@@ -1916,7 +1916,7 @@ components:
           writeOnly: true
           items:
             oneOf:
-              $ref: '#/components/schemas/Part'
+              - $ref: '#/components/schemas/Part'
         payment:
           $ref: '#/components/schemas/Payment'
 
