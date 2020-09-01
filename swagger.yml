@@ -1253,7 +1253,6 @@ paths:
                     invoice:
                       payment:
                         payable: true
-                        status: unpaid
                         currency: SEK
                         due_date: '2017-01-01'
                         total_owed: '123.50'
@@ -1839,6 +1838,7 @@ components:
           type: string
           description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
           default: "unpaid"
+          readOnly: true
           enum: ["paid", "unpaid"]
         currency:
           type: string
