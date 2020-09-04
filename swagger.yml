@@ -902,6 +902,7 @@ paths:
         * Dimensions: squared icon with size between 256x256 px and 512x512 px
         * Alpha Channel: 32-bits
         * Format: PNG
+        * File size: up to 1MB
 
         We recommend to leave a little white area around the logo, to provide the best experience for the users.
       parameters:
