@@ -78,6 +78,7 @@ info:
     | 2020-01-08 | Removed v1 of POST tenant |
     | 2020-03-31 | Announcing of new endpoints and removal of old ones in 6 months |
     | 2020-07-07 | New layout and text adjustments |
+    | 2020-09-28 | "type" attribute in content schema |
 
     # Terminology
     ### User
@@ -1244,6 +1245,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Invoice to User
                   generated_at: '2016-12-12'
+                  type: 'invoice'
                   retain: false
                   tenant_info: string
                   files:
@@ -1269,6 +1271,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Content to User
                   generated_at: '2016-12-12'
+                  type: 'letter'
                   retain: false
                   tenant_info: string
                   files:
@@ -1280,6 +1283,7 @@ paths:
                   ssn: '191212121212'
                   subject: Sample Payslip to User
                   generated_at: '2016-12-12'
+                  type: 'letter.salary'
                   retain: true
                   retention_time: '390'
                   tenant_info: string
@@ -1292,6 +1296,7 @@ paths:
                   vat_number: SE556840226601
                   subject: Sample Content to Company
                   generated_at: '2016-12-12'
+                  type: 'letter'
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1719,7 +1724,7 @@ components:
           writeOnly: true
           example: "191212121212"
         subject:
-          description: This Subject/Title will be visibile in the Recipients Inbox.
+          description: This subject/title will be visibile in the Recipients Inbox.
           type: string
           example: "Sample Invoice"
         generated_at:
@@ -1727,6 +1732,15 @@ components:
           format: ISO8601
           example: "2016-12-12"
           description: Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+        type: 
+          type: string
+          example: "letter"
+          description: |
+            Optional attribute providing information about the type of content being sent. The type of a content may influence how the user interacts with the content and how the user is notified about the content.
+              Allowed values are:
+              - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
+              - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
+              - `"letter.salary"`: indicating that the content is a salary specification.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
@@ -1789,6 +1803,15 @@ components:
           example: "2016-12-12"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+        type: 
+          type: string
+          example: "letter"
+          description: |
+            Optional attribute providing information about the type of content being sent. The type of a content may influence how the user interacts with the content and how the user is notified about the content.
+              Allowed values are:
+              - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
+              - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
+              - `"letter.salary"`: indicating that the content is a salary specification.
         tenant_info:
           description: |
             An arbitrary string defined by the tenant, used to group content for administrative tasks
@@ -2412,4 +2435,3 @@ components:
       flows:
         clientCredentials:
           tokenUrl: 'https://api.kivra.com/v1/auth'
-
