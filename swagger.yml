@@ -541,6 +541,8 @@ info:
     |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
     |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
     |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
+    |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type | 
+    |40030 |IconSizeError | The request can't be processed due to the icon format not being compliant with the requirements |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
     |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
