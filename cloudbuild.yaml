@@ -1,3 +1,11 @@
 steps:
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'index.html', 'swagger.yml', 'gs://developer.kivra.com']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp index.html swagger.yml "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp index.html swagger.yml "gs://developer.kivra.com/" || echo "skipping . . ."'

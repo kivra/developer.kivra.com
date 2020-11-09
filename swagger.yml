@@ -1268,6 +1268,8 @@ paths:
                         variable_amount: false
                         min_amount: '50.00'
                       invoice_reference: 'Invoice Nr #123'
+                  sender_tags:
+                    - 'invoice_consumer_2016-12'
               content to user:
                 value:
                   ssn: '191212121212'
@@ -1280,6 +1282,8 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+                  sender_tags:
+                    - 'annual-report_consumer_2016'
               payslip to user:
                 value:
                   ssn: '191212121212'
@@ -1293,6 +1297,8 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+                  sender_tags:
+                    - 'payslip_2016-12'
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -1304,6 +1310,8 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+                  sender_tags:
+                    - 'invoice_business_2016-12'
 
 # ##############################################
 # POST /v1/tenant/TKEY/agreement
@@ -1780,6 +1788,11 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
+        sender_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SenderTag'
+          writeOnly: true
 
 # ##############################################
 # SCHEMA Content_company
@@ -1840,6 +1853,18 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
+        sender_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SenderTag'
+          writeOnly: true
+
+# ##############################################
+# SCHEMA SenderTag
+# ##############################################
+    SenderTag:
+      type: string
+      description: 'Sender tag to be referenced by campaigns or filtering aggregated sender metrics. examples of this value could be `"batch_12345"`, `"welcome_letter_v3"`, `"insurance_invoice_2020-03"` or something completely different.'
 
 # ##############################################
 # SCHEMA Payment
