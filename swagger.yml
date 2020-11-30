@@ -5,7 +5,7 @@ servers:
   - url: https://sender.api.kivra.com
     description: Production environment
   - url: https://sender.sandbox-api.kivra.com
-    description: Staging environment
+    description: Sandbox environment
 info:
   title: Kivra Sweden API
   version: v1 and v2
