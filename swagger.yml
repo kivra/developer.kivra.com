@@ -1163,7 +1163,7 @@ paths:
       tags:
         - "Tenant API - Content"
       summary: Send content to a recipient (user or company)
-      operationId: post_v1_tenant_key_content
+      operationId: Send content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
