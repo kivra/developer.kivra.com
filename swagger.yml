@@ -14,10 +14,10 @@ info:
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
     ## National versions of Kivra APIs
-    As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate. 
-    
+    As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate.
+
     This version of the API is about **Kivra Sweden**.
-    
+
     ## Api version: v1 and v2
     We currently have some endpoints in v1 and some endpoints in v2. Each endpoint documented here specifies in the URL whether the endpoint requires v1 or v2.
 
@@ -179,7 +179,7 @@ info:
     ## VAT identifier
     In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT identifier may reflect the grouping by e.g. suffixing the number.
 
-    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters. 
+    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters.
 
     Kivra only uses and recognizes the Swedish VAT number which is composed of the prefix `SE` followed by 12 digits. For instance, Kivra’s VAT Id would be: `SE556840226601`.
 
@@ -215,13 +215,13 @@ info:
     The API endpoint for the production environment can be found at
 
     `https://sender.api.kivra.com`
-    
+
     <aside class="notice">
     <i>Note: The older endpoint for production <b>api.kivra.com</b> will be removed on September 30th 2020</i>
     </aside>
 
     The production environment should only be used for sending real data, not for testing of any sort. For testing, please refer to Sandbox.
-   
+
     ### Sandbox environment
     The API for the sandbox environment can be found at
 
@@ -230,7 +230,7 @@ info:
     <aside class="notice">
     <i>Note: The older endpoint for sandbox <b>sandbox.kivra.com</b> will be removed on September 30th 2020</i>
     </aside>
-    
+
     The sandbox is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
 
     We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.
@@ -284,7 +284,7 @@ info:
     | POST        | Used for creating resources, or performing custom or batch type actions |
     | PUT         | Used for updating resources or collections, but can also be used to create a resource when the key has been predetermined. Note that `PUT` apply to the entire resource and not just parts of it. So, when doing a `PUT` operation, the entire resource is replaced |
     | DELETE      | Used for deleting resources. Delete is atomic and acts on the whole resource, that is it can not be used to delete a part or alter the state of a resource. Use `PUT` for that |
-    
+
     # Resource Types
     There are two main types of resources – objects and collections of objects, they are individually outlined in the following sections.
     It can generally be said that if a URL ends with a unique identifier (also known as a key), it is an object or a sub-object. Resources ending with collection names are collection resources.
@@ -337,7 +337,7 @@ info:
     Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
-    
+
     Before looking at the details of the integration, let's look at the concept of "opt-out" and its implication for tenant integration.
 
     ## Opt-out
@@ -349,21 +349,21 @@ info:
 
     Tenants can start sending Content to all Recipients in Kivra.
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
-    
+
     A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
 
     Recipients will automatically start receiving Content from new Tenants.
-    
+
     Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
-    
+
     ## Typical flow for content management
 
     The typical flow for sending content to recipients is illustrated here:
-    
+
     ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
-    
+
     ## Step 1: Synchronize Recipients (optional)
 
     An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
@@ -375,7 +375,7 @@ info:
     This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
 
     ## Step 2: Send Content
-    
+
     Sending of Content is done via the `content` resource. The metadata in the `content` resource identifies the user and also determines how the recipient can interact with the content.
 
     ## Typical integration flows
@@ -469,7 +469,7 @@ info:
     4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
 
     ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
-    
+
     # Partners integration
 
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
@@ -541,7 +541,7 @@ info:
     |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
     |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
     |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
-    |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type | 
+    |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type |
     |40030 |IconSizeError | The request can't be processed due to the icon format not being compliant with the requirements |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
@@ -1188,15 +1188,15 @@ paths:
 
         ### Duplicate control
         If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
-        
+
         <aside class="notice">
         Note: Duplicate control is only available in production, not in sandbox. This allows senders to reuse the same payload several times in the test environment.
         </aside>
 
         It's important to underline that the duplicate control is made by checking the complete payload (beside `generated_at`), not only the attached content. This means that any change in the payload will cause the duplicate check to fail and the corresponding content to be delivered.
-        
+
         Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
-        
+
       security:
         - oAuth2Client:
           - 'post:kivra.v1.tenant.{tenantKey}.content'
@@ -1734,7 +1734,7 @@ components:
           format: ISO8601
           example: "2016-12-12"
           description: Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
-        type: 
+        type:
           type: string
           example: "letter"
           description: |
@@ -1805,7 +1805,7 @@ components:
           example: "2016-12-12"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
-        type: 
+        type:
           type: string
           example: "letter"
           description: |
@@ -2024,7 +2024,7 @@ components:
     Error40915:
       type: object
       properties:
-        code: 
+        code:
           type: string
           description: The 5-digits error code
           example: 40915
