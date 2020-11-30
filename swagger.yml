@@ -1268,6 +1268,32 @@ paths:
                         variable_amount: false
                         min_amount: '50.00'
                       invoice_reference: 'Invoice Nr #123'
+              invoice offer to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Invoice offer to User
+                  type: 'invoice.offer'
+                  retain: false
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: '2021-01-01'
+                        total_owed: '123.50'
+                        type: SE_OCR
+                        method: '1'
+                        account: '12345'
+                        reference: 123OCRNUMBER456
+                        offer_rejection_info:
+                          tite: No party goes on forever...
+                          description: But you are always welcome back!
+                          link_url: https://www.example.com/always-welcome-back
+                          link_text: Check out our other offers here
               content to user:
                 value:
                   ssn: '191212121212'
@@ -1908,6 +1934,27 @@ components:
           format: float
           example: "50.00"
           description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
+        offer:
+          type: boolean
+          readOnly: true
+          description: This boolean will implicitly be set by the backend based on the content type
+        offer_rejection_info:
+          type: object
+          description: Info that will be shown when a user rejects an offer
+          properties:
+            tite:
+              type: string
+              description: Title for offer rejection info
+            description:
+              type: string
+              description: A sentence or two with more info
+            link_url:
+              type: string
+              format: URL
+              description: URL for the link provided to the user
+            link_text:
+              type: string
+              description: The text that will constitute the link
 
 # ##############################################
 # SCHEMA CompanyList
