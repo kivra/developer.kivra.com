@@ -8,8 +8,12 @@ servers:
     description: Sandbox environment
 info:
   title: Kivra Sweden API
+  x-logo:
+   url: '/kivra-logo.png'
+   altText: Kivra logo
   version: v1 and v2
   description: |
+    # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.com) to send digital mail. Questions can be sent to [dev@kivra.com](mailto:dev@kivra.com).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
 
@@ -23,7 +27,7 @@ info:
 
     Authentication is the same for both v1 and v2.
 
-    ## Introduction
+    ## Introduction to API integration
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
 
@@ -50,7 +54,7 @@ info:
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
 
-    ## Change Mangement
+    # Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
     via the [KivraStatus](https://www.kivrastatus.se) service.
 
@@ -156,13 +160,13 @@ info:
     The offset from UTC is given in the format `±[hh]:[mm]`, `±[hh][mm]`, or `±[hh]`. So if the time being described is one hour ahead of UTC (such as the time in Stockholm during the winter), the zone designator would be `+01:00`, `+0100`, or simply `+01`. This is appended to the time in the same way that `Z` was above. The offset from UTC changes with daylight saving time, e.g. a time offset in Chicago, would be `-06:00` for the winter (Central Standard Time) and `-05:00` for the summer (Central Daylight Time).
 
     ## Media types
-    The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type, e.g. "application/pdf"
+    The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media types, e.g. "application/pdf"
 
     ## UTF-8 encoding
     All data sent to Kivra needs to be [UTF-8](http://en.wikipedia.org/wiki/UTF-8) encoded.
 
     ## Currency
-    All places where currency is specified [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) should be used.
+    All places where currency is specified, [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) should be used.
 
     ## Country code
     Where applicable KIVRA uses a country code to determine certain formats. The country code should always be supplied using the [ISO 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) alpha-2 two-letter code.
@@ -239,7 +243,7 @@ info:
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
 
     ### Endpoint
-    `https://sender.TYPE.kivra.com
+    `https://sender.TYPE.kivra.com`
 
     ### Version
     `/VERSION`
@@ -302,7 +306,7 @@ info:
     Update the object. If the object doesn’t already exist, it is created.
 
     **PATCH**
-    Update the object with the specified attributes. If the object doesn’t already exist, it is created.
+    Update the object with the specified attributes.
 
     **DELETE**
     Irreversably delete the designated resource from the entire system. This operation will in most cases be illegal for regular API consumers.
@@ -657,6 +661,8 @@ info:
     | `*`            | Marks a scope as valid for *any* keyword on **current-level**  |
     | `**`           | Marks a scope as valid for *any* keyword on **current-level** and **recursively**                 |
 
+    <SecurityDefinitions/>
+
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
@@ -666,6 +672,16 @@ tags:
     description: Endpoints for managing signatures and agreements
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
+
+x-tagGroups:
+  - name: Tenant API
+    tags:
+      - "Tenant API - Content"
+      - "Tenant API - Tenant Management"
+      - "Tenant API - Agreements"
+  - name: Partner API
+    tags:
+      - "Partner API"
 
 paths:
 
@@ -2106,7 +2122,7 @@ components:
               type: string
               example: "agreement1025.pdf"
             content_type:
-              description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+              description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "application/pdf"
               type: string
               example: "application/pdf"
             data:
@@ -2301,7 +2317,7 @@ components:
           format: 'Base64-encoded data'
           example: REVBREJFRUY=
         content_type:
-          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "application/pdf"
+          description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "application/pdf"
           type: string
           example: "application/pdf"
 
@@ -2325,7 +2341,7 @@ components:
           format: 'Base64-encoded data'
           example: REVBREJFRUY=
         content_type:
-          description: The [Iana](http://www.iana.org/assignments/media-types/media-types.xhtml) Media type corresponding to the file, e.g. "image/png"
+          description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
           type: string
           example: "image/png"
 
@@ -2403,7 +2419,7 @@ components:
       properties:
         content_type:
           type: string
-          description: The Iana Media type corresponding to the file, e.g. "application/pdf"
+          description: The IANA media type corresponding to the file, e.g. "application/pdf"
           example: "application/pdf"
         checksum:
           type: string
@@ -2436,4 +2452,4 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: 'https://api.kivra.com/v1/auth'
+          tokenUrl: 'https://sender.api.kivra.com/v1/auth'
