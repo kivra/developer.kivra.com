@@ -980,7 +980,7 @@ paths:
                 $ref: '#/components/schemas/RequestAccess'
           headers:
             kivra-objkey:
-              description: Object Key for the Request
+              description: Object Key for the Request (requestKey)
               schema:
                 type: string
                 format: 'hexadecimal value'
