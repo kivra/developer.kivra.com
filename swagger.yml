@@ -2447,7 +2447,6 @@ components:
     Icon:
       type: object
       required:
-        - name
         - data
         - content_type
       properties:
