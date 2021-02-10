@@ -1979,7 +1979,6 @@ components:
           type: boolean
           description: Toggles whether this content should be payable through Kivra’s payment platform. Only `true` is allowed when sending multiple payment options.
           enum: [true]
-        # TODO: Should I remove `status`? Or also add `multiple_options` flag?
         status:
           type: string
           description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
