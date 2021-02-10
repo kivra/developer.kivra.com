@@ -946,7 +946,7 @@ paths:
               properties:
                 file:
                   $ref: '#/components/schemas/TenantIcon'
-            example: { "file": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
+            example: { "file": { "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
 
 # ##############################################
 # POST /v2/tenant/request_access
@@ -1344,7 +1344,6 @@ paths:
                             title: "Silver edition"
                             description: "This is a good offer"
                             icon:
-                              name: silver.png
                               data: REVBREJFRUY=
                               content_type: image/png
                           - currency: SEK
@@ -1354,7 +1353,6 @@ paths:
                             title: "Gold edition"
                             description: "This is a better offer"
                             icon:
-                              name: gold.png
                               data: REVBREJFRUY=
                               content_type: image/png
 
