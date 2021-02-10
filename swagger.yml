@@ -2457,6 +2457,7 @@ components:
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
           type: string
+          enum: ["image/png"]
           example: "image/png"
 
 # ##############################################
