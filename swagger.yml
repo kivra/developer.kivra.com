@@ -523,7 +523,7 @@ info:
 
     | Property      | Description                                                |
     | ------------- | ---------------------------------------------------------- |
-    | code          | The Kivra [error code](#error-codes)                       |
+    | code          | The Kivra [error code](#section/Errors/Error-codes)     |
     | short_message | A short description of the error                           |
     | long_message  | A longer and more verbose error message                    |
 
