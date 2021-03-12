@@ -1,11 +1,11 @@
 steps:
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
     args:
-    - '-c'
-    - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp index.html swagger.yml kivra-logo.png "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
+      - "-c"
+      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp index.html styles.css swagger.yml kivra-logo.svg favicon/icon-32x32.png "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
     args:
-    - '-c'
-    - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp index.html swagger.yml kivra-logo.png "gs://developer.kivra.com/" || echo "skipping . . ."'
+      - "-c"
+      - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp index.html styles.css swagger.yml kivra-logo.svg favicon/icon-32x32.png "gs://developer.kivra.com/" || echo "skipping . . ."'
