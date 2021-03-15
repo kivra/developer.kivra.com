@@ -1309,6 +1309,26 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              booking to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Booking to User
+                  generated_at: '2016-12-12'
+                  type: 'booking'
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                      booking:
+                        title: string
+                        start_time: '2016-12-12T10:00:00'
+                        end_time: '2016-12-12T11:00:00'
+                        location: string
+                        description: string
+                        info_url: url
               content to company:
                 value:
                   vat_number: SE556840226601
