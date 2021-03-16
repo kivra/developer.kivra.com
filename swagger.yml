@@ -1779,6 +1779,7 @@ components:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
+              - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
@@ -1816,7 +1817,10 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
-
+            booking:
+              description: Optionally specify booking information
+              $ref: '#/components/schemas/Booking'
+             
 # ##############################################
 # SCHEMA Content_company
 # ##############################################
@@ -2430,6 +2434,42 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Parts'
+
+# ##############################################
+# SCHEMA Booking
+# ##############################################
+    Booking:
+      type: object
+      required:
+        - title
+        - start_time
+      properties:
+        title:
+          description: Booking name that is shown in the Kivra GUI
+          type: string
+          example: "Kontroll av tandhälsa"
+        start_time:
+          description: Date and time for the booking to start
+          type: string
+          format: ISO8601
+          example: "2018-06-19T11:00:00Z"
+        end_time:
+          description: Date and time for the booking to end
+          type: string
+          format: ISO8601
+          example: "2018-06-19T12:00:00Z"
+        location:
+          description: Location for the appointment/booking
+          type: string
+          example: "Strandvägen 61"
+        description:
+          description: Additional information
+          type: string
+          example: "Brush your teeth before coming" 
+        info_url:
+          description: Link to page with additional information
+          type: string
+          format: uri
 
 # ##############################################
 # SCHEMA Parts
