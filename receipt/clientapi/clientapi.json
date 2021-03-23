@@ -2,10 +2,10 @@
     "openapi": "3.0.1",
     "info": {
         "title": "Client API",
-        "version": "{VERSION}",
-        "description": "[Changelog - {yyyy-mm-dd}](/docs/clientapi/changelog/)",
+        "version": " 1.4.5",
+        "description": "[Changelog - 2020-05-05](changelog/)",
         "x-logo": {
-            "url": "/kivra-logo.svg",
+            "url": "../../assets/kivra-logo.svg",
             "altText": "Kivra logo"
         }
     },
@@ -183,7 +183,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Person successfully deleted"
+                        "description": "Person successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -209,7 +216,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "successfully onboarded person"
+                        "description": "successfully onboarded person",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -235,7 +249,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "successfully offboarded person"
+                        "description": "successfully offboarded person",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -414,7 +435,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Identifier successfully deleted"
+                        "description": "Identifier successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -555,7 +583,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Receipt successfully deleted"
+                        "description": "Receipt successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -704,7 +739,14 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Receipt successfully restored."
+                        "description": "Receipt successfully restored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -753,7 +795,14 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "successfully expensed receipt"
+                        "description": "successfully expensed receipt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -813,7 +862,14 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "Receipt successfully gifted."
+                        "description": "Receipt successfully gifted.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -904,7 +960,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Chain rejected."
+                        "description": "Chain rejected.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "$ref": "#/components/responses/BadRequestError"
@@ -950,7 +1013,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Chain restored."
+                        "description": "Chain restored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "$ref": "#/components/responses/BadRequestError"
@@ -1138,7 +1208,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Receipt successfully fetched"
+                        "description": "Receipt successfully fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "$ref": "#/components/responses/BadRequestError"
@@ -1808,13 +1885,6 @@
                         }
                     }
                 }
-            }
-        },
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
             }
         },
         "parameters": {
@@ -2552,9 +2622,4 @@
             }
         }
     },
-    "security": [
-        {
-            "bearerAuth": []
-        }
-    ]
 }
