@@ -1,0 +1,3140 @@
+{
+    "$id": "https://se.digitalreceipts.net/schemas/json/retail/v1.0",
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "description": "digital receipt schema",
+    "type": "object",
+    "properties": {
+        "copy": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true the receipt is a copy"
+        },
+        "business_unit": {
+            "description": "Merchant information",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "service_id": {
+                    "description": "Id created when then business is registered within findity",
+                    "type": "string",
+                    "minLength": 42,
+                    "maxLength": 42,
+                    "pattern": "^[0-9]{10}[0-9a-fA-F]{32}$"
+                },
+                "unit_id": {
+                    "type": "string",
+                    "description": "Internal shop/business unit id"
+                },
+                "organization_number": {
+                    "type": "string",
+                    "description": "Swedish organisationsnummer or vat reg number"
+                },
+                "contact": {
+                    "type": "object",
+                    "description": "Merchant contact information name, address, phone etc",
+                    "properties": {
+                        "address": {
+                            "title": "address",
+                            "description": "An address following the convention of http://microformats.org/wiki/hcard",
+                            "type": "object",
+                            "properties": {
+                                "street_address": {
+                                    "type": "string"
+                                },
+                                "extended_address": {
+                                    "type": "string"
+                                },
+                                "post_box": {
+                                    "type": "string"
+                                },
+                                "locality": {
+                                    "type": "string"
+                                },
+                                "postal_code": {
+                                    "type": "string"
+                                },
+                                "region": {
+                                    "type": "string"
+                                },
+                                "country_name": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "object",
+                                    "title": "address type",
+                                    "description": "is address (physical/email) related to business, home, etc",
+                                    "properties": {
+                                        "type": {
+                                            "enum": [
+                                                "home",
+                                                "business"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "anyOf": [
+                                {
+                                    "required": [
+                                        "street_address"
+                                    ]
+                                },
+                                {
+                                    "required": [
+                                        "post_box"
+                                    ]
+                                }
+                            ],
+                            "required": [
+                                "locality",
+                                "postal_code"
+                            ]
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "phone": {
+                            "title": "generic phone number",
+                            "description": "generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed",
+                            "type": "string",
+                            "pattern": "^(\\(?((\\+|(00))[0-9]{1,3})\\)?)?( ?-?\\(?[0-9]+\\)?)+$"
+                        },
+                        "website": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    }
+                },
+                "geo_location": {
+                    "type": "object",
+                    "title": "Geographic location (long/lat)",
+                    "description": "A geographical coordinate",
+                    "properties": {
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "longitude": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "latitude",
+                        "longitude"
+                    ]
+                }
+            },
+            "required": [
+                "name",
+                "service_id",
+                "organization_number",
+                "contact"
+            ]
+        },
+        "cashier": {
+            "description": "Identifies the person handling the purchase if applicable",
+            "title": "cashier name and id",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "sales_recording_system": {
+            "description": "Information about the point of sales system used. The system producing the receipt",
+            "title": "sales recording system information",
+            "type": "object",
+            "oneOf": [
+                {
+                    "title": "point of sales system",
+                    "description": "information that somehow identifies the pos system",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "serial_number": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "anyOf": [
+                        {
+                            "required": [
+                                "id"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "name"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "receipt_identifier": {
+            "description": "Receipt identifiers: sequence number and/or extended number with or without barcode representation",
+            "title": "receipt identifier",
+            "type": "object",
+            "properties": {
+                "sequence_number": {
+                    "type": "integer",
+                    "description": "a sequence number as stipulated by the swedish tax authorities"
+                },
+                "extended_number": {
+                    "type": "object",
+                    "description": "a more complex receipt number if applicable, must be unique in given context",
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "description": "data that will be presented as a barcode on the receipt"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "Interleaved2Of5",
+                                "EAN13",
+                                "EAN8",
+                                "Codabar",
+                                "Code39",
+                                "Code93",
+                                "Code128",
+                                "AztecCode",
+                                "Datamatrix",
+                                "PDF417",
+                                "QRCode"
+                            ],
+                            "description": "barcode representation of any data"
+                        },
+                        "context": {
+                            "type": "string",
+                            "enum": [
+                                "store",
+                                "chain",
+                                "global"
+                            ],
+                            "description": "in what context is the value (receipt number) unique, note GLOBAL can only be used if a digital receipt provider receipt id is used"
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "context"
+                    ]
+                }
+            },
+            "required": [
+                "sequence_number"
+            ],
+            "additionalProperties": false
+        },
+        "time_of_purchase": {
+            "description": "ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+            "type": "string",
+            "format": "date-time"
+        },
+        "currency": {
+            "description": "The receipt default currency. This gives the currency for all amounts in the receipt. If applicable overriding currencies can be added to the tender parts",
+            "title": "ISO-4217 currency codes",
+            "type": "string",
+            "pattern": "^[a-zA-Z]{3}$"
+        },
+        "totals": {
+            "description": "Total amounts and types, example net, gross, vat, discount",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "title": "Total discount amount",
+                        "description": "Total discount amount presented on the receipt",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "discount"
+                                        ],
+                                        "description": "gross: total including vat."
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Loyalty based discount",
+                                                    "description": "Gives discount based on loyalty, connected to totals/discount",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "loyalty"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals for example one for each tax percentage",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "description": "Can be one of the total amount types or any other description what the subtotal is about"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "title": "Paid total amount",
+                        "description": "paid: gross amount including discount and rounding.",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "paid"
+                                        ]
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Amount received from customer",
+                                                    "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is given by  customer",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "received"
+                                                            ]
+                                                        },
+                                                        "amount": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "text": {
+                                                            "description": "optional explaining text",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "array"
+                                                                    ]
+                                                                },
+                                                                "collection": {
+                                                                    "type": "array",
+                                                                    "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "type",
+                                                                "collection"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "amount"
+                                                    ],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "title": "Returned sub total",
+                                                    "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is returned to customer",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "returned"
+                                                            ]
+                                                        },
+                                                        "amount": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "text": {
+                                                            "description": "optional explaining text",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "array"
+                                                                    ]
+                                                                },
+                                                                "collection": {
+                                                                    "type": "array",
+                                                                    "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "type",
+                                                                "collection"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "amount"
+                                                    ],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "title": "Total gross amount presented on the receipt",
+                        "description": "gross: total including vat, excluding discounts",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "gross"
+                                        ],
+                                        "description": "gross: total including vat."
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals eligible for bonus",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "eligible_for_frequent_shopper_points"
+                                                                    ]
+                                                                },
+                                                                "points": {
+                                                                    "type": "integer",
+                                                                    "minimum": 0,
+                                                                    "description": "loyalty points gained/lost in transaction"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals for example one for each tax percentage",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "description": "Can be one of the total amount types or any other description what the subtotal is about"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "title": "Total tax amount presented on the receipt",
+                        "description": "Tax releated total",
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "vat"
+                                ]
+                            },
+                            "amount": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "refund": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "true if amount to customer, example: on return of goods"
+                            },
+                            "sub_totals": {
+                                "type": "array",
+                                "description": "add sub total for each tax percentage used",
+                                "items": {
+                                    "title": "Sub totals can be used on all totals but is mostly used on VAT",
+                                    "description": "One or more sub totals, one for each tax percentage",
+                                    "type": "object",
+                                    "properties": {
+                                        "amount": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "refund": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "true if amount to customer, example: on return of goods"
+                                        },
+                                        "taxable_amount": {
+                                            "description": "Amount including tax amount",
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "net_amount": {
+                                            "description": "Amount excluding tax amount",
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "tax_percentage": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "amount",
+                                        "taxable_amount",
+                                        "net_amount",
+                                        "tax_percentage"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "amount"
+                        ],
+                        "additionalProperties": false
+                    },
+                    {
+                        "title": "Total loyalty points redeemed",
+                        "description": "One or more totals on loyalty points/programs",
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "loyalty"
+                                ]
+                            },
+                            "amount": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "refund": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "true if amount to customer, example: on return of goods"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "amount"
+                        ],
+                        "additionalProperties": false
+                    },
+                    {
+                        "title": "Total net or rounding amounts presented on the receipt",
+                        "description": "One or more totals of type net amount or rounding",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "net",
+                                            "rounding"
+                                        ],
+                                        "description": "net: total including discounts, excluding tax."
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals for example one for each tax percentage",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "description": "Can be one of the total amount types or any other description what the subtotal is about"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    }
+                ]
+            }
+        },
+        "header_text": {
+            "description": "Any textual information aimed for the receipt header",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "array"
+                    ]
+                },
+                "collection": {
+                    "type": "array",
+                    "description": "Arbitray array of strings used where additional info needed at some part",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "collection"
+            ]
+        },
+        "footer_text": {
+            "description": "Any textual information aimed for the receipt footer",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "array"
+                    ]
+                },
+                "collection": {
+                    "type": "array",
+                    "description": "Arbitray array of strings used where additional info needed at some part",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "collection"
+            ]
+        },
+        "items": {
+            "description": "List of receipt items, goods or services sold/returned",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "description": "Defines data needed to handle sold product/service",
+                        "allOf": [
+                            {
+                                "title": "",
+                                "description": "Item sold by the merchant",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sale"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ]
+                            },
+                            {
+                                "title": "Item definition",
+                                "description": "Item and/or service description",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "identifiers": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Item identifier",
+                                            "description": "A list of supported identifier types, pos: Point of Sales, srs: Sales Recording System",
+                                            "type": "object",
+                                            "properties": {
+                                                "identifier_type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "pos",
+                                                        "gtin",
+                                                        "srs"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "identifier_type",
+                                                "value"
+                                            ]
+                                        }
+                                    },
+                                    "serial_number": {
+                                        "description": "Product serial number",
+                                        "type": "string"
+                                    },
+                                    "lot_number": {
+                                        "description": "Specifies a specific product batch/lot",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number"
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "ea",
+                                                    "6 pack",
+                                                    "12 pack",
+                                                    "24 pack",
+                                                    "kg",
+                                                    "grm",
+                                                    "km",
+                                                    "m",
+                                                    "cm",
+                                                    "mm",
+                                                    "annual",
+                                                    "days",
+                                                    "hours",
+                                                    "seconds",
+                                                    "l",
+                                                    "gallon"
+                                                ]
+                                            },
+                                            "entry_method": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "smartcard",
+                                                    "micr",
+                                                    "msr",
+                                                    "keyed",
+                                                    "scanned",
+                                                    "weighed",
+                                                    "measured",
+                                                    "rfid",
+                                                    "automatic",
+                                                    "integrated_chip_card",
+                                                    "tapped",
+                                                    "waved"
+                                                ],
+                                                "default": "scanned"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "entry_method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "smartcard",
+                                            "micr",
+                                            "msr",
+                                            "keyed",
+                                            "scanned",
+                                            "weighed",
+                                            "measured",
+                                            "rfid",
+                                            "automatic",
+                                            "integrated_chip_card",
+                                            "tapped",
+                                            "waved"
+                                        ],
+                                        "default": "scanned"
+                                    },
+                                    "eligible_for_frequent_shopper_points": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if item bought is eligible for bonus"
+                                    }
+                                },
+                                "required": [
+                                    "identifiers",
+                                    "description",
+                                    "quantity"
+                                ]
+                            },
+                            {
+                                "title": "Common item properties",
+                                "description": "Common item properties for ordering and navigation",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "sequence_number": {
+                                        "description": "All items must have a unique sequence number 1,2,3 etc. Used for internal references. Also see item_link",
+                                        "type": "integer"
+                                    },
+                                    "item_link": {
+                                        "description": "A reference to an other items sequence_number if a relation exists",
+                                        "type": "integer"
+                                    },
+                                    "text": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "sequence_number"
+                                ]
+                            }
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "unit_cost_price": {
+                                        "type": "number",
+                                        "description": "The unit cost of the item to the mechant at the time of the Transaction."
+                                    },
+                                    "regular_sales_unit_price": {
+                                        "type": "number",
+                                        "description": "The per-unit price for the item/service before any discounts or surcharges have been applied."
+                                    },
+                                    "extended_gross_amount": {
+                                        "type": "number",
+                                        "description": "The amount this item sells for excluding discounts. It is the regular_sales_unit_price times the quantity"
+                                    },
+                                    "actual_sales_unit_price": {
+                                        "type": "number",
+                                        "description": "The amount a single item sold for taking into account discounts and surcharges. The amount charged the customer (extended_amount) takes into account this number times quantity"
+                                    },
+                                    "extended_amount": {
+                                        "type": "number",
+                                        "description": "The actual amount this item sells for. It is the actual_sales_unit_price times the quantity taking into account any retail price modifiers"
+                                    },
+                                    "retail_price_modifiers": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Retail price modifier",
+                                            "description": "Specifies any modifier to a service/item price on a specific line item, e.g. discount, deposit",
+                                            "type": "object",
+                                            "properties": {
+                                                "action": {
+                                                    "enum": [
+                                                        "add",
+                                                        "subtract",
+                                                        "replace"
+                                                    ],
+                                                    "description": "Tells whether to add, subtract or replace the modifier to/from he sales amount.",
+                                                    "default": "subtract"
+                                                },
+                                                "unit_amount": {
+                                                    "type": "number",
+                                                    "description": "The unit refund for the modifier."
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "description": "Total modifier amount, that is unit_amount * quantity"
+                                                },
+                                                "percent": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                },
+                                                "quantity": {
+                                                    "description": "How many times is the modifier used. Might no be the same as number of items/services bought. Example: 2 coupons '3 for 2' on six items. Item quantity == 6, modifier quantity == 2",
+                                                    "type": "integer",
+                                                    "minimum": 1
+                                                },
+                                                "description": {
+                                                    "description": "modifier reason",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "array"
+                                                            ]
+                                                        },
+                                                        "collection": {
+                                                            "type": "array",
+                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "collection"
+                                                    ]
+                                                },
+                                                "tax_percentage": {
+                                                    "type": "number",
+                                                    "description": "If the modifier has another tax percentage than the item/service amount it affects"
+                                                }
+                                            },
+                                            "required": [
+                                                "amount"
+                                            ]
+                                        }
+                                    },
+                                    "extended_discount_amount": {
+                                        "type": "number",
+                                        "description": "The total discount applied to this item"
+                                    },
+                                    "tax_percentage": {
+                                        "type": "number"
+                                    },
+                                    "tax_amount": {
+                                        "description": "tax amount based on extended amount and tex percentage",
+                                        "type": "number"
+                                    },
+                                    "foreign_currency": {
+                                        "title": "Foreign currency",
+                                        "description": "Gives exchange rate etc when payment is done with a foreign currency",
+                                        "type": "object",
+                                        "properties": {
+                                            "currency": {
+                                                "description": "ISO 4217 foreign currency code",
+                                                "title": "ISO-4217 currency codes",
+                                                "type": "string",
+                                                "pattern": "^[a-zA-Z]{3}$"
+                                            },
+                                            "original_face_amount": {
+                                                "description": "the original amount in the foreign currency the being converted to local currency.  For example, converting Yen to Dollars, this amount would be the amount of Yen",
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "exchange_rate": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            }
+                                        },
+                                        "required": [
+                                            "currency",
+                                            "original_face_amount"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "actual_sales_unit_price",
+                                    "extended_amount",
+                                    "extended_gross_amount"
+                                ]
+                            },
+                            {
+                                "title": "",
+                                "description": "Amount in loyalty program points",
+                                "type": "object",
+                                "properties": {
+                                    "points": {
+                                        "type": "number",
+                                        "description": "cost for goods/service as number of loyalty points"
+                                    }
+                                },
+                                "required": [
+                                    "points"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Defines data needed to handle returned product/service",
+                        "allOf": [
+                            {
+                                "title": "",
+                                "description": "Item returned to the merchant",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "return"
+                                        ]
+                                    },
+                                    "receipt_reference": {
+                                        "type": "object",
+                                        "description": "a more complex receipt number if applicable, must be unique in given context",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "description": "data that will be presented as a barcode on the receipt"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "Interleaved2Of5",
+                                                    "EAN13",
+                                                    "EAN8",
+                                                    "Codabar",
+                                                    "Code39",
+                                                    "Code93",
+                                                    "Code128",
+                                                    "AztecCode",
+                                                    "Datamatrix",
+                                                    "PDF417",
+                                                    "QRCode"
+                                                ],
+                                                "description": "barcode representation of any data"
+                                            },
+                                            "context": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "store",
+                                                    "chain",
+                                                    "global"
+                                                ],
+                                                "description": "in what context is the value (receipt number) unique, note GLOBAL can only be used if a digital receipt provider receipt id is used"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "context"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ]
+                            },
+                            {
+                                "title": "Item definition",
+                                "description": "Item and/or service description",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "identifiers": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Item identifier",
+                                            "description": "A list of supported identifier types, pos: Point of Sales, srs: Sales Recording System",
+                                            "type": "object",
+                                            "properties": {
+                                                "identifier_type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "pos",
+                                                        "gtin",
+                                                        "srs"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "identifier_type",
+                                                "value"
+                                            ]
+                                        }
+                                    },
+                                    "serial_number": {
+                                        "description": "Product serial number",
+                                        "type": "string"
+                                    },
+                                    "lot_number": {
+                                        "description": "Specifies a specific product batch/lot",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number"
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "ea",
+                                                    "6 pack",
+                                                    "12 pack",
+                                                    "24 pack",
+                                                    "kg",
+                                                    "grm",
+                                                    "km",
+                                                    "m",
+                                                    "cm",
+                                                    "mm",
+                                                    "annual",
+                                                    "days",
+                                                    "hours",
+                                                    "seconds",
+                                                    "l",
+                                                    "gallon"
+                                                ]
+                                            },
+                                            "entry_method": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "smartcard",
+                                                    "micr",
+                                                    "msr",
+                                                    "keyed",
+                                                    "scanned",
+                                                    "weighed",
+                                                    "measured",
+                                                    "rfid",
+                                                    "automatic",
+                                                    "integrated_chip_card",
+                                                    "tapped",
+                                                    "waved"
+                                                ],
+                                                "default": "scanned"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "entry_method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "smartcard",
+                                            "micr",
+                                            "msr",
+                                            "keyed",
+                                            "scanned",
+                                            "weighed",
+                                            "measured",
+                                            "rfid",
+                                            "automatic",
+                                            "integrated_chip_card",
+                                            "tapped",
+                                            "waved"
+                                        ],
+                                        "default": "scanned"
+                                    },
+                                    "eligible_for_frequent_shopper_points": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if item bought is eligible for bonus"
+                                    }
+                                },
+                                "required": [
+                                    "identifiers",
+                                    "description",
+                                    "quantity"
+                                ]
+                            },
+                            {
+                                "title": "Common item properties",
+                                "description": "Common item properties for ordering and navigation",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "sequence_number": {
+                                        "description": "All items must have a unique sequence number 1,2,3 etc. Used for internal references. Also see item_link",
+                                        "type": "integer"
+                                    },
+                                    "item_link": {
+                                        "description": "A reference to an other items sequence_number if a relation exists",
+                                        "type": "integer"
+                                    },
+                                    "text": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "sequence_number"
+                                ]
+                            }
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "unit_cost_price": {
+                                        "type": "number",
+                                        "description": "The unit cost of the item to the mechant at the time of the Transaction."
+                                    },
+                                    "regular_sales_unit_price": {
+                                        "type": "number",
+                                        "description": "The per-unit price for the item/service before any discounts or surcharges have been applied."
+                                    },
+                                    "extended_gross_amount": {
+                                        "type": "number",
+                                        "description": "The amount this item sells for excluding discounts. It is the regular_sales_unit_price times the quantity"
+                                    },
+                                    "actual_sales_unit_price": {
+                                        "type": "number",
+                                        "description": "The amount a single item sold for taking into account discounts and surcharges. The amount charged the customer (extended_amount) takes into account this number times quantity"
+                                    },
+                                    "extended_amount": {
+                                        "type": "number",
+                                        "description": "The actual amount this item sells for. It is the actual_sales_unit_price times the quantity taking into account any retail price modifiers"
+                                    },
+                                    "retail_price_modifiers": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Retail price modifier",
+                                            "description": "Specifies any modifier to a service/item price on a specific line item, e.g. discount, deposit",
+                                            "type": "object",
+                                            "properties": {
+                                                "action": {
+                                                    "enum": [
+                                                        "add",
+                                                        "subtract",
+                                                        "replace"
+                                                    ],
+                                                    "description": "Tells whether to add, subtract or replace the modifier to/from he sales amount.",
+                                                    "default": "subtract"
+                                                },
+                                                "unit_amount": {
+                                                    "type": "number",
+                                                    "description": "The unit refund for the modifier."
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "description": "Total modifier amount, that is unit_amount * quantity"
+                                                },
+                                                "percent": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                },
+                                                "quantity": {
+                                                    "description": "How many times is the modifier used. Might no be the same as number of items/services bought. Example: 2 coupons '3 for 2' on six items. Item quantity == 6, modifier quantity == 2",
+                                                    "type": "integer",
+                                                    "minimum": 1
+                                                },
+                                                "description": {
+                                                    "description": "modifier reason",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "array"
+                                                            ]
+                                                        },
+                                                        "collection": {
+                                                            "type": "array",
+                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "collection"
+                                                    ]
+                                                },
+                                                "tax_percentage": {
+                                                    "type": "number",
+                                                    "description": "If the modifier has another tax percentage than the item/service amount it affects"
+                                                }
+                                            },
+                                            "required": [
+                                                "amount"
+                                            ]
+                                        }
+                                    },
+                                    "extended_discount_amount": {
+                                        "type": "number",
+                                        "description": "The total discount applied to this item"
+                                    },
+                                    "tax_percentage": {
+                                        "type": "number"
+                                    },
+                                    "tax_amount": {
+                                        "description": "tax amount based on extended amount and tex percentage",
+                                        "type": "number"
+                                    },
+                                    "foreign_currency": {
+                                        "title": "Foreign currency",
+                                        "description": "Gives exchange rate etc when payment is done with a foreign currency",
+                                        "type": "object",
+                                        "properties": {
+                                            "currency": {
+                                                "description": "ISO 4217 foreign currency code",
+                                                "title": "ISO-4217 currency codes",
+                                                "type": "string",
+                                                "pattern": "^[a-zA-Z]{3}$"
+                                            },
+                                            "original_face_amount": {
+                                                "description": "the original amount in the foreign currency the being converted to local currency.  For example, converting Yen to Dollars, this amount would be the amount of Yen",
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "exchange_rate": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            }
+                                        },
+                                        "required": [
+                                            "currency",
+                                            "original_face_amount"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "actual_sales_unit_price",
+                                    "extended_amount",
+                                    "extended_gross_amount"
+                                ]
+                            },
+                            {
+                                "title": "",
+                                "description": "Amount in loyalty program points",
+                                "type": "object",
+                                "properties": {
+                                    "points": {
+                                        "type": "number",
+                                        "description": "cost for goods/service as number of loyalty points"
+                                    }
+                                },
+                                "required": [
+                                    "points"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "title": "",
+                                "description": "Text only item, example: product warranty text linked to item purchased",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "text"
+                                        ]
+                                    },
+                                    "text": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "text"
+                                ]
+                            },
+                            {
+                                "title": "Common item properties",
+                                "description": "Common item properties for ordering and navigation",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "sequence_number": {
+                                        "description": "All items must have a unique sequence number 1,2,3 etc. Used for internal references. Also see item_link",
+                                        "type": "integer"
+                                    },
+                                    "item_link": {
+                                        "description": "A reference to an other items sequence_number if a relation exists",
+                                        "type": "integer"
+                                    },
+                                    "text": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "sequence_number"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "",
+                        "description": "Deposit to get or pay connected to items sold/returned",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "deposit"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "unit_amount": {
+                                        "type": "number",
+                                        "description": "The unit cost/refund for goods/service deposit."
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Total cost/refund for goods/service deposit, unit_amount * quantity"
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "description": "Number of times deposit is applied"
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "description": "True if amount goes to customer, false otherwise"
+                                    },
+                                    "tax_percentage": {
+                                        "type": "number",
+                                        "description": "Tax on deposit is not always the same as the goods/service connected"
+                                    },
+                                    "sub_deposits": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "VAT sub deposit",
+                                            "description": "A desposit can be devided into different VATs",
+                                            "type": "object",
+                                            "properties": {
+                                                "amount": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                },
+                                                "refund": {
+                                                    "type": "boolean",
+                                                    "default": false,
+                                                    "description": "true if amount to customer, a deposit return"
+                                                },
+                                                "tax_percentage": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                }
+                                            },
+                                            "required": [
+                                                "amount",
+                                                "tax_percentage"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "refund",
+                                    "amount",
+                                    "unit_amount",
+                                    "quantity"
+                                ]
+                            },
+                            {
+                                "title": "Common item properties",
+                                "description": "Common item properties for ordering and navigation",
+                                "type": "object",
+                                "minProperties": 1,
+                                "properties": {
+                                    "sequence_number": {
+                                        "description": "All items must have a unique sequence number 1,2,3 etc. Used for internal references. Also see item_link",
+                                        "type": "integer"
+                                    },
+                                    "item_link": {
+                                        "description": "A reference to an other items sequence_number if a relation exists",
+                                        "type": "integer"
+                                    },
+                                    "text": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "sequence_number"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "retail_price_modifiers": {
+            "type": "array",
+            "description": "Specifies any modifier(s) related to the amount paid by the customer. Example: 5% discount on the total amount",
+            "items": {
+                "title": "Retail price modifier",
+                "description": "Specifies any modifier to a service/item price on a more general receipt level or connected to a specific item/service",
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "item_links": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                },
+                                "description": "Reference to sale/return item sequence_number if applicable"
+                            }
+                        }
+                    },
+                    {
+                        "title": "Retail price modifier",
+                        "description": "Specifies any modifier to a service/item price on a specific line item, e.g. discount, deposit",
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "enum": [
+                                    "add",
+                                    "subtract",
+                                    "replace"
+                                ],
+                                "description": "Tells whether to add, subtract or replace the modifier to/from he sales amount.",
+                                "default": "subtract"
+                            },
+                            "unit_amount": {
+                                "type": "number",
+                                "description": "The unit refund for the modifier."
+                            },
+                            "amount": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": "Total modifier amount, that is unit_amount * quantity"
+                            },
+                            "percent": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "quantity": {
+                                "description": "How many times is the modifier used. Might no be the same as number of items/services bought. Example: 2 coupons '3 for 2' on six items. Item quantity == 6, modifier quantity == 2",
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "description": {
+                                "description": "modifier reason",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "array"
+                                        ]
+                                    },
+                                    "collection": {
+                                        "type": "array",
+                                        "description": "Arbitray array of strings used where additional info needed at some part",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "collection"
+                                ]
+                            },
+                            "tax_percentage": {
+                                "type": "number",
+                                "description": "If the modifier has another tax percentage than the item/service amount it affects"
+                            }
+                        },
+                        "required": [
+                            "amount"
+                        ]
+                    }
+                ]
+            }
+        },
+        "payments": {
+            "description": "Tender related information, several tender types can be used for payment",
+            "type": "array",
+            "items": {
+                "title": "Payment information",
+                "description": "One or more tender types can be used. Each type is described and the amount used for each tender type",
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number"
+                    },
+                    "amount_applied_to_bill": {
+                        "type": "number",
+                        "description": "the amount applied to the transaction total"
+                    },
+                    "foreign_currency_amount": {
+                        "description": "Gives exchange rate etc when payment is done with a foreign currency",
+                        "title": "Foreign currency",
+                        "type": "object",
+                        "properties": {
+                            "currency": {
+                                "description": "ISO 4217 foreign currency code",
+                                "title": "ISO-4217 currency codes",
+                                "type": "string",
+                                "pattern": "^[a-zA-Z]{3}$"
+                            },
+                            "original_face_amount": {
+                                "description": "the original amount in the foreign currency the being converted to local currency.  For example, converting Yen to Dollars, this amount would be the amount of Yen",
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "exchange_rate": {
+                                "type": "number",
+                                "minimum": 0
+                            }
+                        },
+                        "required": [
+                            "currency",
+                            "original_face_amount"
+                        ]
+                    },
+                    "rounding": {
+                        "type": "number",
+                        "description": "If the amount to pay needs rounding"
+                    },
+                    "refund": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "True if customer is given a refund or change"
+                    },
+                    "tender": {
+                        "type": "object",
+                        "description": "Gives the payment/tender type used and payment/tender specific information",
+                        "oneOf": [
+                            {
+                                "title": "Cash payment",
+                                "description": "Cash payment",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "cash"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Credit or Debit Card Tender",
+                                "description": "Credit or debit card payment properties",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "creditdebit"
+                                        ]
+                                    },
+                                    "bank_identification_number": {
+                                        "type": "string",
+                                        "description": "ISO 8583 field 56 Payment Account Reference, masked card number",
+                                        "pattern": "^[A-Za-z0-9*]{0,99}$"
+                                    },
+                                    "retrieval_reference_number": {
+                                        "type": "string",
+                                        "description": "ISO 8583 field 37, Retrieval Reference Number",
+                                        "pattern": "\\w{0,12}"
+                                    },
+                                    "card_acceptor_terminal_id": {
+                                        "type": "string",
+                                        "description": "ISO 8583 field 41 Card Acceptor Terminal ID",
+                                        "pattern": "\\w{8}"
+                                    },
+                                    "merchant_identifier": {
+                                        "type": "string",
+                                        "description": "ISO 8583 field 42 Card Acceptor Identification Code",
+                                        "pattern": "\\w{0,15}"
+                                    },
+                                    "approval_code": {
+                                        "type": "string",
+                                        "description": "ISO 8583 field 38 Approval Code",
+                                        "pattern": "\\w{6}"
+                                    },
+                                    "card_token": {
+                                        "description": "Gives a token value of the payment card and tokenizier info/scheme.",
+                                        "title": "Tokenized payment card",
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "description": "tokenized payment card number"
+                                            },
+                                            "scheme": {
+                                                "type": "string",
+                                                "description": "Token scheme, vendor specific. Any unique token provider definition, e.g. payprov_name_findity_dr"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "scheme"
+                                        ]
+                                    },
+                                    "payment_slip": {
+                                        "description": "Payment slip data as an array of texts",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "array"
+                                                ]
+                                            },
+                                            "collection": {
+                                                "type": "array",
+                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "collection"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Giftcard payment type",
+                                "description": "Gives giftcard payment info: amount (initial, current), valid period, etc. Dates must be given in format: 2016-09-29",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "giftcard"
+                                        ]
+                                    },
+                                    "card_number": {
+                                        "type": "string"
+                                    },
+                                    "date_sold": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_activated": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "expiration_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "initial_balance": {
+                                        "type": "number"
+                                    },
+                                    "current_balance": {
+                                        "type": "number"
+                                    },
+                                    "barcode": {
+                                        "description": "barcode representation of tender details",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "description": "the barcode value"
+                                            },
+                                            "type": {
+                                                "description": "the barcode type",
+                                                "type": "string",
+                                                "enum": [
+                                                    "Interleaved2Of5",
+                                                    "EAN13",
+                                                    "EAN8",
+                                                    "Codabar",
+                                                    "Code39",
+                                                    "Code93",
+                                                    "Code128",
+                                                    "AztecCode",
+                                                    "Datamatrix",
+                                                    "PDF417",
+                                                    "QRCode"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "type"
+                                        ],
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "card_number",
+                                    "current_balance"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Generic mobile payment type",
+                                "description": "Gives basic mobile payment information, mobile specific payment info can be added in the tender_details section",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "mobile"
+                                        ]
+                                    },
+                                    "provider": {
+                                        "type": "string",
+                                        "enum": [
+                                            "swish:pay"
+                                        ],
+                                        "description": "Mobile payment name, e.g. swish, android wallet, etc"
+                                    },
+                                    "phone": {
+                                        "title": "phone number identifer",
+                                        "description": "more restrictive international phone number format used as identifier, based on ITU-T E.123",
+                                        "type": "string",
+                                        "pattern": "^\\+(?:[0-9]\\x20?){6,14}[0-9]$"
+                                    },
+                                    "tender_details": {
+                                        "description": "any aditional payment information needed",
+                                        "allOf": [
+                                            {
+                                                "description": "Generic text collection type used where additional text is needed in a structured (key/value) or unstructured way",
+                                                "oneOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "array"
+                                                                ]
+                                                            },
+                                                            "collection": {
+                                                                "type": "array",
+                                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "type",
+                                                            "collection"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "description": "Add any key-value pair (string based properties) to this collection",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "map"
+                                                                ]
+                                                            },
+                                                            "collection": {}
+                                                        },
+                                                        "required": [
+                                                            "type",
+                                                            "collection"
+                                                        ],
+                                                        "additionalProperties": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "properties": {
+                                                    "barcode": {
+                                                        "description": "barcode representation of tender details",
+                                                        "properties": {
+                                                            "value": {
+                                                                "type": "string",
+                                                                "description": "the barcode value"
+                                                            },
+                                                            "type": {
+                                                                "description": "the barcode type",
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "Interleaved2Of5",
+                                                                    "EAN13",
+                                                                    "EAN8",
+                                                                    "Codabar",
+                                                                    "Code39",
+                                                                    "Code93",
+                                                                    "Code128",
+                                                                    "AztecCode",
+                                                                    "Datamatrix",
+                                                                    "PDF417",
+                                                                    "QRCode"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "value",
+                                                            "type"
+                                                        ],
+                                                        "additionalProperties": false
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Loyalty payment",
+                                "description": "Loyalty payment, bonus check",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "loyalty"
+                                        ]
+                                    },
+                                    "points_redeemed": {
+                                        "type": "number",
+                                        "description": "The number of loyalty points redeemed by the customer"
+                                    },
+                                    "amount_redeemed": {
+                                        "type": "number",
+                                        "description": "The amount redeemed by the customer"
+                                    },
+                                    "loyalty_program": {
+                                        "type": "string",
+                                        "description": "Add loyalty account data to the customer defintions"
+                                    }
+                                },
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "points_redeemed"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "amount_redeemed"
+                                        ]
+                                    }
+                                ],
+                                "required": [
+                                    "type"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Coupon payment",
+                                "description": "Coupon payment",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "coupon"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "coupon name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Any additional coupon description, if needed"
+                                    },
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "description": "Coupon identifier"
+                                    },
+                                    "manufacture_id": {
+                                        "type": "string",
+                                        "description": "If a manufacture coupon"
+                                    },
+                                    "family_code": {
+                                        "type": "string",
+                                        "description": "Assigned by the manufacture for each product, validates that a consumer has purchased a qualifying product"
+                                    },
+                                    "promotion_code": {
+                                        "type": "string",
+                                        "description": "Identifies promotion campaign"
+                                    },
+                                    "coupon_value": {
+                                        "type": "number",
+                                        "description": "Coupon value when redeemed"
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity of items covered by the coupon",
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number"
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "ea",
+                                                    "6 pack",
+                                                    "12 pack",
+                                                    "24 pack",
+                                                    "kg",
+                                                    "grm",
+                                                    "km",
+                                                    "m",
+                                                    "cm",
+                                                    "mm",
+                                                    "annual",
+                                                    "days",
+                                                    "hours",
+                                                    "seconds",
+                                                    "l",
+                                                    "gallon"
+                                                ]
+                                            },
+                                            "entry_method": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "smartcard",
+                                                    "micr",
+                                                    "msr",
+                                                    "keyed",
+                                                    "scanned",
+                                                    "weighed",
+                                                    "measured",
+                                                    "rfid",
+                                                    "automatic",
+                                                    "integrated_chip_card",
+                                                    "tapped",
+                                                    "waved"
+                                                ],
+                                                "default": "scanned"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "expiration_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "item_links": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "description": "Links to sold item sequence numbers part of promotion is applicable"
+                                    },
+                                    "barcode": {
+                                        "description": "barcode representation of tender details",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "description": "the barcode value"
+                                            },
+                                            "type": {
+                                                "description": "the barcode type",
+                                                "type": "string",
+                                                "enum": [
+                                                    "Interleaved2Of5",
+                                                    "EAN13",
+                                                    "EAN8",
+                                                    "Codabar",
+                                                    "Code39",
+                                                    "Code93",
+                                                    "Code128",
+                                                    "AztecCode",
+                                                    "Datamatrix",
+                                                    "PDF417",
+                                                    "QRCode"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "type"
+                                        ],
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "coupon_code",
+                                    "coupon_value"
+                                ],
+                                "additionalProperties": false
+                            },
+                            {
+                                "title": "Generic payment type",
+                                "description": "Generic tendertype. Use other+type_name if no other payment type matches. Add tender specific payment in the details section",
+                                "type": "object",
+                                "oneOf": [
+                                    {
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "purchase_order",
+                                                    "accounts_receivable",
+                                                    "house_account",
+                                                    "voucher"
+                                                ]
+                                            },
+                                            "tender_details": {
+                                                "type": "object",
+                                                "description": "any aditional payment information needed",
+                                                "allOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "array"
+                                                                ]
+                                                            },
+                                                            "collection": {
+                                                                "type": "array",
+                                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "type",
+                                                            "collection"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "barcode": {
+                                                                "description": "barcode representation of tender details",
+                                                                "properties": {
+                                                                    "value": {
+                                                                        "type": "string",
+                                                                        "description": "the barcode value"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "the barcode type",
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "Interleaved2Of5",
+                                                                            "EAN13",
+                                                                            "EAN8",
+                                                                            "Codabar",
+                                                                            "Code39",
+                                                                            "Code93",
+                                                                            "Code128",
+                                                                            "AztecCode",
+                                                                            "Datamatrix",
+                                                                            "PDF417",
+                                                                            "QRCode"
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "value",
+                                                                    "type"
+                                                                ],
+                                                                "additionalProperties": false
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "type"
+                                        ],
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "other"
+                                                ]
+                                            },
+                                            "type_name": {
+                                                "type": "string",
+                                                "description": "other"
+                                            },
+                                            "tender_details": {
+                                                "type": "object",
+                                                "description": "any aditional payment information needed",
+                                                "allOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "array"
+                                                                ]
+                                                            },
+                                                            "collection": {
+                                                                "type": "array",
+                                                                "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "type",
+                                                            "collection"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "barcode": {
+                                                                "description": "barcode representation of tender details",
+                                                                "properties": {
+                                                                    "value": {
+                                                                        "type": "string",
+                                                                        "description": "the barcode value"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "the barcode type",
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "Interleaved2Of5",
+                                                                            "EAN13",
+                                                                            "EAN8",
+                                                                            "Codabar",
+                                                                            "Code39",
+                                                                            "Code93",
+                                                                            "Code128",
+                                                                            "AztecCode",
+                                                                            "Datamatrix",
+                                                                            "PDF417",
+                                                                            "QRCode"
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "value",
+                                                                    "type"
+                                                                ],
+                                                                "additionalProperties": false
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "type_name"
+                                        ],
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "amount",
+                    "tender"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "customer": {
+            "description": "Information and/or identification of the customer",
+            "anyOf": [
+                {
+                    "type": "object",
+                    "description": "Defines valid customer identifiers",
+                    "properties": {
+                        "id": {
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "description": "The digital receipt service customer identifier",
+                                    "properties": {
+                                        "service_id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "service_id"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "The customer email address",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email"
+                                        }
+                                    },
+                                    "required": [
+                                        "email"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "The customer phone number",
+                                    "properties": {
+                                        "phone": {
+                                            "title": "phone number identifer",
+                                            "description": "more restrictive international phone number format used as identifier, based on ITU-T E.123",
+                                            "type": "string",
+                                            "pattern": "^\\+(?:[0-9]\\x20?){6,14}[0-9]$"
+                                        }
+                                    },
+                                    "required": [
+                                        "phone"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "The customer ssn",
+                                    "properties": {
+                                        "civic_registration_number": {
+                                            "type": "string",
+                                            "pattern": "^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$",
+                                            "description": "swedish personnummer 12 digits"
+                                        }
+                                    },
+                                    "required": [
+                                        "civic_registration_number"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Use loyalty program name and customer loyalty number as identifier",
+                                    "properties": {
+                                        "loyalty": {
+                                            "type": "object",
+                                            "description": "Customer loyalty information",
+                                            "properties": {
+                                                "program": {
+                                                    "type": "string",
+                                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                                },
+                                                "level": {
+                                                    "type": "string",
+                                                    "description": "Some programs has different levels based on point etc "
+                                                },
+                                                "customer_number": {
+                                                    "type": "string",
+                                                    "description": "The actual loyalty number"
+                                                },
+                                                "incremental_count": {
+                                                    "type": "integer",
+                                                    "description": "Loyalty points gained/lost in transaction"
+                                                },
+                                                "current_count": {
+                                                    "type": "integer",
+                                                    "description": "Total loyalty points after increment"
+                                                },
+                                                "target_count": {
+                                                    "type": "integer",
+                                                    "description": "Loyalty points needed to achieve next goal/level"
+                                                },
+                                                "effective_date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "expiration_date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                }
+                                            },
+                                            "required": [
+                                                "program",
+                                                "customer_number"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "loyalty"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "description": "Defines customer information, like name, address, loyalty program.",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "contact": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "title": "address",
+                                    "description": "An address following the convention of http://microformats.org/wiki/hcard",
+                                    "type": "object",
+                                    "properties": {
+                                        "street_address": {
+                                            "type": "string"
+                                        },
+                                        "extended_address": {
+                                            "type": "string"
+                                        },
+                                        "post_box": {
+                                            "type": "string"
+                                        },
+                                        "locality": {
+                                            "type": "string"
+                                        },
+                                        "postal_code": {
+                                            "type": "string"
+                                        },
+                                        "region": {
+                                            "type": "string"
+                                        },
+                                        "country_name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "object",
+                                            "title": "address type",
+                                            "description": "is address (physical/email) related to business, home, etc",
+                                            "properties": {
+                                                "type": {
+                                                    "enum": [
+                                                        "home",
+                                                        "business"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "street_address"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "post_box"
+                                            ]
+                                        }
+                                    ],
+                                    "required": [
+                                        "locality",
+                                        "postal_code"
+                                    ]
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "phone": {
+                                    "title": "generic phone number",
+                                    "description": "generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed",
+                                    "type": "string",
+                                    "pattern": "^(\\(?((\\+|(00))[0-9]{1,3})\\)?)?( ?-?\\(?[0-9]+\\)?)+$"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "geo_location": {
+                            "type": "object",
+                            "title": "Geographic location (long/lat)",
+                            "description": "A geographical coordinate",
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ]
+                        },
+                        "loyalty": {
+                            "type": "object",
+                            "description": "Customer loyalty information",
+                            "properties": {
+                                "program": {
+                                    "type": "string",
+                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                },
+                                "level": {
+                                    "type": "string",
+                                    "description": "Some programs has different levels based on point etc "
+                                },
+                                "customer_number": {
+                                    "type": "string",
+                                    "description": "The actual loyalty number"
+                                },
+                                "incremental_count": {
+                                    "type": "integer",
+                                    "description": "Loyalty points gained/lost in transaction"
+                                },
+                                "current_count": {
+                                    "type": "integer",
+                                    "description": "Total loyalty points after increment"
+                                },
+                                "target_count": {
+                                    "type": "integer",
+                                    "description": "Loyalty points needed to achieve next goal/level"
+                                },
+                                "effective_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "expiration_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                }
+                            },
+                            "required": [
+                                "program",
+                                "customer_number"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "customer_order": {
+            "description": "Information about a connected customer order if applicable",
+            "type": "object",
+            "properties": {
+                "order_number": {
+                    "type": "string",
+                    "description": "Order/booking number connected to receipt on new order/booking"
+                },
+                "order_reference": {
+                    "type": "string",
+                    "description": "Order/booking number connected to receipt on existing order/booking when the order is changed."
+                },
+                "customer": {
+                    "description": "To whom the order/order_reference belongs",
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "contact": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "title": "address",
+                                    "description": "An address following the convention of http://microformats.org/wiki/hcard",
+                                    "type": "object",
+                                    "properties": {
+                                        "street_address": {
+                                            "type": "string"
+                                        },
+                                        "extended_address": {
+                                            "type": "string"
+                                        },
+                                        "post_box": {
+                                            "type": "string"
+                                        },
+                                        "locality": {
+                                            "type": "string"
+                                        },
+                                        "postal_code": {
+                                            "type": "string"
+                                        },
+                                        "region": {
+                                            "type": "string"
+                                        },
+                                        "country_name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "object",
+                                            "title": "address type",
+                                            "description": "is address (physical/email) related to business, home, etc",
+                                            "properties": {
+                                                "type": {
+                                                    "enum": [
+                                                        "home",
+                                                        "business"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "street_address"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "post_box"
+                                            ]
+                                        }
+                                    ],
+                                    "required": [
+                                        "locality",
+                                        "postal_code"
+                                    ]
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "phone": {
+                                    "title": "generic phone number",
+                                    "description": "generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed",
+                                    "type": "string",
+                                    "pattern": "^(\\(?((\\+|(00))[0-9]{1,3})\\)?)?( ?-?\\(?[0-9]+\\)?)+$"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "geo_location": {
+                            "type": "object",
+                            "title": "Geographic location (long/lat)",
+                            "description": "A geographical coordinate",
+                            "properties": {
+                                "latitude": {
+                                    "type": "number"
+                                },
+                                "longitude": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "latitude",
+                                "longitude"
+                            ]
+                        },
+                        "loyalty": {
+                            "type": "object",
+                            "description": "Customer loyalty information",
+                            "properties": {
+                                "program": {
+                                    "type": "string",
+                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                },
+                                "level": {
+                                    "type": "string",
+                                    "description": "Some programs has different levels based on point etc "
+                                },
+                                "customer_number": {
+                                    "type": "string",
+                                    "description": "The actual loyalty number"
+                                },
+                                "incremental_count": {
+                                    "type": "integer",
+                                    "description": "Loyalty points gained/lost in transaction"
+                                },
+                                "current_count": {
+                                    "type": "integer",
+                                    "description": "Total loyalty points after increment"
+                                },
+                                "target_count": {
+                                    "type": "integer",
+                                    "description": "Loyalty points needed to achieve next goal/level"
+                                },
+                                "effective_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "expiration_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                }
+                            },
+                            "required": [
+                                "program",
+                                "customer_number"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "oneOf": [
+                {
+                    "required": [
+                        "order_number"
+                    ]
+                },
+                {
+                    "required": [
+                        "order_reference"
+                    ]
+                }
+            ],
+            "additionalProperties": false
+        },
+        "control_unit": {
+            "description": "Control unit information required by swedish tax authorities",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        }
+    },
+    "required": [
+        "business_unit",
+        "sales_recording_system",
+        "receipt_identifier",
+        "time_of_purchase",
+        "currency",
+        "totals",
+        "items",
+        "payments"
+    ],
+    "additionalProperties": false
+}

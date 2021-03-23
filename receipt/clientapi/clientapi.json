@@ -1,0 +1,2625 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Client API",
+        "version": " 1.4.5",
+        "description": "[Changelog - 2020-05-05](changelog/)",
+        "x-logo": {
+            "url": "../../assets/kivra-logo.svg",
+            "altText": "Kivra logo"
+        }
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Test server"
+        }
+    ],
+    "paths": {
+        "/api/v1/persons": {
+            "post": {
+                "description": "Creates a single person in the system with the given identifiers.",
+                "operationId": "createPerson",
+                "summary": "Create person",
+                "requestBody": {
+                    "description": "Takes in the ID of the person to be created and a list of identifiers, defined by the identifier type and value.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUser"
+                            },
+                            "example": {
+                                "id": "12345678987654321b1844ba29cdece32abbee1c51",
+                                "state": "ONBOARDED",
+                                "identifiers": [
+                                    {
+                                        "type": "civic_registration_number",
+                                        "value": "199005091239"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Person successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateUserSuccess"
+                                },
+                                "example": {
+                                    "id": "1157932187e602c539cf884fa4b521199364de40aa"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/ConflictError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}": {
+            "get": {
+                "operationId": "getPerson",
+                "summary": "Get person",
+                "description": "Get information for the person with the given personID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Person successfully fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Fetch person response",
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        },
+                                        "identifiers": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "hashed_value": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": "15585939879f8ee65bc6c144609f8724819e76a1b1",
+                                        "created_at": "2019-05-23T08:46:27+02:00",
+                                        "updated_at": "2019-05-23T08:46:27+02:00",
+                                        "state": "ONBOARDED",
+                                        "identifiers": [
+                                            {
+                                                "id": "15585939879f8ee65bc6c144609f8724819e76a1b1",
+                                                "created_at": "2019-05-23T08:46:27+02:00",
+                                                "updated_at": "2019-05-23T08:46:27+02:00",
+                                                "type": "civic_registration_number",
+                                                "hashed_value": "I2fn2SdZ2+E4iFAnKURym7PeM5CLnjbfwSyPtfdBTp8="
+                                            },
+                                            {
+                                                "id": "1558593984f9ee69bc12c144613f8724820e77a3b2",
+                                                "created_at": "2019-05-23T08:46:27+02:00",
+                                                "updated_at": "2019-05-23T08:46:27+02:00",
+                                                "type": "email",
+                                                "hashed_value": "I2fn2SdZ2+E4iFAnKURym7PeM5CLnjbfwSyPtfdBTp8="
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deletePerson",
+                "summary": "Delete person",
+                "description": "Delete a person with the given personID. Be aware that the person is soft-deleted with a grace period set with query parameters(defaulting to 30 days)",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Days"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Person successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "410": {
+                        "$ref": "#/components/responses/GoneError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/onboard": {
+            "put": {
+                "operationId": "OnboardPerson",
+                "summary": "Onboard person",
+                "description": "Onboard person to the receipt service",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "successfully onboarded person",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/offboard": {
+            "put": {
+                "operationId": "OffboardPerson",
+                "summary": "Offboard person",
+                "description": "Offboard person to the receipt service",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "successfully offboarded person",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/expense": {
+            "get": {
+                "operationId": "GetExpenseManagementSystems",
+                "summary": "Get expense management systems",
+                "description": "Get a list of all expense management systems this person has connected",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of EMS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EMSList"
+                                },
+                                "example": {
+                                    "systems": [
+                                        {
+                                            "id": "1234567890",
+                                            "name": "Company Expense",
+                                            "icon_url": "http://expense.api.com/path/to/icon"
+                                        },
+                                        {
+                                            "id": "1234567891",
+                                            "name": "Fortnox",
+                                            "icon_url": "http://expense.api.com/path/to/icon"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/identifiers": {
+            "post": {
+                "description": "Creates a single identifier in the system for a given person",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "operationId": "createIdentifier",
+                "summary": "Create identifier",
+                "requestBody": {
+                    "description": "Takes in an dentifier, defined by the identifier type and value.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Identifier"
+                            },
+                            "example": {
+                                "type": "civic_registration_number",
+                                "value": "199005091239"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Identifier successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdentifierSuccess"
+                                },
+                                "example": {
+                                    "id": "1157932187e602c539cf884fa4b521199364de40aa"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/identifiers/{identifierID}": {
+            "put": {
+                "description": "Updates a single identifier in the system for a given person",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdentifierID"
+                    }
+                ],
+                "operationId": "updateIdentifier",
+                "summary": "Update identifier",
+                "requestBody": {
+                    "description": "Takes in an dentifier, defined by the identifier type and value and updates.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Identifier"
+                            },
+                            "example": {
+                                "type": "civic_registration_number",
+                                "value": "199005091239"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Identifier successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdentifierSuccess"
+                                },
+                                "example": {
+                                    "id": "1157932187e602c539cf884fa4b521199364de40aa"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deleteIdentifier",
+                "summary": "Delete identifier from a person",
+                "description": "Delete an identifier with identifierID from a person with personID",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdentifierID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Identifier successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "410": {
+                        "$ref": "#/components/responses/GoneError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/receipts": {
+            "get": {
+                "operationId": "personReceipts",
+                "summary": "Get receipts",
+                "description": "Fetch a list of all receipts for the given personID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortBy"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Search"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Q"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/gdpr": {
+            "get": {
+                "operationId": "personGDPR",
+                "summary": "Get GDPR-compliant list of all receipts for a person",
+                "description": "Fetches GDPR-compliant version of all receipt for the given personID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GDPRReceiptList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/receipts/{receiptID}": {
+            "get": {
+                "operationId": "getPersonReceipt",
+                "summary": "Get receipt",
+                "description": "Fetch a receipt for the given personID and receiptID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/AcceptJSON"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptSingle"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deletePersonReceipt",
+                "summary": "Get receipt",
+                "description": "Delete a receipt belonging the given personID, with a receiptID. Be aware that the receipt is soft-deleted with a grace period set with query parameters(defaulting to 30 days)",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Days"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Receipt successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "410": {
+                        "$ref": "#/components/responses/GoneError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains": {
+            "get": {
+                "operationId": "personChains",
+                "summary": "Get chains",
+                "description": "Fetch a list of all chains for a person sorted by purchase_date.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Include"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ChainList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}/receipts": {
+            "get": {
+                "operationId": "personChainReceipts",
+                "summary": "Get receipts for chain",
+                "description": "Fetch a list of all receipts for the given personID and chainID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortBy"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Search"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Q"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/deleted": {
+            "get": {
+                "operationId": "GetPersonDeletedReceipts",
+                "summary": "Get deleted receipts",
+                "description": "Fetch a list of receipts that have been marked for deletion",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortBy"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/receipts/{receiptID}/restore": {
+            "put": {
+                "operationId": "RestorePersonReceipt",
+                "summary": "Restore deleted receipt",
+                "description": "Restore a deleted receipt ",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Receipt successfully restored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/receipts/{receiptID}/expense": {
+            "post": {
+                "operationId": "ExpenseReceipt",
+                "summary": "Expense receipt",
+                "description": "Expense receipt to the given expense management system",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Defines the receipt to be expensed and to what expense management system",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "The id of the expense management system",
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "id": "1234567890"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "successfully expensed receipt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "409": {
+                        "description": "Receipt already expensed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": 10103,
+                                    "error_message": "Nothing to do",
+                                    "error_detail": [
+                                        "Receipt already Expensed"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/receipts/{receiptID}/gift": {
+            "put": {
+                "operationId": "GiftPersonReceipt",
+                "summary": "Create a gift receipt",
+                "description": "Create a gift receipt",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Takes in the ID of the person the receipt should be given to.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GiftReceipt"
+                            },
+                            "example": {
+                                "person_id": "00348736678bf773c75fea4020bf6bf6f219cb1234"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Receipt successfully gifted.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/gifted/receipts/{giftLinkID}/claim": {
+            "put": {
+                "operationId": "ClaimPersonGiftedReceipt",
+                "summary": "Claim a gifted receipt",
+                "description": "Claim a gifted receipt",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GiftLinkID"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The gifted receipt was successfully claimed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "The id of the gift receipt created"
+                                        }
+                                    },
+                                    "required": [
+                                        "id"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Gifted receipt link has already claimed or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": 40303,
+                                    "error_message": "gifted receipt link has already been claimed"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}/reject": {
+            "put": {
+                "operationId": "RejectChainReceipts",
+                "summary": "Reject chain",
+                "description": "Reject all new receipts from the given chainID for the given personID",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chain rejected.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "description": "This person has already rejected this chain",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": "10103",
+                                    "error_message": "Nothing to do",
+                                    "error_detail": [
+                                        "Chain already rejected"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}/restore": {
+            "put": {
+                "operationId": "RestoreChainReceipts",
+                "summary": "Restore chain",
+                "description": "Start receiving receipts again from given chainID for the given personID",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chain restored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "description": "This person hasn't rejected this chain",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": "10103",
+                                    "error_message": "Nothing to do",
+                                    "error_detail": [
+                                        "Chain wasn't rejected by the user."
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/barcode/{type}/{value}": {
+            "get": {
+                "operationId": "GetBarcode",
+                "summary": "Get barcode",
+                "description": "Fetch a barcode with the given type and value in image format.",
+                "security": [
+                    {}
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/BarcodeValue"
+                    },
+                    {
+                        "$ref": "#/components/parameters/BarcodeType"
+                    },
+                    {
+                        "name": "width",
+                        "in": "query",
+                        "description": "Width of the barcode, (0, 4096]",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 4096
+                        }
+                    },
+                    {
+                        "name": "height",
+                        "in": "query",
+                        "description": "Height of the barcode, (0, 4096]",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 4096,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "pdf417encoding",
+                        "in": "query",
+                        "description": "Defines the encoding level of PDF417 barcodes [1, 8]",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 8,
+                            "default": 3
+                        }
+                    },
+                    {
+                        "name": "ar",
+                        "in": "query",
+                        "description": "aspect ratio if the generated barcode, ignored if both height and width is given",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 10,
+                            "default": 3.0
+                        }
+                    },
+                    {
+                        "name": "fg",
+                        "in": "query",
+                        "description": "Forground color of the barcode, accepts RGBA in hex format (#RRGGBBAA)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 9,
+                            "maxLength": 9,
+                            "default": "#000000FF"
+                        }
+                    },
+                    {
+                        "name": "bg",
+                        "in": "query",
+                        "description": "Background color of the barcode, accepts RGBA in hex format (#RRGGBBAA)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 9,
+                            "maxLength": 9,
+                            "default": "#FFFFFF00"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Barcode successfully fetched",
+                        "content": {
+                            "image/png": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/{resourceID}": {
+            "get": {
+                "operationId": "getResource",
+                "summary": "Get resource",
+                "description": "Fetch a resource with the given resourceID",
+                "security": [
+                    {}
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ResourceID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resource successfully fetched",
+                        "content": {
+                            "image/png": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/gifted/receipts/{giftLinkID}": {
+            "get": {
+                "operationId": "GetGiftedReceipt",
+                "summary": "View a gift receipt before claiming it",
+                "description": "View a gift receipt before claiming it",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/GiftLinkID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receipt successfully fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Gifted receipt link has already claimed or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": 40303,
+                                    "error_message": "gifted receipt link has already been claimed"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/expense": {
+            "get": {
+                "operationId": "GetAllEMS",
+                "summary": "Get all expense management systems",
+                "description": "Get a list of all expense management systems",
+                "responses": {
+                    "200": {
+                        "description": "List of EMS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EMSList"
+                                },
+                                "example": {
+                                    "systems": [
+                                        {
+                                            "id": "1234567890",
+                                            "name": "Company Expense",
+                                            "icon_url": "http://expense.api.com/path/to/icon"
+                                        },
+                                        {
+                                            "id": "1234567891",
+                                            "name": "Fortnox",
+                                            "icon_url": "http://expense.api.com/path/to/icon"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/chains": {
+            "get": {
+                "operationId": "chains",
+                "summary": "Get all chains",
+                "description": "Fetch a list of all chains.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchChains"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ChainListAll"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorResponse": {
+                "title": "ErrorResponse",
+                "type": "object",
+                "properties": {
+                    "error_code": {
+                        "type": "integer",
+                        "minimum": 10000,
+                        "maximum": 99999,
+                        "description": "A code identifying the error"
+                    },
+                    "error_message": {
+                        "type": "string",
+                        "description": "A descriptive string describing the error"
+                    },
+                    "error_detail": {
+                        "type": "array",
+                        "description": "Additional details describing the error",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "error_code",
+                    "error_message"
+                ]
+            },
+            "GiftReceipt": {
+                "title": "Gift Receipt Schema",
+                "type": "object",
+                "properties": {
+                    "person_id": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "identifiers"
+                ]
+            },
+            "CreateUser": {
+                "title": "Create a new user",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "ID of the user that will be created"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "ONBOARDED",
+                            "OFFBBOARDED"
+                        ],
+                        "default": "ONBOARDED"
+                    },
+                    "identifiers": {
+                        "type": "array",
+                        "description": "List of identifiers for this user",
+                        "items": {
+                            "$ref": "#/components/schemas/Identifier"
+                        }
+                    }
+                },
+                "required": [
+                    "identifiers"
+                ]
+            },
+            "Identifier": {
+                "title": "Create a new identifier",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "description": "The type of identifier",
+                        "type": "string",
+                        "enum": [
+                            "civic_registration_number",
+                            "email",
+                            "phone"
+                        ]
+                    },
+                    "value": {
+                        "description": "Value of the identifier",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "type",
+                    "value"
+                ]
+            },
+            "CreateUserSuccess": {
+                "title": "Response to successfully created user",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "ID of the user that was created"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "IdentifierSuccess": {
+                "title": "Response to successfully created identifier",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "ID of the identifier that was created"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "ChainList": {
+                "title": "List of chains",
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "chains": {
+                        "title": "Chain list",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "logo_url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "icon_url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "num_receipts": {
+                                    "type": "integer"
+                                },
+                                "is_rejected": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name",
+                                "logo_id",
+                                "icon_id",
+                                "num_receipts",
+                                "is_rejected"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "offset",
+                    "limit",
+                    "receipts"
+                ]
+            },
+            "ChainListAll": {
+                "title": "List of chains",
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "chains": {
+                        "title": "Chain list",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "logo_url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "icon_url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "num_receipts": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name",
+                                "logo_id",
+                                "icon_id",
+                                "num_receipts"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "offset",
+                    "limit",
+                    "receipts"
+                ]
+            },
+            "ReceiptSingle": {
+                "title": "Receipt with related receipts",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SALE",
+                            "RETURN",
+                            "SALE_RETURN"
+                        ]
+                    },
+                    "receipt_id": {
+                        "type": "string"
+                    },
+                    "store_id": {
+                        "type": "string"
+                    },
+                    "chain_id": {
+                        "type": "string"
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_copy": {
+                        "type": "boolean"
+                    },
+                    "is_refund": {
+                        "type": "boolean"
+                    },
+                    "is_expensed": {
+                        "type": "boolean"
+                    },
+                    "deleted": {
+                        "type": "boolean"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "multipleOf": 0.01
+                    },
+                    "receipt": {
+                        "type": "object"
+                    },
+                    "parents": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Parents"
+                        }
+                    },
+                    "returns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Returns"
+                        }
+                    },
+                    "item_display_fields": {
+                        "type": "array",
+                        "description": "The extra fields from receipt items that should be displayed in the app",
+                        "items": {
+                            "type": "string",
+                            "enum": ["article_number_pos","article_number_gtin"]
+                        }
+                    }
+                },
+                "required": [
+                    "type",
+                    "receipt_id",
+                    "store_id",
+                    "chain_id",
+                    "logo_url",
+                    "is_copy",
+                    "is_refund",
+                    "is_expensed",
+                    "deleted", 
+                    "amount", 
+                    "receipt",
+                    "parents",
+                    "returns"
+                ]
+            },
+            "Parents": {
+                "title": "List with related parent receipts",
+                "type": "object",
+                "properties": {
+                    "receipt_id": {
+                        "type": "string"
+                    },
+                    "receipt_reference": {
+                        "type": "object",
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "context": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "Returns": {
+                "title": "List with related return receipts",
+                "type": "object",
+                "properties": {
+                    "receipt_id": {
+                        "type": "string"
+                    },
+                    "Items": {
+                        "type": "object"
+                        }
+                    }
+            },
+            "ReceiptItem": {
+                "title": "Receipt item",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SALE",
+                            "RETURN",
+                            "SALE_RETURN"
+                        ]
+                    },
+                    "chain_id": {
+                        "type": "string"
+                    },
+                    "store_id": {
+                        "type": "string"
+                    },
+                    "store_name": {
+                        "type": "string"
+                    },
+                    "receipt_id": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "multipleOf": 0.01
+                    },
+                    "currency": {
+                        "type": "string"
+                    },
+                    "purchase_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "is_copy": {
+                        "type": "boolean"
+                    },
+                    "is_expensed": {
+                        "type": "boolean"
+                    },
+                    "discount": {
+                        "type": "number",
+                        "multipleOf": 0.01,
+                        "nullable": true
+                    },
+                    "store_icon_url": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "type",
+                    "chain_id",
+                    "store_id",
+                    "store_name",
+                    "receipt_id",
+                    "amount",
+                    "currency",
+                    "purchase_date",
+                    "description",
+                    "is_copy",
+                    "is_expensed",
+                    "discount",
+                    "store_icon_url"
+                ]
+            },
+            "ReceiptList": {
+                "title": "List of receipts",
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "receipts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReceiptItem"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "offset",
+                    "limit",
+                    "receipts"
+                ]
+            },
+            "GDPRBusinessUnit": {
+                "title": "GDPR business unit",
+                "type": "object",
+                "properties": {
+                    "service_id": {
+                        "type": "string"
+                    },
+                    "organization_number": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "service_id",
+                    "organization_number",
+                    "name"
+                ]
+            },
+            "GDPRReceiptDetails": {
+                "title": "GDPR Receipt details",
+                "type": "object",
+                "properties": {
+                    "business_unit": {
+                        "$ref": "#/components/schemas/GDPRBusinessUnit"
+                    },
+                    "time_of_purchase": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "payments": {
+                        "type": "object"
+                    },
+                    "customer": {
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "business_unit",
+                    "time_of_purchase",
+                    "payments",
+                    "customer"
+                ]
+            },
+            "GDPRReceiptItem": {
+                "title": "GDPR Receipt item",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SALE",
+                            "RETURN",
+                            "SALE_RETURN"
+                        ]
+                    },
+                    "store_id": {
+                        "type": "string"
+                    },
+                    "receipt_id": {
+                        "type": "string"
+                    },
+                    "receipt": {
+                        "$ref": "#/components/schemas/GDPRReceiptDetails"
+                    }
+                },
+                "required": [
+                    "type",
+                    "store_id",
+                    "receipt_id",
+                    "receipt"
+                ]
+            },
+            "GDPRReceiptList": {
+                "title": "List of GDPR-compliant receipts",
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "receipts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GDPRReceiptItem"
+                        }
+                    }
+                },
+                "required": [
+                    "total",
+                    "offset",
+                    "limit",
+                    "receipts"
+                ]
+            },
+            "EMSList": {
+                "title": "List of EMS",
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "systems": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "description": "The id of the expense management system",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "description": "The name of the expense management system",
+                                    "type": "string"
+                                },
+                                "icon_url": {
+                                    "description": "The URL to an EMS's icon",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name",
+                                "icon_url"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "PersonID": {
+                "name": "personID",
+                "in": "path",
+                "description": "User ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "IdentifierID": {
+                "name": "identifierID",
+                "in": "path",
+                "description": "Identifier ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "ChainID": {
+                "name": "chainID",
+                "in": "path",
+                "description": "Chain ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "StoreID": {
+                "name": "storeID",
+                "in": "path",
+                "description": "Store ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "ReceiptID": {
+                "name": "receiptID",
+                "in": "path",
+                "description": "Receipt ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "GiftLinkID": {
+                "name": "giftLinkID",
+                "in": "path",
+                "description": "Gift Link ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "ResourceID": {
+                "name": "resourceID",
+                "in": "path",
+                "description": "Resource ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "BarcodeValue": {
+                "name": "value",
+                "in": "path",
+                "description": "Value to encode",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "BarcodeType": {
+                "name": "type",
+                "in": "path",
+                "description": "Barcode type",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "Interleaved2Of5",
+                        "Code39",
+                        "Code93",
+                        "Code128",
+                        "AztecCode",
+                        "Codabar",
+                        "Datamatrix",
+                        "EAN8",
+                        "EAN13",
+                        "PDF417",
+                        "QRCode"
+                    ]
+                }
+            },
+            "Include": {
+                "name": "include",
+                "in": "query",
+                "description": "what chains to to include",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "activated",
+                        "rejected",
+                        "all"
+                    ],
+                    "default": "activated"
+                }
+            },
+            "Limit": {
+                "name": "limit",
+                "in": "query",
+                "description": "Max number of results to return",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 20
+                }
+            },
+            "Offset": {
+                "name": "offset",
+                "in": "query",
+                "description": "Offset for returned items",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0
+                }
+            },
+            "SortBy": {
+                "name": "sort_by",
+                "in": "query",
+                "description": "Name of the column to sort results by",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "default": "purchase_date"
+                }
+            },
+            "DrErrorCode": {
+                "name": "X-Dr-Error-Code",
+                "in": "header",
+                "description": "Represents the error code that is being returned",
+                "schema": {
+                    "type": "string",
+                    "example": "40100"
+                }
+            },
+            "AcceptJSON": {
+                "name": "accept",
+                "in": "header",
+                "description": "defines the receipt schema format that will be returned, invalid values default to RC2",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "default": "application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0",
+                    "example": "application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0"
+                }
+            },
+            "Days": {
+                "name": "days",
+                "in": "header",
+                "description": "Defines the number of days an object can be restored",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "default": "30",
+                    "example": "10"
+                }
+            },
+            "Order": {
+                "name": "order",
+                "in": "query",
+                "description": "Determines if results are ordered in ascending or descending order",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ],
+                    "default": "desc"
+                }
+            },
+            "Q": {
+                "name": "q",
+                "in": "query",
+                "description": "Search based on individual fields",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "Search": {
+                "name": "search",
+                "in": "query",
+                "description": "Search based on store name and item description",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SearchChains": {
+                "name": "search",
+                "in": "query",
+                "description": "Search based on store name",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 40100,
+                            "error_message": "jwt token missing"
+                        }
+                    }
+                }
+            },
+            "BadRequestError": {
+                "description": "400 type error",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 40000,
+                            "error_message": "body is missing from the request"
+                        }
+                    }
+                }
+            },
+            "NotFoundError": {
+                "description": "404 type error",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 40401,
+                            "error_message": "person not found"
+                        }
+                    }
+                }
+            },
+            "ConflictError": {
+                "description": "Conflict error. Fx. an identifier being created belongs to another person",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 40901,
+                            "error_message": "conflict SSN identifier already exists"
+                        }
+                    }
+                }
+            },
+            "GoneError": {
+                "description": "Person/Receipt not found",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 40014,
+                            "error_message": "receipt not found"
+                        }
+                    }
+                }
+            },
+            "InternalError": {
+                "description": "500 Internal server error",
+                "headers": {
+                    "X-Dr-Error-Code": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Error code being returned"
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        },
+                        "example": {
+                            "error_code": 50000,
+                            "error_message": "internal error"
+                        }
+                    }
+                }
+            },
+            "ReceiptSingle": {
+                "description": "Receipt successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReceiptSingle"
+                        },
+                        "example": {
+                            "type": "SALE_RETURN",
+                            "receipt_id": "1910ac078e61740f93987ee6b67b0f503e51b49eb137",
+                            "store_id": "012345678901234567890123456789012345678901",
+                            "chain_id": "012345678901234567890123456789012345678900",
+                            "logo_url": "/api/v1/resources/15713833575eec61f7fec94c3ba3faf525f7ea8e75",
+                            "deleted": false,
+                            "is_copy": false,
+                            "is_refund": false,
+                            "is_expensed": false,
+                            "amount": 100.00,
+                            "receipt": {
+                                "business_unit": {
+                                    "contact": {
+                                        "address": {
+                                            "locality": "Stockholm",
+                                            "postal_code": "11111",
+                                            "street_address": "Gatan 3"
+                                        },
+                                        "phone": "+460720327183"
+                                    },
+                                    "name": "DRP Store",
+                                    "organization_number": "1111345",
+                                    "service_id": "012345678901234567890123456789012345678901"
+                                },
+                                "cashier": {
+                                    "id": "5",
+                                    "name": "Anna Andersson"
+                                },
+                                "currency": "SEK",
+                                "items": [
+                                    {
+                                        "sequence_number": 1,
+                                        "type": "sale",
+                                        "identifiers": [
+                                            {
+                                                "value": "912042",
+                                                "identifier_type": "pos"
+                                            }
+                                        ],
+                                        "quantity": {
+                                            "value": 1,
+                                            "unit": "ea",
+                                            "entry_method": "scanned"
+                                        },
+                                        "tax_percentage": 25,
+                                        "description": "Kingston USB Flash Drive 256 GB",
+                                        "extended_amount": 200,
+                                        "regular_sales_unit_price": 200,
+                                        "actual_sales_unit_price": 200
+                                    },
+                                    {
+                                        "sequence_number": 1,
+                                        "type": "return",
+                                        "identifiers": [
+                                            {
+                                                "value": "912042",
+                                                "identifier_type": "pos"
+                                            }
+                                        ],
+                                        "quantity": {
+                                            "value": 1,
+                                            "unit": "ea",
+                                            "entry_method": "scanned"
+                                        },
+                                        "tax_percentage": 25,
+                                        "description": "Kingston USB Flash Drive 128 GB",
+                                        "extended_amount": 100,
+                                        "regular_sales_unit_price": 100,
+                                        "actual_sales_unit_price": 100,
+                                        "receipt_reference": {
+                                            "value": "0000000010",
+                                            "context": "store"
+                                        }
+                                    }
+                                ],
+                                "payments": [
+                                    {
+                                        "amount": 100,
+                                        "amount_applied_to_bill": 100,
+                                        "tender": {
+                                            "type": "cash"
+                                        }
+                                    }
+                                ],
+                                "receipt_identifier": {
+                                    "extended_number": {
+                                        "value": "0000000011",
+                                        "type": "EAN8",
+                                        "context": "store"
+                                    },
+                                    "sequence_number": 123456
+                                },
+                                "sales_recording_system": {
+                                    "serial_number": "EA38329",
+                                    "name": "kassa 3"
+                                },
+                                "header_text": {
+                                    "type": "array",
+                                    "collection": [
+                                        "Öppettider: Måndag - Fredag 10-18 Lördag 10-15"
+                                    ]
+                                },
+                                "footer_text": {
+                                    "type": "array",
+                                    "collection": []
+                                },
+                                "time_of_purchase": "2019-10-30T12:04:52.402Z",
+                                "totals": [
+                                    {
+                                        "amount": 75,
+                                        "type": "net"
+                                    },
+                                    {
+                                        "amount": 25,
+                                        "type": "vat",
+                                        "sub_totals": [
+                                            {
+                                                "amount": 25,
+                                                "tax_percentage": 25,
+                                                "taxable_amount": 100
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "amount": 100,
+                                        "type": "gross"
+                                    },
+                                    {
+                                        "amount": 0,
+                                        "type": "rounding"
+                                    },
+                                    {
+                                        "amount": 100,
+                                        "type": "paid"
+                                    }
+                                ],
+                                "customer": {
+                                    "id": {
+                                        "civic_registration_number": "199005081239"
+                                    }
+                                },
+                                "control_unit": {
+                                    "code": "BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;",
+                                    "id": "RIHTT102710007088"
+                                }
+                            },
+                            "parents": [
+                                {
+                                    "receipt_id": "191034a8c566cadb005ca2368bcd2823fee7c607f5b0",
+                                    "receipt_reference": {
+                                        "value": "0000000010",
+                                        "context": "store"
+                                    }
+                                }
+                            ],
+                            "returns": [
+                                {
+                                    "receipt_id": "19105b20a6e3479ee90e85058e4fec899356b28298c0",
+                                    "items": [
+                                        {
+                                            "sequence_number": 1,
+                                            "type": "return",
+                                            "identifiers": [
+                                                {
+                                                    "value": "912042",
+                                                    "identifier_type": "pos"
+                                                }
+                                            ],
+                                            "quantity": {
+                                                "value": 1,
+                                                "unit": "ea",
+                                                "entry_method": "scanned"
+                                            },
+                                            "tax_percentage": 25,
+                                            "description": "Kingston USB Flash Drive 256 GB",
+                                            "extended_amount": 200,
+                                            "regular_sales_unit_price": 200,
+                                            "actual_sales_unit_price": 200,
+                                            "receipt_reference": {
+                                                "value": "0000000011",
+                                                "context": "store"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "ReceiptList": {
+                "description": "List of receipts successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ReceiptList"
+                        },
+                        "example": {
+                            "total": 2,
+                            "offset": 0,
+                            "limit": 20,
+                            "receipts": [
+                                {
+                                    "type": "SALE",
+                                    "chain_id": "8a499ffa488cdce401488cf8c5d700cd",
+                                    "store_id": "8a499ffb488d9ca501488dc3fba0005b",
+                                    "store_name": "Test Store",
+                                    "receipt_id": "1905d0d2b21a56a00bcd71dd4c8db8219d97a4b3b280",
+                                    "amount": 27.99,
+                                    "currency": "SEK",
+                                    "purchase_date": "2019-05-24T11:37:56+02:00",
+                                    "description": "Sale receipt",
+                                    "is_copy": false,
+                                    "is_expensed": false,
+                                    "discount": null,
+                                    "store_icon_url": "https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6"
+                                },
+                                {
+                                    "type": "SALE",
+                                    "chain_id": "8a499ffa488cdce401488cf8c5d700cd",
+                                    "store_id": "8a499ffb488d9ca501488dc3fba0005b",
+                                    "store_name": "Test Store",
+                                    "receipt_id": "1905d0d2b21a56a00bcd71dd4c8db8219d97a4b3b281",
+                                    "amount": 27.99,
+                                    "currency": "SEK",
+                                    "purchase_date": "2019-05-25T11:37:56+02:00",
+                                    "description": "Random sale receipt",
+                                    "is_copy": false,
+                                    "is_expensed": false,
+                                    "discount": null,
+                                    "store_icon_url": "https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "ChainList": {
+                "description": "List of chains successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ChainList"
+                        },
+                        "example": {
+                            "total": 1,
+                            "offset": 0,
+                            "limit": 20,
+                            "chains": [
+                                {
+                                    "id": "8a499ffa488cdce401488cf8c5d700cd",
+                                    "name": "Test Chain",
+                                    "logo_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d7",
+                                    "icon_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d1",
+                                    "num_receipts": 11,
+                                    "is_rejected": false
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "ChainListAll": {
+                "description": "List of all chains successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ChainListAll"
+                        },
+                        "example": {
+                            "total": 1,
+                            "offset": 0,
+                            "limit": 20,
+                            "chains": [
+                                {
+                                    "id": "8a499ffa488cdce401488cf8c5d700cd",
+                                    "name": "Test Chain",
+                                    "logo_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d7",
+                                    "icon_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d1",
+                                    "num_receipts": 11
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "GDPRReceiptList": {
+                "description": "List of GDPR receipts successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GDPRReceiptList"
+                        },
+                        "example": {
+                            "total": 2,
+                            "offset": 0,
+                            "limit": 20,
+                            "receipts": [
+                                {
+                                    "type": "SALE_RETURN",
+                                    "receipt_id": "20023672be75be626be13056565df117e541bd8c910a",
+                                    "store_id": "012345678901234567890123456789012345678901",
+                                    "receipt": {
+                                        "business_unit": {
+                                            "service_id": "012345678901234567890123456789012345678901",
+                                            "organization_number": "556838-8200",
+                                            "name": "Findity store AB"
+                                        },
+                                        "time_of_purchase": "2020-01-17T14:37:20.058Z",
+                                        "payments": [
+                                            {
+                                                "amount": 40,
+                                                "refund": true,
+                                                "tender": {
+                                                    "type": "cash"
+                                                }
+                                            }
+                                        ],
+                                        "customer": {
+                                            "id": {
+                                                "phone": "+46 77 777 7777"
+                                            },
+                                            "loyalty": {
+                                                "customer_number": "1122334455667788",
+                                                "program": "Findity card"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "SALE",
+                                    "receipt_id": "19137da65895102bf4a3c5b2b55a064e00f6fafea92d",
+                                    "store_id": "012345678901234567890123456789012345678901",
+                                    "receipt": {
+                                        "business_unit": {
+                                            "service_id": "012345678901234567890123456789012345678901",
+                                            "organization_number": "556838-8200",
+                                            "name": "Findity store AB"
+                                        },
+                                        "time_of_purchase": "2019-12-17T09:22:48.778+01:00",
+                                        "payments": [
+                                            {
+                                                "amount": 100,
+                                                "tender": {
+                                                    "type": "cash"
+                                                }
+                                            },
+                                            {
+                                                "amount": 300,
+                                                "tender": {
+                                                    "type": "cash"
+                                                }
+                                            },
+                                            {
+                                                "amount": 60,
+                                                "refund": true,
+                                                "tender": {
+                                                    "type": "cash"
+                                                }
+                                            }
+                                        ],
+                                        "customer": {
+                                            "id": {
+                                                "phone": "+46 75 777 7777"
+                                            },
+                                            "loyalty": {
+                                                "customer_number": "1122334455667788",
+                                                "program": "Findity card"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+}

@@ -1,0 +1,155 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+
+    "definitions": {
+        "customer_identifier": {
+            "type": "object",
+            "description": "Defines valid customer identifiers",
+            "properties": {
+                "id": {
+                    "type": "object",
+                    "oneOf": [{
+                        "$ref": "#/definitions/customer_identifier_service_id"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_email"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_phone"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_civic_registration_number"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_loyalty"
+                    }]
+                }
+            }
+        },
+        "customer_information": {
+            "type": "object",
+            "description": "Defines customer information, like name, address, loyalty program.",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "$ref": "service-common-definitions.json#/definitions/address"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "phone": {
+                            "$ref": "service-common-definitions.json#/definitions/phone_number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "geo_location": {
+                    "$ref": "service-common-definitions.json#/definitions/geo_location"
+                },
+                "loyalty": {
+                  "$ref": "#/definitions/customer_loyalty_program"
+                }
+            },
+            "additionalProperties": false
+        },
+        "customer_identifier_service_id": {
+            "type": "object",
+            "description": "The digital receipt service customer identifier",
+            "properties": {
+                "service_id": {
+                    "type": "string"
+                }
+            },
+            "required": ["service_id"],
+            "additionalProperties": false
+        },
+        "customer_identifier_civic_registration_number": {
+            "type": "object",
+            "description": "The customer ssn",
+            "properties": {
+                "civic_registration_number": {
+                    "type": "string",
+                    "pattern": "^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$",
+                    "description": "swedish personnummer 12 digits"
+                }
+            },
+            "required": ["civic_registration_number"],
+            "additionalProperties": false
+        },
+        "customer_identifier_email": {
+            "type": "object",
+            "description": "The customer email address",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email"
+                }
+            },
+            "required": ["email"],
+            "additionalProperties": false
+        },
+        "customer_identifier_phone": {
+            "type": "object",
+            "description": "The customer phone number",
+            "properties": {
+                "phone": {
+                    "$ref": "service-common-definitions.json#/definitions/phone_number_id"
+                }
+            },
+            "required": ["phone"],
+            "additionalProperties": false
+        },
+        "customer_identifier_loyalty": {
+            "type": "object",
+            "description": "Use loyalty program name and customer loyalty number as identifier",
+            "properties": {
+              "loyalty": {
+                "$ref": "#/definitions/customer_loyalty_program"
+              }
+            },
+            "required": ["loyalty"]
+        },
+
+        "customer_loyalty_program": {
+            "type": "object",
+            "description": "Customer loyalty information",
+            "properties": {
+                "program": {
+                    "type": "string",
+                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                },
+                "level": {
+                    "type": "string",
+                    "description": "Some programs has different levels based on point etc "
+                },
+                "customer_number": {
+                    "type": "string",
+                    "description": "The actual loyalty number"
+                },
+                "incremental_count": {
+                    "type": "integer",
+                    "description": "Loyalty points gained/lost in transaction"
+                },
+                "current_count": {
+                    "type": "integer",
+                    "description": "Total loyalty points after increment"
+                },
+                "target_count": {
+                    "type": "integer",
+                    "description": "Loyalty points needed to achieve next goal/level"
+                },
+                "effective_date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "expiration_date": {
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "required": ["program", "customer_number"]
+        }
+    }
+}
