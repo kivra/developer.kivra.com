@@ -1,0 +1,141 @@
+{
+  "$id": "https://se.digitalreceipts.net/schemas/json/retail/v1.0",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "digital receipt schema",
+
+  "type": "object",
+  "properties": {
+    "copy": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true the receipt is a copy"
+    },
+    "business_unit": {
+      "description": "Merchant information",
+      "$ref": "business-definitions.json#/definitions/business_information"
+    },
+    "cashier": {
+      "description": "Identifies the person handling the purchase if applicable",
+      "$ref": "sales-recording-system-definitions.json#/definitions/cashier"
+    },
+    "sales_recording_system": {
+      "description": "Information about the point of sales system used. The system producing the receipt",
+      "$ref": "sales-recording-system-definitions.json#/definitions/sales_recording_system"
+    },
+    "receipt_identifier": {
+      "description": "Receipt identifiers: sequence number and/or extended number with or without barcode representation",
+      "$ref": "sales-recording-system-definitions.json#/definitions/receipt_identifier"
+    },
+    "time_of_purchase": {
+      "description": "ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+      "type": "string",
+      "format": "date-time"
+    },
+    "currency": {
+      "description": "The receipt default currency. This gives the currency for all amounts in the receipt. If applicable overriding currencies can be added to the tender parts",
+      "$ref": "monetary-definitions.json#/definitions/currency_code"
+    },
+    "totals": {
+      "description": "Total amounts and types, example net, gross, vat, discount",
+      "type": "array",
+      "items": {
+        "oneOf": [{
+            "$ref": "monetary-definitions.json#/definitions/total_discount_element"
+          },
+          {
+              "$ref": "monetary-definitions.json#/definitions/total_paid_element"
+            },
+          {
+              "$ref": "monetary-definitions.json#/definitions/total_gross_element"
+          },
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_tax_element"
+          },
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_loyalty_element"
+          },
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_net_rounding_element"
+          }
+
+        ]
+      }
+    },
+
+    "header_text": {
+      "description": "Any textual information aimed for the receipt header",
+      "$ref": "service-common-definitions.json#/definitions/text_arr"
+    },
+    "footer_text": {
+      "description": "Any textual information aimed for the receipt footer",
+      "$ref": "service-common-definitions.json#/definitions/text_arr"
+    },
+
+    "items": {
+      "description": "List of receipt items, goods or services sold/returned",
+      "type": "array",
+      "items": {
+        "oneOf": [{
+            "$ref": "item-definitions.json#/definitions/sale_item"
+          },
+          {
+            "$ref": "item-definitions.json#/definitions/return_item"
+          },
+          {
+            "$ref": "item-definitions.json#/definitions/text_item"
+          },
+          {
+            "$ref": "item-definitions.json#/definitions/deposit_item"
+          }
+        ]
+      }
+    },
+
+    "retail_price_modifiers": {
+      "type": "array",
+      "description": "Specifies any modifier(s) related to the amount paid by the customer. Example: 5% discount on the total amount",
+      "items": {
+        "$ref": "monetary-definitions.json#/definitions/retail_price_modifier_general"
+      }
+    },
+
+    "payments": {
+      "description": "Tender related information, several tender types can be used for payment",
+      "type": "array",
+      "items": {
+        "$ref": "tender-definitions.json#/definitions/tender_element"
+      }
+    },
+
+    "customer": {
+      "description": "Information and/or identification of the customer",
+      "anyOf": [{
+          "$ref": "customer-definitions.json#/definitions/customer_identifier"
+        },
+        {
+          "$ref": "customer-definitions.json#/definitions/customer_information"
+        }
+      ]
+    },
+    "customer_order": {
+      "description": "Information about a connected customer order if applicable",
+      "$ref": "customer-order-definitions.json#/definitions/customer_order_information"
+    },
+
+    "control_unit": {
+      "description": "Control unit information required by swedish tax authorities",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "required": ["id"]
+    }
+  },
+  "required": ["business_unit", "sales_recording_system", "receipt_identifier", "time_of_purchase", "currency", "totals", "items", "payments"],
+  "additionalProperties": false
+}

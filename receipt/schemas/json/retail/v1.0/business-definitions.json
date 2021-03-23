@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "definitions": {
+    "business_information": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string"},
+        "service_id": {
+          "description": "Id created when then business is registered within findity",
+          "type": "string",
+          "minLength": 42,
+          "maxLength": 42,
+          "pattern": "^[0-9]{10}[0-9a-fA-F]{32}$"
+        },
+        "unit_id": {"type": "string", "description": "Internal shop/business unit id"},
+        "organization_number": {
+          "type": "string",
+          "description": "Swedish organisationsnummer or vat reg number"
+        },
+        "contact": {
+          "type": "object",
+          "description": "Merchant contact information name, address, phone etc",
+          "properties": {
+            "address": {"$ref": "service-common-definitions.json#/definitions/address"},
+            "email": {"type": "string", "format": "email"},
+            "phone": {"$ref": "service-common-definitions.json#/definitions/phone_number"},
+            "website": {"type": "string", "format": "uri"}
+          }
+        },
+        "geo_location": { "$ref": "service-common-definitions.json#/definitions/geo_location" }
+      },
+      "required": [
+        "name",
+        "service_id",
+        "organization_number",
+        "contact"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "customer_order_information": {
+      "type": "object",
+      "description": "Use this if the receipt is connected to an order or booking",
+      "properties": {
+        "order_number": {
+          "type": "string",
+          "description": "Order/booking number connected to receipt on new order/booking"
+        },
+        "order_reference": {
+          "type": "string",
+          "description": "Order/booking number connected to receipt on existing order/booking when the order is changed."
+        },
+        "customer": {
+          "$ref": "customer-definitions.json#/definitions/customer_information",
+          "description": "To whom the order/order_reference belongs"
+        }
+      },
+      "oneOf": [
+          {"required": ["order_number"]},
+          {"required": ["order_reference"]}
+      ], "additionalProperties": false
+    }
+  }
+}

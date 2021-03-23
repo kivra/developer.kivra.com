@@ -1,0 +1,1986 @@
+openapi: "3.0.1"
+
+info:
+  title: POS API
+  version: "1.4.5"
+  x-logo:
+    url: "../../assets/kivra-logo.svg"
+    altText: Kivra logo
+
+  description: >
+    [Changelog - 2020-08-18](changelog/)
+
+    # Digital Receipts Platform API
+
+    Kivra's digital receipt platform API, is a REST based API intented for Kivra partners and customers.
+    The API is designed to receive receipts in specific XML and JSON formats. The API grants accessibility and management
+    of digital receipts.
+
+    ## Getting started
+
+    <details><summary>Setting up the first store</summary>
+
+      ### Setting up the first store
+
+      The roles and access used in the digital receipts API are the following
+
+      <div>
+        <img width="600" src="https://lh3.googleusercontent.com/1C2B6fGnNh-uuQ0cOCNlVVXcKJ33SVjPmG4E24nWLaHmVAuieGfg-Xd8nR4n_mgDpzdNnizRtXNCJsVd635HpRs7H3MQg3Y9pEIw_7cfYI1eGuvMemLMiBby9Ase3sXvkVHMXbQrGA=w2400" alt="Italian Trulli">
+      </div>
+
+      Receipt producers are regarded as partners i.e. they are free to set up digital receipts for as many organisations as they want.
+      In order to start creating digital receipts using the POS API, a test store needs to be set up.
+
+      Every store needs to be a part of a chain.
+
+      1. Use your company credential to fetch a partner token
+      2. Use you partner token to create a chain using the createChain method.
+
+      After your chain has been created you receive a chain_id. Now a store can be created and connected to this chain.
+
+      1. Use your partner token, or fetch it again if it is expired.
+      2. Create store using the addStore methods.
+      3. In the request body use the chain_id as owner id.
+
+      After the store has been successfully created you will receive a store_id.
+      In order to create receipts belonging to the store you need store_token.
+
+      1. Use your partner token to retrieve store token for the store.
+      2. Use the store id as service id in the body of the CreateReceipt method.
+
+      And thats it.
+
+      ### Creating digital receipts
+
+      ### Sales receipt
+
+      When a digital receipt is created it is important that a verified user identifier is present in the receipt data.
+      The verified identifiers are
+
+      - Social security number
+      - Email
+      - Mobile phone number
+
+    </details>
+
+    <details><summary>Return of a product using digital receipt</summary>
+
+      ### Return of a product
+
+      When a user returns an item using a digital receipt, the POS can scan a QR code on the reciept to retreive the receipt identifier.
+      A return receipt can then be created by creating a digital receipt and having a reference to the original receipt identifier in the return item description.
+      The flow is the following.
+
+      <img width="600" src="https://lh3.googleusercontent.com/qCKyFtcNrDL0LsbxUI3OiGwjCdt8O2SEZX6EbvUDh55tDZxxxmqQv6CCRq9KbJq624L_ZUI6N0nKWCUEmN-I2I5BCerZ19IE49GeLmFzhdj8aHOJzdy9vwGKw7V4HoaFsfqfwZ6HSQ=w2400" alt="Return flow">
+    </details>
+
+    <details><summary>Digital receipt JSON schema explained</summary>
+
+      ### Resources
+      [Digital receipt JSON schema explained and example receipts](/receipt/wiki/mdwiki.html)
+      will give you more information on how to create digital receipts based on the Kivra digital receipt JSON schema.
+    </details>
+
+servers:
+  - url: https://receipt.sandbox-api.kivra.com
+    description: Test environment (uses test data)
+paths:
+  /dr/v1/receipts:
+    post:
+      description: >
+        Adds a new receipt to the Kivra DRP.
+
+        Following credentials are needed in order to create digital receipts.
+
+        - **storeID** : this is used for the "service_id" element in the receipt body
+
+        - **storeToken** : the JWT bearer token used for authorization
+
+        Both of these are obtained when new store is created using the addStore method.
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+
+        ###  Headers
+
+        The Content-Type must be set according to the receipt format, one of:
+
+        * Content-Type: application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0
+
+        * Content-Type: application/xml
+
+
+        When sending json receipts the profile tells what version of the JSON schema that the receipt is based on.
+
+        When sending XML receipts the XML start element will give the XML schema(s)/version used.
+
+        ###  Body
+
+        Supported formats are:
+
+        * SDRS (Swedish digital receipt standard) XML structure
+
+        * ARTS (Association for retail technical standards) DR 2.0 XML structure
+
+        * JSON structure
+
+
+        ### IMPORTANT NOTE:
+
+        For card payments, Kivra's SRDS scheme requires the following payment
+        terminal information according to <a href="https://en.wikipedia.org/wiki/ISO_8583">ISO standard 8583</a>
+
+        * Bank Identification Number
+
+        * Retrieval Reference Number
+
+        * Card Acceptor Terminal ID
+
+        * Merchant Identifier
+
+        * Approval Code
+
+      operationId: CreateReceipt
+      summary: Create receipt
+      requestBody:
+        description: Takes in a receipt object
+        required: true
+        content:
+          ? application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0
+          : schema:
+              type: object
+            example:
+              business_unit:
+                service_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                organization_number: 556838-8200
+                name: Demo store AB
+                contact:
+                  address:
+                    street_address: Shopping street 20
+                    locality: Onebuying
+                    postal_code: "12345"
+                  phone: "+460771584886"
+              cashier:
+                id: "5"
+                name: Anna Andersson
+              sales_recording_system:
+                serial_number: EA38329
+                name: kassa 3
+              receipt_identifier:
+                sequence_number: 123456
+                extended_number:
+                  value: "0123456123"
+                  type: EAN8
+                  context: store
+              time_of_purchase: "2019-11-09T08:49:00+01:00"
+              currency: SEK
+              totals:
+                - type: net
+                  amount: 280
+                - type: vat
+                  amount: 70
+                  sub_totals:
+                    - amount: 70
+                      net_amount: 280
+                      taxable_amount: 350
+                      tax_percentage: 25
+                - type: gross
+                  amount: 395
+                - type: discount
+                  amount: 45
+                - type: rounding
+                  amount: 0
+                - type: paid
+                  amount: 350
+              header_text:
+                type: array
+                collection:
+                  - "Öppettider: Mådag - Fredag 10-18 Lördag 10-15"
+                  - Another header text...
+              footer_text:
+                type: array
+                collection:
+                  - "Sommarerbjudande: Köp 3 par skor få det billigaste paret på köpet."
+              items:
+                - type: sale
+                  identifiers:
+                    - identifier_type: pos
+                      value: "912042"
+                    - identifier_type: gtin
+                      value: "1234567890"
+                  description: Skor 42 - Foder BR
+                  quantity:
+                    value: 1
+                    unit: ea
+                  regular_sales_unit_price: 395
+                  extended_gross_amount: 395
+                  retail_price_modifiers:
+                    - amount: 45
+                  actual_sales_unit_price: 350
+                  extended_amount: 350
+                  tax_percentage: 25
+                  sequence_number: 1
+              payments:
+                - tender:
+                    type: cash
+                  amount_applied_to_bill: 350
+                  amount: 350
+              customer:
+                id:
+                  phone: +46 75 777 7777
+              control_unit:
+                id: RIHTT102710007088
+                code: BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;
+      responses:
+        "201":
+          description: Receipt successfully created
+          headers:
+            x-dr-transactionid:
+              schema:
+                type: string
+                pattern: "^([a-z0-9]{42})$"
+              example: "15662258993a2dcd45aba54f9086544f5f97c60ec4"
+              description: The id of the created receipt
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Received receipt
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                invalid_schema_format:
+                  value:
+                    error_code: "40003"
+                    error_message: "unsupported schema format"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                person_not_found:
+                  value:
+                    error_code: "40005"
+                    error_message: "person not found"
+                duplicate_receipt_id:
+                  value:
+                    error_code: "40006"
+                    error_message: "duplicate receipt id"
+                greenbin_not_activated:
+                  value:
+                    error_code: "40022"
+                    error_message: "greenbin has not been activated"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                store_blocked:
+                  value:
+                    error_code: "40104"
+                    error_message: "Store is blocked"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/dr/v1/receipts/{receiptID}":
+    get:
+      description: >
+        Fetch a single receipt matching the passed receipt id. Returns the original receipt unmodified.
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+
+      operationId: FetchReceipt
+      summary: Fetch receipt
+      parameters:
+        - $ref: "#/components/parameters/ReceiptID"
+      responses:
+        "200":
+          description: Receipt successfully fetched
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml: {}
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/chains:
+    post:
+      description: >
+
+        Creates a chain or links to an existing chain.
+
+        ### Access scope
+
+          - PARTNER
+
+        ### Matching
+
+        To determine if this is an existing chain the following fields need to match
+          - name
+          - vat
+
+        It is only possible to create one chain per VAT number.
+
+      operationId: AddChain
+      summary: Add chain
+      requestBody:
+        description: Takes in a chain object with required information to create a new chain
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddChain"
+            example:
+              name: Demo chain
+              vat: "SE555555555501"
+              address:
+                street1: Gatan 1
+                postalcode: "13254"
+                city: "onebuying"
+                country: swe
+              icon:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+              item_display_fields: ["article_number_pos"]
+      responses:
+        "200":
+          description: Chain already existed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddChainResponse"
+              example:
+                chain_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                vat: 55555
+                created: false
+        "201":
+          description: Chain successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddChainResponse"
+              example:
+                chain_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                vat: 55555
+                created: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missing_body:
+                  value:
+                    error_code: "40000"
+                    error_message: "body is missing from the request"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                vat_exists:
+                  value:
+                    error_code: "40007"
+                    error_message: "company with the given vat exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/chains/{chainID}:
+    put:
+      description: >
+        A partner can update chain information using this endpoint.
+
+        ### Access scope
+
+          - PARTNER
+
+      operationId: UpdateChain
+      summary: Update chain
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      requestBody:
+        description: >
+          Takes in a chain object with fields to be modified.
+
+          Fields not present in the body are not modified.
+
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChain"
+            example:
+              name: Demo chain updated
+              vat: "SE555555555501"
+              address:
+                street1: Gatan 2
+                postalcode: "13254"
+                city: "onebuying"
+                country: swe
+              logo:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+              item_display_fields: ["article_number_pos"]
+      responses:
+        "200":
+          description: Chain successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missing_body:
+                  value:
+                    error_code: "40000"
+                    error_message: "body is missing from the request"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                vat_exists:
+                  value:
+                    error_code: "40007"
+                    error_message: "company with the given vat exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/stores:
+    post:
+      description: >
+        Creates a store or link to an existing store using this endpoint.
+
+        There are two different ways to use this endpoint.
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+
+        ### Using external ID
+
+
+        If external ID is provided in the body a new store is created using the external ID. If the external id already exists an error is returned.
+
+
+        ### Without external ID (Deprecated)
+
+        If external ID is not provided we determine if this is an existing store based on the following fields
+          - name
+          - vat
+          - owner_id
+
+        It is possible to create multiple stores with the same VAT, however they all need to belong to the same owner (chain).
+
+        <details><summary>More info</summary>
+
+        <div>
+          <img width="600"  src="https://lh3.googleusercontent.com/k8UkWVwtu6dM8h_rinpY_hia7fFMIJC0rhv9hATrwVPaQIm0ATP_NSPMVtdxbW_0zDJO2oThc301BB8aVgYe0yEPwWJoJSaJ3EHjMOgWdcIrduwWN4FBYhpXxDF5oHb3r5a3X76RKg=w2400" alt="Italian Trulli">
+        </div>
+
+        </detail>
+
+      operationId: AddStore
+      summary: Add store
+      requestBody:
+        description: Takes in a store object with required information to create a new store
+        required: true
+
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddStore"
+            example:
+              external_id: ex000001
+              name: Demo store
+              vat: SE012345678989
+              owner_id: "1593602546268ce6ece6cf49969f52f8a724e6f1f5"
+              address:
+                street1: Gatan 1
+                postalcode: "13254"
+                country: swe
+              icon:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+              logo:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+      responses:
+        "200":
+          description: Store already existed, only of no external_id is provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddStoreResponse"
+              example:
+                store_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                vat: SE012345678989
+                created: false
+        "201":
+          description: Store successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddStoreResponse"
+              example:
+                store_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                vat: SE012345678989
+                external_id: ex000001
+                created: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missing_body:
+                  value:
+                    error_code: "40000"
+                    error_message: "body is missing from the request"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                vat_exists:
+                  value:
+                    error_code: "40007"
+                    error_message: "company with the given vat exists"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    get:
+      description: >
+        Fetch information on the given store
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+
+      operationId: GetStoreByID
+      summary: Get store
+
+      parameters:
+        - $ref: "#/components/parameters/ExternalIDQuery"
+        - $ref: "#/components/parameters/OwnerIDQuery"
+
+      responses:
+        "200":
+          description: Successfully fetched store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddStore"
+              example:
+                external_id: ex000001
+                name: Demo store
+                vat: SE012345678989
+                owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
+                address:
+                  street1: Gatan 1
+                  postalcode: "13254"
+                  country: swe
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/stores/{StoreID}:
+    get:
+      description: >
+        Fetch information on the given store
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+
+      operationId: GetStore
+      summary: Get store
+
+      parameters:
+        - $ref: "#/components/parameters/StoreID"
+
+      responses:
+        "200":
+          description: Successfully fetched store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddStore"
+              example:
+                external_id: ex000001
+                name: Demo store
+                vat: SE012345678989
+                owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
+                address:
+                  street1: Gatan 1
+                  postalcode: "13254"
+                  country: swe
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      description: >
+
+        A partner can update store information using this endpoint.
+
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+
+      operationId: UpdateStore
+      summary: Update store
+
+      parameters:
+        - $ref: "#/components/parameters/StoreID"
+
+      requestBody:
+        description: >
+          Takes in a store object with fields to be modified.
+
+          Fields not present in the body are not modified.
+
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStore"
+            example:
+              name: Demo store
+              vat: "SE123456789100"
+              owner_id: "1593602546268ce6ece6cf49969f52f8a724e6f1f5"
+              address:
+                street1: Gatan 1
+                postalcode: "13254"
+                country: swe
+              icon:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+              logo:
+                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                content_type: "image/png"
+      responses:
+        "200":
+          description: Store successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missing_body:
+                  value:
+                    error_code: "40000"
+                    error_message: "body is missing from the request"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/expense/register:
+    post:
+      summary: Register a new Expense Management System(EMS)
+      description: >
+        ### Access scope
+
+          - EMS
+      requestBody:
+        description: Takes in a expense management object with required information to create a new expense management system
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterEMS"
+            example:
+              external_id: "0123456789abcdef0123456789abcdef01234567890"
+              name: Company Expense
+              icon_url: https://www.ems.se/icon
+              url: https://api.ems.se/v1
+      responses:
+        "201":
+          description: Expense management sucessfully created
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/expense/authorise:
+    get:
+      description: >
+        Start the authorisation process for a registering a person for an EMS. Currently only BankID is supported
+      parameters:
+        - $ref: "#/components/parameters/ClientID"
+        - $ref: "#/components/parameters/RedirectURI"
+        - $ref: "#/components/parameters/StateParam"
+      responses:
+        "200":
+          description: HTML template to start the authorisation application
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_query_parameter:
+                  value:
+                    error_code: "40011"
+                    error_message: "invalid query parameter"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/expense/person:
+    post:
+      summary: Register a person for an EMS
+      description: >
+        ### Access scope
+
+          - EMS
+      requestBody:
+        description: Takes in a register person for ems object with required information to register a person for an EMS
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterPersonForEMS"
+            example:
+              external_id: "0123456789abcdef0123456789abcdef01234567890"
+              owner_id: "191039d537408dbaa8a22a0097a7f962301b36b360fe"
+              token: "example_token_for_191039d537408dbaa8a22a0097a7f962301b36b360fe_and_0123456789abcdef0123456789abcdef01234567890"
+      responses:
+        "201":
+          description: Implicit person successfully registered for an EMS
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/expense/person/deregister:
+    post:
+      summary: Deregisters a receipt that has been expensed
+      description: >
+        ### Access scope
+
+          - EMS
+      requestBody:
+        description: Takes in a de-register person for ems object with required information to de-register a person from an EMS
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeregisterPersonForEMS"
+            example:
+              external_id: "0123456789abcdef0123456789abcdef01234567890"
+              owner_id: "191039d537408dbaa8a22a0097a7f962301b36b360fe"
+      responses:
+        "204":
+          description: Implicit person successfully de-registered from an EMS
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/expense/receipts/{receiptID}:
+    delete:
+      summary: Deregisters a receipt that has been expensed
+      description: >
+        ### Access scope
+
+          - EMS
+      parameters:
+        - $ref: "#/components/parameters/ReceiptID"
+      responses:
+        "204":
+          description: Receipt successfully removed from expense system
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/auth/token:
+    post:
+      description: >
+        Fetch JWT authentication token using OAuth client credential grant
+        Requires client_id and client_secret
+
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                    - client_credentials
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/auth/token/chain/{chainID}:
+    post:
+      summary: Fetch JWT authentication token for a chain using partner token
+      description: >
+        ### Access scope
+
+          - PARTNER
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/auth/token/store/{StoreID}:
+    post:
+      summary: Fetch JWT authentication token for a store using partner or chain token
+      description: >
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+
+      parameters:
+        - $ref: "#/components/parameters/StoreID"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/users/{type}/{id}:
+    get:
+      summary: Check if a user with the given id exists
+      description: >
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+      parameters:
+        - $ref: "#/components/parameters/IdentifierType"
+        - $ref: "#/components/parameters/IdentifierID"
+        - $ref: "#/components/parameters/PartnerChainID"
+        - $ref: "#/components/parameters/Hashed"
+
+      responses:
+        "204":
+          description: User exists
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                person_not_found:
+                  value:
+                    error_code: "40005"
+                    error_message: "person not found"
+                unknown_url_parameter:
+                  value:
+                    error_code: "40010"
+                    error_message: "unknown url parameter"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  schemas:
+    TokenResponse:
+      title: TokenResponse
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum:
+            - Bearer
+        expires_in:
+          description: expiration time in seconds
+          type: integer
+    AddStoreResponse:
+      title: AddStoreResponse
+      type: object
+      properties:
+        store_id:
+          type: string
+        vat:
+          type: string
+        external_id:
+          type: string
+        created:
+          type: boolean
+    AddChainResponse:
+      title: AddChainResponse
+      type: object
+      properties:
+        chain_id:
+          type: string
+        vat:
+          type: string
+        created:
+          type: boolean
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      properties:
+        error_code:
+          type: string
+        error_message:
+          type: string
+        error_detail:
+          type: array
+          items:
+            type: string
+    AddStore:
+      title: AddStore
+      type: object
+      properties:
+        externalid:
+          type: string
+          description: ID provided by the POS that is unique per chain
+        name:
+          type: string
+          description: The name of the store
+          minLength: 1
+        vat:
+          type: string
+          description: The VAT number of the store
+          pattern: ^((SE)?[0-9]{12})$"
+        owner_id:
+          type: string
+          description: ID of the owner company (chain)
+          pattern: "^([a-z0-9]{42})$"
+        phone:
+          type: string
+          description: The phone number of the store
+        address:
+          type: object
+          description: The address of the store
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+              maxLength: 3
+              minLength: 3
+          required:
+            - street1
+            - postalcode
+            - country
+        icon:
+          type: object
+          description: Icon displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        logo:
+          type: object
+          description: Logo displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+      required:
+        - name
+        - vat
+        - owner_id
+    UpdateStore:
+      title: UpdateStore
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the store
+          minLength: 1
+        vat:
+          type: string
+          description: The VAT number of the store
+          pattern: ^((SE)?[0-9]{12})$"
+        owner_id:
+          type: string
+          description: ID of the owner company (chain)
+          pattern: "^([a-z0-9]{42})$"
+        phone:
+          type: string
+          description: The phone number of the store
+        address:
+          type: object
+          description: The address of the store
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+              maxLength: 3
+              minLength: 3
+        icon:
+          type: object
+          description: Icon displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        logo:
+          type: object
+          description: Logo displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+    AddChain:
+      title: AddChain
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the store
+          minLength: 1
+        vat:
+          type: string
+          description: The VAT number of the store
+          pattern: ^((SE)?[0-9]{12})$"
+        phone:
+          type: string
+          description: The phone number of the store
+        address:
+          type: object
+          description: The address of the store
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+              maxLength: 3
+              minLength: 3
+          required:
+            - street1
+            - postalcode
+            - country
+        icon:
+          type: object
+          description: Icon displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        logo:
+          type: object
+          description: Logo displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        item_display_fields:
+          type: array
+          description: The extra fields from receipt items that should be displayed in the app
+          items:
+            type: string
+            enum: [article_number_pos, article_number_gtin]
+      required:
+        - name
+        - vat
+    UpdateChain:
+      title: UpdateChain
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the chain
+          minLength: 1
+        vat:
+          type: string
+          description: The VAT number of the chain
+          pattern: ^((SE)?[0-9]{12})$"
+        phone:
+          type: string
+          description: The phone number of the chain
+        address:
+          type: object
+          description: The address of the chain
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+              maxLength: 3
+              minLength: 3
+        icon:
+          type: object
+          description: Icon displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        logo:
+          type: object
+          description: Logo displayed on the receipt
+          properties:
+            data:
+              type: string
+              description: Base64 encoded image
+            content_type:
+              type: string
+              description: The image content type
+          required:
+            - data
+            - content_type
+        item_display_fields:
+          type: array
+          description: The extra fields from receipt items that should be displayed in the app
+          items:
+            type: string
+            enum: [article_number_pos, article_number_gtin]
+
+    RegisterEMS:
+      title: RegisterEMS
+      type: object
+      properties:
+        external_id:
+          type: string
+          description: External ID of the expense management system that identifies it in foreign system
+        name:
+          type: string
+          description: The name of the expense management system
+          minLength: 1
+        url:
+          type: string
+          description: A URL that points to the root URL of the foreign EMS API
+        icon_url:
+          type: string
+          description: An optional icon URL that represents the full URL to an icon belonging to the EMS
+    RegisterPersonForEMS:
+      title: RegisterPersonForEMS
+      type: object
+      properties:
+        external_id:
+          type: string
+          description: External ID of the expense management system that identifies it in foreign system
+        owner_id:
+          type: string
+          description: The id of the person registering for expense management system
+          minLength: 1
+        token:
+          type: string
+          description: A token to use when expensing a receipt for this person in the foreign EMS
+    DeregisterPersonForEMS:
+      title: DeregisterPersonForEMS
+      type: object
+      properties:
+        external_id:
+          type: string
+          description: External ID of the expense management system that identifies it in foreign system
+        owner_id:
+          type: string
+          description: The id of the person registering for expense management system
+          minLength: 1
+  parameters:
+    ReceiptID:
+      name: receiptID
+      in: path
+      description: Receipt ID
+      required: true
+      schema:
+        type: string
+    ChainID:
+      name: chainID
+      in: path
+      description: Chain ID
+      required: true
+      schema:
+        type: string
+    PartnerChainID:
+      name: chain_id
+      in: query
+      description: The chain ID is required if using a partner token
+      required: false
+      schema:
+        type: string
+    StoreID:
+      name: StoreID
+      in: path
+      description: Store ID
+      required: true
+      schema:
+        type: string
+    ExternalIDQuery:
+      name: external_id
+      in: query
+      description: External ID of the store
+      required: false
+      schema:
+        type: string
+    OwnerIDQuery:
+      name: owner_id
+      in: query
+      description: Represents the id of the chain the store belongs to. Only required when using partner token
+      required: false
+      schema:
+        type: string
+    ClientID:
+      name: client_id
+      in: query
+      required: true
+      description: Combination of EMS external id and EMS company id
+      schema:
+        type: string
+      example: 157200307788dc2ecacb9e412a9a215df8f897bb53-16200214
+    RedirectURI:
+      name: redirect_uri
+      in: query
+      required: true
+      description: redirect uri to the external system trying to authorise
+      schema:
+        type: string
+      example: https://api.ems.se/
+    StateParam:
+      name: state
+      in: query
+      required: true
+      description: state parameter provided by external system for verification with the callback
+      schema:
+        type: string
+      example: ce3mwhfZSnvNJ%2FActq9MUD2yCgXGRzHJEsD5nLMTznCZDecwHqfPe1npcz5aY6W7L1Z0csbflCTM5iulelYXGXvrX0jfqeXiWPK8vOuGx0zbnIlcC7sDBjkfIm0iXc%2Fk
+
+    IdentifierType:
+      name: type
+      in: path
+      description: "The type of identifier given"
+      required: true
+      schema:
+        type: string
+        enum: [nationalidentitynumber, mobilephone, email]
+    IdentifierID:
+      name: id
+      in: path
+      description: "The value of the identifier"
+      required: true
+      schema:
+        type: string
+    Hashed:
+      name: hashed
+      in: query
+      description: "Determinied if the identifier is given as hashed value or in cleartext"
+      required: true
+      schema:
+        type: boolean
+        default: true
+  examples:
+    perm_denied:
+      value: { "error_code": "10007", "error_message": "Permission denied" }
+    store_blocked:
+      value: { "error_code": "10008", "error_message": "Store is blocked" }
+  responses:
+    UserDoesntError:
+      description: User does not exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            { "error_code": "20102", "error_message": "Person not found" }
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            value:
+              error_code: "10007"
+              error_message: "Permission denied"
+    InternalError:
+      description: 500 Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error_code: "50000"
+            error_message: "internal error"
+    Token:
+      description: Token successfully created
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TokenResponse"
+          example:
+            {
+              "access_token": "<JWT token>",
+              "token_type": "Bearer",
+              "expires_in": 86000,
+            }

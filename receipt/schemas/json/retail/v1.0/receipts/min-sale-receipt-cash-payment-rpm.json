@@ -1,0 +1,212 @@
+{
+  "business_unit": {
+    "contact": {
+      "address": {
+        "locality": "Ludvika",
+        "postal_code": "77187",
+        "street_address": "Engelbrektsgatan 20"
+      },
+      "phone": "+460771584886"
+    },
+    "name": "Findity store AB",
+    "organization_number": "556838-8200",
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce"
+  },
+  "cashier": {
+    "id": "5",
+    "name": "Anna Andersson"
+  },
+  "currency": "SEK",
+  "items": [{
+    "sequence_number": 1,
+    "type": "sale",
+    "identifiers": [{
+      "value": "912040",
+      "identifier_type": "pos"
+    }],
+    "quantity": {
+      "value": 1,
+      "unit": "l"
+    },
+    "tax_percentage": 12.00,
+    "description": "Mumsig läskedryck svart",
+    "extended_amount": 20.00,
+    "extended_gross_amount": 20.00,
+    "regular_sales_unit_price": 20.00,
+    "eligible_for_frequent_shopper_points": true,
+    "actual_sales_unit_price": 20.00
+  }, {
+    "sequence_number": 2,
+    "type": "deposit",
+    "amount": 2.00,
+    "unit_amount": 2.00,
+    "quantity": 1,
+    "refund": false,
+    "item_link": 1
+  }, {
+    "sequence_number": 3,
+    "type": "sale",
+    "identifiers": [{
+      "value": "912041",
+      "identifier_type": "pos"
+    }],
+    "quantity": {
+      "value": 1,
+      "unit": "l"
+    },
+    "tax_percentage": 12.00,
+    "description": "Mumsig läskedryck röd",
+    "extended_amount": 20.00,
+    "extended_gross_amount": 20.00,
+    "regular_sales_unit_price": 20.00,
+    "eligible_for_frequent_shopper_points": true,
+    "actual_sales_unit_price": 20.00
+  }, {
+    "sequence_number": 4,
+    "type": "deposit",
+    "amount": 2.00,
+    "unit_amount": 2.00,
+    "quantity": 1,
+    "refund": false,
+    "item_link": 3
+  }, {
+    "sequence_number": 5,
+    "type": "sale",
+    "identifiers": [{
+      "value": "912042",
+      "identifier_type": "pos"
+    }],
+    "quantity": {
+      "value": 1,
+      "unit": "l"
+    },
+    "tax_percentage": 12.00,
+    "description": "Mumsig läskedryck orange",
+    "extended_amount": 20.00,
+    "extended_gross_amount": 20.00,
+    "regular_sales_unit_price": 20.00,
+    "eligible_for_frequent_shopper_points": true,
+    "actual_sales_unit_price": 20.00
+  }, {
+    "sequence_number": 6,
+    "type": "deposit",
+    "amount": 2.00,
+    "unit_amount": 2.00,
+    "quantity": 1,
+    "refund": false,
+    "item_link": 5
+  }],
+  "payments": [{
+    "amount": 50.00,
+    "amount_applied_to_bill": 46.00,
+    "tender": {
+      "type": "cash"
+    }
+  }, {
+    "amount": 4.00,
+    "amount_applied_to_bill": 4.00,
+    "refund": true,
+    "tender": {
+      "type": "cash"
+    }
+  }],
+  "receipt_identifier": {
+    "extended_number": {
+      "value": "0123456123",
+      "type": "EAN8",
+      "context": "store"
+    },
+    "sequence_number": 123456
+  },
+  "sales_recording_system": {
+    "serial_number": "EA38329",
+    "name": "kassa 3"
+  },
+  "header_text": {
+    "type": "array",
+    "collection": ["Öppettider: Mådag - Fredag 10-18", "Lördag 10-15"]
+  },
+  "time_of_purchase": "2018-11-09T08:49:00+01:00",
+  "totals": [{
+    "amount": 41.00,
+    "type": "net",
+    "refund": false
+  }, {
+    "amount": 7.00,
+    "type": "vat",
+    "refund": false,
+    "sub_totals": [{
+      "amount": 7,
+      "tax_percentage": 12.00,
+      "taxable_amount": 46.00,
+      "net_amount": 39.00,
+      "refund": false
+    }]
+  }, {
+    "amount": 66.00,
+    "type": "gross",
+    "refund": false,
+    "sub_totals": [{
+      "amount": 60,
+      "points": 20,
+      "type": "eligible_for_frequent_shopper_points",
+      "text": {
+        "type": "array",
+        "collection": ["Bonusgrundande belopp"]
+      },
+      "refund": false
+    }]
+  }, {
+    "amount": 0.00,
+    "type": "rounding",
+    "refund": false
+  }, {
+    "amount": 46.00,
+    "type": "paid",
+    "refund": false,
+    "sub_totals": [{
+      "amount": 50,
+      "type": "received",
+      "text": {
+        "type": "array",
+        "collection": ["Mottaget"]
+      }
+    }, {
+      "amount": 4,
+      "type": "returned",
+      "text": {
+        "type": "array",
+        "collection": ["Växel"]
+      }
+    }]
+  }, {
+    "amount": 20.00,
+    "type": "discount",
+    "refund": true
+  }],
+  "customer": {
+    "id": {
+      "phone": "+46 75 777 7777"
+    },
+    "loyalty": {
+      "program": "stammis",
+      "customer_number": "1111222233334444",
+      "incremental_count": 20,
+      "current_count": 100000,
+      "target_count": 150000
+    }
+  },
+  "control_unit": {
+    "code": "BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;",
+    "id": "RIHTT102710007088"
+  },
+  "retail_price_modifiers": [{
+    "action": "subtract",
+    "amount": 20.00,
+    "description": {
+      "type": "array",
+      "collection": ["3 läsk betala för 2"]
+    },
+    "item_links": [1, 3, 5]
+  }]
+}

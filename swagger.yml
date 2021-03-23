@@ -9,8 +9,8 @@ servers:
 info:
   title: Kivra Sweden API
   x-logo:
-   url: '/kivra-logo.svg'
-   altText: Kivra logo
+    url: "assets/kivra-logo.svg"
+    altText: Kivra logo
   version: v1 and v2
   description: |
     # Introduction
@@ -684,10 +684,9 @@ x-tagGroups:
       - "Partner API"
 
 paths:
-
-# ##############################################
-# POST, GET /v2/tenant
-# ##############################################
+  # ##############################################
+  # POST, GET /v2/tenant
+  # ##############################################
   /v2/tenant:
     post:
       tags:
@@ -701,7 +700,7 @@ paths:
         </aside>
       security:
         - oAuth2Client:
-          - 'post:kivra.v2.tenant'
+            - "post:kivra.v2.tenant"
       responses:
         201:
           description: |
@@ -709,13 +708,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant_v2'
+                $ref: "#/components/schemas/Tenant_v2"
           headers:
             kivra-objkey:
               description: Object Key
               schema:
                 type: string
-                format: 'hexadecimal value'
+                format: "hexadecimal value"
             location:
               description: URL to created Object
               schema:
@@ -727,12 +726,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error40915'
+                $ref: "#/components/schemas/Error40915"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tenant_v2'
+              $ref: "#/components/schemas/Tenant_v2"
     get:
       tags:
         - "Tenant API - Tenant Management"
@@ -741,7 +740,7 @@ paths:
       description: Lists all tenants that are manageable by the current client
       security:
         - oAuth2Client:
-          - 'get:kivra.v2.tenant'
+            - "get:kivra.v2.tenant"
       parameters:
         - name: orgnr
           in: query
@@ -766,11 +765,15 @@ paths:
                     key:
                       type: string
                       description: Tenant ID
-                  example: [ { "key": "155748793356fa20e402ae472e51019cf723d7fe35" }, { "key": "150231793356fa88a88eae472e51019cf723d7d13a"  } ]
+                  example:
+                    [
+                      { "key": "155748793356fa20e402ae472e51019cf723d7fe35" },
+                      { "key": "150231793356fa88a88eae472e51019cf723d7d13a" },
+                    ]
 
-# ##############################################
-# GET /v2/tenant/TKEY
-# ##############################################
+  # ##############################################
+  # GET /v2/tenant/TKEY
+  # ##############################################
   /v2/tenant/{tenantKey}:
     get:
       tags:
@@ -788,7 +791,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'get:kivra.v2.tenant.{tenantKey}'
+            - "get:kivra.v2.tenant.{tenantKey}"
       responses:
         200:
           description: |
@@ -796,11 +799,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant_v2'
+                $ref: "#/components/schemas/Tenant_v2"
 
-# ##############################################
-# PUT /v2/tenant/TKEY/name
-# ##############################################
+  # ##############################################
+  # PUT /v2/tenant/TKEY/name
+  # ##############################################
   /v2/tenant/{tenantKey}/name:
     put:
       tags:
@@ -818,7 +821,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'put:kivra.v2.tenant.{tenantKey}.name'
+            - "put:kivra.v2.tenant.{tenantKey}.name"
       responses:
         200:
           description: empty response confirming that the put operation was successful
@@ -832,9 +835,9 @@ paths:
                   type: string
                   example: "Lenas Konditori AB"
 
-# ##############################################
-# POST /v2/tenant/TKEY/company_id
-# ##############################################
+  # ##############################################
+  # POST /v2/tenant/TKEY/company_id
+  # ##############################################
   /v2/tenant/{tenantKey}/company_id:
     post:
       tags:
@@ -853,7 +856,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'put:kivra.v2.tenant.{tenantKey}.company_id'
+            - "put:kivra.v2.tenant.{tenantKey}.company_id"
       responses:
         204:
           description: empty response confirming that the put operation was successful
@@ -864,11 +867,11 @@ paths:
               type: object
               properties:
                 company_id:
-                  $ref: '#/components/schemas/CompanyId'
+                  $ref: "#/components/schemas/CompanyId"
 
-# ##############################################
-# DELETE /v2/tenant/TKEY/company_id/{orgnr}
-# ##############################################
+  # ##############################################
+  # DELETE /v2/tenant/TKEY/company_id/{orgnr}
+  # ##############################################
   /v2/tenant/{tenantKey}/company_id/{orgNr}:
     delete:
       tags:
@@ -894,14 +897,14 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'delete:kivra.v2.tenant.{tenantKey}.company_id.{orgnr}'
+            - "delete:kivra.v2.tenant.{tenantKey}.company_id.{orgnr}"
       responses:
         204:
           description: empty response confirming that the put operation was successful
 
-# ##############################################
-# POST /v2/tenant/TKEY/icon
-# ##############################################
+  # ##############################################
+  # POST /v2/tenant/TKEY/icon
+  # ##############################################
   /v2/tenant/{tenantKey}/icon:
     post:
       tags:
@@ -934,7 +937,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'post:kivra.v2.tenant.{tenantKey}.icon'
+            - "post:kivra.v2.tenant.{tenantKey}.icon"
       responses:
         204:
           description: empty response confirming that the put operation was successful
@@ -945,12 +948,20 @@ paths:
               type: object
               properties:
                 file:
-                  $ref: '#/components/schemas/Icon'
-            example: { "file": { "name": "fancy icon",  "data": "REVBR ...... EJFRUY=", "content_type": "image/png" } }
+                  $ref: "#/components/schemas/Icon"
+            example:
+              {
+                "file":
+                  {
+                    "name": "fancy icon",
+                    "data": "REVBR ...... EJFRUY=",
+                    "content_type": "image/png",
+                  },
+              }
 
-# ##############################################
-# POST /v2/tenant/request_access
-# ##############################################
+  # ##############################################
+  # POST /v2/tenant/request_access
+  # ##############################################
   /v2/tenant/request_access:
     post:
       tags:
@@ -970,20 +981,20 @@ paths:
         If the client posts a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated status.
       security:
         - oAuth2Client:
-          - 'put:kivra.v2.tenant.request_access'
+            - "put:kivra.v2.tenant.request_access"
       responses:
         201:
           description: Data about the requested tenant
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RequestAccess'
+                $ref: "#/components/schemas/RequestAccess"
           headers:
             kivra-objkey:
               description: Object Key for the Request (requestKey)
               schema:
                 type: string
-                format: 'hexadecimal value'
+                format: "hexadecimal value"
       requestBody:
         content:
           application/json:
@@ -994,9 +1005,9 @@ paths:
                   type: string
                   example: "SE556840226601"
 
-# ##############################################
-# GET /v2/tenant/request_access/{requestKey}
-# ##############################################
+  # ##############################################
+  # GET /v2/tenant/request_access/{requestKey}
+  # ##############################################
   /v2/tenant/request_access/{requestKey}:
     get:
       tags:
@@ -1015,24 +1026,24 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-          - 'put:kivra.v2.tenant.request_access.{requestKey}'
+            - "put:kivra.v2.tenant.request_access.{requestKey}"
       responses:
         200:
           description: Data about the requested tenant
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RequestAccess'
+                $ref: "#/components/schemas/RequestAccess"
           headers:
             kivra-objkey:
               description: Object Key for the Request
               schema:
                 type: string
-                format: 'hexadecimal value'
+                format: "hexadecimal value"
 
-# ##############################################
-# GET /v1/tenant/TKEY/user
-# ##############################################
+  # ##############################################
+  # GET /v1/tenant/TKEY/user
+  # ##############################################
   /v1/tenant/{tenantKey}/user:
     get:
       tags:
@@ -1067,7 +1078,7 @@ paths:
             example: "191212121212"
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.tenant.{tenantKey}.user'
+            - "get:kivra.v1.tenant.{tenantKey}.user"
       responses:
         200:
           description: |
@@ -1078,11 +1089,11 @@ paths:
                 type: array
                 description: List of available users, can be empty
                 items:
-                  $ref: '#/components/schemas/UserList'
+                  $ref: "#/components/schemas/UserList"
 
-# ##############################################
-# POST /v1/tenant/TKEY/usermatch
-# ##############################################
+  # ##############################################
+  # POST /v1/tenant/TKEY/usermatch
+  # ##############################################
   /v1/tenant/{tenantKey}/usermatch:
     post:
       tags:
@@ -1109,24 +1120,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserMatch'
+              $ref: "#/components/schemas/UserMatch"
             example: '{"ssns":["191212121212","197701032380","198112172385"]}'
         required: true
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.tenant.{tenantKey}.usermatch'
+            - "get:kivra.v1.tenant.{tenantKey}.usermatch"
       responses:
         200:
           description: Filtered list of SSNs
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserMatch'
+                $ref: "#/components/schemas/UserMatch"
               example: '{"ssns":["191212121212", "198112172385"]}'
 
-# ##############################################
-# GET /v1/tenant/TKEY/company
-# ##############################################
+  # ##############################################
+  # GET /v1/tenant/TKEY/company
+  # ##############################################
   /v1/tenant/{tenantKey}/company:
     get:
       tags:
@@ -1158,7 +1169,7 @@ paths:
             example: SE556840226601
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.tenant.{tenantKey}.company'
+            - "get:kivra.v1.tenant.{tenantKey}.company"
       responses:
         200:
           description: |
@@ -1169,11 +1180,11 @@ paths:
                 type: array
                 description: List of available companies, can be empty
                 items:
-                  $ref: '#/components/schemas/CompanyList'
+                  $ref: "#/components/schemas/CompanyList"
 
-# ##############################################
-# POST /v1/tenant/TKEY/content
-# ##############################################
+  # ##############################################
+  # POST /v1/tenant/TKEY/content
+  # ##############################################
   /v1/tenant/{tenantKey}/content:
     post:
       tags:
@@ -1215,7 +1226,7 @@ paths:
 
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.content'
+            - "post:kivra.v1.tenant.{tenantKey}.content"
       parameters:
         - name: tenantKey
           in: path
@@ -1232,14 +1243,14 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Content_user'
-                  - $ref: '#/components/schemas/Content_company'
+                  - $ref: "#/components/schemas/Content_user"
+                  - $ref: "#/components/schemas/Content_company"
           headers:
             kivra-objkey:
               description: Object Key
               schema:
                 type: string
-                format: 'hexadecimal value'
+                format: "hexadecimal value"
             kivra-retained:
               description: |
                 Boolean denoting if a Content was Retained, Note: this header is **only** returned when a Content is retained
@@ -1255,15 +1266,15 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/Content_user'
-                - $ref: '#/components/schemas/Content_company'
+                - $ref: "#/components/schemas/Content_user"
+                - $ref: "#/components/schemas/Content_company"
             examples:
               invoice to user:
                 value:
-                  ssn: '191212121212'
+                  ssn: "191212121212"
                   subject: Sample Invoice to User
-                  generated_at: '2016-12-12'
-                  type: 'invoice'
+                  generated_at: "2016-12-12"
+                  type: "invoice"
                   retain: false
                   tenant_info: string
                   files:
@@ -1275,21 +1286,21 @@ paths:
                       payment:
                         payable: true
                         currency: SEK
-                        due_date: '2017-01-01'
-                        total_owed: '123.50'
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
                         type: SE_OCR
-                        method: '1'
-                        account: '12345'
+                        method: "1"
+                        account: "12345"
                         reference: 123OCRNUMBER456
                         variable_amount: false
-                        min_amount: '50.00'
-                      invoice_reference: 'Invoice Nr #123'
+                        min_amount: "50.00"
+                      invoice_reference: "Invoice Nr #123"
               content to user:
                 value:
-                  ssn: '191212121212'
+                  ssn: "191212121212"
                   subject: Sample Content to User
-                  generated_at: '2016-12-12'
-                  type: 'letter'
+                  generated_at: "2016-12-12"
+                  type: "letter"
                   retain: false
                   tenant_info: string
                   files:
@@ -1298,12 +1309,12 @@ paths:
                       content_type: application/pdf
               payslip to user:
                 value:
-                  ssn: '191212121212'
+                  ssn: "191212121212"
                   subject: Sample Payslip to User
-                  generated_at: '2016-12-12'
-                  type: 'letter.salary'
+                  generated_at: "2016-12-12"
+                  type: "letter.salary"
                   retain: true
-                  retention_time: '390'
+                  retention_time: "390"
                   tenant_info: string
                   files:
                     - name: filename.pdf
@@ -1313,17 +1324,17 @@ paths:
                 value:
                   vat_number: SE556840226601
                   subject: Sample Content to Company
-                  generated_at: '2016-12-12'
-                  type: 'letter'
+                  generated_at: "2016-12-12"
+                  type: "letter"
                   tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
 
-# ##############################################
-# POST /v1/tenant/TKEY/agreement
-# ##############################################
+  # ##############################################
+  # POST /v1/tenant/TKEY/agreement
+  # ##############################################
   /v1/tenant/{tenantKey}/agreement:
     post:
       tags:
@@ -1335,7 +1346,7 @@ paths:
         listed in the metadata. An Agreement ID will be returned.
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.agreement'
+            - "post:kivra.v1.tenant.{tenantKey}.agreement"
       parameters:
         - name: tenantKey
           in: path
@@ -1346,18 +1357,17 @@ paths:
             format: hexadecimal
       responses:
         200:
-          description:
-            Agreement created succesfully
+          description: Agreement created succesfully
           content:
             application/json:
               schema:
                 type: string
                 example: "15544700816b7d63c83d6e476493879b5043ec9d7b"
       requestBody:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Agreement'
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Agreement"
     get:
       tags:
         - "Tenant API - Agreements"
@@ -1366,7 +1376,7 @@ paths:
       description: List all agreements created by a tenant, with their current status.
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.agreement'
+            - "post:kivra.v1.tenant.{tenantKey}.agreement"
       parameters:
         - name: tenantKey
           in: path
@@ -1376,7 +1386,7 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        '200':
+        "200":
           description: List of agreements and their status
           content:
             application/json:
@@ -1384,18 +1394,18 @@ paths:
                 type: array
                 description: list
                 items:
-                  $ref: '#/components/schemas/AgreementStateShort'
+                  $ref: "#/components/schemas/AgreementStateShort"
                 example:
-                  - key: '1527232009ba54f8186d8c43e2a3c8092b57ca2739'
+                  - key: "1527232009ba54f8186d8c43e2a3c8092b57ca2739"
                     state: active
-                  - key: '155265136911763308f2514ff3aa6dacc8211a2107'
+                  - key: "155265136911763308f2514ff3aa6dacc8211a2107"
                     state: revoked
-                  - key: '15100645203cff9f19d92443848c8a2f1cbf257510'
+                  - key: "15100645203cff9f19d92443848c8a2f1cbf257510"
                     state: completed
 
-# ##############################################
-# GET /v1/tenant/TKEY/agreement/AKEY
-# ##############################################
+  # ##############################################
+  # GET /v1/tenant/TKEY/agreement/AKEY
+  # ##############################################
   /v1/tenant/{tenantKey}/agreement/{agreementKey}:
     get:
       tags:
@@ -1405,7 +1415,7 @@ paths:
       description: Get an agreement with current status and updated metadata
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}'
+            - "post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -1422,16 +1432,16 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        '200':
+        "200":
           description: Agreement object with current status and updated metadata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AgreementStateDetailed'
+                $ref: "#/components/schemas/AgreementStateDetailed"
 
-# ##############################################
-# GET /v1/tenant/TKEY/agreement/AKEY/revoke
-# ##############################################
+  # ##############################################
+  # GET /v1/tenant/TKEY/agreement/AKEY/revoke
+  # ##############################################
   /v1/tenant/{tenantKey}/agreement/{agreementKey}/revoke:
     post:
       tags:
@@ -1442,7 +1452,7 @@ paths:
         Revoke an agreement. An agreement once revoked can no longer be accessed or signed by any of the parties. An agreement can only be rekoved if in state *active*, and after revoke will be put in state *revoked*. A revoked agreement can never become active again.
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.revoke'
+            - "post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.revoke"
       parameters:
         - name: tenantKey
           in: path
@@ -1459,17 +1469,17 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        '204':
+        "204":
           description: empty response confirming that the revoke operation was successful
       requestBody:
-          description: empty JSON body
-          content:
-            application/json:
-              schema: { }
+        description: empty JSON body
+        content:
+          application/json:
+            schema: {}
 
-# ##############################################
-# GET /v1/tenant/TKEY/agreement/AKEY/covenant
-# ##############################################
+  # ##############################################
+  # GET /v1/tenant/TKEY/agreement/AKEY/covenant
+  # ##############################################
   /v1/tenant/{tenantKey}/agreement/{agreementKey}/covenant:
     get:
       tags:
@@ -1480,7 +1490,7 @@ paths:
         Get the covenant file (the signed version of the agreement).
       security:
         - oAuth2Client:
-          - 'post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.covenant'
+            - "post:kivra.v1.tenant.{tenantKey}.agreement.{agreementKey}.covenant"
       parameters:
         - name: tenantKey
           in: path
@@ -1497,7 +1507,7 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        '200':
+        "200":
           description: The covenant file as a PDF file with base64 encoding
           content:
             application/json:
@@ -1517,9 +1527,9 @@ paths:
                     description: the signature to verify the file's authenticity
                     type: string
 
-# ##############################################
-# GET /v1/partner/company
-# ##############################################
+  # ##############################################
+  # GET /v1/partner/company
+  # ##############################################
   /v1/partner/company:
     get:
       tags:
@@ -1542,11 +1552,10 @@ paths:
             example: SE556840226601
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company'
+            - "get:kivra.v1.partner.company"
       responses:
         200:
-          description:
-            Company key for the company with the matching VAT number
+          description: Company key for the company with the matching VAT number
           content:
             application/json:
               schema:
@@ -1557,17 +1566,16 @@ paths:
                     type: string
                     example: "15236156848eefa1dc75364af2be38c98eb3aae223"
 
-# ##############################################
-# GET /v1/partner/company/COMPKEY/content
-# ##############################################
+  # ##############################################
+  # GET /v1/partner/company/COMPKEY/content
+  # ##############################################
   /v1/partner/company/{companyKey}/content:
     get:
       tags:
         - "Partner API"
       summary: Get the company inbox
       operationId: Get company inbox
-      description:
-        This resource allows to access a high level description for each content in the company inbox, to allow for a first sorting and filtering of the content.
+      description: This resource allows to access a high level description for each content in the company inbox, to allow for a first sorting and filtering of the content.
       parameters:
         - name: companyKey
           in: path
@@ -1578,27 +1586,25 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}'
+            - "get:kivra.v1.partner.company.{companyKey}"
       responses:
         200:
-          description:
-            High level description of content items in the company inbox
+          description: High level description of content items in the company inbox
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CompanyInbox'
+                  $ref: "#/components/schemas/CompanyInbox"
 
-# ##############################################
-# GET /v1/partner/company/COMPKEY/content/CONTKEY
-# ##############################################
+  # ##############################################
+  # GET /v1/partner/company/COMPKEY/content/CONTKEY
+  # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}:
     get:
       tags:
         - "Partner API"
-      summary:
-        Get metadata for a content.
+      summary: Get metadata for a content.
       operationId: Get content metadata
       description:
         This resource allows to get complete metadata information for a particular content.
@@ -1622,27 +1628,25 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}.**'
+            - "get:kivra.v1.partner.company.{companyKey}.**"
       responses:
         200:
-          description:
-            Complete metadata for the specific content
+          description: Complete metadata for the specific content
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompanyContent'
+                $ref: "#/components/schemas/CompanyContent"
 
-# ##############################################
-# GET /v1/partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
-# ##############################################
+  # ##############################################
+  # GET /v1/partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
+  # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
         - "Partner API"
       summary: Get raw file in binary format
       operationId: Get raw file
-      description:
-        This resource allows to get the raw file in binary format.
+      description: This resource allows to get the raw file in binary format.
       parameters:
         - name: companyKey
           in: path
@@ -1667,28 +1671,26 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}.**'
+            - "get:kivra.v1.partner.company.{companyKey}.**"
       responses:
         200:
-          description:
-            The content type will be the same as the file, so for a typical pdf it will be `application/pdf`
+          description: The content type will be the same as the file, so for a typical pdf it will be `application/pdf`
           content:
             application/json:
               schema:
                 type: string
                 format: binary
 
-# ##############################################
-# POST /v1/partner/company/COMPKEY/content/CONTKEY/STATUS
-# ##############################################
+  # ##############################################
+  # POST /v1/partner/company/COMPKEY/content/CONTKEY/STATUS
+  # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}/{status}:
     post:
       tags:
         - "Partner API"
       summary: Set status for content
       operationId: Set status for content
-      description:
-        This resource allows to set the status for a specific content. It is used by the partner to set whether the content should be marked as viewed or paid.
+      description: This resource allows to set the status for a specific content. It is used by the partner to set whether the content should be marked as viewed or paid.
       parameters:
         - name: companyKey
           in: path
@@ -1713,23 +1715,21 @@ paths:
             type: string
       security:
         - oAuth2Client:
-          - 'get:kivra.v1.partner.company.{companyKey}.**'
+            - "get:kivra.v1.partner.company.{companyKey}.**"
       responses:
         204:
-          description:
-            empty response confirming that the operation was successful
+          description: empty response confirming that the operation was successful
       requestBody:
-          description: empty JSON body
-          content:
-            application/json:
-              schema: { }
+        description: empty JSON body
+        content:
+          application/json:
+            schema: {}
 
 components:
   schemas:
-
-# ##############################################
-# SCHEMA Content_user
-# ##############################################
+    # ##############################################
+    # SCHEMA Content_user
+    # ##############################################
     Content_user:
       type: object
       required:
@@ -1770,7 +1770,7 @@ components:
           type: string
           writeOnly: true
           example: "30"
-          enum: ["30","390"]
+          enum: ["30", "390"]
         tenant_info:
           description: An arbitrary string defined by the tenant, used to group content for administrative tasks
           type: string
@@ -1780,7 +1780,7 @@ components:
           type: array
           writeOnly: true
           items:
-            $ref: '#/components/schemas/File'
+            $ref: "#/components/schemas/File"
         context:
           type: object
           writeOnly: true
@@ -1791,15 +1791,15 @@ components:
               description: Optionally specify invoice information
               properties:
                 payment:
-                  $ref: '#/components/schemas/Payment'
+                  $ref: "#/components/schemas/Payment"
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
 
-# ##############################################
-# SCHEMA Content_company
-# ##############################################
+    # ##############################################
+    # SCHEMA Content_company
+    # ##############################################
     Content_company:
       type: object
       required:
@@ -1840,7 +1840,7 @@ components:
           type: array
           writeOnly: true
           items:
-            $ref: '#/components/schemas/File'
+            $ref: "#/components/schemas/File"
         context:
           type: object
           writeOnly: true
@@ -1851,15 +1851,15 @@ components:
               description: Optionally specify invoice information
               properties:
                 payment:
-                  $ref: '#/components/schemas/Payment'
+                  $ref: "#/components/schemas/Payment"
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
 
-# ##############################################
-# SCHEMA Payment
-# ##############################################
+    # ##############################################
+    # SCHEMA Payment
+    # ##############################################
     Payment:
       type: object
       description: Optionally specify payment information
@@ -1925,9 +1925,9 @@ components:
           example: "50.00"
           description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
 
-# ##############################################
-# SCHEMA CompanyList
-# ##############################################
+    # ##############################################
+    # SCHEMA CompanyList
+    # ##############################################
     CompanyList:
       type: object
       properties:
@@ -1940,9 +1940,9 @@ components:
           type: string
           example: "SE556840226601"
 
-# ##############################################
-# SCHEMA UserList
-# ##############################################
+    # ##############################################
+    # SCHEMA UserList
+    # ##############################################
     UserList:
       type: object
       properties:
@@ -1955,12 +1955,12 @@ components:
           type: string
           example: "191212121212"
 
-# ##############################################
-# SCHEMA UserMatch
-# ##############################################
+    # ##############################################
+    # SCHEMA UserMatch
+    # ##############################################
     UserMatch:
       required:
-      - ssns
+        - ssns
       type: object
       properties:
         ssns:
@@ -1978,9 +1978,9 @@ components:
           - "197701032380"
           - "198112172385"
 
-# ##############################################
-# SCHEMA Tenant_v2
-# ##############################################
+    # ##############################################
+    # SCHEMA Tenant_v2
+    # ##############################################
     Tenant_v2:
       type: object
       required:
@@ -1994,7 +1994,7 @@ components:
         company_id:
           type: array
           items:
-            $ref: '#/components/schemas/CompanyId'
+            $ref: "#/components/schemas/CompanyId"
         edit_security_level:
           description: Security level needed for an enduser to `opt_out` from this Tenant
           type: integer
@@ -2034,9 +2034,9 @@ components:
           readOnly: true
           example: "opt_out"
 
-# ##############################################
-# SCHEMA Error40915
-# ##############################################
+    # ##############################################
+    # SCHEMA Error40915
+    # ##############################################
     Error40915:
       type: object
       properties:
@@ -2053,9 +2053,9 @@ components:
           description: A text message explaining the conflict
           example: "One or more of the organisation numbers within the company_id's you provided, already exist in existing tenants. Tenants outside your scope: {Name: TestBolag, Tenant key: 1424780396902ee9278b16417f8e3252c3ced28c38, Organisation number: SE556840226601}"
 
-# ##############################################
-# SCHEMA RequestAccess
-# ##############################################
+    # ##############################################
+    # SCHEMA RequestAccess
+    # ##############################################
     RequestAccess:
       type: object
       properties:
@@ -2090,9 +2090,9 @@ components:
           readOnly: true
           example: "1424780396902ee9278b16417f8e3252c3ced28c38"
 
-# ##############################################
-# SCHEMA Agreement
-# ##############################################
+    # ##############################################
+    # SCHEMA Agreement
+    # ##############################################
     Agreement:
       type: object
       required:
@@ -2128,13 +2128,13 @@ components:
             data:
               description: Base64-encoded data for the agreement PDF
               type: string
-              format: 'Base64-encoded data'
+              format: "Base64-encoded data"
               example: REVBREJFRUY=
         parties:
           description: list of signers and delegates that are requested to sign the agreement
           type: array
           items:
-            $ref: '#/components/schemas/AgreementParties'
+            $ref: "#/components/schemas/AgreementParties"
           example:
             - ssn: "197701032380"
               name: "Jan-Erik Karlsson"
@@ -2145,9 +2145,9 @@ components:
               email: "gustav123@mymail.com"
               role: "delegate"
 
-# ##############################################
-# SCHEMA AgreementParties
-# ##############################################
+    # ##############################################
+    # SCHEMA AgreementParties
+    # ##############################################
     AgreementParties:
       type: object
       properties:
@@ -2170,24 +2170,24 @@ components:
           enum: ["signer", "delegate"]
           example: "signer"
 
-# ##############################################
-# SCHEMA AgreementStateShort
-# ##############################################
+    # ##############################################
+    # SCHEMA AgreementStateShort
+    # ##############################################
     AgreementStateShort:
       type: object
       properties:
         key:
           description: unique agreement id
           type: string
-          example: '1544707148d73a3e84a216427724637fc207cba2ab'
+          example: "1544707148d73a3e84a216427724637fc207cba2ab"
         state:
           description: current state for the agreement
           type: string
-          example: 'active'
+          example: "active"
 
-# ##############################################
-# SCHEMA AgreementStateDetailed
-# ##############################################
+    # ##############################################
+    # SCHEMA AgreementStateDetailed
+    # ##############################################
     AgreementStateDetailed:
       type: object
       properties:
@@ -2230,7 +2230,7 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/AgreementSignature'
+            $ref: "#/components/schemas/AgreementSignature"
           example:
             - ssn: "197701032380"
               real_name: "Jan-Erik Karlsson"
@@ -2244,7 +2244,7 @@ components:
           description: list of signers and delegates that are requested to sign the agreement
           type: array
           items:
-            $ref: '#/components/schemas/AgreementParties'
+            $ref: "#/components/schemas/AgreementParties"
           example:
             - ssn: "197701032380"
               name: "Jan-Erik Karlsson"
@@ -2255,9 +2255,9 @@ components:
               email: "gustav123@mymail.com"
               role: "delegate"
 
-# ##############################################
-# SCHEMA AgreementSignature
-# ##############################################
+    # ##############################################
+    # SCHEMA AgreementSignature
+    # ##############################################
     AgreementSignature:
       type: object
       properties:
@@ -2279,9 +2279,9 @@ components:
           type: string
           example: "d4ace777-6b91-4172-903e-39371ede89f1"
 
-# ##############################################
-# SCHEMA CompanyId
-# ##############################################
+    # ##############################################
+    # SCHEMA CompanyId
+    # ##############################################
     CompanyId:
       type: object
       required:
@@ -2297,9 +2297,9 @@ components:
           type: string
           example: "SE556840226601"
 
-# ##############################################
-# SCHEMA File
-# ##############################################
+    # ##############################################
+    # SCHEMA File
+    # ##############################################
     File:
       type: object
       required:
@@ -2314,16 +2314,16 @@ components:
         data:
           description: Base64-encoded data
           type: string
-          format: 'Base64-encoded data'
+          format: "Base64-encoded data"
           example: REVBREJFRUY=
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "application/pdf"
           type: string
           example: "application/pdf"
 
-# ##############################################
-# SCHEMA Icon
-# ##############################################
+    # ##############################################
+    # SCHEMA Icon
+    # ##############################################
     Icon:
       type: object
       required:
@@ -2338,16 +2338,16 @@ components:
         data:
           description: Base64-encoded data
           type: string
-          format: 'Base64-encoded data'
+          format: "Base64-encoded data"
           example: REVBREJFRUY=
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
           type: string
           example: "image/png"
 
-# ##############################################
-# SCHEMA CompanyInbox
-# ##############################################
+    # ##############################################
+    # SCHEMA CompanyInbox
+    # ##############################################
     CompanyInbox:
       type: object
       properties:
@@ -2374,12 +2374,12 @@ components:
         status:
           description: Whether the content has been read (opened) or not
           type: string
-          enum: ["read","unread"]
+          enum: ["read", "unread"]
           example: "read"
 
-# ##############################################
-# SCHEMA CompanyContent
-# ##############################################
+    # ##############################################
+    # SCHEMA CompanyContent
+    # ##############################################
     CompanyContent:
       type: object
       properties:
@@ -2404,16 +2404,16 @@ components:
           type: string
           example: "Digital Hero AB"
         payment:
-          $ref: '#/components/schemas/Payment'
+          $ref: "#/components/schemas/Payment"
         parts:
           description: files composing the content
           type: array
           items:
-            $ref: '#/components/schemas/Parts'
+            $ref: "#/components/schemas/Parts"
 
-# ##############################################
-# SCHEMA Parts
-# ##############################################
+    # ##############################################
+    # SCHEMA Parts
+    # ##############################################
     Parts:
       type: object
       properties:
@@ -2443,13 +2443,13 @@ components:
             The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
 
-# ##############################################
-# SECURITY oAuth2Client
-# ##############################################
+  # ##############################################
+  # SECURITY oAuth2Client
+  # ##############################################
 
   securitySchemes:
     oAuth2Client:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: 'https://sender.api.kivra.com/v1/auth'
+          tokenUrl: "https://sender.api.kivra.com/v1/auth"
