@@ -22,12 +22,6 @@ info:
 
       ### Setting up the first store
 
-      The roles and access used in the digital receipts API are the following
-
-      <div>
-        <img width="600" src="https://lh3.googleusercontent.com/1C2B6fGnNh-uuQ0cOCNlVVXcKJ33SVjPmG4E24nWLaHmVAuieGfg-Xd8nR4n_mgDpzdNnizRtXNCJsVd635HpRs7H3MQg3Y9pEIw_7cfYI1eGuvMemLMiBby9Ase3sXvkVHMXbQrGA=w2400" alt="Italian Trulli">
-      </div>
-
       Receipt producers are regarded as partners i.e. they are free to set up digital receipts for as many organisations as they want.
       In order to start creating digital receipts using the POS API, a test store needs to be set up.
 
@@ -69,9 +63,7 @@ info:
 
       When a user returns an item using a digital receipt, the POS can scan a QR code on the reciept to retreive the receipt identifier.
       A return receipt can then be created by creating a digital receipt and having a reference to the original receipt identifier in the return item description.
-      The flow is the following.
 
-      <img width="600" src="https://lh3.googleusercontent.com/qCKyFtcNrDL0LsbxUI3OiGwjCdt8O2SEZX6EbvUDh55tDZxxxmqQv6CCRq9KbJq624L_ZUI6N0nKWCUEmN-I2I5BCerZ19IE49GeLmFzhdj8aHOJzdy9vwGKw7V4HoaFsfqfwZ6HSQ=w2400" alt="Return flow">
     </details>
 
     <details><summary>Digital receipt JSON schema explained</summary>
@@ -1097,7 +1089,7 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/person/deregister:
     post:
-      summary: Deregisters a receipt that has been expensed
+      summary: Deregisters a person from an EMS
       description: >
         ### Access scope
 
