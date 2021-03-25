@@ -8,12 +8,12 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r receipt "gs://developer.kivra.com/$BRANCH_NAME/receipt" || echo "skipping . . ."'
+      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r receipt "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
     args:
       - "-c"
-      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r assets "gs://developer.kivra.com/$BRANCH_NAME/assets" || echo "skipping . . ."'
+      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r assets "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
     args:
