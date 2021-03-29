@@ -100,7 +100,7 @@
         },
         "scheme": {
           "type": "string",
-          "description": "Token scheme, vendor specific. Any unique token provider definition, e.g. payprov_name_findity_dr"
+          "description": "Token scheme, vendor specific. Any unique token provider definition, e.g. payprov_name_kivra_dr"
         }
       },
       "required": ["value", "scheme"]

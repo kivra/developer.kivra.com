@@ -118,7 +118,7 @@
             "properties": {
                 "program": {
                     "type": "string",
-                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Kivra"
                 },
                 "level": {
                     "type": "string",

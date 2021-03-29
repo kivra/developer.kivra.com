@@ -2549,7 +2549,7 @@
                                         "business_unit": {
                                             "service_id": "012345678901234567890123456789012345678901",
                                             "organization_number": "556838-8200",
-                                            "name": "Findity store AB"
+                                            "name": "Kivra store AB"
                                         },
                                         "time_of_purchase": "2020-01-17T14:37:20.058Z",
                                         "payments": [
@@ -2567,7 +2567,7 @@
                                             },
                                             "loyalty": {
                                                 "customer_number": "1122334455667788",
-                                                "program": "Findity card"
+                                                "program": "Kivra card"
                                             }
                                         }
                                     }
@@ -2580,7 +2580,7 @@
                                         "business_unit": {
                                             "service_id": "012345678901234567890123456789012345678901",
                                             "organization_number": "556838-8200",
-                                            "name": "Findity store AB"
+                                            "name": "Kivra store AB"
                                         },
                                         "time_of_purchase": "2019-12-17T09:22:48.778+01:00",
                                         "payments": [
@@ -2610,7 +2610,7 @@
                                             },
                                             "loyalty": {
                                                 "customer_number": "1122334455667788",
-                                                "program": "Findity card"
+                                                "program": "Kivra card"
                                             }
                                         }
                                     }

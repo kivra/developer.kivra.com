@@ -17,7 +17,7 @@
                     "type": "string"
                 },
                 "service_id": {
-                    "description": "Id created when then business is registered within findity",
+                    "description": "Id created when then business is registered within Kivra",
                     "type": "string",
                     "minLength": 42,
                     "maxLength": 42,
@@ -2090,7 +2090,7 @@
                                             },
                                             "scheme": {
                                                 "type": "string",
-                                                "description": "Token scheme, vendor specific. Any unique token provider definition, e.g. payprov_name_findity_dr"
+                                                "description": "Token scheme, vendor specific. Any unique token provider definition, e.g. payprov_name_kivra_dr"
                                             }
                                         },
                                         "required": [
@@ -2752,7 +2752,7 @@
                                             "properties": {
                                                 "program": {
                                                     "type": "string",
-                                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Kivra"
                                                 },
                                                 "level": {
                                                     "type": "string",
@@ -2900,7 +2900,7 @@
                             "properties": {
                                 "program": {
                                     "type": "string",
-                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Kivra"
                                 },
                                 "level": {
                                     "type": "string",
@@ -3056,7 +3056,7 @@
                             "properties": {
                                 "program": {
                                     "type": "string",
-                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity"
+                                    "description": "Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Kivra"
                                 },
                                 "level": {
                                     "type": "string",

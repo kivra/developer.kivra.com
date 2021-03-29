@@ -6,7 +6,7 @@
       "properties": {
         "name": { "type": "string"},
         "service_id": {
-          "description": "Id created when then business is registered within findity",
+          "description": "Id created when then business is registered within Kivra",
           "type": "string",
           "minLength": 42,
           "maxLength": 42,
