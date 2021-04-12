@@ -1,0 +1,181 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+    "organization_number": "123456-1111",
+    "name": "SparaKvittotDemoButik",
+    "contact": {
+      "address": {
+        "street_address": "Sparakvittotgatan 20",
+        "locality": "Ludvika",
+        "postal_code": "77100"
+      },
+      "phone": "+46-0771-584886"
+    }
+  },
+  "cashier": {
+    "name": "Farouk"
+  },
+  "sales_recording_system": {
+    "name": "65252",
+    "serial_number": "EA38329"
+  },
+  "receipt_identifier": {
+    "sequence_number": 33952504,
+    "extended_number": {
+      "value": "5060033952504",
+      "type": "EAN13",
+      "context": "store"
+    }
+  },
+  "time_of_purchase": "2018-11-06T12:13:00+01:00",
+  "currency": "SEK",
+  "totals": [{
+      "type": "net",
+      "amount": 466.40
+    },
+    {
+      "type": "vat",
+      "amount": 117.10,
+      "sub_totals": [{
+        "amount": 117.10,
+        "taxable_amount": 466.40,
+        "net_amount": 349.30,
+        "tax_percentage": 25
+      }]
+    },
+    {
+      "type": "gross",
+      "amount": 583.50
+    },
+    {
+      "type": "paid",
+      "amount": 583.00
+    }
+  ],
+  "header_text": {
+    "type": "array",
+    "collection": [
+      "Öppettider: Måndag - Fredag 10-18, Lördag 10-15."
+    ]
+  },
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "Spara kvittot, gäller som garanti.",
+      "Öppet köp 30 dagar."
+    ]
+  },
+  "items": [{
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "608794"
+      }],
+      "description": "Bogserlina med krokar",
+      "quantity": {
+        "value": 2,
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 79.00,
+      "actual_sales_unit_price": 69.00,
+      "extended_amount": 138.00,
+      "extended_gross_amount": 158.00,
+      "retail_price_modifiers": [{
+        "amount": 10.00
+      }],
+      "extended_discount_amount": 20.00,
+      "tax_percentage": 25,
+      "sequence_number": 1
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "923048"
+      }],
+      "description": "Headset hörlurar - SLR",
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 49.00,
+      "actual_sales_unit_price": 49.00,
+      "extended_amount": 49.00,
+      "extended_gross_amount": 49.00,
+      "tax_percentage": 25,
+      "sequence_number": 2
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "912042"
+      }],
+      "description": "Stövel 42 - Fodrad BR",
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 395.00,
+      "actual_sales_unit_price": 395.00,
+      "extended_amount": 395.00,
+      "extended_gross_amount": 395.00,
+      "tax_percentage": 25,
+      "sequence_number": 3
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "608003"
+      }],
+      "description": "Plastpåse",
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 1.50,
+      "actual_sales_unit_price": 1.50,
+      "extended_amount": 1.50,
+      "extended_gross_amount": 1.50,
+      "tax_percentage": 25,
+      "sequence_number": 4
+    }
+  ],
+  "payments": [{
+      "tender": {
+        "type": "giftcard",
+        "card_number": "527500******7651",
+        "expiration_date": "2018-12-31",
+        "initial_balance": 1000.00,
+        "current_balance": 503.00
+      },
+      "amount": 503.00,
+      "amount_applied_to_bill": 503.00
+    },
+    {
+      "tender": {
+        "type": "cash"
+      },
+      "amount": 100.00,
+      "amount_applied_to_bill": 55.50,
+      "rounding": 0.50
+    },
+    {
+      "tender": {
+        "type": "cash"
+      },
+      "refund": true,
+      "amount": 44.00,
+      "amount_applied_to_bill": 44.00
+    }
+  ],
+  "customer": {
+    "id": {
+      "email": "your@email.com"
+    }
+  },
+  "control_unit": {
+    "id": "RIHTT102710007088"
+  }
+}

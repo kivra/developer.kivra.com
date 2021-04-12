@@ -1,0 +1,431 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+
+    "sub_total_common": {
+      "title": "Common sub total properties",
+      "description": "Common properties for all sub totals",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, example: on return of goods"
+        },
+        "text": {
+          "description": "optional explaining text",
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        }
+      },
+      "required": ["amount"]
+    },
+
+    "sub_total_vat": {
+      "title": "Sub totals can be used on all totals but is mostly used on VAT",
+      "description": "One or more sub totals, one for each tax percentage",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, example: on return of goods"
+        },
+        "taxable_amount": {
+          "description": "Amount including tax amount",
+          "type": "number",
+          "minimum": 0
+        },
+        "net_amount": {
+          "description": "Amount excluding tax amount",
+          "type": "number",
+          "minimum": 0
+        },
+        "tax_percentage": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["amount", "taxable_amount", "net_amount", "tax_percentage"]
+    },
+
+    "sub_total_other": {
+      "title": "Sub totals can be used on all totals if needed",
+      "description": "One or more sub totals for example one for each tax percentage",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/sub_total_common"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Can be one of the total amount types or any other description what the subtotal is about"
+            }
+          }
+        }
+      ]
+    },
+
+    "sub_total_bonus": {
+      "title": "Sub totals can be used on all totals if needed",
+      "description": "One or more sub totals eligible for bonus",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/sub_total_common"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["eligible_for_frequent_shopper_points"]
+            },
+            "points": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "loyalty points gained/lost in transaction"
+            }
+          }
+        }
+      ]
+    },
+
+    "sub_total_discount_loyalty": {
+      "title": "Loyalty based discount",
+      "description": "Gives discount based on loyalty, connected to totals/discount",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/sub_total_common"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["loyalty"]
+            }
+          }
+        }
+      ]
+    },
+
+    "sub_total_received": {
+      "title": "Amount received from customer",
+      "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is given by  customer",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["received"]
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "text": {
+          "description": "optional explaining text",
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        }
+      },
+      "required": ["type", "amount"],
+      "additionalProperties": false
+    },
+
+    "sub_total_returned": {
+      "title": "Returned sub total",
+      "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is returned to customer",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["returned"]
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "text": {
+          "description": "optional explaining text",
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        }
+      },
+      "required": ["type", "amount"],
+      "additionalProperties": false
+    },
+
+    "total_common_element": {
+      "title": "Total amounts presented on the receipt",
+      "description": "One or more totals like net amount, vat, paid, discount",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, example: on return of goods"
+        }
+      },
+      "required": ["amount"]
+    },
+
+    "total_net_rounding_element": {
+      "title": "Total net or rounding amounts presented on the receipt",
+      "description": "One or more totals of type net amount or rounding",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/total_common_element"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["net", "rounding"],
+              "description": "net: total including discounts, excluding tax."
+            },
+            "sub_totals": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {"$ref": "#/definitions/sub_total_other"}
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": ["type"]
+    },
+
+    "total_paid_element": {
+      "title": "Paid total amount",
+      "description": "paid: gross amount including discount and rounding.",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/total_common_element"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["paid"]
+            },
+            "sub_totals": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {"$ref": "#/definitions/sub_total_received"},
+                  {"$ref": "#/definitions/sub_total_returned"}
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": ["type"]
+    },
+
+    "total_discount_element": {
+      "title": "Total discount amount",
+      "description": "Total discount amount presented on the receipt",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/total_common_element"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["discount"],
+              "description": "gross: total including vat."
+            },
+            "sub_totals": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {"$ref": "#/definitions/sub_total_discount_loyalty"},
+                  {"$ref": "#/definitions/sub_total_other"}
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": ["type"]
+    },
+
+    "total_gross_element": {
+      "title": "Total gross amount presented on the receipt",
+      "description": "gross: total including vat, excluding discounts",
+      "type": "object",
+      "allOf": [
+        {"$ref": "#/definitions/total_common_element"},
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["gross"],
+              "description": "gross: total including vat."
+            },
+            "sub_totals": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {"$ref": "#/definitions/sub_total_bonus"},
+                  {"$ref": "#/definitions/sub_total_other"}
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": ["type"]
+    },
+
+    "total_tax_element": {
+      "title": "Total tax amount presented on the receipt",
+      "description": "Tax releated total",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["vat"]
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, example: on return of goods"
+        },
+        "sub_totals": {
+          "type": "array",
+          "description": "add sub total for each tax percentage used",
+          "items": {
+            "$ref": "#/definitions/sub_total_vat"
+          }
+        }
+      },
+      "required": ["type", "amount"],
+      "additionalProperties": false
+    },
+
+    "total_loyalty_element": {
+      "title": "Total loyalty points redeemed",
+      "description": "One or more totals on loyalty points/programs",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["loyalty"]
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, example: on return of goods"
+        }
+      },
+      "required": ["type", "amount"],
+      "additionalProperties": false
+    },
+
+    "currency_code": {
+      "title": "ISO-4217 currency codes",
+      "description": "ISO 4217 currency code, e.g.: USD, EUR, CHF",
+      "type": "string",
+      "pattern": "^[a-zA-Z]{3}$"
+    },
+
+    "foreign_currency": {
+      "title": "Foreign currency",
+      "description": "Gives exchange rate etc when payment is done with a foreign currency",
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 foreign currency code",
+          "$ref": "#/definitions/currency_code"
+        },
+        "original_face_amount": {
+          "description": "the original amount in the foreign currency the being converted to local currency.  For example, converting Yen to Dollars, this amount would be the amount of Yen",
+          "type": "number",
+          "minimum": 0
+        },
+        "exchange_rate": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["currency", "original_face_amount"]
+    },
+
+    "retail_price_modifier_item": {
+      "title": "Retail price modifier",
+      "description": "Specifies any modifier to a service/item price on a specific line item, e.g. discount, deposit",
+      "type": "object",
+      "properties": {
+        "action": {
+          "enum": ["add", "subtract", "replace"],
+          "description": "Tells whether to add, subtract or replace the modifier to/from he sales amount.",
+          "default": "subtract"
+        },
+        "unit_amount": {
+          "type": "number",
+          "description": "The unit refund for the modifier."
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total modifier amount, that is unit_amount * quantity"
+        },
+        "percent": {
+          "type": "number",
+          "minimum": 0
+        },
+        "quantity": {
+          "description": "How many times is the modifier used. Might no be the same as number of items/services bought. Example: 2 coupons '3 for 2' on six items. Item quantity == 6, modifier quantity == 2",
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "description": "modifier reason",
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        },
+        "tax_percentage": {
+          "type": "number",
+          "description": "If the modifier has another tax percentage than the item/service amount it affects"
+        }
+      },
+      "required": ["amount"]
+    },
+
+    "retail_price_modifier_general": {
+      "title": "Retail price modifier",
+      "description": "Specifies any modifier to a service/item price on a more general receipt level or connected to a specific item/service",
+      "type": "object",
+      "allOf": [{
+          "properties": {
+            "item_links": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "Reference to sale/return item sequence_number if applicable"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/retail_price_modifier_item"
+        }
+      ]
+    }
+  }
+}

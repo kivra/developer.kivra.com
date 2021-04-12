@@ -1,0 +1,141 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+    "organization_number": "556838-8200",
+    "name": "Kivra store AB",
+    "contact": {
+      "address": {
+        "street_address": "Engelbrektsgatan 20",
+        "locality": "Ludvika",
+        "postal_code": "77187"
+      },
+      "phone": "+460771584886"
+    }
+  },
+
+  "cashier": {
+    "id": "5",
+    "name": "Anna Andersson"
+  },
+  "sales_recording_system": {
+    "serial_number": "EA38329",
+    "name": "kassa 3"
+  },
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "0123456123",
+      "type": "EAN8",
+      "context": "store"
+    }
+
+  },
+  "time_of_purchase": "2015-02-19T22:01:00+01:00",
+  "currency": "SEK",
+
+  "totals": [{
+      "type": "net",
+      "amount": 80.00
+    },
+    {
+      "type": "vat",
+      "amount": 20.00,
+      "sub_totals": [{
+        "amount": 20.00,
+        "taxable_amount": 80.00,
+        "net_amount": 60.00,
+        "tax_percentage": 25
+      }]
+    },
+    {
+      "type": "gross",
+      "amount": 145.00
+    },
+    {
+      "type": "discount",
+      "amount": 45.00
+    },
+    {
+      "type": "rounding",
+      "amount": 0.00
+    },
+    {
+      "type": "paid",
+      "amount": 100.00
+    }
+  ],
+
+  "header_text": {
+    "type": "array",
+    "collection": [
+      "Öppettider: Måndag - Fredag 10-18 Lördag 10-15"
+    ]
+  },
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "Sommarerbjudande: Rabatt på lagringsmedia."
+    ]
+  },
+
+  "items": [{
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "912042"
+    }],
+    "description": "Kingston USB Flash Drive 8 GB",
+    "quantity": {
+      "value": 1,
+      "entry_method": "scanned",
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 145,
+    "retail_price_modifiers": [{
+      "amount": 45
+    }],
+    "actual_sales_unit_price": 100,
+    "extended_amount": 100,
+    "extended_gross_amount": 145,
+    "tax_percentage": 25,
+    "sequence_number": 1
+  }],
+
+  "payments": [{
+    "tender": {
+      "type": "mobile",
+      "phone": "+467211234567",
+      "provider": "swish:pay",
+      "tender_details": {
+        "type": "map",
+        "collection": {
+          "id": "AB23D7406ECE4542A80152D909EF9F6B",
+          "payeePaymentReference": "0123456789",
+          "paymentReference": "6D6CD7406ECE4542A80152D909EF9F6B",
+          "callbackUrl": "https://example.com/api/swishcb/paymentrequests",
+          "payerAlias": "07211234567",
+          "payeeAlias": "1231234567890",
+          "amount": "100",
+          "currency": "SEK",
+          "message": "Kingston USB Flash Drive 8 GB",
+          "status": "PAID",
+          "dateCreated": "2015-02-19T22:01:53+01:00",
+          "datePaid": "2015-02-19T22:03:53+01:00"
+        }
+      }
+    },
+    "amount_applied_to_bill": 100.00,
+    "amount": 100.00
+  }],
+
+  "customer": {
+    "id": {
+      "phone": "+467211234567"
+    }
+  },
+
+  "control_unit": {
+    "id": "RIHTT102710007088",
+    "code": "BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;"
+  }
+}
