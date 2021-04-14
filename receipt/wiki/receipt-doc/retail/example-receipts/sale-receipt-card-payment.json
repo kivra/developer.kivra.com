@@ -1,0 +1,176 @@
+{
+  "business_unit": {
+    "service_id": "15594097552e6dfbe7ca6d4679acd8120c3344cc8c",
+    "organization_number": "123456-1111",
+    "name": "Sample Store BB",
+    "contact": {
+      "address": {
+        "street_address": "Sparakvittotgatan 20",
+        "locality": "Ludvika",
+        "postal_code": "77100"
+      },
+      "phone": "+46-0771-584886"
+    }
+  },
+
+  "cashier": {
+    "name": "Mika"
+  },
+  "sales_recording_system": {
+    "name": "Kassa 1"
+  },
+
+  "receipt_identifier": {
+    "sequence_number": 144079,
+    "extended_number": {
+      "value": "0144079",
+      "type": "Interleaved2Of5",
+      "context": "chain"
+    }
+  },
+  "time_of_purchase": "2018-11-09T11:07:00+01:00",
+  "currency": "SEK",
+  "totals": [{
+      "type": "net",
+      "amount": 390.40
+    },
+    {
+      "type": "vat",
+      "amount": 97.60,
+      "sub_totals": [{
+        "amount": 97.60,
+        "tax_percentage": 25,
+        "taxable_amount": 390.40,
+        "net_amount": 292.80
+      }]
+    },
+    {
+      "type": "gross",
+      "amount": 488.00
+    },
+    {
+      "type": "paid",
+      "amount": 488.00
+    }
+  ],
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "För reavaror gäller byte i 5 dagar.",
+      "Bad- & underkläder bytes endast plomberade.",
+      "Välkommen åter"
+    ]
+  },
+  "items": [{
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "000077-284305 45025-L"
+      }],
+      "description": "Short Shorts, 3xSport",
+      "quantity": {
+        "value": 1,
+        "unit": "ea"
+      },
+      "regular_sales_unit_price": 279.00,
+      "actual_sales_unit_price": 195.30,
+      "extended_amount": 195.30,
+      "extended_gross_amount": 279.00,
+      "retail_price_modifiers": [{
+        "amount": 83.70
+      }],
+      "tax_percentage": 25,
+      "sequence_number": 1
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "000007-084205 01031-L"
+      }],
+      "description": "Short shorts, 2 to go",
+      "quantity": {
+        "value": 2,
+        "unit": "ea"
+      },
+      "regular_sales_unit_price": 209.00,
+      "actual_sales_unit_price": 146.35,
+      "extended_amount": 292.70,
+      "extended_gross_amount": 418.00,
+      "retail_price_modifiers": [{
+        "amount": 62.65
+      }],
+      "extended_discount_amount": 125.30,
+      "tax_percentage": 25,
+      "sequence_number": 2
+    }
+  ],
+  "payments": [{
+    "tender": {
+      "type": "creditdebit",
+      "card_token": {
+        "value": "123455",
+        "scheme": "payment_provider_scheme"
+      },
+      "payment_slip": {
+        "type": "array",
+        "collection": [
+          "BB Ludvika Ou",
+          "Sparakvittotgatan 20",
+          "S-77100 LUDVIKA",
+          "TEL +46-0771-584886",
+          "Org.nr: 123456-1111",
+          "Teller Sweden AB",
+          "Butiksnr: 10565281",
+          "Termid: 7320080100029574",
+          "2018-11-09 11:22",
+          "KÖP",
+          "SEK: 488,00",
+          "Varav moms: 139,40",
+          "TOTALT: 488-00",
+          "Personlig kod",
+          "**** **** **** 3602",
+          "",
+          "Bankkort VISA",
+          "Ca2 1 ___ TEL 315 L99029",
+          "Ref.nr: 000295749077",
+          "AID: A000000003101000",
+          "TVR: 0000000000",
+          "TSI: E800",
+          "SPARA KVITTOT",
+          "KUNDENS KOPIA",
+          "",
+          "Transaktionsinformation",
+          "Butiksnr: 58213559",
+          "          4368122",
+          "Term.id: 7320080100029574",
+          "2018-11-09 11:22",
+          "              KÖP",
+          "BELOPP: SEK187,00",
+          "",
+          "GODKÄNT",
+          "************8796",
+          "Bankkort VISA",
+          "Personlig kod",
+          "Ca1 7 000 SWE 415 826244",
+          "Ref.nr: 301005397477",
+          "AID A00000000041010",
+          "2018-11-09         09:49",
+          "TSI E800",
+          "TVR 0080001000",
+          "SemportNr: 4196"
+        ]
+      }
+    },
+    "amount": 488.00,
+    "amount_applied_to_bill": 488.00
+  }],
+  "customer": {
+    "id": {
+      "civic_registration_number": "19990909-1999"
+    }
+  },
+  "control_unit": {
+    "id": "RIHTT102710007088"
+  }
+}
