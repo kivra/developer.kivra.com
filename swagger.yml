@@ -1320,6 +1320,32 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              invoice.renewal to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Offer to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.renewal"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
+                        type: SE_OCR
+                        method: "1"
+                        account: "12345"
+                        reference: 123OCRNUMBER456
+                        variable_amount: false
+                        min_amount: "50.00"
+                      invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
                   vat_number: SE556840226601
