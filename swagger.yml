@@ -1804,6 +1804,7 @@ components:
               Allowed values are:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
+              - `"invoice.renewal"`: indicating that the content contains a renewal offer. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"booking"`: indicating that the content is a booking/appointement.
         retain:
