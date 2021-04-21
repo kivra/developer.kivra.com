@@ -1335,8 +1335,8 @@ paths:
                   context:
                      booking:
                         title: string
-                        start_time: '2016-12-12T10:00:00'
-                        end_time: '2016-12-12T11:00:00'
+                        start_time: '2026-12-12T10:00:00'
+                        end_time: '2026-12-12T11:00:00'
                         location: string
                         description: string
                         info_url: url
@@ -2476,15 +2476,15 @@ components:
           type: string
           example: "Kontroll av tandhälsa"
         start_time:
-          description: Date and time for the booking to start
+          description: Date and time for the booking to start. Must be in the future.
           type: string
           format: ISO8601
-          example: "2018-06-19T11:00:00Z"
+          example: "2028-06-19T11:00:00Z"
         end_time:
-          description: Date and time for the booking to end
+          description: Date and time for the booking to end. If present must be after start_time.
           type: string
           format: ISO8601
-          example: "2018-06-19T12:00:00Z"
+          example: "2028-06-19T12:00:00Z"
         location:
           description: Location for the appointment/booking
           type: string
