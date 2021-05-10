@@ -2069,7 +2069,7 @@ components:
                 type: string
                 format: ISO8601
                 example: "2017-01-01"
-                description: Date when this Invoice is due
+                description: Date when this option is due. Must be in the future.
               amount:
                 type: string
                 format: float
