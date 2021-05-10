@@ -1366,6 +1366,32 @@ paths:
                         variable_amount: false
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
+              invoice reminder to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Reminder to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.reminder"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
+                        type: SE_OCR
+                        method: "1"
+                        account: "12345"
+                        reference: 123OCRNUMBER456
+                        variable_amount: false
+                        min_amount: "50.00"
+                      invoice_reference: "Invoice Nr #123"                      
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -1803,9 +1829,9 @@ components:
             Optional attribute providing information about the type of content being sent. The type of a content may influence how the user interacts with the content and how the user is notified about the content.
               Allowed values are:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
-              - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
-              - `"invoice.renewal"`: indicating that the content contains a renewal offer. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true.
               - `"letter.salary"`: indicating that the content is a salary specification.
+              - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
+              - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
