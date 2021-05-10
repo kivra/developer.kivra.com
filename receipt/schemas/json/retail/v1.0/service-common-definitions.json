@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "uuid_dash": {
+      "title": "uuid-dash",
+      "description": "UUID ( http://regex101.com/r/eJ7gN2 )",
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "uuid_no_dash": {
+      "title": "uuid-no-dash",
+      "description": "UUID ( http://regex101.com/r/eJ7gN2 )",
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 32,
+      "pattern": "^[0-9a-fA-F]{32}$"
+    },
+
+    "phone_number": {
+        "title": "generic phone number",
+        "description": "generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed",
+        "type": "string",
+        "pattern": "^(\\(?((\\+|(00))[0-9]{1,3})\\)?)?( ?-?\\(?[0-9]+\\)?)+$"
+    },
+
+    "phone_number_id": {
+      "title": "phone number identifer",
+      "description": "more restrictive international phone number format used as identifier, based on ITU-T E.123",
+      "type": "string",
+      "pattern": "^\\+(?:[0-9]\\x20?){6,14}[0-9]$"
+    },
+
+    "address": {
+      "title": "address",
+      "description": "An address following the convention of http://microformats.org/wiki/hcard",
+      "type": "object",
+      "properties": {
+        "street_address": {"type": "string" },
+        "extended_address": {"type": "string" },
+        "post_box": {"type": "string" },
+        "locality":{"type": "string" },
+        "postal_code":{"type": "string" },
+        "region": {"type": "string"},
+        "country_name": {"type": "string" },
+        "type": {"$ref": "#/definitions/address_category"}
+      },
+      "anyOf": [
+        {"required": ["street_address"]},
+        {"required": ["post_box"]}
+      ],
+      "required": ["locality", "postal_code"]
+    },
+
+    "geo_location": {
+      "type": "object",
+      "title": "Geographic location (long/lat)",
+      "description": "A geographical coordinate",
+      "properties": {
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" }
+      },
+      "required": ["latitude", "longitude"]
+    },
+
+    "address_category": {
+      "type": "object",
+      "title": "address type",
+      "description": "is address (physical/email) related to business, home, etc",
+      "properties": {
+        "type": {"enum": ["home", "business"]}
+      }
+    },
+
+    "text_map": {
+      "type": "object",
+      "description": "Add any key-value pair (string based properties) to this collection",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["map"]
+        },
+        "collection": {
+        }
+      },
+      "required": ["type", "collection"],
+      "additionalProperties": false
+    },
+
+    "text_arr": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string", "enum": ["array"]
+        },
+        "collection": {
+          "type": "array",
+          "description": "Arbitray array of strings used where additional info needed at some part",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["type", "collection"]
+    },
+
+    "text_collection": {
+      "description": "Generic text collection type used where additional text is needed in a structured (key/value) or unstructured way",
+      "oneOf" : [
+         {"$ref": "#/definitions/text_arr"},
+         {"$ref": "#/definitions/text_map"}
+      ]
+    },
+
+    "entry_method_elment": {
+      "type": "string",
+      "enum": ["smartcard", "micr", "msr", "keyed", "scanned", "weighed", "measured", "rfid", "automatic", "integrated_chip_card", "tapped", "waved"],
+      "default": "scanned"
+    },
+
+    "quantity_element": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["ea", "6 pack", "12 pack", "24 pack", "kg", "grm", "km", "m", "cm", "mm", "annual", "days", "hours", "seconds", "l", "gallon"]
+        },
+        "entry_method": {
+          "$ref": "#/definitions/entry_method_elment"
+        }
+      },
+      "required": ["value", "unit"]
+    },
+
+    "barcode_element": {
+      "type": "string",
+      "enum": ["Interleaved2Of5", "EAN13", "EAN8", "Codabar", "Code39", "Code93", "Code128", "AztecCode", "Datamatrix", "PDF417", "QRCode"],
+      "description": "barcode representation of any data"
+    }
+  }
+}

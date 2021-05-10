@@ -1,0 +1,97 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+    "organization_number": "5565772984",
+    "name": "LINKON AB",
+    "contact": {
+      "address": {
+        "street_address": "Engelbrektsgatan 20",
+        "locality": "Stockholm",
+        "postal_code": "11120"
+      },
+      "phone": "+46087893300"
+    }
+  },
+
+  "sales_recording_system": {
+    "serial_number": "2425",
+    "name": "PAY02425"
+  },
+
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "BLX4948Z",
+      "context": "chain"
+    }
+  },
+  "time_of_purchase": "2018-11-09T08:49:00+01:00",
+  "currency": "SEK",
+  "totals": [{
+    "type": "loyalty",
+    "amount": 6400
+  }],
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "Beställningsnummer: BLX4948Z"
+    ]
+  },
+  "items": [{
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-01-00"
+    }],
+    "description": "Sthlm Central - Göteborg C",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "points": 6400,
+    "sequence_number": 1
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": [
+        "Sittplats",
+        "Internet - Wi-Fi"
+      ]
+    },
+    "sequence_number": 2,
+    "item_link": 1
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": [
+        "Flexibilitet - Kan ombokas"
+      ]
+    },
+    "sequence_number": 3,
+    "item_link": 1
+  }],
+  "payments": [{
+    "tender": {
+      "type": "loyalty",
+      "points_redeemed": 6400
+    },
+    "amount": 0
+  }],
+  "customer": {
+    "id": {
+      "loyalty": {
+        "program": "sj_prio",
+        "customer_number": "5752 2102 1236 1196"
+      }
+    },
+    "contact": {
+      "email": "your@email.com",
+      "phone": "+46111111111"
+    }
+  },
+  "customer_order": {
+    "order_number": "BLX4948Z"
+  }
+}

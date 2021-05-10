@@ -1,0 +1,124 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+    "organization_number": "556838-8200",
+    "name": "Kivra store AB",
+    "contact": {
+      "address": {
+        "street_address": "Engelbrektsgatan 20",
+        "locality": "Ludvika",
+        "postal_code": "77187"
+      },
+      "phone": "+460771584886"
+    }
+  },
+
+  "cashier": {
+    "id": "5",
+    "name": "Anna Andersson"
+  },
+  "sales_recording_system": {
+    "serial_number": "EA38329",
+    "name": "kassa 3"
+  },
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "0123456123",
+      "type": "EAN8",
+      "context": "store"
+    }
+
+  },
+  "time_of_purchase": "2018-11-09T08:49:00+01:00",
+  "currency": "SEK",
+
+  "totals": [{
+      "type": "net",
+      "amount": 14.36
+    },
+    {
+      "type": "vat",
+      "amount": 7.64,
+      "sub_totals": [{
+        "amount": 7.64,
+        "taxable_amount": 22.00,
+        "net_amount": 39.00,
+        "tax_percentage": 12
+      }]
+    },
+    {
+      "type": "gross",
+      "amount": 22.00
+    },
+    {
+      "type": "rounding",
+      "amount": 0.00
+    },
+    {
+      "type": "paid",
+      "amount": 22.00
+    }
+  ],
+
+  "header_text": {
+    "type": "array",
+    "collection": [
+      "Öppettider: Mådag - Fredag 10-18 Lördag 10-15",
+      "Another header text..."
+    ]
+  },
+  "items": [{
+    "type": "sale",
+    "identifiers": [{
+        "identifier_type": "pos",
+        "value": "912042"
+      }
+    ],
+    "description": "Mumsig läskedryck",
+    "quantity": {
+      "value": 1,
+      "unit": "ea"
+    },
+    "regular_sales_unit_price": 20.00,
+    "actual_sales_unit_price": 20.00,
+    "extended_amount": 20.00,
+    "extended_gross_amount": 20.00,
+    "tax_percentage": 12,
+    "sequence_number": 1
+  },
+  {
+    "type": "deposit",
+    "amount": 2.00,
+    "unit_amount": 2.00,
+    "quantity": 1,
+    "refund": false,
+    "sequence_number": 2,
+    "item_link": 1,
+    "text": {
+        "type": "array",
+        "collection": [
+        "Pant Mumsig läskedryck"
+      ]
+      }
+  }],
+
+  "payments": [{
+    "tender": {
+      "type": "cash"
+    },
+    "amount_applied_to_bill": 22.00,
+    "amount": 22.00
+  }],
+
+  "customer": {
+    "id": {
+      "phone": "+46 75 777 7777"
+    }
+  },
+
+  "control_unit": {
+    "id": "RIHTT102710007088",
+    "code": "BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;"
+  }
+}

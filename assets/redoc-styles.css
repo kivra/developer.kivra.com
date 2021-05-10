@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.menu-content div:first-of-type img {
+  padding: 20px 0 10px 20px;
+  width: 130px;
+  height: auto;
+}
