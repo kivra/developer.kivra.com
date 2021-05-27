@@ -1121,7 +1121,8 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserMatch"
-            example: '{"ssns":["191212121212","197701032380","198112172385"]}'
+            example: 
+              ssns: ["191212121212","197701032380","198112172385"]
         required: true
       security:
         - oAuth2Client:
@@ -1133,7 +1134,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserMatch"
-              example: '{"ssns":["191212121212", "198112172385"]}'
+              example: 
+                ssns: ["191212121212", "198112172385"]
 
   # ##############################################
   # GET /v1/tenant/TKEY/company
