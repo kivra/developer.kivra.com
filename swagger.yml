@@ -1388,6 +1388,41 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              invoice offer with multiple payment options to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample multiple payment options invoice offer to User
+                  type: 'invoice.offer'
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        due_date: '2021-01-01'
+                        method: '1'
+                        account: '1234-5678'
+                        options:
+                          - currency: SEK
+                            total_owed: '199.00'
+                            type: SE_OCR
+                            reference: '100001'
+                            title: "Silver edition"
+                            description: "This is a good offer"
+                            icon:
+                              data: REVBREJFRUY=
+                              content_type: image/png
+                          - currency: SEK
+                            total_owed: '299.00'
+                            type: SE_OCR
+                            reference: '100002'
+                            title: "Gold edition"
+                            description: "This is a better offer"
+                            icon:
+                              data: REVBREJFRUY=
+                              content_type: image/png
 
   # ##############################################
   # POST /v1/tenant/TKEY/agreement
@@ -1849,7 +1884,9 @@ components:
               description: Optionally specify invoice information
               properties:
                 payment:
-                  $ref: "#/components/schemas/Payment"
+                  oneOf:
+                    - $ref: '#/components/schemas/Payment'
+                    - $ref: '#/components/schemas/PaymentMultipleOptions'
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
@@ -1982,6 +2019,84 @@ components:
           format: float
           example: "50.00"
           description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
+
+    # ##############################################
+    # SCHEMA PaymentMultipleOptions
+    # ##############################################
+    PaymentMultipleOptions:
+      type: object
+      description: Payment information when multiple options are available
+      required:
+        - payable
+        - account
+        - method
+        - currency
+        - options
+      properties:
+        payable:
+          type: boolean
+          description: Toggles whether this content should be payable through Kivra’s payment platform. Only `true` is allowed when sending multiple payment options.
+          enum: [true]
+        status:
+          type: string
+          description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
+          default: "unpaid"
+          readOnly: true
+          enum: ["paid", "unpaid"]
+        method:
+          type: string
+          description: 1 = BG and 2 = PG
+          example: "1"
+          enum: ["1", "2"]
+        account:
+          type: string
+          example: "1234-5678"
+          description: Tenant’s account number
+        currency:
+          type: string
+          format: ISO4217
+          example: "SEK"
+          description: Currency used in specifying `amount`
+        options:
+          type: array
+          description: "A list of payment options"
+          items:
+            type: object
+            description: "A payment option where each option should differ in either `amount` or `reference`"
+            required:
+              - currency
+              - amount
+              - type
+              - reference
+              - title
+            properties:
+              due_date:
+                type: string
+                format: ISO8601
+                example: "2017-01-01"
+                description: Date when this option is due. Must be in the future.
+              amount:
+                type: string
+                format: float
+                example: "123.50"
+                description: The payment amount for this option. A positive number.
+              type:
+                type: string
+                description: Type of format for the reference
+                example: "SE_OCR"
+                enum: ["SE_OCR", "TENANT_REF"]
+              reference:
+                type: string
+                example: "123OCRNUMBER456"
+                description: The reference number used for paying. This can be maximum 25 characters long.
+              title:
+                type: string
+                description: "Title for this option"
+              description:
+                type: string
+                description: "Optional description for this option"
+              icon:
+                $ref: '#/components/schemas/PaymentOptionIcon'
 
     # ##############################################
     # SCHEMA CompanyList
@@ -2366,7 +2481,7 @@ components:
         - content_type
       properties:
         name:
-          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          description: Arbitrary filename that is shown alongside the File in the Kivra GUI
           type: string
           example: filename.pdf
         data:
@@ -2385,12 +2500,11 @@ components:
     Icon:
       type: object
       required:
-        - name
         - data
         - content_type
       properties:
         name:
-          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          description: Arbitrary filename
           type: string
           example: filename.pdf
         data:
@@ -2401,7 +2515,40 @@ components:
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
           type: string
+          enum: ["image/png"]
           example: "image/png"
+
+
+    # ##############################################
+    # SCHEMA TenantIcon
+    # ##############################################
+    TenantIcon:
+      allOf:
+        - $ref: '#/components/schemas/Icon'
+        - type: object
+          properties:
+            data:
+              description: Base64-encoded data
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
+
+    # ##############################################
+    # SCHEMA PaymentOptionIcon
+    # ##############################################
+    PaymentOptionIcon:
+      allOf:
+        - $ref: '#/components/schemas/Icon'
+        - type: object
+          properties:
+            data:
+              # TODO: Actually decide max before merging this PR
+              description: >
+                Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
+                100 kB before encoding.
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
 
     # ##############################################
     # SCHEMA CompanyInbox
