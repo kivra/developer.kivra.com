@@ -2514,13 +2514,13 @@ components:
           format: ISO8601
           example: "2028-06-19T12:00:00Z"
         location:
-          description: Location for the appointment/booking
+          description: Location for the appointment/booking. Address most contain city for full functionality.
           type: string
-          example: "Strandvägen 61"
+          example: "Strandvägen 61, Stockholm"
         description:
           description: Additional information
           type: string
-          example: "Brush your teeth before coming" 
+          example: "Brush your teeth before coming"
         info_url:
           description: Link to page with additional information
           type: string
