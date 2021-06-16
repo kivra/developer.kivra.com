@@ -705,6 +705,24 @@ paths:
         - oAuth2Client:
             - "post:kivra.v2.tenant"
       responses:
+        200:
+          description: |
+            Tenant already existing and added to the client scope
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant_v2"
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
         201:
           description: |
             Tenant Created succesfully
@@ -725,7 +743,7 @@ paths:
                 format: url
         409:
           description: |
-            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists. In the body of the answer there will be information on whether the existing tenant is already in the scope of the client or not. The client may use the `request_access` endpoint to request access to this tenant.
+            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists and cannot be automatically added to the client scope. The client may use the `request_access` endpoint to request access to this tenant.
           content:
             application/json:
               schema:
