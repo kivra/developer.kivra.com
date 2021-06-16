@@ -14,8 +14,8 @@ info:
   version: v1 and v2
   description: |
     # Receipt API
-    The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html). 
-    
+    The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html).
+
     # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail. Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/hjalp).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
@@ -1346,7 +1346,7 @@ paths:
               invoice.renewal to user:
                 value:
                   ssn: "191212121212"
-                  subject: Sample Invoice Offer to User
+                  subject: Sample Invoice Renewal Offer to User
                   generated_at: "2016-12-12"
                   type: "invoice.renewal"
                   retain: false
@@ -1394,7 +1394,7 @@ paths:
                         reference: 123OCRNUMBER456
                         variable_amount: false
                         min_amount: "50.00"
-                      invoice_reference: "Invoice Nr #123"                      
+                      invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -1835,6 +1835,7 @@ components:
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              - `"invoice.renewal"`: indicating that the content is a payable renewal offer, with the same format as an invoice, from a sender to a current or previous customer.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
