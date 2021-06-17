@@ -1343,6 +1343,26 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              booking to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Booking to User
+                  generated_at: '2016-12-12'
+                  type: 'booking'
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                     booking:
+                        title: string
+                        start_time: '2026-12-12T10:00:00'
+                        end_time: '2026-12-12T11:00:00'
+                        location: string
+                        description: string
+                        info_url: url
               invoice.renewal to user:
                 value:
                   ssn: "191212121212"
@@ -1835,6 +1855,7 @@ components:
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
@@ -1872,7 +1893,10 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
-
+            booking:
+              description: Optionally specify booking information
+              $ref: '#/components/schemas/Booking'
+             
     # ##############################################
     # SCHEMA Content_company
     # ##############################################
@@ -2486,6 +2510,42 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Parts"
+
+    # ##############################################
+    # SCHEMA Booking
+    # ##############################################
+    Booking:
+      type: object
+      required:
+        - title
+        - start_time
+      properties:
+        title:
+          description: Booking name that is shown in the Kivra GUI
+          type: string
+          example: "Kontroll av tandhälsa"
+        start_time:
+          description: Date and time for the booking to start. Must be in the future.
+          type: string
+          format: ISO8601
+          example: "2028-06-19T11:00:00Z"
+        end_time:
+          description: Date and time for the booking to end. If present must be after start_time.
+          type: string
+          format: ISO8601
+          example: "2028-06-19T12:00:00Z"
+        location:
+          description: Location for the appointment/booking. Address most contain city for full functionality.
+          type: string
+          example: "Strandvägen 61, Stockholm"
+        description:
+          description: Additional information
+          type: string
+          example: "Brush your teeth before coming"
+        info_url:
+          description: Link to page with additional information
+          type: string
+          format: uri
 
     # ##############################################
     # SCHEMA Parts
