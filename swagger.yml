@@ -1386,8 +1386,6 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
-                        min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
               invoice reminder to user:
                 value:
