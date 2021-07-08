@@ -675,6 +675,8 @@ tags:
     description: Endpoints for managing signatures and agreements
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
+  - name: "Company API"
+    description: Endpoints access to company mailboxes
 
 x-tagGroups:
   - name: Tenant API
@@ -685,6 +687,9 @@ x-tagGroups:
   - name: Partner API
     tags:
       - "Partner API"
+  - name: Company API
+    tags:
+      - "Company API"
 
 paths:
   # ##############################################
@@ -1818,6 +1823,42 @@ paths:
           application/json:
             schema: {}
 
+
+
+  # ##############################################
+  # POST /v3/company/match/plus_active
+  # ##############################################
+  /v3/company/match/plus_active:
+    post:
+      tags:
+        - "Company API"
+      summary: Filter companies with Kivra+
+      operationId: Match companies
+      description: |
+        This resource is used to match a list of VAT Numbers to check whether a company has an active Kivra+ subscription.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v3.company.match.plus_active.**"
+      responses:
+        200:
+          description: Filterd list of VAT numbers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyMatch"
+              example:
+                vat_numbers: ["SE25555555552"]
+      requestBody:
+        description: List of VAT numbers to be matched
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyMatch"
+              items:
+                {
+                  "vat_numbers": ["SE556840226601"]
+                }
+
 components:
   schemas:
     # ##############################################
@@ -2076,6 +2117,29 @@ components:
           - "191212121212"
           - "197701032380"
           - "198112172385"
+
+    # ##############################################
+    # SCHEMA CompanyMatch
+    # ##############################################
+    CompanyMatch:
+      required:
+        - vat_numbers
+      type: object
+      properties:
+        vat_numbers:
+          type: array
+          items:
+            type: string
+            example:
+              - "SE25555555550"
+              - "SE25555555551"
+              - "SE25555555552"
+          description: list of VAT Numbers
+      example:
+        vat_numbers:
+          - "SE25555555550"
+          - "SE25555555551"
+          - "SE25555555552"
 
     # ##############################################
     # SCHEMA Tenant_v2
