@@ -56,6 +56,17 @@ info:
     also reflected in the allocation of responsibilities. Concretely, this
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
+    
+    ## Management of Personal Information in the metadata
+    It is not allowed to include so called sensitive personal data in any of the free-text metadata fields. 
+    
+    Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin, 
+    political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or 
+    sexual orientation, genetic data, biometric data that is being used to uniquely identify a person), and this means 
+    for example that it is not allowed to state the reason for a booking in either of the Title field or the Description 
+    field when sending medical care notices. 
+    
+    The sender is responsible for ensuring no sensitive personal data is included in any of the free-text metadata fields.
 
     # Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
