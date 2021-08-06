@@ -57,7 +57,7 @@ info:
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
     
-    ## Management of Personal Information in the metadata
+    ## Policy for Personal Information in the metadata
     It is not allowed to include so called sensitive personal data in any of the free-text metadata fields. 
     
     Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin, 
