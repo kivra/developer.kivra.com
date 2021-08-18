@@ -13,6 +13,9 @@ info:
     altText: Kivra logo
   version: v1 and v2
   description: |
+    # Receipt API
+    The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html).
+
     # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail. Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/hjalp).
     If anything is missing or seems incorrect, please check the [GitHub issues](https://github.com/kivra/developer.kivra.com/issues) for existing known issues or [create a new issue](https://github.com/kivra/developer.kivra.com/issues/new).
@@ -53,6 +56,17 @@ info:
     also reflected in the allocation of responsibilities. Concretely, this
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
+    
+    ## Policy for Personal Information in the metadata
+    It is not allowed to include so called sensitive personal data in any of the free-text metadata fields. 
+    
+    Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin, 
+    political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or 
+    sexual orientation, genetic data, biometric data that is being used to uniquely identify a person), and this means 
+    for example that it is not allowed to state the reason for a booking in either of the Title field or the Description 
+    field when sending medical care notices. 
+    
+    The sender is responsible for ensuring no sensitive personal data is included in any of the free-text metadata fields.
 
     # Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
@@ -672,6 +686,8 @@ tags:
     description: Endpoints for managing signatures and agreements
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
+  - name: "Company API"
+    description: Endpoints access to company mailboxes
 
 x-tagGroups:
   - name: Tenant API
@@ -682,6 +698,9 @@ x-tagGroups:
   - name: Partner API
     tags:
       - "Partner API"
+  - name: Company API
+    tags:
+      - "Company API"
 
 paths:
   # ##############################################
@@ -702,6 +721,24 @@ paths:
         - oAuth2Client:
             - "post:kivra.v2.tenant"
       responses:
+        200:
+          description: |
+            Tenant already existing and added to the client scope
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant_v2"
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
         201:
           description: |
             Tenant Created succesfully
@@ -722,7 +759,7 @@ paths:
                 format: url
         409:
           description: |
-            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists. In the body of the answer there will be information on whether the existing tenant is already in the scope of the client or not. The client may use the `request_access` endpoint to request access to this tenant.
+            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists and cannot be automatically added to the client scope. The client may use the `request_access` endpoint to request access to this tenant.
           content:
             application/json:
               schema:
@@ -1121,7 +1158,8 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserMatch"
-            example: '{"ssns":["191212121212","197701032380","198112172385"]}'
+            example: 
+              ssns: ["191212121212","197701032380","198112172385"]
         required: true
       security:
         - oAuth2Client:
@@ -1133,7 +1171,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserMatch"
-              example: '{"ssns":["191212121212", "198112172385"]}'
+              example: 
+                ssns: ["191212121212", "198112172385"]
 
   # ##############################################
   # GET /v1/tenant/TKEY/company
@@ -1320,12 +1359,32 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
-              invoice.renewal to user:
+              booking to user:
+                value:
+                  ssn: '191212121212'
+                  subject: Sample Booking to User
+                  generated_at: '2016-12-12'
+                  type: 'booking'
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                     booking:
+                        title: string
+                        start_time: '2026-12-12T10:00:00'
+                        end_time: '2026-12-12T11:00:00'
+                        location: string
+                        description: string
+                        info_url: url
+              invoice.debtcampaign to user:
                 value:
                   ssn: "191212121212"
-                  subject: Sample Invoice Offer to User
+                  subject: Sample Debtcampaign Invoice to User
                   generated_at: "2016-12-12"
-                  type: "invoice.renewal"
+                  type: "invoice.debtcampaign"
                   retain: false
                   tenant_info: string
                   files:
@@ -1343,8 +1402,6 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
-                        min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
               invoice reminder to user:
                 value:
@@ -1371,7 +1428,7 @@ paths:
                         reference: 123OCRNUMBER456
                         variable_amount: false
                         min_amount: "50.00"
-                      invoice_reference: "Invoice Nr #123"                      
+                      invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -1812,6 +1869,42 @@ paths:
           application/json:
             schema: {}
 
+
+
+  # ##############################################
+  # POST /v3/company/match/plus_active
+  # ##############################################
+  /v3/company/match/plus_active:
+    post:
+      tags:
+        - "Company API"
+      summary: Filter companies with Kivra+
+      operationId: Match companies
+      description: |
+        This resource is used to match a list of VAT Numbers to check whether a company has an active Kivra+ subscription.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v3.company.match.plus_active.**"
+      responses:
+        200:
+          description: Filterd list of VAT numbers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyMatch"
+              example:
+                vat_numbers: ["SE25555555552"]
+      requestBody:
+        description: List of VAT numbers to be matched
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyMatch"
+              items:
+                {
+                  "vat_numbers": ["SE556840226601"]
+                }
+
 components:
   schemas:
     # ##############################################
@@ -1847,6 +1940,8 @@ components:
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              - `"invoice.debtcampaign"`: indicating that the content is an invoice or payment plan from a debt collection company. The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". This content types enables long due dates with a longer notification scheme
+              - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
           type: boolean
@@ -1886,6 +1981,9 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
+            booking:
+              description: Optionally specify booking information
+              $ref: '#/components/schemas/Booking'
 
     # ##############################################
     # SCHEMA Content_company
@@ -2145,6 +2243,29 @@ components:
           - "191212121212"
           - "197701032380"
           - "198112172385"
+
+    # ##############################################
+    # SCHEMA CompanyMatch
+    # ##############################################
+    CompanyMatch:
+      required:
+        - vat_numbers
+      type: object
+      properties:
+        vat_numbers:
+          type: array
+          items:
+            type: string
+            example:
+              - "SE25555555550"
+              - "SE25555555551"
+              - "SE25555555552"
+          description: list of VAT Numbers
+      example:
+        vat_numbers:
+          - "SE25555555550"
+          - "SE25555555551"
+          - "SE25555555552"
 
     # ##############################################
     # SCHEMA Tenant_v2
@@ -2610,6 +2731,42 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Parts"
+
+    # ##############################################
+    # SCHEMA Booking
+    # ##############################################
+    Booking:
+      type: object
+      required:
+        - title
+        - start_time
+      properties:
+        title:
+          description: Booking name that is shown in the Kivra GUI
+          type: string
+          example: "Kontroll av tandhälsa"
+        start_time:
+          description: Date and time for the booking to start. Must be in the future.
+          type: string
+          format: ISO8601
+          example: "2028-06-19T11:00:00Z"
+        end_time:
+          description: Date and time for the booking to end. If present must be after start_time.
+          type: string
+          format: ISO8601
+          example: "2028-06-19T12:00:00Z"
+        location:
+          description: Location for the appointment/booking. Address must contain city for full functionality.
+          type: string
+          example: "Strandvägen 61, Stockholm"
+        description:
+          description: Additional information
+          type: string
+          example: "Brush your teeth before coming"
+        info_url:
+          description: Link to page with additional information
+          type: string
+          format: uri
 
     # ##############################################
     # SCHEMA Parts
