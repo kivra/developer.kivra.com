@@ -1451,7 +1451,7 @@ paths:
                       content_type: application/pdf
                   context:
                     invoice:
-                      payment:
+                      payment_multiple_options:
                         payable: true
                         due_date: '2021-01-01'
                         method: '1'
