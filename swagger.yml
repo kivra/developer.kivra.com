@@ -575,6 +575,7 @@ info:
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
     |40915 |Conflict |An attempt was made to create an object that already exists |
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
+    |43000 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
 
     # API - Authentication
     Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
@@ -1472,6 +1473,12 @@ paths:
               schema:
                 type: string
                 example: "15544700816b7d63c83d6e476493879b5043ec9d7b"
+        400:
+          description: Agreement PDF was invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error43000"
       requestBody:
         content:
           application/json:
@@ -2226,6 +2233,25 @@ components:
           type: string
           description: A text message explaining the conflict
           example: "One or more of the organisation numbers within the company_id's you provided, already exist in existing tenants. Tenants outside your scope: {Name: TestBolag, Tenant key: 1424780396902ee9278b16417f8e3252c3ced28c38, Organisation number: SE556840226601}"
+
+    # ##############################################
+    # SCHEMA Error43000
+    # ##############################################
+    Error43000:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The 5-digits error code
+          example: 43000
+        short_message:
+          type: string
+          description: A short message explaining the error
+          example: PDF was invalid
+        long_message:
+          type: string
+          description: A text message explaining the error
+          example: The supplied agreement PDF was invalid. Please check that the file is a valid PDF
 
     # ##############################################
     # SCHEMA RequestAccess
