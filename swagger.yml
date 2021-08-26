@@ -1475,6 +1475,7 @@ paths:
                             icon:
                               data: REVBREJFRUY=
                               content_type: image/png
+                      invoice_reference: "Invoice Nr #123"
 
   # ##############################################
   # POST /v1/tenant/TKEY/agreement
@@ -1973,7 +1974,7 @@ components:
               type: object
               description: Optionally specify invoice information
               properties:
-                payment:
+                payment_or_payment_multiple_options:
                   oneOf:
                     - $ref: '#/components/schemas/Payment'
                     - $ref: '#/components/schemas/PaymentMultipleOptions'
