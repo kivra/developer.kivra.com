@@ -561,6 +561,7 @@ info:
     |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
     |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type |
     |40030 |IconSizeError | The request can't be processed due to the icon format not being compliant with the requirements |
+    |40045 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
     |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
@@ -1472,6 +1473,12 @@ paths:
               schema:
                 type: string
                 example: "15544700816b7d63c83d6e476493879b5043ec9d7b"
+        400:
+          description: Agreement PDF was invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error40045"
       requestBody:
         content:
           application/json:
@@ -2226,6 +2233,25 @@ components:
           type: string
           description: A text message explaining the conflict
           example: "One or more of the organisation numbers within the company_id's you provided, already exist in existing tenants. Tenants outside your scope: {Name: TestBolag, Tenant key: 1424780396902ee9278b16417f8e3252c3ced28c38, Organisation number: SE556840226601}"
+
+    # ##############################################
+    # SCHEMA Error40045
+    # ##############################################
+    Error40045:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The 5-digits error code
+          example: 40045
+        short_message:
+          type: string
+          description: A short message explaining the error
+          example: PDF was invalid
+        long_message:
+          type: string
+          description: A text message explaining the error
+          example: The supplied agreement PDF was invalid. Please check that the file is a valid PDF
 
     # ##############################################
     # SCHEMA RequestAccess
