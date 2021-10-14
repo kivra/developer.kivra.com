@@ -1,4 +1,4 @@
----
+i---
 openapi: 3.0.1
 
 servers:
@@ -1193,7 +1193,7 @@ paths:
         
         Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
         
-        ### Dynamic Content Lifecycle
+        ### Responsive Content Lifecycle
         When sending html content it's required to provide a PDF version of the document as the base `Part`. Inside this base `Part` you can then assign the responsive html version of the document as a `ResponsivePart` under the key: `responsive_part`.
       security:
         - oAuth2Client:
@@ -1240,10 +1240,10 @@ paths:
                 - $ref: '#/components/schemas/Content_user_v2'
                 - $ref: '#/components/schemas/Content_company_v2'
             examples:
-              dynamic content to user:
+              responsive content to user:
                 value:
                   ssn: '191212121212'
-                  subject: Sample Dynamic Content to User
+                  subject: Sample Responsive Content to User
                   generated_at: '2020-05-25'
                   retain: false
                   tenant_info: string
