@@ -488,6 +488,10 @@ info:
 
     ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
 
+    ## PDF handling
+
+    See the [Agreements PDF handling](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc) document for recommendations and requirements about PDF agreement documents.
+
     # Partners integration
 
     Partners integration allows a *company recipient* to open up its mailbox to a third party (a *partner*) to allow it to access and process the mailbox content. This is typically used by companies to allow bookkeeping and administrative third parties to access and process invoices and documents.
@@ -1451,9 +1455,14 @@ paths:
         - "Tenant API - Agreements"
       summary: Post an agreement to be signed
       operationId: Post Agreement
-      description:
+      description: |
         This resource is used to post an agreement to be signed by the recipients
         listed in the metadata. An Agreement ID will be returned.
+
+        The agreement PDF will be validated and a `400 Bad Request` response will
+        be obtained if the file is invalid. Read more PDF specific documentation
+        in the [Agreements PDF handling](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc)
+        document.
       security:
         - oAuth2Client:
             - "post:kivra.v1.tenant.{tenantKey}.agreement"

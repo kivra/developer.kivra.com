@@ -1,6 +1,7 @@
-app:
-  build: .
-  ports:
-    - 3080:80
-  volumes:
-    - .:/usr/share/nginx/html
+services:
+  app:
+    build: .
+    ports:
+      - 3080:80
+    volumes:
+      - .:/usr/share/nginx/html

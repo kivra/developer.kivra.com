@@ -10,7 +10,7 @@ This project is deployed automatically when a commit is pushed to `master`.
 ## Developing
 
 ```shell
-$ docker-compose up
+$ docker compose up
 ```
 
 The site is hosted locally at `http://localhost:3080`.
