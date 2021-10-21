@@ -1406,6 +1406,9 @@ paths:
     get:
       summary: Check if a user with the given id exists
       description: >
+        The user lookup checks if a given identifier is connected to a Kivra user. We recommend to hash the identifier before
+        doing the lookup except if a cardtoken is used. The cardtoken MUST NOT be hashed.
+        
         ### Access scope
 
           - PARTNER
@@ -1420,10 +1423,6 @@ paths:
       responses:
         "204":
           description: User exists
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request
           content:
@@ -1914,7 +1913,7 @@ components:
       required: true
       schema:
         type: string
-        enum: [nationalidentitynumber, mobilephone, email]
+        enum: [nationalidentitynumber, mobilephone, email, cardtoken]
     IdentifierID:
       name: id
       in: path
