@@ -605,7 +605,7 @@ Example, customer uses a 100 SEK note to pay a 55.50 SEK bill with _rounding_ an
 }
 ```
 
-#### tender creditdebit
+#### tender-creditdebit
 
 Payment is done using a credit/debit card.
 Additional properties:
@@ -633,7 +633,7 @@ Example, card payment.
         "card_token": {
             "value": "0bbe7c68d1b5536ee5b1ef221816817d321dc1bff61c377b383bbfbd1b4bf17c",
             "scheme": "kivra"
-        },        
+        },
         "payment_slip": {
           "type": "array",
           "collection": [
@@ -835,9 +835,9 @@ You can use _points_redeemed_ and/or _amount_redeemed_.
 
 ### Customer
 
-Contains information about the customer. The customer property must contain one identifier unless a _greenbin receipt_. The contact part is optional. 
+Contains information about the customer. The customer property must contain one identifier unless a _greenbin receipt_. The contact part is optional.
 
-NOTE! The customer property is not needed if a credit/debitcard token is used to identify the customer. In that case the token information is added to the [tender part](#tender-creditdebit). 
+NOTE! The customer property is not needed if a credit/debitcard token is used to identify the customer. In that case the token information is added to the [tender part](#tender-creditdebit).
 
 Supported id types:
 
