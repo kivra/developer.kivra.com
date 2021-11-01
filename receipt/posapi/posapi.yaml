@@ -728,8 +728,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/AddStore"
               example:
-                external_id: ex000001
-                name: Demo store
+                store_id: "012345678901234567890123456789012345678901"
+                external_id: "ex000001"
+                name: "Demo store"
                 vat: SE012345678989
                 owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
                 address:
@@ -801,6 +802,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AddStore"
               example:
+                store_id: "012345678901234567890123456789012345678901"
                 external_id: ex000001
                 name: Demo store
                 vat: SE012345678989
@@ -921,6 +923,268 @@ paths:
                   value:
                     error_code: "40008"
                     error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /dr/v1/auth/token:
+    post:
+      description: >
+        Fetch JWT authentication token using OAuth client credential grant
+        Requires client_id and client_secret
+
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                    - client_credentials
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/auth/token/chain/{chainID}:
+    post:
+      summary: Fetch JWT authentication token for a chain using partner token
+      description: >
+        ### Access scope
+
+          - PARTNER
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/auth/token/store/{StoreID}:
+    post:
+      summary: Fetch JWT authentication token for a store using partner or chain token
+      description: >
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+
+      parameters:
+        - $ref: "#/components/parameters/StoreID"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalid_content_type:
+                  value:
+                    error_code: "40002"
+                    error_message: "unsupported content type header"
+                invalid_body:
+                  value:
+                    error_code: "40001"
+                    error_message: "body is missing required fields or has invalid fields"
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                company_exists:
+                  value:
+                    error_code: "40008"
+                    error_message: "company exists"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /dr/v1/users/{type}/{id}:
+    get:
+      summary: Check if a user with the given id exists
+      description: >
+        The user lookup checks if a given identifier is connected to a Kivra user. We recommend to hash the identifier before
+        doing the lookup except if a cardtoken is used. The cardtoken MUST NOT be hashed.
+        
+        ### Access scope
+
+          - PARTNER
+          - CHAIN
+          - STORE
+      parameters:
+        - $ref: "#/components/parameters/IdentifierType"
+        - $ref: "#/components/parameters/IdentifierID"
+        - $ref: "#/components/parameters/PartnerChainID"
+        - $ref: "#/components/parameters/Hashed"
+
+      responses:
+        "204":
+          description: User exists
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                person_not_found:
+                  value:
+                    error_code: "40005"
+                    error_message: "person not found"
+                unknown_url_parameter:
+                  value:
+                    error_code: "40010"
+                    error_message: "unknown url parameter"
         "401":
           description: Unauthorized
           content:
@@ -1201,269 +1465,7 @@ paths:
                     error_code: "40103"
                     error_message: "credentials invalid"
         "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token:
-    post:
-      description: >
-        Fetch JWT authentication token using OAuth client credential grant
-        Requires client_id and client_secret
-
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                grant_type:
-                  type: string
-                  enum:
-                    - client_credentials
-                client_id:
-                  type: string
-                client_secret:
-                  type: string
-              required:
-                - grant_type
-                - client_id
-                - client_secret
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                token_missing:
-                  value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token/chain/{chainID}:
-    post:
-      summary: Fetch JWT authentication token for a chain using partner token
-      description: >
-        ### Access scope
-
-          - PARTNER
-
-      parameters:
-        - $ref: "#/components/parameters/ChainID"
-
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                token_missing:
-                  value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token/store/{StoreID}:
-    post:
-      summary: Fetch JWT authentication token for a store using partner or chain token
-      description: >
-        ### Access scope
-
-          - PARTNER
-          - CHAIN
-
-      parameters:
-        - $ref: "#/components/parameters/StoreID"
-
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                token_missing:
-                  value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/users/{type}/{id}:
-    get:
-      summary: Check if a user with the given id exists
-      description: >
-        ### Access scope
-
-          - PARTNER
-          - CHAIN
-          - STORE
-      parameters:
-        - $ref: "#/components/parameters/IdentifierType"
-        - $ref: "#/components/parameters/IdentifierID"
-        - $ref: "#/components/parameters/PartnerChainID"
-        - $ref: "#/components/parameters/Hashed"
-
-      responses:
-        "204":
-          description: User exists
-          content:
-            application/json:
-              schema:
-                type: object
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                person_not_found:
-                  value:
-                    error_code: "40005"
-                    error_message: "person not found"
-                unknown_url_parameter:
-                  value:
-                    error_code: "40010"
-                    error_message: "unknown url parameter"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                token_missing:
-                  value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
-        "500":
-          $ref: "#/components/responses/InternalError"
+          $ref: "#/components/responses/InternalError"          
 
 components:
   schemas:
@@ -1518,7 +1520,7 @@ components:
       title: AddStore
       type: object
       properties:
-        externalid:
+        external_id:
           type: string
           description: ID provided by the POS that is unique per chain
         name:
@@ -1914,7 +1916,7 @@ components:
       required: true
       schema:
         type: string
-        enum: [nationalidentitynumber, mobilephone, email]
+        enum: [nationalidentitynumber, mobilephone, email, cardtoken]
     IdentifierID:
       name: id
       in: path
