@@ -1445,6 +1445,18 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              creditnotice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Creditnotice to User
+                  generated_at: "2020-12-12"
+                  type: "letter.creditnotice"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
               booking to user:
                 value:
                   ssn: '191212121212'
@@ -1995,6 +2007,7 @@ components:
               Allowed values are:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
+              - `"letter.creditnotice"`: indicating that the content is a creditnotice.
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"invoice.debtcampaign"`: indicating that the content is an invoice or payment plan from a debt collection company. The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". This content types enables long due dates with a longer notification scheme
@@ -2073,6 +2086,7 @@ components:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
+              - `"letter.creditnotice"`: indicating that the content is a creditnotice.
         tenant_info:
           description: |
             An arbitrary string defined by the tenant, used to group content for administrative tasks
