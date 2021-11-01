@@ -1451,8 +1451,7 @@ paths:
                   subject: Sample Creditnotice to User
                   generated_at: "2020-12-12"
                   type: "letter.creditnotice"
-                  retain: true
-                  retention_time: "390"
+                  retain: false
                   tenant_info: string
                   files:
                     - name: filename.pdf
