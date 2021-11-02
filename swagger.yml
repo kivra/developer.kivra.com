@@ -1177,14 +1177,16 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: ssn
-          in: query
-          description: Perform a search to see if specific Users are available
-          required: false
+        - name: diffId
+          in: path
+          description: |
+            ID that was returned in header in a previous request and is used 
+            to calculate what users have been added/removed between that 
+            request and now 
+          required: true
           schema:
-            description: List of user SSNs
             type: string
-            example: "191212121212"
+            example: "3831CD15163421134211695294"
         - name: include
           in: query
           description: List of fields that are returned for each user object
