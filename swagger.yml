@@ -1454,12 +1454,12 @@ paths:
                     invoice:
                       payment_multiple_options:
                         payable: true
-                        due_date: '2021-01-01'
                         method: '1'
                         account: '1234-5678'
+                        currency: SEK
                         options:
-                          - currency: SEK
-                            total_owed: '199.00'
+                          - due_date: '2021-02-01'
+                            amount: '199.00'
                             type: SE_OCR
                             reference: '100001'
                             title: "Silver edition"
@@ -1467,8 +1467,8 @@ paths:
                             icon:
                               data: REVBREJFRUY=
                               content_type: image/png
-                          - currency: SEK
-                            total_owed: '299.00'
+                          - due_date: '2021-01-01'
+                            amount: '299.00'
                             type: SE_OCR
                             reference: '100002'
                             title: "Gold edition"
@@ -2165,17 +2165,16 @@ components:
             type: object
             description: "A payment option where each option should differ in either `amount` or `reference`"
             required:
-              - currency
+              - due_date
               - amount
               - type
               - reference
-              - title
             properties:
               due_date:
                 type: string
                 format: ISO8601
                 example: "2017-01-01"
-                description: Date when this option is due. Must be in the future.
+                description: Date when this option is due.
               amount:
                 type: string
                 format: float
