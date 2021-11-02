@@ -895,10 +895,10 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-            - "put:kivra.v2.tenant.{tenantKey}.company_id"
+            - "post:kivra.v2.tenant.{tenantKey}.company_id"
       responses:
         204:
-          description: empty response confirming that the put operation was successful
+          description: empty response confirming that the post operation was successful
       requestBody:
         content:
           application/json:
