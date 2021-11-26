@@ -1426,9 +1426,74 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
+                      invoice_reference: "Invoice Nr #123"
+              invoice with variable amount to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
+                        type: SE_OCR
+                        method: "1"
+                        account: "12345"
+                        reference: 123OCRNUMBER456
+                        variable_amount: true
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
+              content with multiple payment options to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment_multiple_options:
+                        payable: true
+                        currency: SEK
+                        account: "123456"
+                        method: "1"
+                        options:
+                          - due_date: "2024-02-29"
+                            amount: "4711.23"
+                            type: "SE_OCR"
+                            reference: "771554193"
+                            title: "Option 1"
+                            description: "The first options in this invoice."
+                            icon:
+                              name: "this_will_be_ignored.png"
+                              content_type: "image/png"
+                              data: "Base64-encoded string with PNG data"
+                          - due_date: "2024-03-31"
+                            amount: "11147.42"
+                            type: "SE_OCR"
+                            reference: "771554194"
+                            title: "Option 2"
+                            description: "The second options in this invoice."
+                            icon:
+                              name: "this_will_be_ignored.png"
+                              content_type: "image/png"
+                              data: "A different base64-encoded string with PNG data"
+                      invoice_reference: "Invoice #23"
               content to user:
                 value:
                   ssn: "191212121212"
@@ -1534,8 +1599,6 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
-                        min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
