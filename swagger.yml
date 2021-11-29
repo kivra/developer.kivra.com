@@ -2596,7 +2596,7 @@ components:
             data:
               description: Base64-encoded data for the agreement PDF
               type: string
-              format: "Base64-encoded data"
+              format: "Base64-encoded data 0"
               example: REVBREJFRUY=
         parties:
           description: list of signers and delegates that are requested to sign the agreement
@@ -2780,9 +2780,9 @@ components:
           type: string
           example: filename.pdf
         data:
-          description: Base64-encoded data
+          description: Base64-encoded data 1
           type: string
-          format: "Base64-encoded data"
+          format: "Base64-encoded data 2"
           example: REVBREJFRUY=
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "application/pdf"
@@ -2803,9 +2803,9 @@ components:
           type: string
           example: filename.pdf
         data:
-          description: Base64-encoded data
+          description: Base64-encoded data 3
           type: string
-          format: "Base64-encoded data"
+          format: "Base64-encoded data 4"
           example: REVBREJFRUY=
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
@@ -2823,9 +2823,9 @@ components:
         - type: object
           properties:
             data:
-              description: Base64-encoded data
+              description: Base64-encoded data 5
               type: string
-              format: 'Base64-encoded data'
+              format: 'Base64-encoded data 6'
               example: REVBREJFRUY=
 
     # ##############################################
