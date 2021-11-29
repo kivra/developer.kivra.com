@@ -1426,9 +1426,74 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
+                      invoice_reference: "Invoice Nr #123"
+              invoice with variable amount to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
+                        type: SE_OCR
+                        method: "1"
+                        account: "12345"
+                        reference: 123OCRNUMBER456
+                        variable_amount: true
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
+              content with multiple payment options to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment_multiple_options:
+                        payable: true
+                        currency: SEK
+                        account: "123456"
+                        method: "1"
+                        options:
+                          - due_date: "2024-02-29"
+                            amount: "4711.23"
+                            type: "SE_OCR"
+                            reference: "771554193"
+                            title: "Option 1"
+                            description: "The first options in this invoice."
+                            icon:
+                              name: "this_will_be_ignored.png"
+                              content_type: "image/png"
+                              data: "Base64-encoded string with PNG data"
+                          - due_date: "2024-03-31"
+                            amount: "11147.42"
+                            type: "SE_OCR"
+                            reference: "771554194"
+                            title: "Option 2"
+                            description: "The second options in this invoice."
+                            icon:
+                              name: "this_will_be_ignored.png"
+                              content_type: "image/png"
+                              data: "A different base64-encoded string with PNG data"
+                      invoice_reference: "Invoice #23"
               content to user:
                 value:
                   ssn: "191212121212"
@@ -1534,8 +1599,6 @@ paths:
                         method: "1"
                         account: "12345"
                         reference: 123OCRNUMBER456
-                        variable_amount: false
-                        min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
@@ -2053,8 +2116,10 @@ components:
               type: object
               description: Optionally specify invoice information
               properties:
-                payment:
-                  $ref: "#/components/schemas/Payment"
+                payment_or_payment_multiple_options:
+                  oneOf:
+                    - $ref: '#/components/schemas/Payment'
+                    - $ref: '#/components/schemas/PaymentMultipleOptions'
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
@@ -2191,6 +2256,83 @@ components:
           format: float
           example: "50.00"
           description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
+
+    # ##############################################
+    # SCHEMA PaymentMultipleOptions
+    # ##############################################
+    PaymentMultipleOptions:
+      type: object
+      description: Payment information when multiple options are available. Note that the first options is special. Notifications about the invoice will be based on the due date specified in the first option, and in the case where a user looks at the invoice in a client that does not know about multiple options, the first one will be the only one presented. For example, if the invoice offers the choice of paying the entire debt or to start a payment plan, the first option should be to pay the entire debt.
+      required:
+        - payable
+        - account
+        - method
+        - currency
+        - options
+      properties:
+        payable:
+          type: boolean
+          description: Toggles whether this content should be payable through Kivra’s payment platform. Only `true` is allowed when sending multiple payment options.
+          enum: [true]
+        status:
+          type: string
+          description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
+          default: "unpaid"
+          readOnly: true
+          enum: ["paid", "unpaid"]
+        method:
+          type: string
+          description: 1 = BG and 2 = PG
+          example: "1"
+          enum: ["1", "2"]
+        account:
+          type: string
+          example: "1234-5678"
+          description: Tenant’s account number
+        currency:
+          type: string
+          format: ISO4217
+          example: "SEK"
+          description: Currency used in specifying `amount`
+        options:
+          type: array
+          description: "A list of payment options"
+          items:
+            type: object
+            description: "A payment option where each option should differ in either `amount` or `reference`"
+            required:
+              - due_date
+              - amount
+              - type
+              - reference
+            properties:
+              due_date:
+                type: string
+                format: ISO8601
+                example: "2017-01-01"
+                description: Date when this option is due.
+              amount:
+                type: string
+                format: float
+                example: "123.50"
+                description: The payment amount for this option. A positive number.
+              type:
+                type: string
+                description: Type of format for the reference
+                example: "SE_OCR"
+                enum: ["SE_OCR", "TENANT_REF"]
+              reference:
+                type: string
+                example: "123OCRNUMBER456"
+                description: The reference number used for paying. This can be maximum 25 characters long.
+              title:
+                type: string
+                description: "Title for this option"
+              description:
+                type: string
+                description: "Optional description for this option"
+              icon:
+                $ref: '#/components/schemas/PaymentOptionIcon'
 
     # ##############################################
     # SCHEMA CompanyList
@@ -2653,12 +2795,11 @@ components:
     Icon:
       type: object
       required:
-        - name
         - data
         - content_type
       properties:
         name:
-          description: Arbritrary file-name that is shown alongside the File in the Kivra GUI
+          description: Arbitrary filename
           type: string
           example: filename.pdf
         data:
@@ -2669,7 +2810,40 @@ components:
         content_type:
           description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type corresponding to the file, e.g. "image/png"
           type: string
+          enum: ["image/png"]
           example: "image/png"
+
+
+    # ##############################################
+    # SCHEMA TenantIcon
+    # ##############################################
+    TenantIcon:
+      allOf:
+        - $ref: '#/components/schemas/Icon'
+        - type: object
+          properties:
+            data:
+              description: Base64-encoded data
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
+
+    # ##############################################
+    # SCHEMA PaymentOptionIcon
+    # ##############################################
+    PaymentOptionIcon:
+      allOf:
+        - $ref: '#/components/schemas/Icon'
+        - type: object
+          properties:
+            data:
+              # TODO: Actually decide max before merging this PR
+              description: >
+                Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
+                100 kB before encoding.
+              type: string
+              format: 'Base64-encoded data'
+              example: REVBREJFRUY=
 
     # ##############################################
     # SCHEMA CompanyInbox
