@@ -421,6 +421,10 @@ info:
 
     `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
 
+    Invoices can have multiple payment options. That means that while the recipient of the payment is the same for the entire invoice, some specifics of the payment can vary. The details are described further down in this document, but in general each option can have its own amount, reference information and due date. If there are more than one option, each of them must have a short title, and may have a longer description as well as its own icon.
+
+    If an invoice has more than one payment option, the first option is treated specially. All notifications are based on the due date in the first option, and if a user accesses an invoice in an older client that is not aware of the multiple-option functionality, it will only display the information from the first option. Because of this, it is important that the first option always is to pay the entire debt, or, more generally, that paying the first option will release the user from any further obligation related to that particular invoice.
+
     # Tenant integration: Tenant management
 
     With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
