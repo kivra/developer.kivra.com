@@ -2803,7 +2803,12 @@ components:
           type: string
           example: filename.pdf
         data:
-          description: Base64-encoded data
+          description: >
+                Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
+                100 kB before encoding. The image format must be PNG.
+                The image must be quadratic (that is, width and height
+                must be the same). The sides must be at least 256
+                pixels long, and at most 512 pixels long.
           type: string
           format: "Base64-encoded data"
           example: REVBREJFRUY=
@@ -2838,11 +2843,8 @@ components:
           properties:
             data:
               # TODO: Actually decide max before merging this PR
-              description: >
-                Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
-                100 kB before encoding.
+              description: This string is ignored by the documentation system
               type: string
-              format: 'Base64-encoded data'
               example: REVBREJFRUY=
 
     # ##############################################
