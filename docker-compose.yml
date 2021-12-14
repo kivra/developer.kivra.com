@@ -1,6 +1,8 @@
-app:
-  build: .
-  ports:
-    - 3080:80
-  volumes:
-    - .:/usr/share/nginx/html
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - 3080:80
+    volumes:
+      - .:/usr/share/nginx/html
