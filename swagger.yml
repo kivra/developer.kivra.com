@@ -2300,7 +2300,7 @@ components:
           description: Currency used in specifying `amount`
         options:
           type: array
-          description: "A list of payment options"
+          description: "A list of payment options, where each option should differ in either `amount` or `reference`"
           items:
             type: object
             description: "A payment option where each option should differ in either `amount` or `reference`"
