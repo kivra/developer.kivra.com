@@ -904,7 +904,7 @@ paths:
         204:
           description: empty response confirming that the post operation was successful
         409:
-          description: A tenant with the same `orgnr` already exists and cannot be automatically added to the client scope. The client may use the `request_access` endpoint to request access to this tenant.
+          description: Another tenant with the same `orgnr` already exists.
           content:
             application/json:
               schema:
