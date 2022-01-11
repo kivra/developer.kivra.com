@@ -903,6 +903,12 @@ paths:
       responses:
         204:
           description: empty response confirming that the post operation was successful
+        409:
+          description: A tenant with the same `orgnr` already exists and cannot be automatically added to the client scope. The client may use the `request_access` endpoint to request access to this tenant.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error40915"
       requestBody:
         content:
           application/json:
