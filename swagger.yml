@@ -1030,7 +1030,7 @@ paths:
         If the client posts a new identical request (requesting the same `OrgNr` for the same client), the same object will be returned with an updated status.
       security:
         - oAuth2Client:
-            - "put:kivra.v2.tenant.request_access"
+            - "post:kivra.v2.tenant.request_access"
       responses:
         201:
           description: Data about the requested tenant
@@ -1075,7 +1075,7 @@ paths:
             format: hexadecimal
       security:
         - oAuth2Client:
-            - "put:kivra.v2.tenant.request_access.{requestKey}"
+            - "get:kivra.v2.tenant.request_access.{requestKey}"
       responses:
         200:
           description: Data about the requested tenant
