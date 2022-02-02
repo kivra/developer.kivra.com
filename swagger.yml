@@ -1044,6 +1044,11 @@ paths:
               schema:
                 type: string
                 format: "hexadecimal value"
+            location:
+              description: The complete API url for where to check the status of this request
+              schema:
+                type: string
+                format: "hexadecimal value"
       requestBody:
         content:
           application/json:
@@ -2552,6 +2557,8 @@ components:
           type: string
           readOnly: true
           example: "pending"
+        client_id:
+          description: ID Of You the Client
         client_name:
           description: Name of the client who created the requested tenant
           type: string
