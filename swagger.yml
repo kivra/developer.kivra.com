@@ -36,7 +36,7 @@ info:
 
     Integration in its simplest form consists of two steps:
 
-      1. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
+      1. The first step is to match the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
       2. The second step is to send the contents itself.
 
     A prerequisite for these two steps is to have client credentials, to be authorized to use the Kivra API, and a tenant ID to specify who is the sender of the content.
@@ -101,7 +101,10 @@ info:
 
     # Terminology
     ### User
-    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. A user can become `dormant` or deactivate themselves and be put under a `grace period`. Both these states is to aid the Tenant in making sure that only active Users are available for receiving Content. See below for more information on Dormant and Grace period.
+    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. 
+    Users are required to login at least once every 12 month to be considered active. A user that has not logged in since longer than 12 months will no longer be listed for matching to inform the tenant that they should not send content to this user.
+    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active Users are available for receiving Content. 
+    See below for more information on Dormant and Grace period.
 
     ### Company
     A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for more information on Dormant and Grace period.
@@ -367,31 +370,34 @@ info:
     #### Tenant
 
     Tenants can start sending Content to all Recipients in Kivra.
+    
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
 
-    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
 
     Recipients will automatically start receiving Content from new Tenants.
 
-    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
+    Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
+    
     ## Typical flow for content management
 
     The typical flow for sending content to recipients is illustrated here:
 
     ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
 
-    ## Step 1: Synchronize Recipients (optional)
+    ## Step 1: Matching Recipients
 
-    An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
+    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
 
-    This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
+    This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
-    Synchronization of Recipients is done via the `usermatch` resource.
-
-    This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
+    Matching of recipients is done via the `usermatch` resource.
+    
+    Matching of recipients is strongly recommended with the exception of flows using the "retain" functionality.
 
     ## Step 2: Send Content
 
@@ -405,9 +411,9 @@ info:
 
     In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
 
-    The sender uses the API to synchronize the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
+    The sender uses the API to match the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
 
-    Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
+    Even if the recipient database have been matched, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the matching of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
 
     ### Payslips and retain functionality
 
@@ -509,7 +515,7 @@ info:
 
     The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
 
-    ### Recipient-file synchronization:
+    ### Recipient-file matching:
 
     Common errors that can occur and need to be handled gracefully.
 
