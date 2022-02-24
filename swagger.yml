@@ -2021,6 +2021,7 @@ components:
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"invoice.debtcampaign"`: indicating that the content is an invoice or payment plan from a debt collection company. The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". This content types enables long due dates with a longer notification scheme
+              - `"invoice.renewal"`: indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
