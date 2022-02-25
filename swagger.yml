@@ -98,6 +98,7 @@ info:
     | 2020-07-07 | New layout and text adjustments |
     | 2020-09-28 | "type" attribute in content schema |
     | 2021-10-14 | Added endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
+    | 2022-02-25 | Added new error codes |
 
     # Terminology
     ### User
@@ -570,9 +571,40 @@ info:
     |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
     |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
     |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
+    |40012 |Error in type |The request can't be processed due to type field failing extended validation. |
+    |40013 |Sendrequest already accepted |The request can't be processed due to user have already an accepted sendrequest |
+    |40014 |Invalid Status |The request can't be processed due to invalid Status  |
+    |40015 |Invalid Token |Invalid access_token provided |
+    |40016 |Invalid State |The request can't be processed due to invalid State |
+    |40017 |Invalid Campaigns |The request can't be processed due to invalid campaigns |
+    |40018 |Error in Company ID |The request can't be processed due to Company ID not meeting the required format |
+    |40019 |Invalid Files |The request can't be processed due to invalid files |
+    |40020 |Invalid Parties |The request can't be processed due to invalid data for parties |
+    |40021 |Invalid Bank Account |The request can't be processed due to invalid bank account |
+    |40022 |Missing Postal Address |The request can't be processed due to missing postal address |
+    |40023 |Invalid Contact Info |Invalid contact_info provided |
+    |40024 |No Receiver Specified |Neither 'ssn' nor 'vat_number' has been specified as receiver |
+    |40025 |Invalid OTP |The provided OTP is invalid or expired |
+    |40026 |JSON payload was not an object |The JSON payload was malformed. Only JSON objects are supported |
+    |40027 |Signature verification failed |Signup signature is invalid or signup data is altered |
     |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type |
     |40030 |IconSizeError | The request can't be processed due to the icon format not being compliant with the requirements |
-    |40045 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40031 |PNG Missing Alpha Channel | Only PNG with alpha channel (PNG32) is allowed |
+    |40032 |User doesn't exist | No user exists with provided SSN |
+    |40033 |Invalid query parameters | One or more query parameters were invalid, e.g. bad format, not supported |
+    |40035 |Required header missing | One or more required headers were missing in the request |
+    |40036 |Resource Already Exists | The resource you are trying to create already exists |
+    |40037 |Agreement parties are not unique | All agreement parties must have a unique SSN |
+    |40038 |The provided destination URL does not meet our requirements | Its either not following the format https://subdomain.domain.tld/* or is not yet whitelisted in our system. Please contact us for support |
+    |40039 |Cannot publish or update a canceled campaign | Cannot publish or update a canceled campaign |
+    |40040 |Campaign must have an image | Cannot publish campaign without an image |
+    |40041 |Invalid pay date | Pay date is in the past, too far in the future or not a bank day |
+    |40042 |Invalid amount | The amount is out of range |
+    |40043 |Invalid user preference | This preference is not supported |
+    |40044 |Invalid OCR | The OCR did not pass validation |
+    |40045 |Invalid option id | The option does not exist |
+    |40047 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40098 |Invalid barcode data | The barcode could not be created due to invalid barcode type |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
     |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
@@ -580,7 +612,13 @@ info:
     |40104 |Invalid Client |Client authentication failed (e.g. unknown client, no client authentication included, or unsupported authentication method). |
     |40105 |Invalid Sendrequest |No sendrequest exists between sender and receiver, or sendrequest is not accepted. |
     |40106 |Email in use |This email adress is already in use and can not be used. |
+    |40107 |Phone number is already in use |This phone number is already in use and can not be used. |
     |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
+    |40109 |Sendrequest or Share already exists or is blocked |An already existing Sendrequest exists or is blocked. |
+    |40110 |Missing Print Integration |No print integration exists for the tenant |
+    |40111 |Access Denied: Invalid OTP |The provided OTP is invalid or expired |
+    |40112 |Access Denied: Insufficient Security Score |The requested resource requires a greater security score than the one associated with the current login method |
+    |40113 |User does not exist with provided id |Contact us to enroll, make sure to include your id |
     |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
     |40400 |Not found |The resource was not found at the given URI at this time |
     |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
