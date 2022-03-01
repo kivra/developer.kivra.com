@@ -1542,7 +1542,7 @@ paths:
                   ssn: "191212121212"
                   subject: Sample Invoice Renewal to User
                   generated_at: "2016-12-12"
-                  type: "invoice"
+                  type: "invoice.renewal"
                   retain: false
                   tenant_info: string
                   files:
