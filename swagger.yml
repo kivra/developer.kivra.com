@@ -99,7 +99,7 @@ info:
     | 2020-09-28 | "type" attribute in content schema |
     | 2021-10-14 | Endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
     | 2022-02-25 | New error codes |
-    | 2022-03-15 ] Information about PAdES release for Kivra Signatures |
+    | 2022-03-15 | Information about PAdES release for Kivra Signatures |
 
     # Terminology
     ### User
