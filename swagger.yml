@@ -36,7 +36,7 @@ info:
 
     Integration in its simplest form consists of two steps:
 
-      1. The first step is to synchronize the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
+      1. The first step is to match the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
       2. The second step is to send the contents itself.
 
     A prerequisite for these two steps is to have client credentials, to be authorized to use the Kivra API, and a tenant ID to specify who is the sender of the content.
@@ -97,11 +97,16 @@ info:
     | 2020-03-31 | Announcing of new endpoints and removal of old ones in 6 months |
     | 2020-07-07 | New layout and text adjustments |
     | 2020-09-28 | "type" attribute in content schema |
-    | 2021-10-14 | Added endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
+    | 2021-10-14 | Endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
+    | 2022-02-25 | New error codes |
+    | 2022-03-15 ] Information about PAdES release for Kivra Signatures |
 
     # Terminology
     ### User
-    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. A user can become `dormant` or deactivate themselves and be put under a `grace period`. Both these states is to aid the Tenant in making sure that only active Users are available for receiving Content. See below for more information on Dormant and Grace period.
+    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. 
+    Users are required to login at least once every 12 month to be considered active. A user that has not logged in since longer than 12 months will no longer be listed for matching to inform the tenant that they should not send content to this user.
+    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active Users are available for receiving Content. 
+    See below for more information on Dormant and Grace period.
 
     ### Company
     A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for more information on Dormant and Grace period.
@@ -367,31 +372,34 @@ info:
     #### Tenant
 
     Tenants can start sending Content to all Recipients in Kivra.
+    
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
 
-    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
 
     Recipients will automatically start receiving Content from new Tenants.
 
-    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to synchronize their register. During this grace period the Tenant can still post content to the recipient.
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
+    Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
+    
     ## Typical flow for content management
 
     The typical flow for sending content to recipients is illustrated here:
 
     ![Send Content to Kivra - Basic Flow](https://www.lucidchart.com/publicSegments/view/3774eaa4-e877-49e8-86d3-0470f95f9b05/image.png)
 
-    ## Step 1: Synchronize Recipients (optional)
+    ## Step 1: Matching Recipients
 
-    An integration may start by synchronizing which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
+    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
 
-    This means that for each Tenant the Recipient-request is unique and therefore integrators integrating many Tenants need to keep track of the different Recipients for each of the separate Tenants.
+    This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
-    Synchronization of Recipients is done via the `usermatch` resource.
-
-    This is an optional step, as in some case the client may prefer to try to send content directly and manage the error message in case the content cannot be delivered, rather than listing all available users before trying to send. This choice is usually depending on the internal processes for the integrator.
+    Matching of recipients is done via the `usermatch` resource.
+    
+    Matching of recipients is strongly recommended with the exception of flows using the "retain" functionality.
 
     ## Step 2: Send Content
 
@@ -405,9 +413,9 @@ info:
 
     In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
 
-    The sender uses the API to synchronize the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
+    The sender uses the API to match the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
 
-    Even if the recipient database have been synchronized, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the synchronization of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
+    Even if the recipient database have been matched, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the matching of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
 
     ### Payslips and retain functionality
 
@@ -479,6 +487,9 @@ info:
 
     The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
 
+    Since 2022-03-15 the covenant file is also digitally signed according to PAdES (PDF Advanced Electronic Signatures). PAdES is a standard for digital signatures which is adopted by the European eIDAS standard, meaning that agreements signed according to PAdES are legally binding in all EU member states since July 2014. For more information on PAdES: [Wikipedia article](https://en.wikipedia.org/wiki/PAdES) or [EU e-Signature page](https://ec.europa.eu/digital-building-blocks/wikis/display/CEFDIGITAL/Standards+and+specifications). This means that covenant PDFs produced by Kivra Signatures are self-bearing and their validity and authenticity can be easily determined by free PDF readers like Abobe Acrobat Reader, completely independently of Kivra. The PAdES signature can also be verified programmatically if one would like to do so. 
+    
+    For more information on how we handle PDF files in Kivra Signatures and PAdES, please refer to [this document](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc/edit?usp=sharing).
     ## Notifications
 
     After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/).
@@ -509,7 +520,7 @@ info:
 
     The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
 
-    ### Recipient-file synchronization:
+    ### Recipient-file matching:
 
     Common errors that can occur and need to be handled gracefully.
 
@@ -564,9 +575,40 @@ info:
     |40009 |Error in SSN |The request can't be processed due to SSN not meeting the required format. |
     |40010 |No action supplied or invalid |The action parameter was not supplied or invalid. |
     |40011 |Failed Extended Validation |The request can't be processed due to SSN and/or mobile failed extended validation. |
+    |40012 |Error in type |The request can't be processed due to type field failing extended validation. |
+    |40013 |Sendrequest already accepted |The request can't be processed due to user have already an accepted sendrequest |
+    |40014 |Invalid Status |The request can't be processed due to invalid Status  |
+    |40015 |Invalid Token |Invalid access_token provided |
+    |40016 |Invalid State |The request can't be processed due to invalid State |
+    |40017 |Invalid Campaigns |The request can't be processed due to invalid campaigns |
+    |40018 |Error in Company ID |The request can't be processed due to Company ID not meeting the required format |
+    |40019 |Invalid Files |The request can't be processed due to invalid files |
+    |40020 |Invalid Parties |The request can't be processed due to invalid data for parties |
+    |40021 |Invalid Bank Account |The request can't be processed due to invalid bank account |
+    |40022 |Missing Postal Address |The request can't be processed due to missing postal address |
+    |40023 |Invalid Contact Info |Invalid contact_info provided |
+    |40024 |No Receiver Specified |Neither 'ssn' nor 'vat_number' has been specified as receiver |
+    |40025 |Invalid OTP |The provided OTP is invalid or expired |
+    |40026 |JSON payload was not an object |The JSON payload was malformed. Only JSON objects are supported |
+    |40027 |Signature verification failed |Signup signature is invalid or signup data is altered |
     |40028 |UnsupportedFileType | The request can't be processed due to a data file was provided using an unsupported type |
     |40030 |IconSizeError | The request can't be processed due to the icon format not being compliant with the requirements |
-    |40045 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40031 |PNG Missing Alpha Channel | Only PNG with alpha channel (PNG32) is allowed |
+    |40032 |User doesn't exist | No user exists with provided SSN |
+    |40033 |Invalid query parameters | One or more query parameters were invalid, e.g. bad format, not supported |
+    |40035 |Required header missing | One or more required headers were missing in the request |
+    |40036 |Resource Already Exists | The resource you are trying to create already exists |
+    |40037 |Agreement parties are not unique | All agreement parties must have a unique SSN |
+    |40038 |The provided destination URL does not meet our requirements | Its either not following the format https://subdomain.domain.tld/* or is not yet whitelisted in our system. Please contact us for support |
+    |40039 |Cannot publish or update a canceled campaign | Cannot publish or update a canceled campaign |
+    |40040 |Campaign must have an image | Cannot publish campaign without an image |
+    |40041 |Invalid pay date | Pay date is in the past, too far in the future or not a bank day |
+    |40042 |Invalid amount | The amount is out of range |
+    |40043 |Invalid user preference | This preference is not supported |
+    |40044 |Invalid OCR | The OCR did not pass validation |
+    |40045 |Invalid option id | The option does not exist |
+    |40047 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40098 |Invalid barcode data | The barcode could not be created due to invalid barcode type |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
     |40102 |Unauthorized Client |The client is not authorized to request an authorization code using this method. |
@@ -574,7 +616,13 @@ info:
     |40104 |Invalid Client |Client authentication failed (e.g. unknown client, no client authentication included, or unsupported authentication method). |
     |40105 |Invalid Sendrequest |No sendrequest exists between sender and receiver, or sendrequest is not accepted. |
     |40106 |Email in use |This email adress is already in use and can not be used. |
+    |40107 |Phone number is already in use |This phone number is already in use and can not be used. |
     |40108 |Registration Code or Sendrequest Invalid |The Registration Code is invalid or no Sendrequest exists or has been expired. |
+    |40109 |Sendrequest or Share already exists or is blocked |An already existing Sendrequest exists or is blocked. |
+    |40110 |Missing Print Integration |No print integration exists for the tenant |
+    |40111 |Access Denied: Invalid OTP |The provided OTP is invalid or expired |
+    |40112 |Access Denied: Insufficient Security Score |The requested resource requires a greater security score than the one associated with the current login method |
+    |40113 |User does not exist with provided id |Contact us to enroll, make sure to include your id |
     |40300 |Forbidden |Access was denied to the given resource, authenticating will make no difference |
     |40400 |Not found |The resource was not found at the given URI at this time |
     |40500 |Method Not Allowed |The method specified in is not allowed for the resource at the requested URI |
@@ -1615,6 +1663,30 @@ paths:
                         account: "12345"
                         reference: 123OCRNUMBER456
                       invoice_reference: "Invoice Nr #123"
+              invoice renewal to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Renewal to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.renewal"
+                  retain: false
+                  tenant_info: string
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    invoice:
+                      payment:
+                        payable: true
+                        currency: SEK
+                        due_date: "2017-01-01"
+                        total_owed: "123.50"
+                        type: SE_OCR
+                        method: "1"
+                        account: "12345"
+                        reference: 123OCRNUMBER456
+                      invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -2099,6 +2171,7 @@ components:
               - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
               - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"invoice.debtcampaign"`: indicating that the content is an invoice or payment plan from a debt collection company. The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". This content types enables long due dates with a longer notification scheme
+              - `"invoice.renewal"`: indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
