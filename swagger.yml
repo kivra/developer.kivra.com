@@ -99,7 +99,7 @@ info:
     | 2020-09-28 | "type" attribute in content schema |
     | 2021-10-14 | Endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
     | 2022-02-25 | New error codes |
-    | 2022-03-15 ] Information about PAdES release for Kivra Signatures |
+    | 2022-03-15 | Information about PAdES release for Kivra Signatures |
 
     # Terminology
     ### User
@@ -1089,6 +1089,11 @@ paths:
           headers:
             kivra-objkey:
               description: Object Key for the Request (requestKey)
+              schema:
+                type: string
+                format: "hexadecimal value"
+            location:
+              description: The complete API url for where to check the status of this request
               schema:
                 type: string
                 format: "hexadecimal value"
@@ -2625,6 +2630,8 @@ components:
           type: string
           readOnly: true
           example: "pending"
+        client_id:
+          description: ID Of You the Client
         client_name:
           description: Name of the client who created the requested tenant
           type: string
