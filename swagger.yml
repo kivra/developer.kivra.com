@@ -100,6 +100,7 @@ info:
     | 2021-10-14 | Endpoint `/v1/tenant/{tenantKey}/user/diff/{diffId}` |
     | 2022-02-25 | New error codes |
     | 2022-03-15 | Information about PAdES release for Kivra Signatures |
+    | 2022-04-11 | More details about specification for time and dates |
 
     # Terminology
     ### User
@@ -179,6 +180,8 @@ info:
 
     The offset from UTC is given in the format `±[hh]:[mm]`, `±[hh][mm]`, or `±[hh]`. So if the time being described is one hour ahead of UTC (such as the time in Stockholm during the winter), the zone designator would be `+01:00`, `+0100`, or simply `+01`. This is appended to the time in the same way that `Z` was above. The offset from UTC changes with daylight saving time, e.g. a time offset in Chicago, would be `-06:00` for the winter (Central Standard Time) and `-05:00` for the summer (Central Daylight Time).
 
+    Please note that we always expect date & time to be specified as UTC or having an explicit timezone. Time & date fields without any time zone designator will be interpreted as UTC.
+    
     ## Media types
     The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media types, e.g. "application/pdf"
 
@@ -1616,8 +1619,8 @@ paths:
                   context:
                      booking:
                         title: string
-                        start_time: '2026-12-12T10:00:00'
-                        end_time: '2026-12-12T11:00:00'
+                        start_time: '2026-12-12T10:00:00Z'
+                        end_time: '2026-12-12T11:00:00Z'
                         location: string
                         description: string
                         info_url: url
