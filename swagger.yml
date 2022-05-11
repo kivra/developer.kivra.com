@@ -1342,14 +1342,14 @@ paths:
                 ssns: ["191212121212", "198112172385"]
 
   # ##############################################
-  # POST /v2/tenant/TKEY/usermatch
+  # POST v2 usermatching
   # ##############################################
-  /v2/tenant/{tenantKey}/usermatch:
+  /v2/tenant/{tenantKey}/usermatch/ssn:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Match a list of recipient users for a specific tenant (v2)
-      operationId: Match Users v2
+      summary: Match a list of ssns of recipient for a specific tenant (v2)
+      operationId: Match Users ssn v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from
           the specific Tenant.
@@ -1366,37 +1366,69 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: type
-          in: query
-          description: The recipient address type contained in `list`. It defaults to `ssn` if omitted.
-          required: false
-          default: ssn
-          schema:
-            type: string
-            enum:
-              - ssn
-              - email
-              - primary_email
-              - verified_email
       requestBody:
-        description: List of addresses to be matched to kivra recipients.
+        description: List of ssns to be matched to kivra recipients.
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserMatchV2"
+              $ref: "#/components/schemas/UserMatchV2SSN"
             example:
               list: ["191212121212","197701032380","198112172385"]
         required: true
       security:
         - oAuth2Client:
-            - "get:kivra.v2.tenant.{tenantKey}.usermatch"
+            - "get:kivra.v2.tenant.{tenantKey}.usermatch.ssn"
       responses:
         200:
           description: Filtered list of addresses that matched.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserMatchV2"
+                $ref: "#/components/schemas/UserMatchV2SSN"
+              example:
+                list: ["191212121212", "198112172385"]
+
+  /v2/tenant/{tenantKey}/usermatch/verified_email:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Match a list of emails of recipient for a specific tenant (v2)
+      operationId: Match Users verified_email v2
+      description: |
+        This resource is used to match a list of users to check that they are eligible for receiving Content from
+          the specific Tenant.
+        The request contains a list of recipient addresses to be matched, and the response is a filtered list containing only the addresses that are eligible to receive content from the tenant.
+        The type of address is indicated with the `type` query parameter.
+        <aside class="notice">
+          If none of the provided addresses are eligible to receive content from this tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key the matching should be done against. Recipients that opt-out from the tenant will be excluded.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: List of ssns to be matched to kivra recipients.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserMatchV2Email"
+            example:
+              list: ["191212121212","197701032380","198112172385"]
+        required: true
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}.usermatch.verified_email"
+      responses:
+        200:
+          description: Filtered list of addresses that matched.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserMatchV2Email"
               example:
                 list: ["191212121212", "198112172385"]
 
@@ -2561,9 +2593,9 @@ components:
           - "198112172385"
 
     # ##############################################
-    # SCHEMA UserMatchV2
+    # SCHEMA V2 UserMatch
     # ##############################################
-    UserMatchV2:
+    UserMatchV2SSN:
       required:
         - list
       type: object
@@ -2582,6 +2614,24 @@ components:
           - "191212121212"
           - "197701032380"
           - "198112172385"
+
+    UserMatchV2Email:
+      required:
+        - list
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            type: string
+            example:
+              - "fOO@example.com"
+              - "bAr@EXAMPLE.COM"
+          description: list of recipient addresses to be matched
+      example:
+        list:
+          - "fOO@example.com"
+          - "bAr@EXAMPLE.COM"
 
     # ##############################################
     # SCHEMA CompanyMatch
