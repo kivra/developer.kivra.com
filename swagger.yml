@@ -3029,13 +3029,13 @@ components:
           example: "Kontroll av tandhälsa"
         start_time:
           description: |
-            Date and time for the booking to start. Must be in the future. Time zone will be automatically set to UTC – but you can state a different time zone here if applicable.
+            Date and time for the booking to start. Must be in the future. If the time zone is not stated it will be set to UTC.
           type: string
           format: ISO8601
           example: "2028-06-19T11:00:00Z"
         end_time:
           description: |
-            Date and time for the booking to end. If present must be after start_time. Time zone will be automatically set to UTC – but you can state a different time zone here if applicable.
+            Date and time for the booking to end. If present must be after start_time. If the time zone is not stated it will be set to UTC.
           type: string
           format: ISO8601
           example: "2028-06-19T12:00:00Z"
