@@ -1491,10 +1491,17 @@ paths:
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
-        As a minimum a valid `ssn` or `vat_number` is required.
+        As a minimum a valid receiver identifier is required.
 
         <aside class="notice">
-        Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
+        Note: Kivra will not fall through to next field if there is no match on the first defined recipeient identifier field.
+
+        Kivra(se) will in order look for
+            1. `vat_number`
+            2. `ssn`
+            3. `email`
+
+        E.g. if a content has both an ssn and an email, only the ssn will be used to find a receiver, even if there is no ssn match.
         </aside>
 
         ### Retained Content
@@ -2249,6 +2256,12 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
+        email:
+          description: |
+            A kivra user's email address.
+          type: string
+          writeOnly: true
+          example: "Kivra.Sweden@example.com"
         subject:
           description: This subject/title will be visibile in the Recipients Inbox.
           type: string
