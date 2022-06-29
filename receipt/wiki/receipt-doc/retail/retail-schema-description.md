@@ -12,7 +12,7 @@ This document focuses on details in the digital receipt JSON structure. To simpl
 
 - [Sample receipts](example-receipts.md)
 - [Json schema and definition files](retail-schema-content.md)
-- [Chapter 7.1, required receipt content according to Swedish tax authories](http://www4.skatteverket.se/download/18.23a7d9f315064c2d02960ef/1447256030870/SKVFS+2014+9.pdf)
+- [Chapter 7.1, required receipt content according to Swedish tax authories](https://www4.skatteverket.se/download/18.71e5c03417f5a7815e81e74/1647357497170/SKVFS%202014%209.pdf)
 
 ## Scope
 

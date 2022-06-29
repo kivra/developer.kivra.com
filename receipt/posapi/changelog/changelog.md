@@ -1,5 +1,8 @@
 # POS API
 
+## Version 1.3.13 (2022-06-30)
+
+- Fixed some small bugs and partly rewritten ingres.
 ## Version 1.3.12 (2020-05-05)
 
 ## Fix
