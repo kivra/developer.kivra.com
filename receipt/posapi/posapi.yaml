@@ -33,26 +33,43 @@ info:
       After your chain has been created you receive a chain_id. Now a store can be created and connected to this chain.
 
       3. Use your partner token, or fetch it again if it is expired.
-      4. Create store using the addStore methods.
+      4. Create a store using the addStore method.
       5. In the request body use the chain_id as owner id.
 
       After the store has been successfully created you will receive a store_id.
 
-      6. Use a partner, chain or store token to create receipts. The partner token is used to create a chain or store token.
-      7. Use the store id as service id in the body of the CreateReceipt method.
+    </details>
 
-      And thats it.
+    <details><summary>Creating digital receipts</summary>
 
-      ### Creating digital receipts
+      ### Digital receipts
 
-      ### Sales receipt
+      #### Receipt content
 
-      When a digital receipt is created it is important that a verified user identifier is present in the receipt data.
+      The receipt content sent to Kivra is based on a json schema. There are 4 different kinds of receipt types supported:
+
+      - Sales (a receipt with only sales items)
+      - Return (a receipt with only return items)
+      - Combined sales/return (a receipt with both sales and return items)
+      - Greenbin (a receipt without recipient, the receipt will end up in a digital waste bin)
+
+      All types are built the same way, using the same json schema as base. There are a few properties within the receipt that differs depending on type.
+
+      When a digital receipt is created it is important that a verified user identifier is present (unless greenbin receipt) in the receipt data.
       The verified identifiers are
 
       - Social security number
       - Email
       - Mobile phone number
+      - Credit/Debit card token
+
+      For more information on receipt content and schemas used, see.
+      [Digital receipt JSON schema explained and example receipts](/receipt/wiki/mdwiki.html)
+      
+
+      #### Send a digital receipt
+      1. Use a partner, chain or store token to send/create receipts. The partner token is used to create a chain or store token.
+      2. Use the store id (returned when the store is created) as service id in the body of the Create Receipt method.
 
     </details>
 
@@ -85,9 +102,9 @@ paths:
 
         - **storeID** : this is used for the "service_id" element in the receipt body
 
-        - **token** : the JWT bearer token used for authorization. Partner, chain or store token can be used
+        - **token** : the JWT bearer token used for authorization. Partner, chain or store token can be used.
 
-        Both of these are obtained when new store is created using the addStore method.
+        The storeID is obtained when new store is created using the addStore method.
 
         ### Access scope
 
@@ -121,7 +138,7 @@ paths:
 
         ### IMPORTANT NOTE:
 
-        For card payments, Kivra's SRDS scheme requires the following payment
+        For card payments, Kivra's SDRS scheme requires the following payment
         terminal information according to <a href="https://en.wikipedia.org/wiki/ISO_8583">ISO standard 8583</a>
 
         * Bank Identification Number
@@ -241,6 +258,14 @@ paths:
                 type: object
                 example:
                   message: Received receipt
+        "202":
+          description: Greenbin receipt received
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Received receipt                  
         "400":
           description: Bad request
           content:
@@ -570,8 +595,6 @@ paths:
       description: >
         Creates a store or link to an existing store using this endpoint.
 
-        There are two different ways to use this endpoint.
-
         ### Access scope
 
           - PARTNER
@@ -592,13 +615,6 @@ paths:
 
         It is possible to create multiple stores with the same VAT, however they all need to belong to the same owner (chain).
 
-        <details><summary>More info</summary>
-
-        <div>
-          <img width="600"  src="https://lh3.googleusercontent.com/k8UkWVwtu6dM8h_rinpY_hia7fFMIJC0rhv9hATrwVPaQIm0ATP_NSPMVtdxbW_0zDJO2oThc301BB8aVgYe0yEPwWJoJSaJ3EHjMOgWdcIrduwWN4FBYhpXxDF5oHb3r5a3X76RKg=w2400" alt="Italian Trulli">
-        </div>
-
-        </detail>
 
       operationId: AddStore
       summary: Add store
@@ -618,6 +634,7 @@ paths:
               address:
                 street1: Gatan 1
                 postalcode: "13254"
+                city: "onebuying"
                 country: swe
               icon:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
@@ -705,7 +722,7 @@ paths:
           $ref: "#/components/responses/InternalError"
     get:
       description: >
-        Fetch information on the given store
+        Fetch information on the given store using external store ID
 
         ### Access scope
 
@@ -736,6 +753,7 @@ paths:
                 address:
                   street1: Gatan 1
                   postalcode: "13254"
+                  city: "onebuying"
                   country: swe
         "400":
           description: Bad request
@@ -810,6 +828,7 @@ paths:
                 address:
                   street1: Gatan 1
                   postalcode: "13254"
+                  city: "onebuying"
                   country: swe
         "400":
           description: Bad request
@@ -882,6 +901,7 @@ paths:
               address:
                 street1: Gatan 1
                 postalcode: "13254"
+                city: "onebuying"
                 country: swe
               icon:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
@@ -1153,9 +1173,13 @@ paths:
     get:
       summary: Check if a user with the given id exists
       description: >
-        The user lookup checks if a given identifier is connected to a Kivra user. We recommend to hash the identifier before
+        The user lookup checks if a given identifier is connected to a Kivra user. We recommend to hash (sha256) the identifier before
         doing the lookup except if a cardtoken is used. The cardtoken MUST NOT be hashed.
         
+        
+        **NOTE!** A user can reject receipts from any chain so if a partner token is used when doing the user lookup
+        a chain id must be passed.
+
         ### Access scope
 
           - PARTNER

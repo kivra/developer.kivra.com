@@ -1,6 +1,6 @@
 # **_DR - Retail Schema Content_**
 
-The DR Retail JSON schema is based on the [JSON schema specification](https://json-schema.org/). It is contains one schema file and a number of JSON schema definition files. This document gives an overview of the content of each schema/definition file. For more details see each schema/definition file and [retail schema explained](./retail-schema-description.md)
+The DR Retail JSON schema is based on the [JSON schema specification](https://json-schema.org/). It contains one schema file and a number of JSON schema definition files. This document gives an overview of the content of each schema/definition file. For more details see each schema/definition file and [retail schema explained](./retail-schema-description.md)
 
 An "exploded schema" (schema and definitions files merged) is found here:
 
@@ -116,7 +116,7 @@ General receipt information referenced from other definition files/schemas:
 
 ### [Tender-definitions](../../../schemas/json/retail/v1.0/tender-definitions.json)
 
-Paymern information:
+Payment information:
 
 - tender type and type related information
   - cash
