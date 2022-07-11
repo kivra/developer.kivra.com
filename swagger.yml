@@ -101,6 +101,7 @@ info:
     | 2022-02-25 | New error codes |
     | 2022-03-15 | Information about PAdES release for Kivra Signatures |
     | 2022-04-11 | More details about specification for time and dates |
+    | 2022-07-11 | Added state `generating` for agreements |
 
     # Terminology
     ### User
@@ -470,11 +471,15 @@ info:
 
     If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
 
-    The terminal states in which an agreement can transition to, are described here below.
+    ### State generating
+    
+    When the last of all parties sign the agreement, the agreement transition to state `generating` while the covenant PDF is generated 
+    and all necessary operations required for PAdES are applied to it. The `generating` state will then automatically transition to `completed` 
+    as soon as the covenant file is ready.
 
     ### State completed
 
-    Agreements automatically transitions to the state `completed` at the time when the last of all parties sign the agreement. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party. In other words, no one can change a completed agreement.
+    Agreements automatically transitions to the state `completed` at the time when the last of all parties sign the agreement and the covenant file is ready. When an agreement has been completed, it is forever under the terminal state completed and can never transition back to an active state or be acted upon by any party. In other words, no one can change a completed agreement.
 
     When an agreement becomes completed, a covenant file is created (see below). The covenant file will be availabe to the tenant via the signature API, and to the signers and delegates via the graphical interface.
 
@@ -2751,6 +2756,8 @@ components:
           description: current state for the agreement
           type: string
           example: "active"
+          enum: [active, generating, completed, revoked]
+          readOnly: true
 
     # ##############################################
     # SCHEMA AgreementStateDetailed
@@ -2777,7 +2784,7 @@ components:
           description: The current state of the agreement
           type: string
           example: completed
-          enum: [active, completed, revoked]
+          enum: [active, generating, completed, revoked]
           readOnly: true
         tenant_name:
           description: The name of the tenant that created the agreement
