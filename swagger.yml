@@ -9,7 +9,7 @@ servers:
 info:
   title: Kivra Sweden API
   x-logo:
-    url: "assets/kivra-logo.svg"
+    url: "assets/Kivra_logo_1920X1080_green.png"
     altText: Kivra logo
   version: v1 and v2
   description: |
