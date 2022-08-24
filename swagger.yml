@@ -1486,8 +1486,6 @@ paths:
                   subject: Sample Invoice to User
                   generated_at: "2016-12-12"
                   type: "invoice"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1510,8 +1508,6 @@ paths:
                   subject: Sample Invoice to User
                   generated_at: "2016-12-12"
                   type: "invoice"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1536,8 +1532,6 @@ paths:
                   subject: Sample Invoice to User
                   generated_at: "2016-12-12"
                   type: "invoice"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1577,8 +1571,6 @@ paths:
                   subject: Sample Content to User
                   generated_at: "2016-12-12"
                   type: "letter"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1591,7 +1583,6 @@ paths:
                   type: "letter.salary"
                   retain: true
                   retention_time: "390"
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1604,7 +1595,6 @@ paths:
                   type: "letter.creditnotice"
                   retain: true
                   retention_time: "30"
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1615,8 +1605,6 @@ paths:
                   subject: Sample Booking to User
                   generated_at: '2016-12-12'
                   type: 'booking'
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1635,8 +1623,6 @@ paths:
                   subject: Sample Debtcampaign Invoice to User
                   generated_at: "2016-12-12"
                   type: "invoice.debtcampaign"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1659,8 +1645,6 @@ paths:
                   subject: Sample Invoice Reminder to User
                   generated_at: "2016-12-12"
                   type: "invoice.reminder"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1683,8 +1667,6 @@ paths:
                   subject: Sample Invoice Renewal to User
                   generated_at: "2016-12-12"
                   type: "invoice.renewal"
-                  retain: false
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -1707,7 +1689,6 @@ paths:
                   subject: Sample Content to Company
                   generated_at: "2016-12-12"
                   type: "letter"
-                  tenant_info: string
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
@@ -2199,10 +2180,6 @@ components:
           writeOnly: true
           example: "30"
           enum: ["30", "390"]
-        tenant_info:
-          description: An arbitrary string defined by the tenant, used to group content for administrative tasks
-          type: string
-          writeOnly: true
         files:
           description: Array of file Objects
           type: array
@@ -2264,11 +2241,6 @@ components:
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
-        tenant_info:
-          description: |
-            An arbitrary string defined by the tenant, used to group content for administrative tasks
-          type: string
-          writeOnly: true
         files:
           description: Array of file Objects
           type: array
