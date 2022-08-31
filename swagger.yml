@@ -1500,7 +1500,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 123OCRNUMBER456
+                        reference: 426523791
                       invoice_reference: "Invoice Nr #123"
               invoice with variable amount to user:
                 value:
@@ -1522,7 +1522,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 123OCRNUMBER456
+                        reference: 426523791
                         variable_amount: true
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
@@ -1637,7 +1637,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 123OCRNUMBER456
+                        reference: 426523791
                       invoice_reference: "Invoice Nr #123"
               invoice reminder to user:
                 value:
@@ -1659,7 +1659,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 123OCRNUMBER456
+                        reference: 426523791
                       invoice_reference: "Invoice Nr #123"
               invoice renewal to user:
                 value:
@@ -1681,7 +1681,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 123OCRNUMBER456
+                        reference: 426523791
                       invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
@@ -2319,7 +2319,7 @@ components:
           description: Tenant’s account number
         reference:
           type: string
-          example: "123OCRNUMBER456"
+          example: "426523791"
           description: The reference number used for paying. This can be maximum 25 characters long
         variable_amount:
           type: boolean
@@ -2397,7 +2397,7 @@ components:
                 enum: ["SE_OCR", "TENANT_REF"]
               reference:
                 type: string
-                example: "123OCRNUMBER456"
+                example: "426523791"
                 description: The reference number used for paying. This can be maximum 25 characters long.
               title:
                 type: string
