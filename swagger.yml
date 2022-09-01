@@ -437,6 +437,8 @@ info:
 
     If an invoice has more than one payment option, the first option is treated specially. All notifications are based on the due date in the first option, and if a user accesses an invoice in an older client that is not aware of the multiple-option functionality, it will only display the information from the first option. Because of this, it is important that the first option always is to pay the entire debt, or, more generally, that paying the first option will release the user from any further obligation related to that particular invoice.
 
+    If there are between one and seven payment options, there may also be a _flexible option_. This is meant to present the payer with the opportunity to choose how much they want to pay, within given limits. It is given specially under the key `flexible_option` rather than included in the normal options list. The object under the key shares some options with normal options, but does not specify a specific amount. Instead it has four optional keys giving mandatory and suggested limits for the lowest and highest amounts to be paid. Suggested limits will be used by the clients for prompting, hard limits will be enforced by both clients and backend.
+
     # Tenant integration: Tenant management
 
     With the introduction of `v2` of the Tenant management API, the client has the possibility to manage the tenants programmatically. In more details the client may:
@@ -2407,6 +2409,57 @@ components:
                 description: "Optional description for this option"
               icon:
                 $ref: '#/components/schemas/PaymentOptionIcon'
+        flexible_option:
+          type: object
+          description: "A flexible payment option."
+          required:
+            - due_date
+            - type
+            - reference
+          properties:
+            due_date:
+              type: string
+              format: ISO8601
+              example: "2017-01-01"
+              description: Date when this option is due.
+            type:
+              type: string
+              description: Type of format for the reference
+              example: "SE_OCR"
+              enum: ["SE_OCR", "TENANT_REF"]
+            reference:
+              type: string
+              example: "426523791"
+              description: The reference number used for paying. This can be maximum 25 characters long.
+            title:
+              type: string
+              description: "Title for this option"
+            description:
+              type: string
+              description: "Optional description for this option"
+            icon:
+              $ref: '#/components/schemas/PaymentOptionIcon'
+            min_limit:
+              type: string
+              format: float
+              example: "123.50"
+              description: The smallest allowed amount to be paid. If not given it defaults to 1.00 SEK.
+            min_suggested:
+              type: string
+              format: float
+              example: "123.50"
+              description: The user is encouraged to pay more than this amount.
+            max_suggested:
+              type: string
+              format: float
+              example: "123.50"
+              description: The user is encouraged to not pay more than this amount.
+            max_limit:
+              type: string
+              format: float
+              example: "123.50"
+              description: The largest allowed amount to be paid. Note that even if this amount is not given or very high, limits from the payment provider or bank will still apply.
+
 
     # ##############################################
     # SCHEMA CompanyList
