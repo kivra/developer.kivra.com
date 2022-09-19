@@ -517,16 +517,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/AllChainsResponse"
               example:
-                store_id: "012345678901234567890123456789012345678901"
-                external_id: "ex000001"
-                name: "Demo store"
-                vat: SE012345678989
-                owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
-                address:
-                  street1: Gatan 1
-                  postalcode: "13254"
-                  city: "onebuying"
-                  country: swe
+                - chain_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  partner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Chain 1"
+                  vat: SE123456789009
+                  address:
+                    street1: Gatan 1
+                    postalcode: "13254"
+                    city: "One Buying"
+                    country: swe
+                  icon_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                  logo_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                - chain_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  partner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Chain 2"
+                  vat: SE987654321009
+                  address:
+                    street1: Gatan 2
+                    postalcode: "23456"
+                    city: "Two Buying"
+                    country: swe
+                  icon_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  logo_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "400":
           description: Bad request
           content:
@@ -664,6 +676,79 @@ paths:
                     error_message: "credentials invalid"
         "500":
           $ref: "#/components/responses/InternalError"
+    get:
+      description: >
+
+        Fetches chain with given ID.
+
+        ### Access scope
+
+          - PARTNER
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      operationId: GetChain
+      summary: Get chain
+      responses:
+        "200":
+          description: Successfully fetched chain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetChainResponse"
+              example:
+                chain_id: "012345678901234567890123456789012345678901"
+                partner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
+                name: "Demo chain"
+                vat: SE012345678989
+                address:
+                  street1: Gatan 1
+                  postalcode: "13254"
+                  city: "onebuying"
+                  country: swe
+                icon_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                logo_url: https://test.digitalreceipts.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"                      
   /dr/v1/stores:
     post:
       description: >
@@ -1581,6 +1666,7 @@ components:
           description: expiration time in seconds
           type: integer
     AllChainsResponse:
+      title: List of chains    
       type: array
       items:
         $ref: '#/components/schemas/GetChainResponse'
@@ -1627,15 +1713,13 @@ components:
           description: The chain id in Kivra
         partner_id:
           type: string
-          description: The partner id in Kivra, the partner doing the request
+          description: The partner id in Kivra
         name:
           type: string
           description: The name of the chain
-          minLength: 1
         vat:
           type: string
           description: The VAT number of the chain
-          pattern: ^((SE)?[0-9]{12})$"
         phone:
           type: string
           description: The phone number of the chain
@@ -1657,8 +1741,6 @@ components:
               type: string
             country:
               type: string
-              maxLength: 3
-              minLength: 3
         icon_url:
           type: string
           description: Icon URL
@@ -2106,7 +2188,7 @@ components:
               error_code: "10007"
               error_message: "Permission denied"
     InternalError:
-      description: 500 Internal server error
+      description: Internal server error
       content:
         application/json:
           schema:
