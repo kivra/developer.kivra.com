@@ -8,7 +8,7 @@ info:
     altText: Kivra logo
 
   description: >
-    [Changelog - 2020-08-18](changelog/)
+    [Changelog - 2022-09-21](changelog/)
 
     # Digital Receipts Platform API
 
@@ -419,7 +419,7 @@ paths:
                 street1: Gatan 1
                 postalcode: "13254"
                 city: "onebuying"
-                country: swe
+                country: SWE
               icon:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
                 content_type: "image/png"
@@ -493,6 +493,92 @@ paths:
                     error_message: "jwt token invalid"
         "500":
           $ref: "#/components/responses/InternalError"
+    get:
+      description: >
+
+        Fetches information on chains connected to a partner.
+
+        ### Access scope
+
+          - PARTNER
+
+        ### Matching
+
+        Fetches chains based on partner token
+          - partnertoken
+
+      operationId: GetChains
+      summary: Get chains
+      responses:
+        "200":
+          description: Successfully fetched chains
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AllChainsResponse"
+              example:
+                - chain_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  partner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Chain 1"
+                  vat: SE123456789009
+                  address:
+                    street1: Gatan 1
+                    postalcode: "13254"
+                    city: "One Buying"
+                    country: SWE
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                  logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                - chain_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  partner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Chain 2"
+                  vat: SE987654321009
+                  address:
+                    street1: Gatan 2
+                    postalcode: "23456"
+                    city: "Two Buying"
+                    country: SWE
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"            
   /dr/v1/chains/{chainID}:
     put:
       description: >
@@ -526,7 +612,7 @@ paths:
                 street1: Gatan 2
                 postalcode: "13254"
                 city: "onebuying"
-                country: swe
+                country: SWE
               logo:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
                 content_type: "image/png"
@@ -590,6 +676,253 @@ paths:
                     error_message: "credentials invalid"
         "500":
           $ref: "#/components/responses/InternalError"
+    get:
+      description: >
+
+        Fetches information on the given chain
+
+        ### Access scope
+
+          - PARTNER
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      operationId: GetChain
+      summary: Get chain
+      responses:
+        "200":
+          description: Successfully fetched chain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetChainResponse"
+              example:
+                chain_id: "012345678901234567890123456789012345678901"
+                partner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
+                name: "Demo chain"
+                vat: SE012345678989
+                address:
+                  street1: Gatan 1
+                  postalcode: "13254"
+                  city: "onebuying"
+                  country: SWE
+                icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"   
+  /dr/v1/chains/{chainID}/stores:
+    get:
+      description: >
+
+        Fetches information on stores connected to a chain.
+
+        ### Access scope
+
+          - PARTNER
+
+        ### Matching
+
+        Fetches stores based on partner token and chain id
+
+      operationId: GetStores
+      summary: Get stores
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+
+      responses:
+        "200":
+          description: Successfully fetched stores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AllStoresResponse"
+              example:
+                - store_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  external_id: "store-100"
+                  owner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Store 1"
+                  vat: SE123456789009
+                  address:
+                    street1: Gatan 1
+                    postalcode: "13254"
+                    city: "One Buying"
+                    country: SWE
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                  logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                - store_id: "8a499ffa488cdce401488cf8c5d700cd"
+                  external_id: "store-200"
+                  owner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                  name: "Test Store 2"
+                  vat: SE987654321009
+                  address:
+                    street1: Gatan 2
+                    postalcode: "23456"
+                    city: "Two Buying"
+                    country: SWE
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"            
+  /dr/v1/chains/{chainID}/stores/{storeID}:
+    get:
+      description: >
+
+        Fetches information on the given store.
+        Same as [/dr/v1/stores/{storeID}](#operation/GetStore).
+
+        ### Access scope
+
+          - PARTNER
+
+        ### Matching
+
+        Fetches store based on chain and store id
+
+      operationId: GetStore2
+      summary: Get store
+
+      parameters:
+        - $ref: "#/components/parameters/ChainID"
+        - $ref: "#/components/parameters/StoreID"
+
+      responses:
+        "200":
+          description: Successfully fetched stores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetStoreResponse"
+              example:
+                store_id: "8a499ffa488cdce401488cf8c5d700cd"
+                external_id: "store-100"
+                owner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                name: "Test Store 1"
+                vat: SE123456789009
+                address:
+                  street1: Gatan 1
+                  postalcode: "13254"
+                  city: "One Buying"
+                  country: SWE
+                icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
+                  value:
+                    error_code: "40004"
+                    error_message: "resource not found"
+                id_not_provided:
+                  value:
+                    error_code: "40009"
+                    error_message: "required id not provided"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                token_missing:
+                  value:
+                    error_code: "40100"
+                    error_message: "jwt token missing"
+                token_expired:
+                  value:
+                    error_code: "40101"
+                    error_message: "jwt token expired"
+                token_invalid:
+                  value:
+                    error_code: "40102"
+                    error_message: "jwt token invalid"
+                credentials_invalid:
+                  value:
+                    error_code: "40103"
+                    error_message: "credentials invalid"
+        "500":
+          $ref: "#/components/responses/InternalError"                      
   /dr/v1/stores:
     post:
       description: >
@@ -635,7 +968,7 @@ paths:
                 street1: Gatan 1
                 postalcode: "13254"
                 city: "onebuying"
-                country: swe
+                country: SWE
               icon:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
                 content_type: "image/png"
@@ -743,18 +1076,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AddStore"
+                $ref: "#/components/schemas/GetStoreResponse"
               example:
                 store_id: "012345678901234567890123456789012345678901"
                 external_id: "ex000001"
-                name: "Demo store"
+                owner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                name: "Demo Store"
                 vat: SE012345678989
-                owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
                 address:
                   street1: Gatan 1
                   postalcode: "13254"
-                  city: "onebuying"
-                  country: swe
+                  city: "One Buying"
+                  country: SWE
+                icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
         "400":
           description: Bad request
           content:
@@ -818,18 +1153,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AddStore"
+                $ref: "#/components/schemas/GetStoreResponse"
               example:
                 store_id: "012345678901234567890123456789012345678901"
-                external_id: ex000001
-                name: Demo store
+                external_id: "ex000001"
+                owner_id: "8a499ffb488d9ca501488dc3fba0005b"
+                name: "Demo Store"
                 vat: SE012345678989
-                owner_id: "1561724304c592809e0b614d33a5258cf697a55fc9"
                 address:
                   street1: Gatan 1
                   postalcode: "13254"
-                  city: "onebuying"
-                  country: swe
+                  city: "One Buying"
+                  country: SWE
+                icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
         "400":
           description: Bad request
           content:
@@ -902,7 +1239,7 @@ paths:
                 street1: Gatan 1
                 postalcode: "13254"
                 city: "onebuying"
-                country: swe
+                country: SWE
               icon:
                 data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
                 content_type: "image/png"
@@ -1506,6 +1843,16 @@ components:
         expires_in:
           description: expiration time in seconds
           type: integer
+    AllChainsResponse:
+      title: List of chains    
+      type: array
+      items:
+        $ref: '#/components/schemas/GetChainResponse'
+    AllStoresResponse:
+      title: List of stores
+      type: array
+      items:
+        $ref: '#/components/schemas/GetStoreResponse'        
     AddStoreResponse:
       title: AddStoreResponse
       type: object
@@ -1540,6 +1887,95 @@ components:
           type: array
           items:
             type: string
+    GetChainResponse:
+      title: GetChainResponse
+      type: object
+      properties:
+        chain_id:
+          type: string
+          description: The chain id in Kivra
+        partner_id:
+          type: string
+          description: The partner id in Kivra
+        name:
+          type: string
+          description: The name of the chain
+        vat:
+          type: string
+          description: The VAT number of the chain
+        phone:
+          type: string
+          description: The phone number of the chain
+        address:
+          type: object
+          description: The address of the chain
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+        icon_url:
+          type: string
+          description: Chain Icon URL
+        logo_url:
+          type: string
+          description: Chain Logo URL
+    GetStoreResponse:
+      title: GetStoreResponse
+      type: object
+      properties:
+        store_id:
+          type: string
+          description: The store id in Kivra
+        external_id:
+          type: string
+          description: ID provided by the POS that is unique per chain
+        owner_id:
+          type: string
+          description: ID of the owner company (chain)
+        name:
+          type: string
+          description: The name of the store
+        vat:
+          type: string
+          description: The VAT number of the store
+        phone:
+          type: string
+          description: The phone number of the store
+        address:
+          type: object
+          description: The address of the store
+          properties:
+            street1:
+              type: string
+            street2:
+              type: string
+            street3:
+              type: string
+            postalcode:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+        icon_url:
+          type: string
+          description: Store Icon URL
+        logo_url:
+          type: string
+          description: Store Logo URL          
     AddStore:
       title: AddStore
       type: object
@@ -1981,7 +2417,7 @@ components:
               error_code: "10007"
               error_message: "Permission denied"
     InternalError:
-      description: 500 Internal server error
+      description: Internal server error
       content:
         application/json:
           schema:
