@@ -2751,9 +2751,11 @@ components:
           enum: ["paid", "unpaid"]
         currency:
           type: string
-          format: ISO4217
+          enum:
+            - SEK
           example: "SEK"
-          description: Currency used in specifying `total_owed`
+          description: |
+            Currency used in specifying `total_owed`. In Sweden, only SEK is accepted.
         due_date:
           type: string
           format: ISO8601
@@ -2826,9 +2828,11 @@ components:
           description: Tenant’s account number
         currency:
           type: string
-          format: ISO4217
+          enum:
+            - SEK
           example: "SEK"
-          description: Currency used in specifying `amount`
+          description: |
+            Currency used in specifying `amount`. In Sweden, only SEK is allowed.
         options:
           type: array
           description: "A list of payment options, where each option should differ in either `amount` or `reference`"
