@@ -749,6 +749,8 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
+  - name: "Tenant API - Form"
+    description: Endpoints for working with forms
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -762,6 +764,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
+      - "Tenant API - Form"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2048,6 +2051,89 @@ paths:
                       content_type: text/html
 
   # ##############################################
+  # POST /v2/tenant/TKEY/content
+  # ##############################################
+  /v1/tenant/{tkey}/form:
+    post:
+      tags:
+        - "Tenant API - Form"
+      summary: Create form
+      operationId: Send responsive content
+      description: |
+        Describe what this API does and how to use it.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant for whom the form belongs to
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Content_form_v1"
+            examples:
+              Create form:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              Create form with options:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              
+  # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
   # ##############################################
   /v1/tenant/{tenantKey}/agreement:
@@ -2663,6 +2749,123 @@ components:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
 
+  # ##############################################
+    # SCHEMA Content_Form
+    # ##############################################
+    Content_form_v1:
+      type: object
+      required:
+        - title
+        - description
+        - fields
+      properties:
+        title:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        description:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        fields:
+          description: |
+            todo
+          type: array
+          writeOnly: true
+          items:
+            $ref: "#/components/schemas/FormField"
+    FormResponse:
+      type: object
+      required:
+        - created_at
+        - description
+        - fields
+        - form_id
+        - sender_id
+        - title
+      properties:
+        created_at:
+          type: string
+          example: "todo"
+          description: |
+            todo
+        description:
+          type: string
+          example: "todo"
+          description: |
+            todo
+        form_id:
+          type: string
+          example: "todo"
+          description: |
+            todo
+        sender_id:
+          type: string
+          example: "todo"
+          description: |
+            todo
+        title:
+          type: string
+          example: "todo"
+          description: |
+            todo
+        fields:
+          description: |
+            todo
+          type: array
+          items:
+            $ref: "#/components/schemas/FormField"
+          example:
+            - type: "free_text"
+              label: "First Name"
+              name: "first_name"
+    FormField:
+      type: object
+      properties:
+        type:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        label:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        name:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        values:
+          description: |
+            todo
+          writeOnly: true
+          items:
+            $ref: "#/components/schemas/FormValue"
+    FormValue:
+      type: object
+      properties:
+        id:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+        label:
+          description: |
+            todo
+          type: string
+          writeOnly: true
+          example: "todo"
+    
     # ##############################################
     # SCHEMA Content_company
     # ##############################################
