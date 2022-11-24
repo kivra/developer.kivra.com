@@ -1,11 +1,18 @@
 # POS API
 
+## Version 1.3.14 (2022-09-21)
+
+### New
+- New endpoints: 
+    - list chains connected to a partner
+    - list stores connected to a chain.
 ## Version 1.3.13 (2022-06-30)
 
+### Fix
 - Fixed some small bugs and partly rewritten ingres.
 ## Version 1.3.12 (2020-05-05)
 
-## Fix
+### Fix
 
 - Fixed a bug where user sync incorrectly handled an user change event.
 

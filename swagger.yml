@@ -56,16 +56,16 @@ info:
     also reflected in the allocation of responsibilities. Concretely, this
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
-    
+
     ## Policy for Personal Information in the metadata
     It is not allowed to include so called sensitive personal data in any of the free-text metadata fields. 
-    
+
     Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin, 
     political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or 
     sexual orientation, genetic data, biometric data that is being used to uniquely identify a person), and this means 
     for example that it is not allowed to state the reason for a booking in either of the Title field or the Description 
     field when sending medical care notices. 
-    
+
     The sender is responsible for ensuring no sensitive personal data is included in any of the free-text metadata fields.
 
     # Change Mangement
@@ -102,6 +102,7 @@ info:
     | 2022-03-15 | Information about PAdES release for Kivra Signatures |
     | 2022-04-11 | More details about specification for time and dates |
     | 2022-07-11 | Added state `generating` for agreements |
+    | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
 
     # Terminology
     ### User
@@ -182,7 +183,7 @@ info:
     The offset from UTC is given in the format `±[hh]:[mm]`, `±[hh][mm]`, or `±[hh]`. So if the time being described is one hour ahead of UTC (such as the time in Stockholm during the winter), the zone designator would be `+01:00`, `+0100`, or simply `+01`. This is appended to the time in the same way that `Z` was above. The offset from UTC changes with daylight saving time, e.g. a time offset in Chicago, would be `-06:00` for the winter (Central Standard Time) and `-05:00` for the summer (Central Daylight Time).
 
     Please note that we always expect date & time to be specified as UTC or having an explicit timezone. Time & date fields without any time zone designator will be interpreted as UTC.
-    
+
     ## Media types
     The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media types, e.g. "application/pdf"
 
@@ -376,7 +377,7 @@ info:
     #### Tenant
 
     Tenants can start sending Content to all Recipients in Kivra.
-    
+
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
 
     A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
@@ -388,7 +389,7 @@ info:
     Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
-    
+
     ## Typical flow for content management
 
     The typical flow for sending content to recipients is illustrated here:
@@ -402,7 +403,7 @@ info:
     This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
     Matching of recipients is done via the `usermatch` resource.
-    
+
     Matching of recipients is strongly recommended with the exception of flows using the "retain" functionality.
 
     ## Step 2: Send Content
@@ -474,7 +475,7 @@ info:
     If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
 
     ### State generating
-    
+
     When the last of all parties sign the agreement, the agreement transition to state `generating` while the covenant PDF is generated 
     and all necessary operations required for PAdES are applied to it. The `generating` state will then automatically transition to `completed` 
     as soon as the covenant file is ready.
@@ -498,7 +499,7 @@ info:
     The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
 
     Since 2022-03-15 the covenant file is also digitally signed according to PAdES (PDF Advanced Electronic Signatures). PAdES is a standard for digital signatures which is adopted by the European eIDAS standard, meaning that agreements signed according to PAdES are legally binding in all EU member states since July 2014. For more information on PAdES: [Wikipedia article](https://en.wikipedia.org/wiki/PAdES) or [EU e-Signature page](https://ec.europa.eu/digital-building-blocks/wikis/display/CEFDIGITAL/Standards+and+specifications). This means that covenant PDFs produced by Kivra Signatures are self-bearing and their validity and authenticity can be easily determined by free PDF readers like Abobe Acrobat Reader, completely independently of Kivra. The PAdES signature can also be verified programmatically if one would like to do so. 
-    
+
     For more information on how we handle PDF files in Kivra Signatures and PAdES, please refer to [this document](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc/edit?usp=sharing).
     ## Notifications
 
@@ -525,9 +526,9 @@ info:
     # Errors
 
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. 
-    
+
     In general: 
-    
+
     * Codes in the `2xx` range indicate success. 
     * Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). 
     * Codes in the `5xx` range indicate an error with Kivra's servers or a timeout. In this case it is safe to retry the request.
@@ -1216,9 +1217,9 @@ paths:
           headers:
             diff-id:
               description: |
-                  An ID that can be used in a subsequent request to
-                  `/v1/tenant/{tenantKey}/user/diff/{diffId}` to fetch users
-                  that were added/removed since `diffId` was obtained
+                An ID that can be used in a subsequent request to
+                `/v1/tenant/{tenantKey}/user/diff/{diffId}` to fetch users
+                that were added/removed since `diffId` was obtained
               schema:
                 type: string
                 example: "3831CD15163421134211695294"
@@ -1261,7 +1262,7 @@ paths:
           description: |
             ID that was returned in header in a previous request and is used 
             to calculate what users have been added/removed between that 
-            request and now 
+            request and now
           required: true
           schema:
             type: string
@@ -1272,7 +1273,7 @@ paths:
           required: false
           schema:
             type: string
-            example: "191212121212"            
+            example: "191212121212"
         - name: include
           in: query
           description: List of fields that are returned for each user object
@@ -1291,9 +1292,9 @@ paths:
           headers:
             diff-id:
               description: |
-                  An ID that can be used in a subsequent request to
-                  `/v1/tenant/{tenantKey}/user/diff/{diffId}` to fetch users
-                  that were added/removed since `diffId` was obtained
+                An ID that can be used in a subsequent request to
+                `/v1/tenant/{tenantKey}/user/diff/{diffId}` to fetch users
+                that were added/removed since `diffId` was obtained
               schema:
                 type: string
                 example: "3831CD15163421134211695294"
@@ -1332,8 +1333,8 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserMatch"
-            example: 
-              ssns: ["191212121212","197701032380","198112172385"]
+            example:
+              ssns: ["191212121212", "197701032380", "198112172385"]
         required: true
       security:
         - oAuth2Client:
@@ -1345,7 +1346,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserMatch"
-              example: 
+              example:
                 ssns: ["191212121212", "198112172385"]
 
   # ##############################################
@@ -1402,7 +1403,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send content to a recipient (user or company)
+      summary: Send content (PDF) to a recipient (user or company)
       operationId: Send content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
@@ -1413,6 +1414,11 @@ paths:
         <aside class="notice">
         Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
         </aside>
+
+        ### Content (PDF) vs Responsive content (HTML+PDF)
+        There are two API resources to send content to a recipient:
+          - `/v1/tenant/TKEY/content`, the one documented here, is used to send one or several PDFs to a recipient. 
+          - `/v2/tenant/TKEY/content` is used to send one or several HTML+PDF pairs (referred to as responsive content) to a recipient. To learn more about the advantages of responsive content see the relative section below   in this documentation.
 
         ### Retained Content
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
@@ -1603,22 +1609,22 @@ paths:
                       content_type: application/pdf
               booking to user:
                 value:
-                  ssn: '191212121212'
+                  ssn: "191212121212"
                   subject: Sample Booking to User
-                  generated_at: '2016-12-12'
-                  type: 'booking'
+                  generated_at: "2016-12-12"
+                  type: "booking"
                   files:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
                   context:
-                     booking:
-                        title: 'Appointment'
-                        start_time: '2026-12-12T10:00:00Z'
-                        end_time: '2026-12-12T11:00:00Z'
-                        location: 'Somewhere'
-                        description: 'More details'
-                        info_url: url
+                    booking:
+                      title: "Appointment"
+                      start_time: "2026-12-12T10:00:00Z"
+                      end_time: "2026-12-12T11:00:00Z"
+                      location: "Somewhere"
+                      description: "More details"
+                      info_url: url
               invoice.debtcampaign to user:
                 value:
                   ssn: "191212121212"
@@ -1697,7 +1703,354 @@ paths:
                       content_type: application/pdf
 
   # ##############################################
-  # POST /v1/tenant/TKEY/agreement
+  # POST /v2/tenant/TKEY/content
+  # ##############################################
+  /v2/tenant/{tenantKey}/content:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Send responsive content (HTML+PDF) to a recipient (user or company)
+      operationId: Send responsive content
+      description: |
+        Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
+
+        ### Minimum Metadata
+        As a minimum a valid `ssn` or `vat_number` is required.
+
+        <aside class="notice">
+        Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
+        </aside>
+
+        ### Content (PDF) vs Responsive content (HTML+PDF)
+        There are two API resources to send content to a recipient:
+          - `/v1/tenant/TKEY/content`, is used to send one or several PDFs to a recipient. see related section above to learn more about it
+          - `/v2/tenant/TKEY/content` is used to send one or several HTML+PDF pairs (referred to as responsive content) to a recipient. 
+
+        ### Benefits and usage of responsive content
+        As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easyly readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
+
+         Responsive content solve this problem by allowing senders to provide 2 versions of the content:
+          - a PDF which contains all the information and details that needs to be presented to the recipient
+          - an HTML version of the same content that includes an overview of the information and highlights what the sender wants to present to the user.
+
+        Here are a couple of examples on how to use HTML resp. PDF in your communication:
+        - Let's consider an invoice where the PDF contains all the information that the invoice must include, while the responsive part (HTML) contains only the due amount, the due date, some information about the product or service that was delivered, the benefits for the customer for using the supplier and some brand information.
+        -  Let's consider a salary specification where the PDF contains all the details and how the salary was calculated while the HTML presentes only some key information like the salary total, when the money will be paid and the number of vacation days left.
+
+        ### Restrictions for the HTML part
+        Kivra is an archive and it is very important that content sent in Kivra is immutable and does not update itself over time. The recipient should be able to return to a received docucontentment at any point in time and see the content exactly as it was when it was received.
+
+        As HTML is a format that offers many possibilities there are restrictions on how the HTML is formed:
+        - No javascript: **no javascript allowed**, neither inline or fetched from external resources
+        - External documents such as images, icons, css, etc. **must be embedded inline in the HTML** file to avoid external links to become bad over time and break the rendering of the HTML
+
+        Privacy is also an important concern for Kivra. For this reason common links are allowed in the HTML but **no user-specific tracking links are allowed**, for instance links containing UTMs or other technology to track the behavior of each particular user.
+
+        ### Retained Content
+        A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
+
+        <aside class="notice">
+        Note: Usage of retained content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        </aside>
+
+        Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
+        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the default amount of time (*30 days*). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
+
+        If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
+
+        ### Duplicate control
+        If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
+
+        <aside class="notice">
+        Note: Duplicate control is only available in production, not in sandbox. This allows senders to reuse the same payload several times in the test environment.
+        </aside>
+
+        It's important to underline that the duplicate control is made by checking the complete payload (beside `generated_at`), not only the attached content. This means that any change in the payload will cause the duplicate check to fail and the corresponding content to be delivered.
+
+        Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
+
+      security:
+        - oAuth2Client:
+            - "post:kivra.v1.tenant.{tenantKey}.content"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        201:
+          description: |
+            Content Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content_user"
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            kivra-retained:
+              description: |
+                Boolean denoting if a Content was Retained, Note: this header is **only** returned when a Content is retained
+              schema:
+                type: boolean
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Content_user_v2"
+            examples:
+              invoice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              invoice with variable amount to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+                    variable_amount: true
+                    min_amount: "50.00"
+              content with multiple payment options to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    account: "123456"
+                    method: "1"
+                    options:
+                      - due_date: "2024-02-29"
+                        amount: "4711.23"
+                        type: "SE_OCR"
+                        reference: "771554193"
+                        title: "Option 1"
+                        description: "The first options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "Base64-encoded string with PNG data"
+                      - due_date: "2024-03-31"
+                        amount: "11147.42"
+                        type: "SE_OCR"
+                        reference: "771554194"
+                        title: "Option 2"
+                        description: "The second options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "A different base64-encoded string with PNG data"
+              letter to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+              payslip to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Payslip to User
+                  generated_at: "2016-12-12"
+                  type: "letter.salary"
+                  retain: true
+                  retention_time: "390"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+              creditnotice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Creditnotice to User
+                  generated_at: "2020-12-12"
+                  type: "letter.creditnotice"
+                  retain: true
+                  retention_time: "30"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+              booking to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Booking to User
+                  generated_at: "2016-12-12"
+                  type: "booking"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  booking:
+                    title: "Appointment"
+                    start_time: "2026-12-12T10:00:00Z"
+                    end_time: "2026-12-12T11:00:00Z"
+                    location: "Somewhere"
+                    description: "More details"
+                    info_url: url
+              invoice.debtcampaign to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Debtcampaign Invoice to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.debtcampaign"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              invoice reminder to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Reminder to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.reminder"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              invoice renewal to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Renewal to User
+                  generated_at: "2016-12-12"
+                  type: "invoice.renewal"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+                  payment:
+                    payable: true
+                    currency: SEK
+                    due_date: "2017-01-01"
+                    total_owed: "123.50"
+                    type: SE_OCR
+                    method: "1"
+                    account: "12345"
+                    reference: 426523791
+              content to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: Sample Content to Company
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
+
+  # ##############################################
+  # GET,POST /v1/tenant/TKEY/agreement
   # ##############################################
   /v1/tenant/{tenantKey}/agreement:
     post:
@@ -2095,8 +2448,6 @@ paths:
           application/json:
             schema: {}
 
-
-
   # ##############################################
   # POST /v3/company/match/plus_active
   # ##############################################
@@ -2126,10 +2477,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CompanyMatch"
-              items:
-                {
-                  "vat_numbers": ["SE556840226601"]
-                }
+              items: { "vat_numbers": ["SE556840226601"] }
 
 components:
   schemas:
@@ -2140,6 +2488,8 @@ components:
       type: object
       required:
         - ssn
+        - subject
+        - files
       properties:
         ssn:
           description: |
@@ -2155,23 +2505,44 @@ components:
           type: string
           format: ISO8601
           example: "2016-12-12"
-          description: Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
+            The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         type:
           type: string
           example: "letter"
           description: |
-            Optional attribute providing information about the type of content being sent. The type of a content may influence how the user interacts with the content and how the user is notified about the content.
-              Allowed values are:
-              - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
-              - `"letter.salary"`: indicating that the content is a salary specification.
-              - `"letter.creditnotice"`: indicating that the content is a creditnotice.
-              - `"invoice"`: indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. This is the default type for all payable content.
-              - `"invoice.reminder"`: indicating that the content is an invoice, a reminder for a previously unpaid invoice. The invoice might include late fees and other differences compared to the original invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-              - `"invoice.debtcampaign"`: indicating that the content is an invoice or payment plan from a debt collection company. The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". This content types enables long due dates with a longer notification scheme
-              - `"invoice.renewal"`: indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-              - `"booking"`: indicating that the content is a booking/appointement.
+            Optional attribute providing information about the type of content being sent. 
+            The type of a content may influence how the user interacts with the content and how the user is notified about the content.
+            Allowed values are:
+            - `"letter"`: |
+              indicating that the content is an information letter. This is the default type for all non-payable content.
+            - `"letter.salary"`: |
+              indicating that the content is a salary specification.
+            - `"letter.creditnotice"`: |
+              indicating that the content is a creditnotice.
+            - `"invoice"`: |
+              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. 
+              This is the default type for all payable content.
+            - `"invoice.reminder"`: |
+              indicating that the content is an invoice, a reminder for a previously unpaid invoice. 
+              The invoice might include late fees and other differences compared to the original invoice. 
+              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"invoice.debtcampaign"`: |
+              indicating that the content is an invoice or payment plan from a debt collection company. 
+              The invoice might include fees such as interest and reminder fees. 
+              A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". 
+              This content type enables long due dates with a longer notification scheme
+            - `"invoice.renewal"`: |
+              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. 
+              It can be used to send an offer to renew a subscription, insurance or similar. 
+              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"booking"`: |
+            indicating that the content is a booking/appointement.
         retain:
-          description: Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. Please note that retain must never be set to `true` for payable content.
+          description: |
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. 
+            Please note that retain must never be set to `true` for payable content.
           type: boolean
           writeOnly: true
           example: false
@@ -2199,15 +2570,100 @@ components:
               properties:
                 payment_or_payment_multiple_options:
                   oneOf:
-                    - $ref: '#/components/schemas/Payment'
-                    - $ref: '#/components/schemas/PaymentMultipleOptions'
+                    - $ref: "#/components/schemas/Payment"
+                    - $ref: "#/components/schemas/PaymentMultipleOptions"
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
             booking:
               description: Optionally specify booking information
-              $ref: '#/components/schemas/Booking'
+              $ref: "#/components/schemas/Booking"
+
+    # ##############################################
+    # SCHEMA Content_user_v2
+    # ##############################################
+    Content_user_v2:
+      type: object
+      required:
+        - ssn
+        - subject
+        - parts
+      properties:
+        ssn:
+          description: |
+            User's unique SSN, according to the `YYYYMMDDnnnn` format
+          type: string
+          writeOnly: true
+          example: "191212121212"
+        subject:
+          description: |
+            This subject/title will be visibile in the Recipients Inbox.
+          type: string
+          example: "Sample Invoice"
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2016-12-12"
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
+            The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+        type:
+          type: string
+          example: "letter"
+          description: |
+            Optional attribute providing information about the type of content being sent. 
+            The type of a content may influence how the user interacts with the content and how the user is notified about the content.
+            Allowed values are:
+            - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
+            - `"letter.salary"`: indicating that the content is a salary specification.
+            - `"letter.creditnotice"`: indicating that the content is a creditnotice.
+            - `"invoice"`: |
+              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. 
+              This is the default type for all payable content.
+            - `"invoice.reminder"`: |
+              indicating that the content is an invoice, a reminder for a previously unpaid invoice. 
+              The invoice might include late fees and other differences compared to the original invoice. 
+              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"invoice.debtcampaign"`: |
+              indicating that the content is an invoice or payment plan from a debt collection company. 
+              The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". 
+              This content types enables long due dates with a longer notification scheme
+            - `"invoice.renewal"`: |
+              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. 
+              It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"booking"`: indicating that the content is a booking/appointement.
+        retain:
+          description: |
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. 
+            Please note that retain must never be set to `true` for payable content.
+          type: boolean
+          writeOnly: true
+          example: false
+        retention_time:
+          description: |
+            How long to retain a Content. Supported values: `"30"` and `"390"`
+          type: string
+          writeOnly: true
+          example: "30"
+          enum: ["30", "390"]
+        parts:
+          description: Array of file Objects
+          type: array
+          writeOnly: true
+          items:
+            $ref: "#/components/schemas/Parts_Responsive"
+        payment:
+          type: object
+          description: Optionally specify invoice information, please notice that you cannot have both payment and payment_multiple_options in the same payload
+          $ref: "#/components/schemas/Payment"
+        payment_multiple_options:
+          type: object
+          description: Optionally specify multiple payment options, please notice that you cannot have both payment and payment_multiple_options in the same payload
+          $ref: "#/components/schemas/PaymentMultipleOptions"
+        booking:
+          description: Optionally specify booking information
+          $ref: "#/components/schemas/Booking"
 
     # ##############################################
     # SCHEMA Content_company
@@ -2292,9 +2748,11 @@ components:
           enum: ["paid", "unpaid"]
         currency:
           type: string
-          format: ISO4217
+          enum:
+            - SEK
           example: "SEK"
-          description: Currency used in specifying `total_owed`
+          description: |
+            Currency used in specifying `total_owed`. In Sweden, only SEK is accepted.
         due_date:
           type: string
           format: ISO8601
@@ -2367,9 +2825,11 @@ components:
           description: Tenant’s account number
         currency:
           type: string
-          format: ISO4217
+          enum:
+            - SEK
           example: "SEK"
-          description: Currency used in specifying `amount`
+          description: |
+            Currency used in specifying `amount`. In Sweden, only SEK is allowed.
         options:
           type: array
           description: "A list of payment options, where each option should differ in either `amount` or `reference`"
@@ -2921,6 +3381,50 @@ components:
           example: "application/pdf"
 
     # ##############################################
+    # SCHEMA Parts_Responsive
+    # ##############################################
+    Parts_Responsive:
+      type: object
+      required:
+        - name
+        - data
+        - content_type
+      properties:
+        name:
+          description: Arbritrary file-name
+          type: string
+          example: document.pdf
+        data:
+          description: Base64-encoded data for the PDF content
+          type: string
+          format: "Base64-encoded data"
+          example: REVBREJFRUY=
+        content_type:
+          description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type for PDF files "application/pdf"
+          type: string
+          example: "application/pdf"
+        responsive_part:
+          type: object
+          required:
+            - name
+            - data
+            - content_type
+          properties:
+            name:
+              description: Arbritrary file-name
+              type: string
+              example: document.html
+            data:
+              description: Base64-encoded data for the HTML document
+              type: string
+              format: "Base64-encoded HTML data"
+              example: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+            content_type:
+              description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type for HTML content "text/html"
+              type: string
+              example: "text/html"
+
+    # ##############################################
     # SCHEMA Icon
     # ##############################################
     Icon:
@@ -2935,12 +3439,12 @@ components:
           example: filename.pdf
         data:
           description: >
-                Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
-                100 kB before encoding. The image format must be PNG.
-                The image must be quadratic (that is, width and height
-                must be the same). The sides must be at least 256
-                pixels long, and at most 512 pixels long. The image
-                must have an alpha channel.
+            Base64-encoded data. Max size is 134 kB when encoded which is roughly equivalent to
+            100 kB before encoding. The image format must be PNG.
+            The image must be quadratic (that is, width and height
+            must be the same). The sides must be at least 256
+            pixels long, and at most 512 pixels long. The image
+            must have an alpha channel.
           type: string
           format: "Base64-encoded data"
           example: REVBREJFRUY=
@@ -2950,19 +3454,18 @@ components:
           enum: ["image/png"]
           example: "image/png"
 
-
     # ##############################################
     # SCHEMA TenantIcon
     # ##############################################
     TenantIcon:
       allOf:
-        - $ref: '#/components/schemas/Icon'
+        - $ref: "#/components/schemas/Icon"
         - type: object
           properties:
             data:
               description: Base64-encoded data
               type: string
-              format: 'Base64-encoded data'
+              format: "Base64-encoded data"
               example: REVBREJFRUY=
 
     # ##############################################
@@ -2970,7 +3473,7 @@ components:
     # ##############################################
     PaymentOptionIcon:
       allOf:
-        - $ref: '#/components/schemas/Icon'
+        - $ref: "#/components/schemas/Icon"
         - type: object
           properties:
             data:

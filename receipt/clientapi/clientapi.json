@@ -204,6 +204,39 @@
                 }
             }
         },
+        "/api/v1/persons/{personID}/restore": {
+            "get": {
+                "operationId": "restorePerson",
+                "summary": "Restore a person",
+                "description": "Restore a person that has been marked for deletion",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "successfully onboarded person",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
         "/api/v1/persons/{personID}/onboard": {
             "put": {
                 "operationId": "OnboardPerson",
@@ -479,9 +512,44 @@
                     },
                     {
                         "$ref": "#/components/parameters/Search"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptList" },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "personReceipts",
+                "summary": "Get receipts",
+                "description": "Fetch a list of all receipts for the given personID.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
                     },
                     {
-                        "$ref": "#/components/parameters/Q"
+                        "$ref": "#/components/parameters/Limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Offset"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortBy"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Search"
                     }
                 ],
                 "responses": {
@@ -498,7 +566,82 @@
                         "$ref": "#/components/responses/InternalError"
                     }
                 }
+            },
+            "delete": {
+                "operationId": "personReceipts",
+                "summary": "empty receipts trash bin",
+                "description": "Deletes all receipts belonging to a person that have previously been trashed.",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Receipt successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
             }
+        },
+        "/api/v1/persons/{personID}/receipts/trash": {
+            "put": {
+                "operationId": "trashReceipts",
+                "summary": "Trash receipts",
+                "description": "Bulk trash receipts",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Takes in a list of receipt ID's to trash",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TrashReceiptsList"
+                            },
+                            "example": {
+                                "receipts": [
+                                    "receipt_id_1",
+                                    "receipt_id_2",
+                                    "..."
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ReceiptList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            },
         },
         "/api/v1/persons/{personID}/gdpr": {
             "get": {
@@ -604,6 +747,38 @@
                 }
             }
         },
+        "/api/v1/persons/{personID}/receipts/{receiptID}/attachments/{attachmentID}": {
+            "get": {
+                "operationId": "personAttachments",
+                "summary": "Fetch an attachment",
+                "description": "Fetch an attachment belonging to a person",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ReceiptID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/AttachmentID"
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AttachmentResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
         "/api/v1/persons/{personID}/chains": {
             "get": {
                 "operationId": "personChains",
@@ -626,6 +801,35 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/ChainList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}": {
+            "get": {
+                "operationId": "personChain",
+                "summary": "Get chain",
+                "description": "Fetch a single chain",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ChainObject"
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
@@ -665,9 +869,6 @@
                     },
                     {
                         "$ref": "#/components/parameters/Search"
-                    },
-                    {
-                        "$ref": "#/components/parameters/Q"
                     }
                 ],
                 "responses": {
@@ -679,6 +880,112 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}/reject": {
+            "put": {
+                "operationId": "RejectChainReceipts",
+                "summary": "Reject chain",
+                "description": "Reject all new receipts from the given chainID for the given personID",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chain rejected.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "description": "This person has already rejected this chain",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": "10103",
+                                    "error_message": "Nothing to do",
+                                    "error_detail": [
+                                        "Chain already rejected"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalError"
+                    }
+                }
+            }
+        },
+        "/api/v1/persons/{personID}/chains/{chainID}/restore": {
+            "put": {
+                "operationId": "RestoreChainReceipts",
+                "summary": "Restore chain",
+                "description": "Start receiving receipts again from given chainID for the given personID",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PersonID"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ChainID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chain restored.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "description": "This person hasn't rejected this chain",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "error_code": "10103",
+                                    "error_message": "Nothing to do",
+                                    "error_detail": [
+                                        "Chain wasn't rejected by the user."
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "$ref": "#/components/responses/InternalError"
@@ -938,112 +1245,6 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/NotFoundError"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/InternalError"
-                    }
-                }
-            }
-        },
-        "/api/v1/persons/{personID}/chains/{chainID}/reject": {
-            "put": {
-                "operationId": "RejectChainReceipts",
-                "summary": "Reject chain",
-                "description": "Reject all new receipts from the given chainID for the given personID",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/PersonID"
-                    },
-                    {
-                        "$ref": "#/components/parameters/ChainID"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Chain rejected.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/BadRequestError"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "409": {
-                        "description": "This person has already rejected this chain",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                },
-                                "example": {
-                                    "error_code": "10103",
-                                    "error_message": "Nothing to do",
-                                    "error_detail": [
-                                        "Chain already rejected"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/InternalError"
-                    }
-                }
-            }
-        },
-        "/api/v1/persons/{personID}/chains/{chainID}/restore": {
-            "put": {
-                "operationId": "RestoreChainReceipts",
-                "summary": "Restore chain",
-                "description": "Start receiving receipts again from given chainID for the given personID",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/PersonID"
-                    },
-                    {
-                        "$ref": "#/components/parameters/ChainID"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Chain restored.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/BadRequestError"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/UnauthorizedError"
-                    },
-                    "409": {
-                        "description": "This person hasn't rejected this chain",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                },
-                                "example": {
-                                    "error_code": "10103",
-                                    "error_message": "Nothing to do",
-                                    "error_detail": [
-                                        "Chain wasn't rejected by the user."
-                                    ]
-                                }
-                            }
-                        }
                     },
                     "500": {
                         "$ref": "#/components/responses/InternalError"
@@ -1433,6 +1634,15 @@
                     "id"
                 ]
             },
+            "ChainObject": {
+                "title": "Single chain object information",
+                "type": "object",
+                "properties": {
+                    "chain": {
+                        "$ref": "#/components/schemas/Chain"
+                    }
+                }
+            },
             "ChainList": {
                 "title": "List of chains",
                 "type": "object",
@@ -1447,40 +1657,10 @@
                         "type": "integer"
                     },
                     "chains": {
-                        "title": "Chain list",
+                        "title": "Chain Information",
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "logo_url": {
-                                    "type": "string",
-                                    "nullable": true
-                                },
-                                "icon_url": {
-                                    "type": "string",
-                                    "nullable": true
-                                },
-                                "num_receipts": {
-                                    "type": "integer"
-                                },
-                                "is_rejected": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "logo_id",
-                                "icon_id",
-                                "num_receipts",
-                                "is_rejected"
-                            ]
+                            "$ref": "#/components/schemas/Chain"
                         }
                     }
                 },
@@ -1488,7 +1668,7 @@
                     "total",
                     "offset",
                     "limit",
-                    "receipts"
+                    "chains"
                 ]
             },
             "ChainListAll": {
@@ -1601,6 +1781,18 @@
                             "$ref": "#/components/schemas/Returns"
                         }
                     },
+                    "campaigns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Campaigns"
+                        }
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tags"
+                        }
+                    },
                     "item_display_fields": {
                         "type": "array",
                         "description": "The extra fields from receipt items that should be displayed in the app",
@@ -1626,6 +1818,47 @@
                     "returns"
                 ]
             },
+            "Chain": {
+                "title": "A single chain information",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "icon_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "num_receipts": {
+                        "type": "integer"
+                    },
+                    "is_rejected": {
+                        "type": "boolean"
+                    },
+                    "user_identifiers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "logo_url",
+                    "icon_url",
+                    "num_receipts",
+                    "is_rejected",
+                    "user_identifiers"
+                ]
+            },
             "Parents": {
                 "title": "List with related parent receipts",
                 "type": "object",
@@ -1646,6 +1879,155 @@
                     }
                 }
             },
+            "TrashReceiptsList": {
+                "title": "Moves a list of receipts to the trash bin",
+                "type": "array",
+                "items": {
+                    "receipts": {
+                        "type": "string",
+                        "description": "List of receipt ids to trash",
+                    }
+                },
+                "required": [
+                    "receipts"
+                ]
+            },
+            "Attachments": {
+                "title": "Attachments of receipts",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "content_type": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "valid_from": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "valid_to": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "AttachmentWData": {
+                "title": "Attachments of receipts",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "content_type": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "valid_from": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "valid_to": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "data": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Recalls": {
+                "title": "Recalls of receipts",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecallMessage"
+                        }
+                    }
+                }
+            },
+            "RecallMessage": {
+                "title": "Messages of recalls",
+                "type": "object",
+                "properties": {
+                    "locale": {
+                        "type": "string"
+                    },
+                    "headline": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Campaigns": {
+                "title": "Campaigns of receipts",
+                "type": "object",
+                "properties": {
+                    "destination_url": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "height": {
+                        "type": "number"
+                    },
+                    "width": {
+                        "type": "number"
+                    },
+                    "key": {
+                        "type": "string"
+                    },
+                    "position": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Tags": {
+                "title": "Tags of receipts",
+                "type": "object",
+                "properties": {
+                    "icon": {
+                        "type": "string"
+                    },
+                    "key": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
             "Returns": {
                 "title": "List with related return receipts",
                 "type": "object",
@@ -1653,10 +2035,10 @@
                     "receipt_id": {
                         "type": "string"
                     },
-                    "Items": {
+                    "items": {
                         "type": "object"
-                        }
                     }
+                }
             },
             "ReceiptItem": {
                 "title": "Receipt item",
@@ -1710,6 +2092,24 @@
                     "store_icon_url": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tags"
+                        }
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Attachments"
+                        }
+                    },
+                    "recall": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Recalls"
+                        }
                     }
                 },
                 "required": [
@@ -1924,6 +2324,15 @@
                     "type": "string"
                 }
             },
+            "AttachmentID": {
+                "name": "attachmentID",
+                "in": "path",
+                "description": "Attachment ID",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "ReceiptID": {
                 "name": "receiptID",
                 "in": "path",
@@ -1985,16 +2394,17 @@
             "Include": {
                 "name": "include",
                 "in": "query",
-                "description": "what chains to to include",
+                "description": "what chains to include",
                 "required": false,
                 "schema": {
                     "type": "string",
                     "enum": [
                         "activated",
                         "rejected",
-                        "all"
+                        "all",
+                        "receipt_received"
                     ],
-                    "default": "activated"
+                    "default": "receipt_received"
                 }
             },
             "Limit": {
@@ -2072,15 +2482,6 @@
                         "desc"
                     ],
                     "default": "desc"
-                }
-            },
-            "Q": {
-                "name": "q",
-                "in": "query",
-                "description": "Search based on individual fields",
-                "required": false,
-                "schema": {
-                    "type": "string"
                 }
             },
             "Search": {
@@ -2480,6 +2881,26 @@
                     }
                 }
             },
+            "AttachmentResponse": {
+                "description": "Attachment succesfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AttachmentWData"
+                        },
+                        "example": {
+                            "id": "8a499ffa488cdce401488cf8c5d700cd",
+                            "content_type": "application/json",
+                            "type": "insurance",
+                            "name": "Attachment Name",
+                            "description": "Description of attachment",
+                            "valid_from": "2022-05-01",
+                            "valid_to": "2022-05-05",
+                            "data": "YmFzZTY0IGVuY29kZWQgdGV4dA=="
+                        }
+                    }
+                }
+            },
             "ChainList": {
                 "description": "List of chains successfully fetched",
                 "content": {
@@ -2501,6 +2922,24 @@
                                     "is_rejected": false
                                 }
                             ]
+                        }
+                    }
+                }
+            },
+            "ChainObject": {
+                "description": "Chain successfully fetched",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ChainObject"
+                        },
+                        "example": {
+                            "id": "8a499ffa488cdce401488cf8c5d700cd",
+                            "name": "Test Chain",
+                            "logo_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d7",
+                            "icon_url": "https://test.digitalreceipts.net/api/v1/resources/8a499ffa488cdce401488cf9644500d1",
+                            "num_receipts": 11,
+                            "is_rejected": false
                         }
                     }
                 }
