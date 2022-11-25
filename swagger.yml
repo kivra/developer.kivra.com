@@ -749,8 +749,8 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API - Form"
-    description: Endpoints for working with forms
+  - name: "Tenant API - Forms"
+    description: Endpoints for working with form templates and responses
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -764,7 +764,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
-      - "Tenant API - Form"
+      - "Tenant API - Forms"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -1702,6 +1702,19 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              form to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    form:
+                      id: 2877d684-a340-4e4c-867f-d93283787b01
 
   # ##############################################
   # POST /v2/tenant/TKEY/content
@@ -2049,25 +2062,174 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-
+              
   # ##############################################
-  # POST /v2/tenant/TKEY/content
+  # POST, GET /v1/tenant/TKEY/form
   # ##############################################
-  /v1/tenant/{tkey}/form:
+  /v1/tenant/{tenantKey}/form:
     post:
       tags:
-        - "Tenant API - Form"
-      summary: Create form
-      operationId: Send responsive content
+        - "Tenant API - Forms"
+      summary: Create a form template
+      operationId: Create form template
       description: |
-        Describe what this API does and how to use it.
+        A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
+
+        ### How to send a form to the user
+        When sending a content to the user include the form template id in the context object. See `POST /v1/tenant/{tenantKey}/content` for more information.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v1.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key for the tenant who is creating the form template.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form template created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplate"
+    get:
+      tags:
+        - "Tenant API - Forms"
+      summary: Get form ids
+      operationId: Get Form Ids
+      description: |
+        Given a tenant key returns all form template ids associated with forms they created.
       security:
         - oAuth2Client:
             - "post:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
-          description: The unique Key for a Tenant for whom the form belongs to
+          description: The unique key for a tenant for whom the form templates belongs to
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            List of form template ids
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormId"
+
+  # ##############################################
+  # GET /v1/tenant/{tkey}/form/{formId}
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formId}:
+    get:
+      tags:
+        - "Tenant API - Forms"
+      summary: Get form
+      operationId: Get form
+      description: |
+        Given a tenant key and a form template id returns the form template that the tenant created.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form template belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formId
+          in: path
+          description: The form template id associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+ 
+  # ##############################################
+  # GET /v1/tenant/{tkey}/form/{formid}/responses
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{form_id}/responses:
+    get:
+      tags:
+        - "Tenant API - Forms"
+      summary: Get form response ids
+      operationId: Get form response ids
+      description: |
+        Get the form response ids associated with a form template
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form responses belong to
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: form_id
+          in: path
+          description: The form_id associated with the form responses
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form Response Ids
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponseIds"
+
+  # ##############################################
+  # GET, DELETE /v1/tenant/{tkey}/form/{formid}/responses/{respid}
+  # ##############################################
+  /v1/tenant/{tkey}/form/{formid}/responses/{respid}:
+    get:
+      tags:
+        - "Tenant API - Forms"
+      operationId: Get form response.
+      description: |
+        Gets a form response for the given form response id
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form response belongs to
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: respid
+          in: path
+          description: The response id associated with the form responses
           required: true
           schema:
             type: string
@@ -2080,59 +2242,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormResponse"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Content_form_v1"
-            examples:
-              Create form:
-                value:
-                  ssn: "191212121212"
-                  subject: Sample Invoice to User
-                  generated_at: "2016-12-12"
-                  type: "invoice"
-                  parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
-                  payment:
-                    payable: true
-                    currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
-                    method: "1"
-                    account: "12345"
-                    reference: 426523791
-              Create form with options:
-                value:
-                  ssn: "191212121212"
-                  subject: Sample Invoice to User
-                  generated_at: "2016-12-12"
-                  type: "invoice"
-                  parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
-                  payment:
-                    payable: true
-                    currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
-                    method: "1"
-                    account: "12345"
-                    reference: 426523791
-              
+    delete:
+      tags:
+        - "Tenant API - Forms"
+      summary: Delete form response
+      operationId: Send responsive content
+      description: |
+        Deletes a form response.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant for whom the form belongs to
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: form_id
+          in: path
+          description: The form_id associated with the form template
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: respid
+          in: path
+          description: The response id associated with the form responses
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form deleted
+
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
   # ##############################################
@@ -2663,6 +2809,16 @@ components:
             booking:
               description: Optionally specify booking information
               $ref: "#/components/schemas/Booking"
+            form:
+              required:
+                - id
+              type: object
+              description: The form you would like to attach to this content.
+              properties:
+                id:
+                  type: string
+                  description: The form template id
+                  example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
     # SCHEMA Content_user_v2
@@ -2749,123 +2905,241 @@ components:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
 
-  # ##############################################
-    # SCHEMA Content_Form
     # ##############################################
-    Content_form_v1:
+    # SCHEMA Form Template
+    # ##############################################
+    FormTemplate:
       type: object
       required:
         - title
-        - description
-        - fields
-      properties:
-        title:
-          description: |
-            todo
-          type: string
-          writeOnly: true
-          example: "todo"
-        description:
-          description: |
-            todo
-          type: string
-          writeOnly: true
-          example: "todo"
-        fields:
-          description: |
-            todo
-          type: array
-          writeOnly: true
-          items:
-            $ref: "#/components/schemas/FormField"
-    FormResponse:
-      type: object
-      required:
-        - created_at
         - description
         - fields
         - form_id
         - sender_id
-        - title
+        - created_at
       properties:
-        created_at:
-          type: string
-          example: "todo"
-          description: |
-            todo
-        description:
-          type: string
-          example: "todo"
-          description: |
-            todo
-        form_id:
-          type: string
-          example: "todo"
-          description: |
-            todo
-        sender_id:
-          type: string
-          example: "todo"
-          description: |
-            todo
         title:
           type: string
-          example: "todo"
           description: |
-            todo
+            The title of the form
+          example: Customer KYC
+        description:
+          type: string
+          description: |
+            The purpose of the form.
+          example: Your bank has some questions
         fields:
-          description: |
-            todo
           type: array
+          description: |
+            The questions that you want to ask the user.
           items:
             $ref: "#/components/schemas/FormField"
-          example:
-            - type: "free_text"
-              label: "First Name"
-              name: "first_name"
+          example: 
+            - label: How many times per month do you deposit into your account?
+              name: number_deposits
+              type: number
+            - label: What is the largest amount deposited?
+              name: largest_sum
+              type: options
+              values:
+                - id: small
+                  label: 10000 - 20000
+                - id: medium
+                  label: 20000 - 30000
+                - id: large
+                  label: 30000 - 40000
+            - label: Do you have any further comments?
+              name: comments
+              type: free_text
+        form_id:
+          type: string
+          description: |
+            The id of the newly created form template.
+          readOnly: true
+          example: "2877d684-a340-4e4c-867f-d93283787b01"
+        sender_id:
+          type: string
+          format: hexadecimal
+          description: |
+            The tenant key of the tenant that created the form template.
+          readOnly: true
+          example: "1341543157b3a8c66f220b2164b2e13789d2d04015"
+        created_at:
+          type: string
+          description: |
+            The date the form template was created.
+          readOnly: true
+          example: "2022-11-23T14:51:23.874434Z"
     FormField:
       type: object
+      required:
+        - type
+        - label
+        - name
       properties:
         type:
-          description: |
-            todo
           type: string
-          writeOnly: true
-          example: "todo"
+          enum: [free_text, number, options]
+          description: |
+            The input type required to answer the question.
+
+            `free_text` is a string.
+
+            `number` is an integer or a floating point number.
+
+            `options` is a string that has a finite amount of values e.g. yes or no question.
         label:
-          description: |
-            todo
           type: string
-          writeOnly: true
-          example: "todo"
+          description: |
+            Human readable description of what the question is.
         name:
-          description: |
-            todo
           type: string
-          writeOnly: true
-          example: "todo"
-        values:
           description: |
-            todo
-          writeOnly: true
+            A key used to identify the question.
+        values:
+          type: array
+          description: |
+            When `type` is `options` then use this to specify the answers that the user can select.
           items:
-            $ref: "#/components/schemas/FormValue"
-    FormValue:
+            $ref: "#/components/schemas/FormOption"
+    FormOption:
       type: object
+      required:
+        - id
+        - label
       properties:
         id:
-          description: |
-            todo
           type: string
-          writeOnly: true
-          example: "todo"
+          description: |
+            A key used to identify the answer.
         label:
-          description: |
-            todo
           type: string
-          writeOnly: true
-          example: "todo"
+          description: |
+            A human readable description of the answer.
+    FormId:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: |
+            A key used to identify the form template
+          example: 
+            "2877d684-a340-4e4c-867f-d93283787b01"
     
+    # ##############################################
+    # SCHEMA Form Response
+    # ##############################################  
+    FormResponseIds:
+      type: object
+      required:
+        - form_id
+        - responses
+      properties:
+        form_id:
+          type: string
+          example: 
+            "2877d684-a340-4e4c-867f-d93283787b01"
+          description: |
+            The form_id associated with the form responses
+        responses:
+          type: array
+          description: |
+            Metadata about the form response 
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 
+                  bed773d7-9029-42f2-9f0b-0729390c962c
+                description: |
+                  A key used to identify the individual form response
+    FormResponse:
+      type: object
+      required:
+        - id
+        - form_id
+        - responses
+        - matched_by
+      properties:
+        id:
+          type: string
+          example: 
+            "2877d684-a340-4e4c-867f-d93283787b01"
+          description:
+              The form response id
+        form_id:
+          type: string
+          example: 
+            "2877d684-a340-4e4c-867f-d93283787b01"
+          description:
+             The form template id
+        responses:
+          type: object
+          description:
+            The form response that the user submitted
+          required:
+            - name
+            - value
+            - type
+          properties:
+            name:
+              type: string
+              description: |
+                A key used to identify the question
+            value:
+              type: object
+              additionalProperties:
+                oneOf:
+                  - type: string
+                  - type: number
+              description: |
+                The response to the question
+            type:
+              type: string
+              enum: [free_text, number, options]
+              description: |
+                The input type required to answer the question.
+
+                `free_text` is a string.
+
+                `number` is an integer or a floating point number.
+
+                `options` is a string that has a finite amount of values e.g. yes or no question.
+          example:
+             - name: number_deposits
+               value: 1
+               type: number
+             - name: largest_sum
+               value: small
+               type: options
+             - name: comments
+               value: No further comments
+               type: free_text
+        matched_by:
+          type: object
+          description:
+            Used to identify the user that answered the form
+          required:
+            - type
+            - value
+          properties:
+            type:
+              type: string
+              enum: [ssn, email]
+              description:
+                How the user that answered the form was identified.
+            value:
+              type: string
+              description:
+                Represents a value used to identify a user e.g. ssn or email.
+          example:
+            type: ssn
+            value: 199202286837
+
+
     # ##############################################
     # SCHEMA Content_company
     # ##############################################
