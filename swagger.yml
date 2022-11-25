@@ -2070,8 +2070,8 @@ paths:
     post:
       tags:
         - "Tenant API - Forms"
-      summary: Create a form template
-      operationId: Create form template
+      summary: Create form template
+      operationId: createFormTemplate
       description: |
         A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
 
@@ -2104,8 +2104,8 @@ paths:
     get:
       tags:
         - "Tenant API - Forms"
-      summary: Get form ids
-      operationId: Get Form Ids
+      summary: Get form template ids
+      operationId: getFormTemplateIds
       description: |
         Given a tenant key returns all form template ids associated with forms they created.
       security:
@@ -2114,7 +2114,7 @@ paths:
       parameters:
         - name: tenantKey
           in: path
-          description: The unique key for a tenant for whom the form templates belongs to
+          description: The unique key for a tenant for whom the form templates belongs to.
           required: true
           schema:
             type: string
@@ -2137,8 +2137,8 @@ paths:
     get:
       tags:
         - "Tenant API - Forms"
-      summary: Get form
-      operationId: Get form
+      summary: Get form template
+      operationId: getFormTemplate
       description: |
         Given a tenant key and a form template id returns the form template that the tenant created.
       security:
@@ -2171,28 +2171,28 @@ paths:
   # ##############################################
   # GET /v1/tenant/{tkey}/form/{formid}/responses
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{form_id}/responses:
+  /v1/tenant/{tenantKey}/form/{formId}/responses:
     get:
       tags:
         - "Tenant API - Forms"
       summary: Get form response ids
-      operationId: Get form response ids
+      operationId: getFormResponseIds
       description: |
-        Get the form response ids associated with a form template
+        Given a tenant key and a form template id returns the form response ids associated with form responses submitted by users.
       security:
         - oAuth2Client:
             - "post:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
-          description: The unique key for a tenant for whom the form responses belong to
+          description: The unique key for a tenant for whom the form responses belong to.
           required: true
           schema:
             type: string
             format: hexadecimal
-        - name: form_id
+        - name: formId
           in: path
-          description: The form_id associated with the form responses
+          description: The form template id associated with the form responses.
           required: true
           schema:
             type: string
@@ -2200,7 +2200,7 @@ paths:
       responses:
         200:
           description: |
-            Form Response Ids
+            Form response ids
           content:
             application/json:
               schema:
@@ -2209,27 +2209,36 @@ paths:
   # ##############################################
   # GET, DELETE /v1/tenant/{tkey}/form/{formid}/responses/{respid}
   # ##############################################
-  /v1/tenant/{tkey}/form/{formid}/responses/{respid}:
+  /v1/tenant/{tkey}/form/{formId}/responses/{responseId}:
     get:
       tags:
         - "Tenant API - Forms"
-      operationId: Get form response.
+      summary: Get form response
+      operationId: getFormResponse
       description: |
-        Gets a form response for the given form response id
+        Given a tenant key, form template id and form response id returns 
+        the form response submitted by a user.
       security:
         - oAuth2Client:
             - "post:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
-          description: The unique key for a tenant for whom the form response belongs to
+          description: The unique key for a tenant for whom the form response belongs to.
           required: true
           schema:
             type: string
             format: hexadecimal
-        - name: respid
+        - name: formId
           in: path
-          description: The response id associated with the form responses
+          description: The form template id associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: responseId
+          in: path
+          description: The response id associated with the form response.
           required: true
           schema:
             type: string
@@ -2237,7 +2246,7 @@ paths:
       responses:
         200:
           description: |
-            Form created
+            Form response
           content:
             application/json:
               schema:
@@ -2246,30 +2255,33 @@ paths:
       tags:
         - "Tenant API - Forms"
       summary: Delete form response
-      operationId: Send responsive content
+      operationId: deleteFormResponse
       description: |
-        Deletes a form response.
+        Given a tenant key, form template id and form response id deletes 
+        the form response submitted by a user.
+
+        This enables you to not store any potentially sensitive information about users longer than is necessary in Kivra.
       security:
         - oAuth2Client:
             - "post:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
-          description: The unique Key for a Tenant for whom the form belongs to
+          description: The unique Key for a Tenant for whom the form belongs to.
           required: true
           schema:
             type: string
             format: hexadecimal
-        - name: form_id
+        - name: formId
           in: path
-          description: The form_id associated with the form template
+          description: The form_id associated with the form template.
           required: true
           schema:
             type: string
             format: hexadecimal
-        - name: respid
+        - name: responseId
           in: path
-          description: The response id associated with the form responses
+          description: The response id associated with the form responses.
           required: true
           schema:
             type: string
@@ -2921,7 +2933,7 @@ components:
         title:
           type: string
           description: |
-            The title of the form
+            The title of the form.
           example: Customer KYC
         description:
           type: string
@@ -3024,9 +3036,9 @@ components:
         id:
           type: string
           description: |
-            A key used to identify the form template
+            A key used to identify the form template.
           example: 
-            "2877d684-a340-4e4c-867f-d93283787b01"
+            2877d684-a340-4e4c-867f-d93283787b01
     
     # ##############################################
     # SCHEMA Form Response
@@ -3039,10 +3051,10 @@ components:
       properties:
         form_id:
           type: string
-          example: 
-            "2877d684-a340-4e4c-867f-d93283787b01"
           description: |
-            The form_id associated with the form responses
+            The form template id associated with the form responses.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
         responses:
           type: array
           description: |
@@ -3052,10 +3064,10 @@ components:
             properties:
               id:
                 type: string
+                description: |
+                  A key used to identify the individual form response.
                 example: 
                   bed773d7-9029-42f2-9f0b-0729390c962c
-                description: |
-                  A key used to identify the individual form response
     FormResponse:
       type: object
       required:
@@ -3066,20 +3078,20 @@ components:
       properties:
         id:
           type: string
-          example: 
-            "2877d684-a340-4e4c-867f-d93283787b01"
           description:
               The form response id
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
         form_id:
           type: string
-          example: 
-            "2877d684-a340-4e4c-867f-d93283787b01"
           description:
-             The form template id
+             The form template id.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
         responses:
           type: object
           description:
-            The form response that the user submitted
+            The form response that the user submitted.
           required:
             - name
             - value
@@ -3088,7 +3100,7 @@ components:
             name:
               type: string
               description: |
-                A key used to identify the question
+                A key used to identify the question.
             value:
               type: object
               additionalProperties:
@@ -3096,7 +3108,7 @@ components:
                   - type: string
                   - type: number
               description: |
-                The response to the question
+                The response to the question.
             type:
               type: string
               enum: [free_text, number, options]
@@ -3131,13 +3143,12 @@ components:
               enum: [ssn, email]
               description:
                 How the user that answered the form was identified.
+              example: ssn
             value:
               type: string
               description:
                 Represents a value used to identify a user e.g. ssn or email.
-          example:
-            type: ssn
-            value: 199202286837
+              example: 199202286837
 
 
     # ##############################################
