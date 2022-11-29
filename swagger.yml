@@ -2096,6 +2096,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormTemplate"
+        400:
+          description: |
+            Request body is not valid JSON or does not conform to the schema.
+        401:
+          description: |
+            Not authorized to make the request.
       requestBody:
         content:
           application/json:
@@ -2123,12 +2129,9 @@ paths:
         200:
           description: |
             List of form template ids
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FormId"
+        401:
+          description: |
+            Not authorized to make the request
 
   # ##############################################
   # GET /v1/tenant/{tkey}/form/{formId}
@@ -2167,6 +2170,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormTemplate"
+        401:
+          description: |
+            Not authorized to make the request
+        404:
+          description: |
+            Form template not found
  
   # ##############################################
   # GET /v1/tenant/{tkey}/form/{formid}/responses
@@ -2205,6 +2214,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormResponseIds"
+        400:
+          description: |
+            The request is malformed. This happens when the formId is not a UUID (V4).
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            The form template associated with formId does not exist.
+
 
   # ##############################################
   # GET, DELETE /v1/tenant/{tkey}/form/{formid}/responses/{respid}
@@ -2251,6 +2273,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormResponse"
+        400:
+          description: |
+            The request is malformed. This happens when the formId or responseId is not a UUID (V4).
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            Either the form template associated with the given formId does not exist or the form response associated with the given responseId does not exist.
     delete:
       tags:
         - "Tenant API - Forms"
@@ -2290,6 +2324,18 @@ paths:
         200:
           description: |
             Form deleted
+        400:
+          description: |
+            The request is malformed. This happens when the formId or responseId is not a UUID (V4).
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            Either the form template associated with the given formId does not exist or the form response associated with the given responseId does not exist.
 
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
