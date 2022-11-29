@@ -2098,7 +2098,7 @@ paths:
                 $ref: "#/components/schemas/FormTemplate"
         400:
           description: |
-            Request body is not valid JSON or does not conform to the schema.
+            Can't process the request. Likely due to a client error.
         401:
           description: |
             Not authorized to make the request.
@@ -2116,7 +2116,7 @@ paths:
         Given a tenant key returns all form template ids associated with forms they created.
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}"
+            - "get:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -2146,7 +2146,7 @@ paths:
         Given a tenant key and a form template id returns the form template that the tenant created.
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}"
+            - "get:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -2161,7 +2161,7 @@ paths:
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
       responses:
         200:
           description: |
@@ -2190,7 +2190,7 @@ paths:
         Given a tenant key and a form template id returns the form response ids associated with form responses submitted by users.
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}"
+            - "get:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -2205,7 +2205,7 @@ paths:
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
       responses:
         200:
           description: |
@@ -2216,7 +2216,7 @@ paths:
                 $ref: "#/components/schemas/FormResponseIds"
         400:
           description: |
-            The request is malformed. This happens when the formId is not a UUID (V4).
+            Can't process the request. Likely due to a client error.
         401:
           description: |
             Not authorized to make the request
@@ -2231,7 +2231,7 @@ paths:
   # ##############################################
   # GET, DELETE /v1/tenant/{tkey}/form/{formid}/responses/{respid}
   # ##############################################
-  /v1/tenant/{tkey}/form/{formId}/responses/{responseId}:
+  /v1/tenant/{tenantKey}/form/{formId}/responses/{responseId}:
     get:
       tags:
         - "Tenant API - Forms"
@@ -2242,7 +2242,7 @@ paths:
         the form response submitted by a user.
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}"
+            - "get:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -2257,14 +2257,14 @@ paths:
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
         - name: responseId
           in: path
           description: The response id associated with the form response.
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
       responses:
         200:
           description: |
@@ -2275,7 +2275,7 @@ paths:
                 $ref: "#/components/schemas/FormResponse"
         400:
           description: |
-            The request is malformed. This happens when the formId or responseId is not a UUID (V4).
+            Can't process the request. Likely due to a client error.
         401:
           description: |
             Not authorized to make the request
@@ -2294,10 +2294,10 @@ paths:
         Given a tenant key, form template id and form response id deletes 
         the form response submitted by a user.
 
-        This enables you to not store any potentially sensitive information about users longer than is necessary in Kivra.
+        ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}"
+            - "delete:kivra.v2.tenant.{tenantKey}"
       parameters:
         - name: tenantKey
           in: path
@@ -2312,21 +2312,21 @@ paths:
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
         - name: responseId
           in: path
           description: The response id associated with the form responses.
           required: true
           schema:
             type: string
-            format: hexadecimal
+            format: uuid
       responses:
-        200:
+        204:
           description: |
             Form deleted
         400:
           description: |
-            The request is malformed. This happens when the formId or responseId is not a UUID (V4).
+            Can't process the request. Likely due to a client error.
         401:
           description: |
             Not authorized to make the request
@@ -3011,6 +3011,7 @@ components:
               type: free_text
         form_id:
           type: string
+          format: uuid
           description: |
             The id of the newly created form template.
           readOnly: true
@@ -3097,6 +3098,7 @@ components:
       properties:
         form_id:
           type: string
+          format: uuid
           description: |
             The form template id associated with the form responses.
           example: 
@@ -3110,6 +3112,7 @@ components:
             properties:
               id:
                 type: string
+                format: uuid
                 description: |
                   A key used to identify the individual form response.
                 example: 
@@ -3124,12 +3127,14 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           description:
               The form response id
           example: 
             2877d684-a340-4e4c-867f-d93283787b01
         form_id:
           type: string
+          format: uuid
           description:
              The form template id.
           example: 
