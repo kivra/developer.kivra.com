@@ -903,7 +903,7 @@ paths:
       responses:
         200:
           description: |
-            Tenant Created succesfully
+            Tenant information
           content:
             application/json:
               schema:
@@ -1302,6 +1302,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserDiff"
+        404:
+          description: |
+            This error could indicate that the diffId is no longer valid 
+            and therefore the URL points to a resource that is no longer
+            available
 
   # ##############################################
   # POST /v1/tenant/TKEY/usermatch
