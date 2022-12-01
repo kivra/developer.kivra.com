@@ -2825,7 +2825,17 @@ components:
         account:
           type: string
           example: "1234-5678"
-          description: Tenant’s account number
+          description: |
+            The destination account number if the user choses to pay this
+            invoice with a service that uses some variety of bank transfer (for
+            example, BankGiro or PlusGiro).
+        swish_alias:
+          type: string
+          description: |
+            The Swish Payee Alias that should be used as the recipient if the
+            user choses to pay this invoice with Swish. The alias given must be
+            one that is listed as available for the sender, or it will be
+            ignored.
         currency:
           type: string
           enum:
