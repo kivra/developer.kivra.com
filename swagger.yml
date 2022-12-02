@@ -103,6 +103,7 @@ info:
     | 2022-04-11 | More details about specification for time and dates |
     | 2022-07-11 | Added state `generating` for agreements |
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
+    | 2022-12-02 | Added Forms POC endpoints for Sandbox. API not stable. Breaking changes may happen.  |
 
     # Terminology
     ### User
@@ -750,7 +751,10 @@ tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
   - name: "Tenant API - Forms"
-    description: Endpoints for working with form templates and responses
+    description: |
+      **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+      Endpoints for working with form templates and responses
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -2073,10 +2077,12 @@ paths:
       summary: Create form template
       operationId: createFormTemplate
       description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
         A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
 
         ### How to send a form to the user
-        When sending a content to the user include the form template id in the context object. See `POST /v1/tenant/{tenantKey}/content` for more information.
+        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
       security:
         - oAuth2Client:
             - "post:kivra.v1.tenant.{tenantKey}"
@@ -2110,10 +2116,12 @@ paths:
     get:
       tags:
         - "Tenant API - Forms"
-      summary: Get form template ids
+      summary: Get form template keys
       operationId: getFormTemplateIds
       description: |
-        Given a tenant key returns all form template ids associated with forms they created.
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key returns all form template keys associated with forms they created.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2128,7 +2136,7 @@ paths:
       responses:
         200:
           description: |
-            List of form template ids
+            List of form template keys
         401:
           description: |
             Not authorized to make the request
@@ -2143,7 +2151,9 @@ paths:
       summary: Get form template
       operationId: getFormTemplate
       description: |
-        Given a tenant key and a form template id returns the form template that the tenant created.
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form template that the tenant created.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2157,7 +2167,7 @@ paths:
             format: hexadecimal
         - name: formId
           in: path
-          description: The form template id associated with the form template.
+          description: The form template key associated with the form template.
           required: true
           schema:
             type: string
@@ -2187,7 +2197,9 @@ paths:
       summary: Get form response ids
       operationId: getFormResponseIds
       description: |
-        Given a tenant key and a form template id returns the form response ids associated with form responses submitted by users.
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form response ids associated with form responses submitted by users.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2201,7 +2213,7 @@ paths:
             format: hexadecimal
         - name: formId
           in: path
-          description: The form template id associated with the form responses.
+          description: The form template key associated with the form responses.
           required: true
           schema:
             type: string
@@ -2238,8 +2250,9 @@ paths:
       summary: Get form response
       operationId: getFormResponse
       description: |
-        Given a tenant key, form template id and form response id returns 
-        the form response submitted by a user.
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response id returns the form response submitted by a user.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2253,7 +2266,7 @@ paths:
             format: hexadecimal
         - name: formId
           in: path
-          description: The form template id associated with the form template.
+          description: The form template key associated with the form template.
           required: true
           schema:
             type: string
@@ -2291,8 +2304,9 @@ paths:
       summary: Delete form response
       operationId: deleteFormResponse
       description: |
-        Given a tenant key, form template id and form response id deletes 
-        the form response submitted by a user.
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response id deletes the form response submitted by a user.
 
         ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
       security:
@@ -2308,7 +2322,7 @@ paths:
             format: hexadecimal
         - name: formId
           in: path
-          description: The form_id associated with the form template.
+          description: The form_template_key associated with the form template.
           required: true
           schema:
             type: string
@@ -2875,7 +2889,7 @@ components:
               properties:
                 id:
                   type: string
-                  description: The form template id
+                  description: The form template key
                   example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
@@ -2972,7 +2986,7 @@ components:
         - title
         - description
         - fields
-        - form_id
+        - form_template_key
         - sender_id
         - created_at
       properties:
@@ -3009,7 +3023,7 @@ components:
             - label: Do you have any further comments?
               name: comments
               type: free_text
-        form_id:
+        form_template_key:
           type: string
           format: uuid
           description: |
@@ -3093,14 +3107,14 @@ components:
     FormResponseIds:
       type: object
       required:
-        - form_id
+        - form_template_key
         - responses
       properties:
-        form_id:
+        form_template_key:
           type: string
           format: uuid
           description: |
-            The form template id associated with the form responses.
+            The form template key associated with the form responses.
           example: 
             2877d684-a340-4e4c-867f-d93283787b01
         responses:
@@ -3121,7 +3135,7 @@ components:
       type: object
       required:
         - id
-        - form_id
+        - form_template_key
         - responses
         - matched_by
       properties:
@@ -3132,11 +3146,11 @@ components:
               The form response id
           example: 
             2877d684-a340-4e4c-867f-d93283787b01
-        form_id:
+        form_template_key:
           type: string
           format: uuid
           description:
-             The form template id.
+             The form template key.
           example: 
             2877d684-a340-4e4c-867f-d93283787b01
         responses:
