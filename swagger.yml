@@ -103,7 +103,7 @@ info:
     | 2022-04-11 | More details about specification for time and dates |
     | 2022-07-11 | Added state `generating` for agreements |
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
-    | 2022-12-02 | Added Forms POC endpoints for Sandbox. API not stable. Breaking changes may happen.  |
+    | 2022-12-02 | Added Forms BETA endpoints for Sandbox. API not stable. Breaking changes may happen.  |
 
     # Terminology
     ### User
@@ -750,7 +750,7 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API - Forms"
+  - name: "Tenant API - Forms (BETA)"
     description: |
       **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
@@ -768,7 +768,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
-      - "Tenant API - Forms"
+      - "Tenant API - Forms (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2068,12 +2068,12 @@ paths:
                       content_type: text/html
               
   # ##############################################
-  # POST, GET /v1/tenant/TKEY/form
+  # POST, GET /v1/tenant/tenantKey/form
   # ##############################################
   /v1/tenant/{tenantKey}/form:
     post:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Create form template
       operationId: createFormTemplate
       description: |
@@ -2115,9 +2115,9 @@ paths:
               $ref: "#/components/schemas/FormTemplate"
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form template keys
-      operationId: getFormTemplateIds
+      operationId: getFormTemplateKey
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
@@ -2137,17 +2137,23 @@ paths:
         200:
           description: |
             List of form template keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormTemplateKey"
         401:
           description: |
             Not authorized to make the request
 
   # ##############################################
-  # GET /v1/tenant/{tkey}/form/{formId}
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formId}:
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form template
       operationId: getFormTemplate
       description: |
@@ -2165,7 +2171,7 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: formId
+        - name: formTemplateKey
           in: path
           description: The form template key associated with the form template.
           required: true
@@ -2188,12 +2194,12 @@ paths:
             Form template not found
  
   # ##############################################
-  # GET /v1/tenant/{tkey}/form/{formid}/responses
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formId}/responses:
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form response ids
       operationId: getFormResponseIds
       description: |
@@ -2211,7 +2217,7 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: formId
+        - name: formTemplateKey
           in: path
           description: The form template key associated with the form responses.
           required: true
@@ -2237,16 +2243,16 @@ paths:
             Forbidden from accessing the form response ids
         404:
           description: |
-            The form template associated with formId does not exist.
+            The form template associated with formTemplateKey does not exist.
 
 
   # ##############################################
-  # GET, DELETE /v1/tenant/{tkey}/form/{formid}/responses/{respid}
+  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formId}/responses/{responseId}:
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form response
       operationId: getFormResponse
       description: |
@@ -2264,7 +2270,7 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: formId
+        - name: formTemplateKey
           in: path
           description: The form template key associated with the form template.
           required: true
@@ -2297,10 +2303,10 @@ paths:
             Forbidden from accessing the form response ids
         404:
           description: |
-            Either the form template associated with the given formId does not exist or the form response associated with the given responseId does not exist.
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
     delete:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Delete form response
       operationId: deleteFormResponse
       description: |
@@ -2320,7 +2326,7 @@ paths:
           schema:
             type: string
             format: hexadecimal
-        - name: formId
+        - name: formTemplateKey
           in: path
           description: The form_template_key associated with the form template.
           required: true
@@ -2349,7 +2355,7 @@ paths:
             Forbidden from accessing the form response ids
         404:
           description: |
-            Either the form template associated with the given formId does not exist or the form response associated with the given responseId does not exist.
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
 
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
@@ -3089,12 +3095,12 @@ components:
           type: string
           description: |
             A human readable description of the answer.
-    FormId:
+    FormTemplateKey:
       type: object
       required:
-        - id
+        - form_template_key
       properties:
-        id:
+        form_template_key:
           type: string
           description: |
             A key used to identify the form template.
