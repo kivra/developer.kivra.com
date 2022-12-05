@@ -103,6 +103,7 @@ info:
     | 2022-04-11 | More details about specification for time and dates |
     | 2022-07-11 | Added state `generating` for agreements |
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
+    | 2022-12-02 | Added Forms BETA endpoints for Sandbox. API not stable. Breaking changes may happen.  |
 
     # Terminology
     ### User
@@ -751,6 +752,11 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
+  - name: "Tenant API - Forms (BETA)"
+    description: |
+      **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+      Endpoints for working with form templates and responses
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -764,6 +770,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
+      - "Tenant API - Forms (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -1803,6 +1810,19 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              form to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    form:
+                      id: 2877d684-a340-4e4c-867f-d93283787b01
 
   # ##############################################
   # POST /v2/tenant/TKEY/content
@@ -2150,6 +2170,296 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
+              
+  # ##############################################
+  # POST, GET /v1/tenant/tenantKey/form
+  # ##############################################
+  /v1/tenant/{tenantKey}/form:
+    post:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Create form template
+      operationId: createFormTemplate
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
+
+        ### How to send a form to the user
+        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v1.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key for the tenant who is creating the form template.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form template created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplate"
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form template keys
+      operationId: getFormTemplateKey
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key returns all form template keys associated with forms they created.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form templates belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            List of form template keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormTemplateKey"
+        401:
+          description: |
+            Not authorized to make the request
+
+  # ##############################################
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form template
+      operationId: getFormTemplate
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form template that the tenant created.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form template belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+        401:
+          description: |
+            Not authorized to make the request
+        404:
+          description: |
+            Form template not found
+ 
+  # ##############################################
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form response ids
+      operationId: getFormResponseIds
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form response ids associated with form responses submitted by users.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form responses belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form responses.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form response ids
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponseIds"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            The form template associated with formTemplateKey does not exist.
+
+
+  # ##############################################
+  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form response
+      operationId: getFormResponse
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response id returns the form response submitted by a user.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form response belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: responseId
+          in: path
+          description: The response id associated with the form response.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponse"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
+    delete:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Delete form response
+      operationId: deleteFormResponse
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response id deletes the form response submitted by a user.
+
+        ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
+      security:
+        - oAuth2Client:
+            - "delete:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant for whom the form belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form_template_key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: responseId
+          in: path
+          description: The response id associated with the form responses.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: |
+            Form deleted
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response ids
+        404:
+          description: |
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
 
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
@@ -2687,6 +2997,16 @@ components:
             booking:
               description: Optionally specify booking information
               $ref: "#/components/schemas/Booking"
+            form:
+              required:
+                - id
+              type: object
+              description: The form you would like to attach to this content.
+              properties:
+                id:
+                  type: string
+                  description: The form template key
+                  example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
     # SCHEMA Content_user_v2
@@ -2772,6 +3092,245 @@ components:
         booking:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
+
+    # ##############################################
+    # SCHEMA Form Template
+    # ##############################################
+    FormTemplate:
+      type: object
+      required:
+        - title
+        - description
+        - fields
+        - form_template_key
+        - sender_id
+        - created_at
+      properties:
+        title:
+          type: string
+          description: |
+            The title of the form.
+          example: Customer KYC
+        description:
+          type: string
+          description: |
+            The purpose of the form.
+          example: Your bank has some questions
+        fields:
+          type: array
+          description: |
+            The questions that you want to ask the user.
+          items:
+            $ref: "#/components/schemas/FormField"
+          example: 
+            - label: How many times per month do you deposit into your account?
+              name: number_deposits
+              type: number
+            - label: What is the largest amount deposited?
+              name: largest_sum
+              type: options
+              values:
+                - id: small
+                  label: 10000 - 20000
+                - id: medium
+                  label: 20000 - 30000
+                - id: large
+                  label: 30000 - 40000
+            - label: Do you have any further comments?
+              name: comments
+              type: free_text
+        form_template_key:
+          type: string
+          format: uuid
+          description: |
+            The id of the newly created form template.
+          readOnly: true
+          example: "2877d684-a340-4e4c-867f-d93283787b01"
+        sender_id:
+          type: string
+          format: hexadecimal
+          description: |
+            The tenant key of the tenant that created the form template.
+          readOnly: true
+          example: "1341543157b3a8c66f220b2164b2e13789d2d04015"
+        created_at:
+          type: string
+          description: |
+            The date the form template was created.
+          readOnly: true
+          example: "2022-11-23T14:51:23.874434Z"
+    FormField:
+      type: object
+      required:
+        - type
+        - label
+        - name
+      properties:
+        type:
+          type: string
+          enum: [free_text, number, options]
+          description: |
+            The input type required to answer the question.
+
+            `free_text` is a string.
+
+            `number` is an integer or a floating point number.
+
+            `options` is a string that has a finite amount of values e.g. yes or no question.
+        label:
+          type: string
+          description: |
+            Human readable description of what the question is.
+        name:
+          type: string
+          description: |
+            A key used to identify the question.
+        values:
+          type: array
+          description: |
+            When `type` is `options` then use this to specify the answers that the user can select.
+          items:
+            $ref: "#/components/schemas/FormOption"
+    FormOption:
+      type: object
+      required:
+        - id
+        - label
+      properties:
+        id:
+          type: string
+          description: |
+            A key used to identify the answer.
+        label:
+          type: string
+          description: |
+            A human readable description of the answer.
+    FormTemplateKey:
+      type: object
+      required:
+        - form_template_key
+      properties:
+        form_template_key:
+          type: string
+          description: |
+            A key used to identify the form template.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+    
+    # ##############################################
+    # SCHEMA Form Response
+    # ##############################################  
+    FormResponseIds:
+      type: object
+      required:
+        - form_template_key
+        - responses
+      properties:
+        form_template_key:
+          type: string
+          format: uuid
+          description: |
+            The form template key associated with the form responses.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        responses:
+          type: array
+          description: |
+            Metadata about the form response 
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: |
+                  A key used to identify the individual form response.
+                example: 
+                  bed773d7-9029-42f2-9f0b-0729390c962c
+    FormResponse:
+      type: object
+      required:
+        - id
+        - form_template_key
+        - responses
+        - matched_by
+      properties:
+        id:
+          type: string
+          format: uuid
+          description:
+              The form response id
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        form_template_key:
+          type: string
+          format: uuid
+          description:
+             The form template key.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        responses:
+          type: object
+          description:
+            The form response that the user submitted.
+          required:
+            - name
+            - value
+            - type
+          properties:
+            name:
+              type: string
+              description: |
+                A key used to identify the question.
+            value:
+              type: object
+              additionalProperties:
+                oneOf:
+                  - type: string
+                  - type: number
+              description: |
+                The response to the question.
+            type:
+              type: string
+              enum: [free_text, number, options]
+              description: |
+                The input type required to answer the question.
+
+                `free_text` is a string.
+
+                `number` is an integer or a floating point number.
+
+                `options` is a string that has a finite amount of values e.g. yes or no question.
+          example:
+             - name: number_deposits
+               value: 1
+               type: number
+             - name: largest_sum
+               value: small
+               type: options
+             - name: comments
+               value: No further comments
+               type: free_text
+        matched_by:
+          type: object
+          description:
+            Used to identify the user that answered the form
+          required:
+            - type
+            - value
+          properties:
+            type:
+              type: string
+              enum: [ssn, email]
+              description:
+                How the user that answered the form was identified.
+              example: ssn
+            value:
+              type: string
+              description:
+                Represents a value used to identify a user e.g. ssn or email.
+              example: 199202286837
+
 
     # ##############################################
     # SCHEMA Content_company
