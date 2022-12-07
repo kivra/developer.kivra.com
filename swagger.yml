@@ -2304,12 +2304,12 @@ paths:
     get:
       tags:
         - "Tenant API - Forms (BETA)"
-      summary: Get form response ids
-      operationId: getFormResponseIds
+      summary: Get form response keys
+      operationId: getFormResponseKeys
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
-        Given a tenant key and a form template key returns the form response ids associated with form responses submitted by users.
+        Given a tenant key and a form template key returns the form response key associated with form responses submitted by users.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2344,7 +2344,7 @@ paths:
             Not authorized to make the request
         403:
           description: |
-            Forbidden from accessing the form response ids
+            Forbidden from accessing the form response keys
         404:
           description: |
             The form template associated with formTemplateKey does not exist.
@@ -2353,7 +2353,7 @@ paths:
   # ##############################################
   # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}:
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
     get:
       tags:
         - "Tenant API - Forms (BETA)"
@@ -2362,7 +2362,7 @@ paths:
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
-        Given a tenant key, form template key and form response id returns the form response submitted by a user.
+        Given a tenant key, form template key and form response key returns the form response submitted by a user.
       security:
         - oAuth2Client:
             - "get:kivra.v2.tenant.{tenantKey}"
@@ -2381,9 +2381,9 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: responseId
+        - name: formResponseKey
           in: path
-          description: The response id associated with the form response.
+          description: The form response key associated with the form response.
           required: true
           schema:
             type: string
@@ -2404,7 +2404,7 @@ paths:
             Not authorized to make the request
         403:
           description: |
-            Forbidden from accessing the form response ids
+            Forbidden from accessing the form response keys
         404:
           description: |
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
@@ -2416,7 +2416,7 @@ paths:
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
-        Given a tenant key, form template key and form response id deletes the form response submitted by a user.
+        Given a tenant key, form template key and form response key deletes the form response submitted by a user.
 
         ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
       security:
@@ -2437,9 +2437,9 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: responseId
+        - name: formResponseKey
           in: path
-          description: The response id associated with the form responses.
+          description: The form response key associated with the form responses.
           required: true
           schema:
             type: string
@@ -2456,7 +2456,7 @@ paths:
             Not authorized to make the request
         403:
           description: |
-            Forbidden from accessing the form response ids
+            Forbidden from accessing the form response keys
         404:
           description: |
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
@@ -3103,7 +3103,7 @@ components:
         - description
         - fields
         - form_template_key
-        - sender_id
+        - tenant_key
         - created_at
       properties:
         title:
@@ -3146,7 +3146,7 @@ components:
             The id of the newly created form template.
           readOnly: true
           example: "2877d684-a340-4e4c-867f-d93283787b01"
-        sender_id:
+        tenant_key:
           type: string
           format: hexadecimal
           description: |
@@ -3240,7 +3240,7 @@ components:
           items:
             type: object
             properties:
-              id:
+              form_response_key:
                 type: string
                 format: uuid
                 description: |
@@ -3250,16 +3250,16 @@ components:
     FormResponse:
       type: object
       required:
-        - id
+        - form_response_key
         - form_template_key
         - responses
         - matched_by
       properties:
-        id:
+        form_response_key:
           type: string
           format: uuid
           description:
-              The form response id
+              The form response key
           example: 
             2877d684-a340-4e4c-867f-d93283787b01
         form_template_key:
