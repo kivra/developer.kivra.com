@@ -2399,6 +2399,10 @@ paths:
         400:
           description: |
             Can't process the request. Likely due to a client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormErrorResponse"
         401:
           description: |
             Not authorized to make the request
@@ -3330,6 +3334,15 @@ components:
               description:
                 Represents a value used to identify a user e.g. ssn or email.
               example: 199202286837
+    FormErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: A short error code detailing the reason of the unsuccessful request.
+          example: invalid_json
 
 
     # ##############################################
