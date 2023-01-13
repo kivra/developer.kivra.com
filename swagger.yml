@@ -2396,6 +2396,10 @@ paths:
         200:
           description: |
             Form response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponse"
         400:
           description: |
             Can't process the request. Likely due to a client error.
