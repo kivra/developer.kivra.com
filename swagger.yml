@@ -3103,7 +3103,7 @@ components:
         - description
         - fields
         - form_template_key
-        - sender_id
+        - tenant_key
         - created_at
       properties:
         title:
@@ -3146,7 +3146,7 @@ components:
             The id of the newly created form template.
           readOnly: true
           example: "2877d684-a340-4e4c-867f-d93283787b01"
-        sender_id:
+        tenant_key:
           type: string
           format: hexadecimal
           description: |
