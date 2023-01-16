@@ -3341,15 +3341,25 @@ components:
               description:
                 Represents a value used to identify a user e.g. ssn or email.
               example: 199202286837
-    FormErrorResponse:
+    BasicErrorResponse:
       type: object
       required:
-        - error
+        - code
+        - short_message
+        - long_message
       properties:
         error:
           type: string
-          description: A short error code detailing the reason of the unsuccessful request.
-          example: invalid_json
+          description: An error code identifying the reason of the unsuccessful request.
+    FormErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/BasicErrorResponse"
+        - type: object
+          properties:
+            error:
+              type: string
+              description: A short error code detailing the reason of the unsuccessful request.
+              example: invalid_json
 
 
     # ##############################################
