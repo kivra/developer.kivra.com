@@ -2213,13 +2213,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormErrorResponse"
-              examples:
-                invalid_json:
-                  summary: Posted body is not json
-                  value: {"error": "invalid_json"}
-                schema_violation:
-                  summary: Json doesnt follow schema
-                  value: {"error": "schema_violations"}
         401:
           description: |
             Not authorized to make the request.
