@@ -2335,7 +2335,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FormResponseIds"
+                $ref: "#/components/schemas/FormResponseKeys"
         400:
           description: |
             Can't process the request. Likely due to a client error.
@@ -2351,7 +2351,7 @@ paths:
 
 
   # ##############################################
-  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseId}
+  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseKey}
   # ##############################################
   /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
     get:
@@ -2407,7 +2407,7 @@ paths:
             Forbidden from accessing the form response keys
         404:
           description: |
-            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
     delete:
       tags:
         - "Tenant API - Forms (BETA)"
@@ -2459,7 +2459,7 @@ paths:
             Forbidden from accessing the form response keys
         404:
           description: |
-            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseId does not exist.
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
 
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
@@ -3220,7 +3220,7 @@ components:
     # ##############################################
     # SCHEMA Form Response
     # ##############################################  
-    FormResponseIds:
+    FormResponseKeys:
       type: object
       required:
         - form_template_key
