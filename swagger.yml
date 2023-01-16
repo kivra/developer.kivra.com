@@ -3341,7 +3341,7 @@ components:
         - short_message
         - long_message
       properties:
-        error:
+        code:
           type: string
           description: An error code identifying the reason of the unsuccessful request.
     FormErrorResponse:
@@ -3349,7 +3349,7 @@ components:
         - $ref: "#/components/schemas/BasicErrorResponse"
         - type: object
           properties:
-            error:
+            code:
               type: string
               description: A short error code detailing the reason of the unsuccessful request.
               example: invalid_json
