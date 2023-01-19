@@ -2213,6 +2213,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FormErrorResponse"
+              examples:
+                invalid_json:
+                  value:
+                    code: 40000
+                    short_message: "Invalid JSON"
+                    long_message: "Could not parse posted body as JSON"
         401:
           description: |
             Not authorized to make the request.
@@ -3354,16 +3360,6 @@ components:
       allOf:
         - $ref: "#/components/schemas/BasicErrorResponse"
         - type: object
-          properties:
-            code:
-              type: integer
-              example: 50300
-            short_message:
-              type: string
-              example: "Service Unavailable"
-            long_message:
-              type: string
-              example: "Authentication service is currently not reachable."
 
 
     # ##############################################
