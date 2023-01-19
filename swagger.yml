@@ -2209,6 +2209,16 @@ paths:
         400:
           description: |
             Can't process the request. Likely due to a client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormErrorResponse"
+              examples:
+                invalid_json:
+                  value:
+                    code: 40000
+                    short_message: "Invalid JSON"
+                    long_message: "Could not parse posted body as JSON"
         401:
           description: |
             Not authorized to make the request.
@@ -3330,6 +3340,26 @@ components:
               description:
                 Represents a value used to identify a user e.g. ssn or email.
               example: 199202286837
+    BasicErrorResponse:
+      type: object
+      required:
+        - code
+        - short_message
+        - long_message
+      properties:
+        code:
+          type: integer
+          description: An error code identifying the reason of the unsuccessful request.
+        short_message:
+          type: string
+          description: Short human-readable description.
+        long_message:
+          type: string
+          description: Longer human-readable description getting into details.
+    FormErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/BasicErrorResponse"
+        - type: object
 
 
     # ##############################################
