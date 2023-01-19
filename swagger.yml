@@ -3342,17 +3342,28 @@ components:
         - long_message
       properties:
         code:
-          type: string
+          type: integer
           description: An error code identifying the reason of the unsuccessful request.
+        short_message:
+          type: string
+          description: Short human-readable description.
+        long_message:
+          type: string
+          description: Longer human-readable description getting into details.
     FormErrorResponse:
       allOf:
         - $ref: "#/components/schemas/BasicErrorResponse"
         - type: object
           properties:
             code:
+              type: integer
+              example: 50300
+            short_message:
               type: string
-              description: A short error code detailing the reason of the unsuccessful request.
-              example: invalid_json
+              example: "Service Unavailable"
+            long_message:
+              type: string
+              example: "Authentication service is currently not reachable."
 
 
     # ##############################################
