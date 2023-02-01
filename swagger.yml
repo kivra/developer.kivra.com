@@ -2926,7 +2926,8 @@ components:
           writeOnly: true
           example: "Kivra.Sweden@example.com"
         subject:
-          description: The subject/title will be visibile in the Recipients Inbox. 
+          description: |
+            The subject/title will be visibile in the Recipients Inbox. 
             Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
             Avoid using personal and sensitive information in the subject.
           type: string
