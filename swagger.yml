@@ -2926,13 +2926,15 @@ components:
           writeOnly: true
           example: "Kivra.Sweden@example.com"
         subject:
-          description: This subject/title will be visibile in the Recipients Inbox.
+          description: The subject/title will be visibile in the Recipients Inbox. 
+            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
+            Avoid using personal and sensitive information in the subject.
           type: string
-          example: "Sample Invoice"
+          example: "Invoice for March 2022"
         generated_at:
           type: string
           format: ISO8601
-          example: "2016-12-12"
+          example: "2022-12-31"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
@@ -3036,13 +3038,15 @@ components:
           example: "191212121212"
         subject:
           description: |
-            This subject/title will be visibile in the Recipients Inbox.
+            The subject/title will be visibile in the Recipients Inbox. 
+            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
+            Avoid using personal and sensitive information in the subject.
           type: string
-          example: "Sample Invoice"
+          example: "Invoice for March 2022"
         generated_at:
           type: string
           format: ISO8601
-          example: "2016-12-12"
+          example: "2022-12-31"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
