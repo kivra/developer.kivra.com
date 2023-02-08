@@ -246,10 +246,6 @@ info:
 
     `https://sender.api.kivra.com`
 
-    <aside class="notice">
-    <i>Note: The older endpoint for production <b>api.kivra.com</b> will be removed on September 30th 2020</i>
-    </aside>
-
     The production environment should only be used for sending real data, not for testing of any sort. For testing, please refer to Sandbox.
 
     ### Sandbox environment
@@ -257,13 +253,11 @@ info:
 
     `https://sender.sandbox-api.kivra.com`
 
-    <aside class="notice">
-    <i>Note: The older endpoint for sandbox <b>sandbox.kivra.com</b> will be removed on September 30th 2020</i>
-    </aside>
-
     The sandbox is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
 
     We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.
+    
+    The Sandbox environment cannot be used for capacity or volume tests as it has a much smaller capacity and performance than our production environment.
 
     ## URL Components
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
