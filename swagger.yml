@@ -4296,7 +4296,7 @@ components:
       properties:
         title:
           description: |
-            Booking name that is shown in the Kivra GUI. Note! Don’t include any sensitive information here.
+            Booking name that is used when creating a post in an external calendar. Note! Don’t include any sensitive information here.
           type: string
           example: "Kontroll av tandhälsa"
         start_time:
