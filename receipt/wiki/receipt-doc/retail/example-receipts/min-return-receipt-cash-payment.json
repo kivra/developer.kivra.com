@@ -36,8 +36,8 @@
             "sub_totals": [
                 {
                     "amount": 70.0,
-                    "taxable_amount": 280.0,
-                    "net_amount": 210.00,
+                    "taxable_amount": 350.0,
+                    "net_amount": 280.00,
                     "refund": true,
                     "tax_percentage": 25
                 }
