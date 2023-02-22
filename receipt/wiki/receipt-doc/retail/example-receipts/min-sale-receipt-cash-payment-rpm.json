@@ -35,17 +35,17 @@
 
   "totals": [{
       "type": "net",
-      "amount": 41.00,
+      "amount": 41.10,
       "refund": false
     },
     {
       "type": "vat",
-      "amount": 7.00,
+      "amount": 4.90,
       "refund": false,
       "sub_totals": [{
-        "amount": 7.00,
+        "amount": 4.90,
         "taxable_amount": 46.00,
-        "net_amount": 39.00,
+        "net_amount": 41.10,
         "tax_percentage": 12,
         "refund": false
       }]

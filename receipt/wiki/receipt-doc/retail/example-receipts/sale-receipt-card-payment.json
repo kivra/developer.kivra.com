@@ -40,13 +40,13 @@
       "sub_totals": [{
         "amount": 97.60,
         "tax_percentage": 25,
-        "taxable_amount": 390.40,
-        "net_amount": 292.80
+        "taxable_amount": 488.00,
+        "net_amount": 390.40
       }]
     },
     {
       "type": "gross",
-      "amount": 488.00
+      "amount": 697.00
     },
     {
       "type": "paid",

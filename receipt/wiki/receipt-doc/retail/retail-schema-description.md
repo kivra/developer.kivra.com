@@ -187,18 +187,18 @@ Example sales:
   "totals": [
     {
       "type": "net",
-      "amount": 39.0,
+      "amount": 41.10,
       "refund": false
     },
     {
       "type": "vat",
-      "amount": 7.0,
+      "amount": 4.90,
       "refund": false,
       "sub_totals": [
         {
-          "amount": 7.0,
+          "amount": 4.90,
           "taxable_amount": 46.0,
-          "net_amount": 39.0,
+          "net_amount": 41.10,
           "tax_percentage": 12,
           "refund": false
         }
@@ -272,18 +272,18 @@ Example return:
     {
       "type": "net",
       "refund": true,
-      "amount": 14.36
+      "amount": 19.64
     },
     {
       "type": "vat",
       "refund": true,
-      "amount": 7.64,
+      "amount": 2.36,
       "sub_totals": [
         {
           "refund": true,
-          "amount": 7.64,
+          "amount": 2.36,
           "taxable_amount": 22.0,
-          "net_amount": 14.36,
+          "net_amount": 19.64,
           "tax_percentage": 12
         }
       ]
