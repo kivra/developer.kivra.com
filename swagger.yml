@@ -2895,6 +2895,9 @@ paths:
             If `vat_number` is given, the repsonse will only include companies with VAT numbers in that list.
             The `field` parameter controls which columns (CSV) or properties (JSON) to include in the response.
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseCompany'
             text/csv:
               schema:
                 example: |
