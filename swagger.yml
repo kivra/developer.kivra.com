@@ -4543,21 +4543,36 @@ components:
             The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
 
+    # ##############################################
+    # SCHEMA EmptyString
+    # ##############################################
     EmptyString:
       description: The empty string
       enum:
         - ''
       type: string
+
+    # ##############################################
+    # SCHEMA CompanyKey
+    # ##############################################
     CompanyKey:
       description: The key for a company
       pattern: ^[0-9]{10}[a-f0-9]{32}$
       example: 156077433683911cdca5fd4563bded979572454cb9
       type: string
+
+    # ##############################################
+    # SCHEMA ContentKey
+    # ##############################################
     ContentKey:
       description: The key for a content
       pattern: ^[0-9]{10}[a-f0-9]{32}$
       example: 156077433683911cdca5fd4563bded979572454cb9
       type: string
+
+    # ##############################################
+    # SCHEMA CompanyType
+    # ##############################################
     CompanyType:
       description: |
         The company's/organisation's type
@@ -4571,10 +4586,18 @@ components:
         - company
         - riksidrottsförening
       type: string
+
+    # ##############################################
+    # SCHEMA CompanyName
+    # ##############################################
     CompanyName:
       description: The name of a company
       example: Cornelias Café AB
       type: string
+
+    # ##############################################
+    # SCHEMA VatNumber
+    # ##############################################
     VatNumber:
       pattern: ^[A-Z]{2}[0-9]{10}[0-9]{2}$
       description: |
@@ -4584,11 +4607,19 @@ components:
         Land code - Organisation number - Serial number
       example: SE556000475501
       type: string
+
+    # ##############################################
+    # SCHEMA IncomingEmail
+    # ##############################################
     IncomingEmail:
       pattern: ^[a-tv-zA-TV-Z0-9]{9}@(sandbox\.)?kivramail.com$
       description: K4B+ email address for receiving emails as content
       type: string
       example: xxcsn2psy@kivramail.com
+
+    # ##############################################
+    # SCHEMA ScanningAddress
+    # ##############################################
     ScanningAddress:
       description: K4B+ postal address for scanning physical post
       additionalProperties: false
@@ -4628,6 +4659,10 @@ components:
         - city
         - country
       type: object
+
+    # ##############################################
+    # SCHEMA AllServices
+    # ##############################################
     AllServices:
       description: All K4B and K4B+ services
       additionalProperties: false
@@ -4657,10 +4692,18 @@ components:
           example: true
           type: boolean
       type: object
+
+    # ##############################################
+    # SCHEMA FieldQueryParameter
+    # ##############################################
     FieldQueryParameter:
       description: The field(s) to respond with
       example: key
       type: string
+
+    # ##############################################
+    # SCHEMA BaseCompany
+    # ##############################################
     BaseCompany:
       description: A company object with basic fields only
       additionalProperties: false
@@ -4674,6 +4717,10 @@ components:
         vat_number:
           $ref: '#/components/schemas/VatNumber'
       type: object
+
+    # ##############################################
+    # SCHEMA FullCompany
+    # ##############################################
     FullCompany:
       description: A company object
       additionalProperties: false
@@ -4704,31 +4751,59 @@ components:
       required:
         - key
       type: object
+
+    # ##############################################
+    # SCHEMA GovernmentalLabel
+    # ##############################################
     GovernmentalLabel:
       description: |
         Indicates if the content comes from a governmental body.
       type: boolean
+
+    # ##############################################
+    # SCHEMA HandledLabel
+    # ##############################################
     HandledLabel:
       description: |
         The content has been marked as `handled`, previously known as `paid`.
       type: boolean
+
+    # ##############################################
+    # SCHEMA InterpretedLabel
+    # ##############################################
     InterpretedLabel:
       description: |
         Indicates if the content has been interpreted.
       type: boolean
+
+    # ##############################################
+    # SCHEMA ReminderLabel
+    # ##############################################
     ReminderLabel:
       description: |
         Indicates if the content, which must be an invoice, is a reminder.
       type: boolean
+
+    # ##############################################
+    # SCHEMA TrashedLabel
+    # ##############################################
     TrashedLabel:
       description: |
         Indicates if the content has been moved to the trash.
       type: boolean
+
+    # ##############################################
+    # SCHEMA ViewedLabel
+    # ##############################################
     ViewedLabel:
       description: |
         The content has been viewed. This can be toggled by the user, i.e. "Mark
         as unread".
       type: boolean
+
+    # ##############################################
+    # SCHEMA PartnerPaymentOption
+    # ##############################################
     PartnerPaymentOption:
       description: One way to pay this invoice
       additionalProperties: false
@@ -4789,6 +4864,10 @@ components:
         - reference_type
         - type
       type: object
+
+    # ##############################################
+    # SCHEMA InvoiceReferences
+    # ##############################################
     InvoiceReferences:
       description: Invoice references
       additionalProperties: false
@@ -4803,10 +4882,18 @@ components:
         - our
         - your
       type: object
+
+    # ##############################################
+    # SCHEMA PartQueryParameter
+    # ##############################################
     PartQueryParameter:
       minimum: 1
       description: The content part to retrive, 1-indexed
       type: integer
+
+    # ##############################################
+    # SCHEMA PartMetadata
+    # ##############################################
     PartMetadata:
       additionalProperties: false
       properties:
@@ -4847,9 +4934,17 @@ components:
         - size
         - url
       type: object
+
+    # ##############################################
+    # SCHEMA ContentPart
+    # ##############################################
     ContentPart:
       description: The actual content, mostly PDF's, but can one of serveral formats.
       type: string
+
+    # ##############################################
+    # SCHEMA ContentMetadata
+    # ##############################################
     ContentMetadata:
       additionalProperties: false
       properties:
