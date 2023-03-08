@@ -4548,13 +4548,11 @@ components:
     CompanyKey:
       description: The key for a company
       pattern: ^[0-9]{10}[a-f0-9]{32}$
-      description: The unique identifier for the object this key belongs to
       example: 156077433683911cdca5fd4563bded979572454cb9
       type: string
     ContentKey:
       description: The key for a content
       pattern: ^[0-9]{10}[a-f0-9]{32}$
-      description: The unique identifier for the object this key belongs to
       example: 156077433683911cdca5fd4563bded979572454cb9
       type: string
     CompanyType:
