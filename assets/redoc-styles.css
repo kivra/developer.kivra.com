@@ -3,7 +3,12 @@ body {
   padding: 0;
 }
 
-.menu-content div:first-of-type img {
+/* This alt hack depends on x-logo in swagger.yml,
+ * if you have a better solution that let's us size
+ * our own logo but not the logo in the navbar footer,
+ * feel free to improve this.
+ */
+.menu-content img[alt="Kivra logo"] {
   padding: 20px 0 10px 20px;
   width: 130px;
   height: auto;
