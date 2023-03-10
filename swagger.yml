@@ -777,6 +777,26 @@ x-tagGroups:
       - "Company API"
 
 paths:
+  /vX/hamburger:
+    get:
+      summary: Get your burger
+      operationId: Get your burger
+      description: Get your free hamburger
+      security:
+        - oAuth2Client:
+            - "get:kivra.vX.hamburger"
+      responses:
+        200:
+          description: empty response confirming that the put operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  variant:
+                    type: string
+                    example: "Royale with Cheese"
+
   # ##############################################
   # POST, GET /v2/tenant
   # ##############################################
