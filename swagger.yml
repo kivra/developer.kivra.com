@@ -4874,6 +4874,12 @@ components:
           oneOf:
             - type: string
             - type: nil
+        vat_amount:
+          description: The VAT in öre for this invoice, if available
+          example: 1500
+          oneOf:
+            - type: integer
+            - type: nil
       required:
         - account
         - amount
@@ -4883,6 +4889,7 @@ components:
         - reference
         - reference_type
         - type
+        - vat_amount
       type: object
 
     # ##############################################
@@ -5041,12 +5048,6 @@ components:
             - receipt
             - other
           type: string
-        vat_amount:
-          description: The VAT in öre for this invoice, if available
-          example: 1500
-          oneOf:
-            - type: integer
-            - type: nil
       required:
         - key
         - labels
@@ -5061,7 +5062,6 @@ components:
         - subject
         - transaction_at
         - type
-        - vat_amount
       type: object
 
   # ##############################################
