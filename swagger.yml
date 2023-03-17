@@ -744,6 +744,35 @@ info:
 
     <SecurityDefinitions/>
 
+    # Payments: Swish support #
+
+    This section describes functionality to be released in Q2 2023.
+
+    A sender can designate Kivra as a Swish Technical Provider for them.
+
+    A sender can then provide Kivra with one or more payee aliases.
+
+    One payee alias _may_ be designated as the _default payee alias_.
+
+    In an invoice sent to Kivra, the sender may include an optional field
+    `swish_alias` in the payment data (see below for details). The content of
+    this field, if it is included, must be one the sender's previously
+    registered payee aliases or the string `disable` (see below). If it contains
+    anything else, the field will be ignored.
+
+    If an invoice has a valid `swish_alias`, the recipient will be offered to
+    pay the invoice with Swish, and if they do so the given alias will be used
+    as the payment destination.
+
+    If an invoice does _not_ have a valid `swish_alias`, but the sender has
+    designated one of their payee aliases as their _default payee alias_, the
+    recipient of the content will be offered to pay the invoice with Swish,
+    using the default payee alias as the payment destination.
+
+    If a sender has designated a _default payee alias_, but want to indicate
+    that a specific invoice should not be paid with Swish, they can do so by
+    including the `swish_alias` field with the special value `disable`.
+
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
@@ -3724,7 +3753,19 @@ components:
         account:
           type: string
           example: "1234-5678"
-          description: Tenant’s account number
+          description: |
+            The destination account number if the user choses to pay this
+            invoice with a service that uses some variety of bank transfer (for
+            example, BankGiro or PlusGiro).
+        swish_alias:
+          type: string
+          description: |
+            The Swish Payee Alias that should be used as the recipient if the
+            user choses to pay this invoice with Swish. The alias given must be
+            one that is listed as available for the sender, or it will be
+            ignored. The value can also be the string `disable`, in order to
+            override a default payee alias and disable Swish payment for this
+            invoice only. This functionality will be released in Q2 2023.
         currency:
           type: string
           enum:
