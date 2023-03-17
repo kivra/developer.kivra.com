@@ -746,6 +746,8 @@ info:
 
     # Payments: Swish support #
 
+    This section describes functionality to be released in Q2 2023.
+
     A sender can designate Kivra as a Swish Technical Provider for them.
 
     A sender can then provide Kivra with one or more payee aliases.
@@ -3763,7 +3765,7 @@ components:
             one that is listed as available for the sender, or it will be
             ignored. The value can also be the string `disable`, in order to
             override a default payee alias and disable Swish payment for this
-            invoice only.
+            invoice only. This functionality will be released in Q2 2023.
         currency:
           type: string
           enum:
