@@ -10,7 +10,7 @@ info:
   title: Kivra Sweden API
   x-logo:
     url: "assets/Kivra_logo_1920X1080_green.png"
-    altText: Kivra logo
+    altText: Kivra logo # don't rename this without fixing assets/redoc-styles.css
   version: v1 and v2
   description: |
     # Receipt API
@@ -103,6 +103,8 @@ info:
     | 2022-04-11 | More details about specification for time and dates |
     | 2022-07-11 | Added state `generating` for agreements |
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
+    | 2022-12-02 | Added Forms BETA endpoints for Sandbox. API not stable. Breaking changes may happen.  |
+    | 2023-03-08 | Added v3 of the company Partner API |
 
     # Terminology
     ### User
@@ -245,10 +247,6 @@ info:
 
     `https://sender.api.kivra.com`
 
-    <aside class="notice">
-    <i>Note: The older endpoint for production <b>api.kivra.com</b> will be removed on September 30th 2020</i>
-    </aside>
-
     The production environment should only be used for sending real data, not for testing of any sort. For testing, please refer to Sandbox.
 
     ### Sandbox environment
@@ -256,13 +254,11 @@ info:
 
     `https://sender.sandbox-api.kivra.com`
 
-    <aside class="notice">
-    <i>Note: The older endpoint for sandbox <b>sandbox.kivra.com</b> will be removed on September 30th 2020</i>
-    </aside>
-
     The sandbox is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
 
     We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.
+    
+    The Sandbox environment cannot be used for capacity or volume tests as it has a much smaller capacity and performance than our production environment.
 
     ## URL Components
     When constructing resource identifiers (URIs) it is best to consider them as being built with up to four discrete units.
@@ -437,6 +433,8 @@ info:
     Invoices can have multiple payment options. That means that while the recipient of the payment is the same for the entire invoice, some specifics of the payment can vary. The details are described further down in this document, but in general each option can have its own amount, reference information and due date. If there are more than one option, each of them must have a short title, and may have a longer description as well as its own icon.
 
     If an invoice has more than one payment option, the first option is treated specially. All notifications are based on the due date in the first option, and if a user accesses an invoice in an older client that is not aware of the multiple-option functionality, it will only display the information from the first option. Because of this, it is important that the first option always is to pay the entire debt, or, more generally, that paying the first option will release the user from any further obligation related to that particular invoice.
+
+    If there are between one and seven payment options, there may also be a _flexible option_. This is meant to present the payer with the opportunity to choose how much they want to pay, within given limits. It is given specially under the key `flexible_option` rather than included in the normal options list. The object under the key shares some options with normal options, but does not specify a specific amount. Instead it has four optional keys giving mandatory and suggested limits for the lowest and highest amounts to be paid. Suggested limits will be used by the clients for prompting, hard limits will be enforced by both clients and backend.
 
     # Tenant integration: Tenant management
 
@@ -776,6 +774,11 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
+  - name: "Tenant API - Forms (BETA)"
+    description: |
+      **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+      Endpoints for working with form templates and responses
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -789,16 +792,38 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
+      - "Tenant API - Forms (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
     tags:
-      - "Partner API"
+      - "Partner API v1"
+      - "Partner API v3"
   - name: Company API
     tags:
       - "Company API"
 
 paths:
+  /vX/hamburger:
+    get:
+      summary: Get your burger
+      operationId: Get your burger
+      description: Get your free hamburger
+      security:
+        - oAuth2Client:
+            - "get:kivra.vX.hamburger"
+      responses:
+        200:
+          description: empty response confirming that the put operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  variant:
+                    type: string
+                    example: "Royale with Cheese"
+
   # ##############################################
   # POST, GET /v2/tenant
   # ##############################################
@@ -1380,6 +1405,96 @@ paths:
                 ssns: ["191212121212", "198112172385"]
 
   # ##############################################
+  # POST v2 usermatching
+  # ##############################################
+  /v2/tenant/{tenantKey}/usermatch/ssn:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Match a list of ssns to recipient for a specific tenant (v2)
+      operationId: Match Users ssn v2
+      description: |
+        <p>This resource is used to match a list of users to check that they are eligible for receiving Content from
+          the specific Tenant.
+        <p>The request contains a list of recipient addresses to be matched, and the response is a filtered list containing only the addresses that are eligible to receive content from the tenant.
+        <aside class="notice">
+          If none of the provided addresses are eligible to receive content from this tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key the matching should be done against. Recipients that opt-out from the tenant will be excluded.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: List of ssns to be matched to kivra recipients.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserMatchV2SSN"
+            example:
+              list: ["191212121212","197701032380","198112172385"]
+        required: true
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}.usermatch.ssn"
+      responses:
+        200:
+          description: Filtered list of addresses that matched.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserMatchV2SSN"
+              example:
+                list: ["191212121212", "198112172385"]
+
+  /v2/tenant/{tenantKey}/usermatch/verified_email:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Match a list of emails to recipients for a specific tenant (v2)
+      operationId: Match Users verified_email v2
+      description: |
+        <p>This resource is used to match a list of users to check that they are eligible for receiving Content from
+          the specific Tenant.
+        <p>The request contains a list of recipient addresses to be matched, and the response is a filtered list containing only the addresses that are eligible to receive content from the tenant.
+        <p>Email matching is case insensitive, but the queried email case is returned as submitted.
+        <aside class="notice">
+          If none of the provided addresses are eligible to receive content from this tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key the matching should be done against. Recipients that opt-out from the tenant will be excluded.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: List of ssns to be matched to kivra recipients.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserMatchV2Email"
+            example:
+              list: ["fOO@example.com","bAr@EXAMPLE.COM","XYZ@example.COM"]
+        required: true
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}.usermatch.verified_email"
+      responses:
+        200:
+          description: Filtered list of addresses that matched.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserMatchV2Email"
+              example:
+                list: ["fOO@example.COM", "bAr@EXAMPLE.COM"]
+
+  # ##############################################
   # GET /v1/tenant/TKEY/company
   # ##############################################
   /v1/tenant/{tenantKey}/company:
@@ -1439,10 +1554,17 @@ paths:
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
-        As a minimum a valid `ssn` or `vat_number` is required.
+        As a minimum a valid recipient identifier is required (`vat_number`, `ssn`, `email`).
 
         <aside class="notice">
-        Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
+        Note: Kivra will not fall through to next field if there is no match on the first defined recipeient identifier field.
+
+        Kivra(se) will in order look for
+            1. `vat_number`
+            2. `ssn`
+            3. `email`
+
+        E.g. if a content has both an ssn and an email, only the ssn will be used to find a receiver, even if there is no ssn match.
         </aside>
 
         ### Content (PDF) vs Responsive content (HTML+PDF)
@@ -1731,6 +1853,19 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
+              form to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  context:
+                    form:
+                      id: 2877d684-a340-4e4c-867f-d93283787b01
 
   # ##############################################
   # POST /v2/tenant/TKEY/content
@@ -2078,6 +2213,306 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
+              
+  # ##############################################
+  # POST, GET /v1/tenant/tenantKey/form
+  # ##############################################
+  /v1/tenant/{tenantKey}/form:
+    post:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Create form template
+      operationId: createFormTemplate
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
+
+        ### How to send a form to the user
+        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
+      security:
+        - oAuth2Client:
+            - "post:kivra.v1.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key for the tenant who is creating the form template.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            Form template created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormErrorResponse"
+              examples:
+                invalid_json:
+                  value:
+                    code: 40000
+                    short_message: "Invalid JSON"
+                    long_message: "Could not parse posted body as JSON"
+        401:
+          description: |
+            Not authorized to make the request.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplate"
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form template keys
+      operationId: getFormTemplateKey
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key returns all form template keys associated with forms they created.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form templates belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            List of form template keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormTemplateKey"
+        401:
+          description: |
+            Not authorized to make the request
+
+  # ##############################################
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form template
+      operationId: getFormTemplate
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form template that the tenant created.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form template belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+        401:
+          description: |
+            Not authorized to make the request
+        404:
+          description: |
+            Form template not found
+ 
+  # ##############################################
+  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form response keys
+      operationId: getFormResponseKeys
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key and a form template key returns the form response key associated with form responses submitted by users.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form responses belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form responses.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form response ids
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponseKeys"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response keys
+        404:
+          description: |
+            The form template associated with formTemplateKey does not exist.
+
+
+  # ##############################################
+  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseKey}
+  # ##############################################
+  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
+    get:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Get form response
+      operationId: getFormResponse
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response key returns the form response submitted by a user.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the form response belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form template key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: formResponseKey
+          in: path
+          description: The form response key associated with the form response.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: |
+            Form response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormResponse"
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response keys
+        404:
+          description: |
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
+    delete:
+      tags:
+        - "Tenant API - Forms (BETA)"
+      summary: Delete form response
+      operationId: deleteFormResponse
+      description: |
+        **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Given a tenant key, form template key and form response key deletes the form response submitted by a user.
+
+        ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
+      security:
+        - oAuth2Client:
+            - "delete:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant for whom the form belongs to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: formTemplateKey
+          in: path
+          description: The form_template_key associated with the form template.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: formResponseKey
+          in: path
+          description: The form response key associated with the form responses.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: |
+            Form deleted
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request
+        403:
+          description: |
+            Forbidden from accessing the form response keys
+        404:
+          description: |
+            Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
 
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
@@ -2286,7 +2721,7 @@ paths:
   /v1/partner/company:
     get:
       tags:
-        - "Partner API"
+        - "Partner API v1"
       summary: Lookup a specific company
       operationId: Find Company
       description: |
@@ -2325,7 +2760,7 @@ paths:
   /v1/partner/company/{companyKey}/content:
     get:
       tags:
-        - "Partner API"
+        - "Partner API v1"
       summary: Get the company inbox
       operationId: Get company inbox
       description: This resource allows to access a high level description for each content in the company inbox, to allow for a first sorting and filtering of the content.
@@ -2356,7 +2791,7 @@ paths:
   /v1/partner/company/{companyKey}/content/{contentKey}:
     get:
       tags:
-        - "Partner API"
+        - "Partner API v1"
       summary: Get metadata for a content.
       operationId: Get content metadata
       description:
@@ -2396,7 +2831,7 @@ paths:
   /v1/partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
     get:
       tags:
-        - "Partner API"
+        - "Partner API v1"
       summary: Get raw file in binary format
       operationId: Get raw file
       description: This resource allows to get the raw file in binary format.
@@ -2440,7 +2875,7 @@ paths:
   /v1/partner/company/{companyKey}/content/{contentKey}/{status}:
     post:
       tags:
-        - "Partner API"
+        - "Partner API v1"
       summary: Set status for content
       operationId: Set status for content
       description: This resource allows to set the status for a specific content. It is used by the partner to set whether the content should be marked as viewed or paid.
@@ -2477,6 +2912,187 @@ paths:
         content:
           application/json:
             schema: {}
+
+  # ##############################################
+  # GET /v3/partner/company
+  # ##############################################
+  /v3/partner/company:
+    get:
+      tags:
+        - "Partner API v3"
+      summary: List accessible companies
+      operationId: List companies
+      description: List the companies the client has access to
+      parameters:
+        - name: field
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldQueryParameter'
+        - name: vat_number
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/VatNumber'
+      responses:
+        '200':
+          description: >
+            If `vat_number` is given, the repsonse will only include companies with VAT numbers in that list.
+            The `field` parameter controls which columns (CSV) or properties (JSON) to include in the response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseCompany'
+            text/csv:
+              schema:
+                example: |
+                  key,type,name,vat_number
+                  2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
+                  Café AB,SE556000475501
+                type: string
+
+  # ##############################################
+  # GET /v3/partner/company/COMPKEY
+  # ##############################################
+  /v3/partner/company/{companyKey}:
+    get:
+      tags:
+        - "Partner API v3"
+      summary: Get a single company
+      operationId: Get company
+      description: Get a single company
+      parameters:
+        - name: companyKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/CompanyKey'
+        - name: field
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldQueryParameter'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullCompany'
+
+  # ##############################################
+  # GET /v3/partner/company/COMPKEY/content
+  # ##############################################
+  /v3/partner/company/{companyKey}/content:
+    get:
+      tags:
+        - "Partner API v3"
+      summary: List company inbox content
+      operationId: GET_company-companyKey-content
+      description: >
+        List the content this company has received.
+        This may be filtered by certain `labels` and specific fields may be selected using `field`.
+      parameters:
+        - name: companyKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/CompanyKey'
+        - name: handled
+          in: query
+          schema:
+            $ref: '#/components/schemas/HandledLabel'
+        - name: viewed
+          in: query
+          schema:
+            $ref: '#/components/schemas/ViewedLabel'
+        - name: field
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldQueryParameter'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentMetadata'
+
+  # ##############################################
+  # GET,PATCH /v3/partner/company/COMPKEY/content/CONTKEY
+  # ##############################################
+  /v3/partner/company/{companyKey}/content/{contentKey}:
+    get:
+      tags:
+        - "Partner API v3"
+      summary: Get specific content
+      operationId: Get content
+      parameters:
+        - name: companyKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/CompanyKey'
+        - name: contentKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ContentKey'
+        - name: part
+          in: query
+          schema:
+            $ref: '#/components/schemas/PartQueryParameter'
+      responses:
+        '200':
+          description: Content metadata
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ContentPart'
+    patch:
+      tags:
+        - "Partner API v3"
+      summary: Update content metadata
+      operationId: Update content metadata
+      parameters:
+        - name: companyKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/CompanyKey'
+        - name: contentKey
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ContentKey'
+      responses:
+        '200':
+          description: Content metadata
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ContentPart'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              properties:
+                handled:
+                  description: Mark the content as `handled`/`unhandled`
+                  $ref: '#/components/schemas/HandledLabel'
+                viewed:
+                  description: Mark the content as `viewed`/`unviewed`
+                  $ref: '#/components/schemas/ViewedLabel'
+              type: object
+        required: true
 
   # ##############################################
   # POST /v3/company/match/plus_active
@@ -2527,14 +3143,23 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        subject:
-          description: This subject/title will be visibile in the Recipients Inbox.
+        email:
+          description: |
+            A kivra user's email address.
           type: string
-          example: "Sample Invoice"
+          writeOnly: true
+          example: "Kivra.Sweden@example.com"
+        subject:
+          description: |
+            The subject/title will be visibile in the Recipients Inbox. 
+            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
+            Avoid using personal and sensitive information in the subject.
+          type: string
+          example: "Invoice for March 2022"
         generated_at:
           type: string
           format: ISO8601
-          example: "2016-12-12"
+          example: "2022-12-31"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
@@ -2567,6 +3192,9 @@ components:
               indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. 
               It can be used to send an offer to renew a subscription, insurance or similar. 
               A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"invoice.debtcollection"`: |
+                indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
+                A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"booking"`: |
             indicating that the content is a booking/appointement.
         retain:
@@ -2609,6 +3237,16 @@ components:
             booking:
               description: Optionally specify booking information
               $ref: "#/components/schemas/Booking"
+            form:
+              required:
+                - id
+              type: object
+              description: The form you would like to attach to this content.
+              properties:
+                id:
+                  type: string
+                  description: The form template key
+                  example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
     # SCHEMA Content_user_v2
@@ -2628,13 +3266,15 @@ components:
           example: "191212121212"
         subject:
           description: |
-            This subject/title will be visibile in the Recipients Inbox.
+            The subject/title will be visibile in the Recipients Inbox. 
+            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
+            Avoid using personal and sensitive information in the subject.
           type: string
-          example: "Sample Invoice"
+          example: "Invoice for March 2022"
         generated_at:
           type: string
           format: ISO8601
-          example: "2016-12-12"
+          example: "2022-12-31"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
@@ -2694,6 +3334,265 @@ components:
         booking:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
+
+    # ##############################################
+    # SCHEMA Form Template
+    # ##############################################
+    FormTemplate:
+      type: object
+      required:
+        - title
+        - description
+        - fields
+        - form_template_key
+        - tenant_key
+        - created_at
+      properties:
+        title:
+          type: string
+          description: |
+            The title of the form.
+          example: Customer KYC
+        description:
+          type: string
+          description: |
+            The purpose of the form.
+          example: Your bank has some questions
+        fields:
+          type: array
+          description: |
+            The questions that you want to ask the user.
+          items:
+            $ref: "#/components/schemas/FormField"
+          example: 
+            - label: How many times per month do you deposit into your account?
+              name: number_deposits
+              type: number
+            - label: What is the largest amount deposited?
+              name: largest_sum
+              type: options
+              values:
+                - id: small
+                  label: 10000 - 20000
+                - id: medium
+                  label: 20000 - 30000
+                - id: large
+                  label: 30000 - 40000
+            - label: Do you have any further comments?
+              name: comments
+              type: free_text
+        form_template_key:
+          type: string
+          format: uuid
+          description: |
+            The id of the newly created form template.
+          readOnly: true
+          example: "2877d684-a340-4e4c-867f-d93283787b01"
+        tenant_key:
+          type: string
+          format: hexadecimal
+          description: |
+            The tenant key of the tenant that created the form template.
+          readOnly: true
+          example: "1341543157b3a8c66f220b2164b2e13789d2d04015"
+        created_at:
+          type: string
+          description: |
+            The date the form template was created.
+          readOnly: true
+          example: "2022-11-23T14:51:23.874434Z"
+    FormField:
+      type: object
+      required:
+        - type
+        - label
+        - name
+      properties:
+        type:
+          type: string
+          enum: [free_text, number, options]
+          description: |
+            The input type required to answer the question.
+
+            `free_text` is a string.
+
+            `number` is an integer or a floating point number.
+
+            `options` is a string that has a finite amount of values e.g. yes or no question.
+        label:
+          type: string
+          description: |
+            Human readable description of what the question is.
+        name:
+          type: string
+          description: |
+            A key used to identify the question.
+        values:
+          type: array
+          description: |
+            When `type` is `options` then use this to specify the answers that the user can select.
+          items:
+            $ref: "#/components/schemas/FormOption"
+    FormOption:
+      type: object
+      required:
+        - id
+        - label
+      properties:
+        id:
+          type: string
+          description: |
+            A key used to identify the answer.
+        label:
+          type: string
+          description: |
+            A human readable description of the answer.
+    FormTemplateKey:
+      type: object
+      required:
+        - form_template_key
+      properties:
+        form_template_key:
+          type: string
+          description: |
+            A key used to identify the form template.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+    
+    # ##############################################
+    # SCHEMA Form Response
+    # ##############################################  
+    FormResponseKeys:
+      type: object
+      required:
+        - form_template_key
+        - responses
+      properties:
+        form_template_key:
+          type: string
+          format: uuid
+          description: |
+            The form template key associated with the form responses.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        responses:
+          type: array
+          description: |
+            Metadata about the form response 
+          items:
+            type: object
+            properties:
+              form_response_key:
+                type: string
+                format: uuid
+                description: |
+                  A key used to identify the individual form response.
+                example: 
+                  bed773d7-9029-42f2-9f0b-0729390c962c
+    FormResponse:
+      type: object
+      required:
+        - form_response_key
+        - form_template_key
+        - responses
+        - matched_by
+      properties:
+        form_response_key:
+          type: string
+          format: uuid
+          description:
+              The form response key
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        form_template_key:
+          type: string
+          format: uuid
+          description:
+             The form template key.
+          example: 
+            2877d684-a340-4e4c-867f-d93283787b01
+        responses:
+          type: object
+          description:
+            The form response that the user submitted.
+          required:
+            - name
+            - value
+            - type
+          properties:
+            name:
+              type: string
+              description: |
+                A key used to identify the question.
+            value:
+              type: object
+              additionalProperties:
+                oneOf:
+                  - type: string
+                  - type: number
+              description: |
+                The response to the question.
+            type:
+              type: string
+              enum: [free_text, number, options]
+              description: |
+                The input type required to answer the question.
+
+                `free_text` is a string.
+
+                `number` is an integer or a floating point number.
+
+                `options` is a string that has a finite amount of values e.g. yes or no question.
+          example:
+             - name: number_deposits
+               value: 1
+               type: number
+             - name: largest_sum
+               value: small
+               type: options
+             - name: comments
+               value: No further comments
+               type: free_text
+        matched_by:
+          type: object
+          description:
+            Used to identify the user that answered the form
+          required:
+            - type
+            - value
+          properties:
+            type:
+              type: string
+              enum: [ssn, email]
+              description:
+                How the user that answered the form was identified.
+              example: ssn
+            value:
+              type: string
+              description:
+                Represents a value used to identify a user e.g. ssn or email.
+              example: 199202286837
+    BasicErrorResponse:
+      type: object
+      required:
+        - code
+        - short_message
+        - long_message
+      properties:
+        code:
+          type: integer
+          description: An error code identifying the reason of the unsuccessful request.
+        short_message:
+          type: string
+          description: Short human-readable description.
+        long_message:
+          type: string
+          description: Longer human-readable description getting into details.
+    FormErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/BasicErrorResponse"
+        - type: object
+
 
     # ##############################################
     # SCHEMA Content_company
@@ -2910,7 +3809,58 @@ components:
                 type: string
                 description: "Optional description for this option"
               icon:
-                $ref: "#/components/schemas/PaymentOptionIcon"
+                $ref: '#/components/schemas/PaymentOptionIcon'
+        flexible_option:
+          type: object
+          description: "A flexible payment option."
+          required:
+            - due_date
+            - type
+            - reference
+          properties:
+            due_date:
+              type: string
+              format: ISO8601
+              example: "2017-01-01"
+              description: Date when this option is due.
+            type:
+              type: string
+              description: Type of format for the reference
+              example: "SE_OCR"
+              enum: ["SE_OCR", "TENANT_REF"]
+            reference:
+              type: string
+              example: "426523791"
+              description: The reference number used for paying. This can be maximum 25 characters long.
+            title:
+              type: string
+              description: "Title for this option"
+            description:
+              type: string
+              description: "Optional description for this option"
+            icon:
+              $ref: '#/components/schemas/PaymentOptionIcon'
+            min_limit:
+              type: string
+              format: float
+              example: "123.50"
+              description: The smallest allowed amount to be paid. If not given it defaults to 1.00 SEK.
+            min_suggested:
+              type: string
+              format: float
+              example: "123.50"
+              description: The user is encouraged to pay more than this amount.
+            max_suggested:
+              type: string
+              format: float
+              example: "123.50"
+              description: The user is encouraged to not pay more than this amount.
+            max_limit:
+              type: string
+              format: float
+              example: "123.50"
+              description: The largest allowed amount to be paid. Note that even if this amount is not given or very high, limits from the payment provider or bank will still apply.
+
 
     # ##############################################
     # SCHEMA CompanyList
@@ -2981,6 +3931,47 @@ components:
           - "191212121212"
           - "197701032380"
           - "198112172385"
+
+    # ##############################################
+    # SCHEMA V2 UserMatch
+    # ##############################################
+    UserMatchV2SSN:
+      required:
+        - list
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            type: string
+            example:
+              - "191212121212"
+              - "197701032380"
+              - "198112172385"
+          description: list of recipient addresses to be matched
+      example:
+        list:
+          - "191212121212"
+          - "197701032380"
+          - "198112172385"
+
+    UserMatchV2Email:
+      required:
+        - list
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            type: string
+            example:
+              - "fOO@example.com"
+              - "bAr@EXAMPLE.COM"
+          description: list of recipient addresses to be matched
+      example:
+        list:
+          - "fOO@example.com"
+          - "bAr@EXAMPLE.COM"
 
     # ##############################################
     # SCHEMA CompanyMatch
@@ -3550,7 +4541,7 @@ components:
       properties:
         title:
           description: |
-            Booking name that is shown in the Kivra GUI. Note! Don’t include any sensitive information here.
+            Booking name that is used when creating a post in an external calendar. Note! Don’t include any sensitive information here.
           type: string
           example: "Kontroll av tandhälsa"
         start_time:
@@ -3610,6 +4601,507 @@ components:
           description: |
             The unique key for the content file (present for all content that is not "text/html" or "text/plain")
           example: "15118724482475bf32615b4a2aaa604fd66377010e"
+
+    # ##############################################
+    # SCHEMA EmptyString
+    # ##############################################
+    EmptyString:
+      description: The empty string
+      enum:
+        - ''
+      type: string
+
+    # ##############################################
+    # SCHEMA CompanyKey
+    # ##############################################
+    CompanyKey:
+      description: The key for a company
+      pattern: ^[0-9]{10}[a-f0-9]{32}$
+      example: 156077433683911cdca5fd4563bded979572454cb9
+      type: string
+
+    # ##############################################
+    # SCHEMA ContentKey
+    # ##############################################
+    ContentKey:
+      description: The key for a content
+      pattern: ^[0-9]{10}[a-f0-9]{32}$
+      example: 156077433683911cdca5fd4563bded979572454cb9
+      type: string
+
+    # ##############################################
+    # SCHEMA CompanyType
+    # ##############################################
+    CompanyType:
+      description: |
+        The company's/organisation's type
+
+        This is currently based on the registry holding the signatory
+        information. Thus `company` really means that Bolagsverket is the
+        registry and includes Ekonomiska föreningar as well. For
+        `riksidrottsförening` it is Riksindrottsförbundet.
+      example: company
+      enum:
+        - company
+        - riksidrottsförening
+      type: string
+
+    # ##############################################
+    # SCHEMA CompanyName
+    # ##############################################
+    CompanyName:
+      description: The name of a company
+      example: Cornelias Café AB
+      type: string
+
+    # ##############################################
+    # SCHEMA VatNumber
+    # ##############################################
+    VatNumber:
+      pattern: ^[A-Z]{2}[0-9]{10}[0-9]{2}$
+      description: |
+        The VAT number of the company.
+
+        It follows this format:
+        Land code - Organisation number - Serial number
+      example: SE556000475501
+      type: string
+
+    # ##############################################
+    # SCHEMA IncomingEmail
+    # ##############################################
+    IncomingEmail:
+      pattern: ^[a-tv-zA-TV-Z0-9]{9}@(sandbox\.)?kivramail.com$
+      description: K4B+ email address for receiving emails as content
+      type: string
+      example: xxcsn2psy@kivramail.com
+
+    # ##############################################
+    # SCHEMA ScanningAddress
+    # ##############################################
+    ScanningAddress:
+      description: K4B+ postal address for scanning physical post
+      additionalProperties: false
+      properties:
+        name:
+          $ref: '#/components/schemas/CompanyName'
+        street:
+          description: |
+            A special "street" that allows the scanning facility to send to the correct company.
+
+            It's on the format "Kivra: <organisation number>"
+          type: string
+          example: 'Kivra: 556000-4755'
+        postal_code:
+          description: |
+            The special postal code that goes to Kivra's scanning facility
+          example: 106 31
+          enum:
+            - 106 31
+          type: string
+        city:
+          description: The "city" for Kivra's scanning facility
+          example: Stockholm
+          enum:
+            - Stockholm
+          type: string
+        country:
+          description: The country for Kivra's scanning facility
+          example: SE
+          enum:
+            - SE
+          type: string
+      required:
+        - name
+        - street
+        - postal_code
+        - city
+        - country
+      type: object
+
+    # ##############################################
+    # SCHEMA AllServices
+    # ##############################################
+    AllServices:
+      description: All K4B and K4B+ services
+      additionalProperties: false
+      properties:
+        email:
+          description: The K4B+ email service
+          example: false
+          type: boolean
+        scanning:
+          description: The K4B+ physical scanned post service
+          example: false
+          type: boolean
+        interpreter:
+          description: The K4B+ interpreter (ML) service
+          example: false
+          type: boolean
+        kivra:
+          description: Kivra's normal postal service, is always enabled
+          example: true
+          enum:
+            - true
+          type: boolean
+        minameddelanden:
+          description: |
+            Governmental posts, only available for companies with `type`
+            `company`
+          example: true
+          type: boolean
+      type: object
+
+    # ##############################################
+    # SCHEMA FieldQueryParameter
+    # ##############################################
+    FieldQueryParameter:
+      description: The field(s) to respond with
+      example: key
+      type: string
+
+    # ##############################################
+    # SCHEMA BaseCompany
+    # ##############################################
+    BaseCompany:
+      description: A company object with basic fields only
+      additionalProperties: false
+      properties:
+        key:
+          $ref: '#/components/schemas/CompanyKey'
+        name:
+          $ref: '#/components/schemas/CompanyName'
+        type:
+          $ref: '#/components/schemas/CompanyType'
+        vat_number:
+          $ref: '#/components/schemas/VatNumber'
+      type: object
+
+    # ##############################################
+    # SCHEMA FullCompany
+    # ##############################################
+    FullCompany:
+      description: A company object
+      additionalProperties: false
+      properties:
+        key:
+          $ref: '#/components/schemas/CompanyKey'
+        address:
+          oneOf:
+            - $ref: '#/components/schemas/ScanningAddress'
+            - type: nil
+        created_at:
+          description: When the company started to onboard
+          example: '2019-02-26T14:47:26Z'
+          type: string
+          format: date-time
+        email:
+          oneOf:
+            - $ref: '#/components/schemas/IncomingEmail'
+            - $ref: '#/components/schemas/EmptyString'
+        name:
+          $ref: '#/components/schemas/CompanyName'
+        type:
+          $ref: '#/components/schemas/CompanyType'
+        services:
+          $ref: '#/components/schemas/AllServices'
+        vat_number:
+          $ref: '#/components/schemas/VatNumber'
+      required:
+        - key
+      type: object
+
+    # ##############################################
+    # SCHEMA GovernmentalLabel
+    # ##############################################
+    GovernmentalLabel:
+      description: |
+        Indicates if the content comes from a governmental body.
+      type: boolean
+
+    # ##############################################
+    # SCHEMA HandledLabel
+    # ##############################################
+    HandledLabel:
+      description: |
+        The content has been marked as `handled`, previously known as `paid`.
+      type: boolean
+
+    # ##############################################
+    # SCHEMA InterpretedLabel
+    # ##############################################
+    InterpretedLabel:
+      description: |
+        Indicates if the content has been interpreted.
+      type: boolean
+
+    # ##############################################
+    # SCHEMA ReminderLabel
+    # ##############################################
+    ReminderLabel:
+      description: |
+        Indicates if the content, which must be an invoice, is a reminder.
+      type: boolean
+
+    # ##############################################
+    # SCHEMA TrashedLabel
+    # ##############################################
+    TrashedLabel:
+      description: |
+        Indicates if the content has been moved to the trash.
+      type: boolean
+
+    # ##############################################
+    # SCHEMA ViewedLabel
+    # ##############################################
+    ViewedLabel:
+      description: |
+        The content has been viewed. This can be toggled by the user, i.e. "Mark
+        as unread".
+      type: boolean
+
+    # ##############################################
+    # SCHEMA PartnerPaymentOption
+    # ##############################################
+    PartnerPaymentOption:
+      description: One way to pay this invoice
+      additionalProperties: false
+      properties:
+        account:
+          description: The account to pay to
+          example: '12345678'
+          oneOf:
+            - type: string
+            - type: nil
+        amount:
+          minimum: 0
+          description: The amount to pay in öre, or equivalent
+          example: 150000
+          type: integer
+        currency:
+          description: The currency used for this payment option
+          example: SEK
+          oneOf:
+            - type: string
+            - type: nil
+        description:
+          description: The description of this payment, if available
+          example: Takplåt
+          oneOf:
+            - type: string
+            - type: nil
+        due_at:
+          example: '2022-03-30T00:00:00Z'
+          oneOf:
+            - type: string
+              format: date-time
+            - type: nil
+        reference:
+          description: |
+            The payments reference, could be an OCR number of invoice reference
+          example: 987654321
+          oneOf:
+            - type: string
+            - type: nil
+        reference_type:
+          description: The type of reference
+          oneOf:
+            - type: string
+            - type: nil
+        type:
+          description: The type of the the payment, aka the type of the account
+          oneOf:
+            - type: string
+            - type: nil
+        vat_amount:
+          description: The VAT in öre for this invoice, if available
+          example: 1500
+          oneOf:
+            - type: integer
+            - type: nil
+      required:
+        - account
+        - amount
+        - currency
+        - description
+        - due_at
+        - reference
+        - reference_type
+        - type
+        - vat_amount
+      type: object
+
+    # ##############################################
+    # SCHEMA InvoiceReferences
+    # ##############################################
+    InvoiceReferences:
+      description: Invoice references
+      additionalProperties: false
+      properties:
+        our:
+          description: Our reference, "vår referens" in Swedish
+          type: string
+        your:
+          description: Your reference, "er referens" in Swedish
+          type: string
+      required:
+        - our
+        - your
+      type: object
+
+    # ##############################################
+    # SCHEMA PartQueryParameter
+    # ##############################################
+    PartQueryParameter:
+      minimum: 1
+      description: The content part to retrive, 1-indexed
+      type: integer
+
+    # ##############################################
+    # SCHEMA PartMetadata
+    # ##############################################
+    PartMetadata:
+      additionalProperties: false
+      properties:
+        content_type:
+          description: The MIME type of this content part
+          enum:
+            - application/pdf
+            - text/html
+            - text/plain
+            - image/jpeg
+            - image/gif
+            - image/png
+            - text/calendar
+            - application/msword
+            - >-
+              application/vnd.openxmlformats-officedocument.wordprocessingml.document
+            - >-
+              application/vnd.openxmlformats-officedocument.wordprocessingml.template
+          type: string
+        name:
+          description: The name of this content part. Usually a filename.
+          type: string
+          example: faktura.pdf
+        sha256:
+          description: The SHA256 digest of this content part
+          type: string
+        size:
+          minimum: 0
+          description: The size in bytes of this content part
+          type: integer
+        url:
+          description: The URL to fetch this content part
+          type: string
+      required:
+        - content_type
+        - name
+        - sha256
+        - size
+        - url
+      type: object
+
+    # ##############################################
+    # SCHEMA ContentPart
+    # ##############################################
+    ContentPart:
+      description: The actual content, mostly PDF's, but can one of serveral formats.
+      type: string
+
+    # ##############################################
+    # SCHEMA ContentMetadata
+    # ##############################################
+    ContentMetadata:
+      additionalProperties: false
+      properties:
+        key:
+          $ref: '#/components/schemas/ContentKey'
+        labels:
+          additionalProperties: false
+          properties:
+            governmental:
+              $ref: '#/components/schemas/GovernmentalLabel'
+            handled:
+              $ref: '#/components/schemas/HandledLabel'
+            interpreted:
+              $ref: '#/components/schemas/InterpretedLabel'
+            reminder:
+              $ref: '#/components/schemas/ReminderLabel'
+            trashed:
+              $ref: '#/components/schemas/TrashedLabel'
+            viewed:
+              $ref: '#/components/schemas/ViewedLabel'
+          required:
+            - governmental
+            - handled
+            - interpreted
+            - reminder
+            - trashed
+            - viewed
+          type: object
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartMetadata'
+        payment_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerPaymentOption'
+        references:
+          $ref: '#/components/schemas/InvoiceReferences'
+        received_at:
+          type: string
+          format: date-time
+        receiver_name:
+          type: string
+        receiver_vat_number:
+          $ref: '#/components/schemas/VatNumber'
+        sender_name:
+          type: string
+        sender_vat_numbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/VatNumber'
+        subject:
+          type: string
+        transaction_at:
+          description: |
+            The date and time this content conceptually took place.
+
+            + For a normal `invoice` it is the invoice date.
+            + For a reminder `invoice` it is the reminder data, not the original
+              invoice date.
+            + For a `receipt` it is its transaction date.
+            + For all `other` types of content it is when the sender
+              generated/created the content.
+          type: string
+          format: date-time
+        type:
+          description: |
+            The type of the content
+
+            This is reduced to just three things, an `invoice`, a `receipt` and
+            all `other` types of content.
+          enum:
+            - invoice
+            - receipt
+            - other
+          type: string
+      required:
+        - key
+        - labels
+        - parts
+        - payment_options
+        - references
+        - received_at
+        - receiver_name
+        - receiver_vat_number
+        - sender_name
+        - sender_vat_numbers
+        - subject
+        - transaction_at
+        - type
+      type: object
 
   # ##############################################
   # SECURITY oAuth2Client
