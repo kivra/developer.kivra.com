@@ -2887,7 +2887,101 @@ paths:
             schema: {}
 
   # ##############################################
-  # GET /v3/partner/company
+  # POST /v3/partner/company/bankid
+  # ##############################################
+  /v3/partner/company/bankid:
+    post:
+      tags:
+        - "Partner API v3"
+      summary: Initiate a bankid order for enabling a partner association
+      operationId: Initiate bankid order
+      description: >
+        Initialises a bankid order for the given `ssn` to sign to enable a
+        partner association between the partner and the business mailbox
+        corresponding to the given `vat_number`. The user `ssn` needs to be a
+        signatory for the business with the `vat_number`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vat_number:
+                  $ref: '#/components/schemas/VatNumber' 
+                ssn:
+                  description: User's unique SSN, according to the `YYYYMMDDnnnn` format
+                  type: string
+                  example: "191212121212"
+                end_user_ip:
+                  description: The IP address of the end user from the partner system's perspective
+                  type: string
+                  example: "127.0.0.1"
+            example:
+              vat_number: SE556000475501
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  auto_start_token:
+                    description: TODO Link to bankid's info?
+                    type: string
+                  bankid_order_key:
+                    description: Key identifying the bankid order
+                    type: string
+                    
+
+  # ##############################################
+  # GET /v3/partner/company/bankid/:okey
+  # ##############################################
+  /v3/partner/company/bankid/{orderKey}:
+    get:
+      tags:
+        - "Partner API v3"
+      summary: Get status of bankid order
+      operationId: Get bankid status
+      description: Get the status of an ongoing bankid order.
+      parameters:
+        - name: orderKey
+          in: path
+          required: true
+          schema:
+            description: TODO
+            type: string
+            example: core_012345678901234567890123456789012345678901
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    description: Status of the signing process. One of `"pending"`, `"cancelled"` or `"complete"`. TODO
+                    type: string
+                    enum: ["pending", "cancelled", "complete"]
+                    example: "pending"
+                  progress_status:
+                    description: TODO
+                    type: string
+                    example: TODO
+                  message_code:
+                    description: TODO
+                    type: string
+                    example: TODO
+                  ssn:
+                    description: SSN of the user performing the signing process
+                    type: string
+                    example: "19121212121212"
+
+
+  # ##############################################
+  # GET,POST /v3/partner/company
   # ##############################################
   /v3/partner/company:
     get:
@@ -2925,6 +3019,44 @@ paths:
                   2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
                   Café AB,SE556000475501
                 type: string
+    post:
+      tags:
+        - "Partner API v3"
+      summary: Create an association to a business mailbox
+      operationId: Create association
+      description: |
+        Creates an association between the partner and a business mailbox,
+        meaning the partner can perform operations on the business mailbox such
+        as fecthing its content. Depending on the state of the business
+        mailbox, this operation can include
+        - Creating a business mailbox
+        - Activating Mina Meddelanden
+        - Activating Kivra Business Plus
+        - Enabling the interpretation service
+        - Adding the business mailbox to the partner's scope
+        - TODO (...)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vat_number, bankid_order_key]
+              properties:
+                vat_number:
+                  $ref: '#/components/schemas/VatNumber' 
+                bankid_order_key:
+                  type: string
+            example:
+              vat_number: SE556000475501
+              bankid_order_key: core_012345678901234567890123456789012345678901
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullCompany'
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY
