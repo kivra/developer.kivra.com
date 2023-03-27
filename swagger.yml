@@ -150,10 +150,12 @@ info:
     is a data object that contains information about the document and the document itself
 
     ### Retained functionality
-    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra within this period of time.
-
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. 
+    Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient 
+    registers with Kivra within this period of time.
+   
     <aside class="notice">
-    Note: Usage of retained functionality is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+    Note: Usage of retained functionality is only allowed for documents of type credit notice and salary slip.
     </aside>
 
     ### Tenant key
@@ -1578,7 +1580,7 @@ paths:
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of retained content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        Note: Usage of retained content is only allowed for documents of type credit notice and salary slip.
         </aside>
 
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
@@ -1917,7 +1919,7 @@ paths:
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of retained content is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        Note: Usage of retained content is only allowed for documents of type credit notice and salary slip.
         </aside>
 
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
