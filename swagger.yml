@@ -1428,10 +1428,10 @@ paths:
       operationId: Match Users ssn v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
-        The request contains a list of recipient addresses to be matched, and the response is a filtered list containing only the addresses 
+        The request contains a list of recipient SSNs to be matched, and the response is a filtered list containing only the SSNs 
         that are eligible to receive content from the tenant.
         <aside class="notice">
-          If none of the provided addresses are eligible to receive content from this tenant, an empty list will be returned.
+          If none of the provided SSNs are eligible to receive content from this tenant, an empty list will be returned.
         </aside>
       parameters:
         - name: tenantKey
@@ -1457,7 +1457,7 @@ paths:
             - "get:kivra.v2.tenant.{tenantKey}.usermatch.ssn"
       responses:
         200:
-          description: Filtered list of addresses that matched.
+          description: Filtered list of SSNs that matched.
           content:
             application/json:
               schema:
@@ -1473,11 +1473,11 @@ paths:
       operationId: Match Users verified_email v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
-        The request contains a list of recipient addresses to be matched, and the response is a filtered list containing only the 
-        addresses that are eligible to receive content from the tenant.
+        The request contains a list of recipient email addresses to be matched, and the response is a filtered list containing only the 
+        email addresses that are eligible to receive content from the tenant.
         Email matching is case insensitive, but the queried email case is returned as submitted.
         <aside class="notice">
-          If none of the provided addresses are eligible to receive content from this tenant, an empty list will be returned.
+          If none of the provided email addresses are eligible to receive content from this tenant, an empty list will be returned.
         </aside>
       parameters:
         - name: tenantKey
@@ -1489,7 +1489,7 @@ paths:
             format: hexadecimal
       requestBody:
         description: |
-          List of emails to be matched. The payload can be up to 10MB in size. 
+          List of email addresses to be matched. The payload can be up to 10MB in size. 
           If the payload exceeds 10MB, Kivra will respond with a 413 error. 
         content:
           application/json:
@@ -1503,7 +1503,7 @@ paths:
             - "get:kivra.v2.tenant.{tenantKey}.usermatch.verified_email"
       responses:
         200:
-          description: Filtered list of addresses that matched.
+          description: Filtered list of email addresses that matched.
           content:
             application/json:
               schema:
