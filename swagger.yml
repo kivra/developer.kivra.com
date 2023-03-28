@@ -2223,16 +2223,16 @@ paths:
                   subject: Sample Content to User
                   generated_at: "2016-12-12"
                   type: "letter"
+                  form:
+                    id: 2877d684-a340-4e4c-867f-d93283787b01
                   parts:
-                    name: filename.pdf
+                    name: document.pdf
                     data: REVBREJFRUY=
                     content_type: application/pdf
                     responsive_part:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-                  form:
-                    id: 2877d684-a340-4e4c-867f-d93283787b01
               
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
