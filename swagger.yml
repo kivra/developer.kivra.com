@@ -2224,9 +2224,9 @@ paths:
                   generated_at: "2016-12-12"
                   type: "letter"
                   parts:
-                    - name: filename.pdf
-                      data: REVBREJFRUY=
-                      content_type: application/pdf
+                    name: filename.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
                     responsive_part:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
