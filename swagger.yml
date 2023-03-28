@@ -1489,8 +1489,8 @@ paths:
             format: hexadecimal
       requestBody:
         description: |
-        List of emails to be matched. The payload can be up to 10MB in size. 
-        If the payload exceeds 10MB, Kivra will respond with a 413 error. 
+          List of emails to be matched. The payload can be up to 10MB in size. 
+          If the payload exceeds 10MB, Kivra will respond with a 413 error. 
         content:
           application/json:
             schema:
