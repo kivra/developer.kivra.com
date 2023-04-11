@@ -799,8 +799,6 @@ tags:
     description: Endpoints for managing signatures and agreements
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
-  - name: "Company API"
-    description: Endpoints access to company mailboxes
 
 x-tagGroups:
   - name: Tenant API
@@ -813,9 +811,6 @@ x-tagGroups:
     tags:
       - "Partner API v1"
       - "Partner API v3"
-  - name: Company API
-    tags:
-      - "Company API"
 
 paths:
   /vX/hamburger:
@@ -3129,37 +3124,6 @@ paths:
                   $ref: '#/components/schemas/ViewedLabel'
               type: object
         required: true
-
-  # ##############################################
-  # POST /v3/company/match/plus_active
-  # ##############################################
-  /v3/company/match/plus_active:
-    post:
-      tags:
-        - "Company API"
-      summary: Filter companies with Kivra+
-      operationId: Match companies
-      description: |
-        This resource is used to match a list of VAT Numbers to check whether a company has an active Kivra+ subscription.
-      security:
-        - oAuth2Client:
-            - "get:kivra.v3.company.match.plus_active.**"
-      responses:
-        200:
-          description: Filterd list of VAT numbers
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CompanyMatch"
-              example:
-                vat_numbers: ["SE25555555552"]
-      requestBody:
-        description: List of VAT numbers to be matched
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CompanyMatch"
-              items: { "vat_numbers": ["SE556840226601"] }
 
 components:
   schemas:
