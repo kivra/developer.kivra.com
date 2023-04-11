@@ -632,6 +632,7 @@ info:
     |40044 |Invalid OCR | The OCR did not pass validation |
     |40045 |Invalid option id | The option does not exist |
     |40047 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40050 |Form Response Error | Error processing form response |
     |40098 |Invalid barcode data | The barcode could not be created due to invalid barcode type |
     |40100 |Unauthorized |Supplied credentials was invalid |
     |40101 |Access Denied |The resource owner or authorization server denied the request |
