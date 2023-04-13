@@ -1,21 +1,22 @@
-# **_RFC - Kivra prescription specification_**
+# **_Kivra prescription specification explained_**
 
 ## Introduction
-This RFC describes a proposed way to handle prescription specifications issued by pharmacies which will be sent to Kivra and will be connected to a receipt. 
+This document describes the different parts of Kivras prescription specification format. A prescription specification is issued by pharmacies and will be connected to a receipt in Kivra. 
 
-The specification is based on discussions with different pharmacies, printed examples of prescription specifications and some data from the Swedish eHealth Agency.
-
-This RFC only covers prescription specification content, not scenarios (e.g someone picks up medicals for another person (power of attorney)).
+The specification is based on discussions with different pharmacies and data from the Swedish eHealth Agency.
 
 ## Scope
 
-This document focuses on the construction and content of the prescription specification. It does not describe how the specification is transferred from the issuer to the customer and how it is presented.
+This document focuses on the construction and content of the prescription specification. It does not cover:
+- How the specification is transferred from the issuer to the customer.
+- How it is presented in the Kivra app/web.
+- Scenarios (e.g someone picks up medicals for another person (power of attorney))  
 
 ## Terminology
 
-### Sender System
+### POS
 
-The system creating and delivering prescription specifications to the customer. It can be the same system which creates the receipt (POS) but does not have to.
+Point Of Sale (POS) is any system that creates a receipt. In this document POS is also used for the system creating and delivering prescription specifications to the customer.  In reality it could be a separate system.
 
 ### JSON - JavaScript Object Notation
 
@@ -25,7 +26,7 @@ In computing, JavaScript Object Notation, [JSON](https://www.json.org/), is an o
 
 JSON Schema is a powerful tool for validating the structure of JSON data. [(Understanding JSON Schema)](https://json-schema.org/understanding-json-schema/)
 
-## Json
+## Prescription specification - json
 
 ### Header
 
@@ -42,7 +43,7 @@ These properties are described in more detail [here](../retail/retail-schema-des
 
 ### Expedition
 
-As this part seems to differ a bit between different pharmacies we  represent this part as an array of strings in the json specification.
+As this part seems to differ a bit between different pharmacies we represent this part as an array of strings in the json specification. So pharmacies can add a list of texts to be shown in the prescription specification.
 
 Examples:
 ```json
@@ -63,8 +64,12 @@ Examples:
 }  
 ```
 
-### Animal prescription
-_animal_ identifies to whom the prescription is issued and what medicals are issued.
+### Human or animal prescription
+A prescription can be issued to an _animal_ or _human_. The data needed differs slightly based on the target.
+#### Animal prescription
+_animal_ has two properies
+- _id_: identifies to whom the prescription is issued.
+- _medications_:  a list of medicals issued and price.
 ```json
 {
   "animal": {
@@ -79,8 +84,11 @@ _animal_ identifies to whom the prescription is issued and what medicals are iss
 }  
 ```
 
-### Human prescription
-_human_ contains properties related to high cost reimbursement.
+#### Human prescription
+_human_ has properties related to high cost reimbursement. These are given in three periods:
+- _previous_period_
+- _current_period_
+- _next_period_
 
 ```json
 {
@@ -106,10 +114,30 @@ _human_ contains properties related to high cost reimbursement.
 }  
 ```
 
-### Amount
-_amount_without_benefit_ and _amount_to_pay_ are given on both _animal_ and _human_ specifications. _amount_with_benefit_ is added to human specifications as they are affected by high cost reimbursement. 
+### Amounts
+The following amounts must be given on both _animal_ and _human_:
+- _amount_without_benefit_ 
+- _amount_to_pay_
 
-Animal
+_human_ has an additional amount:
+- _amount_with_benefit_
+as they are affected by high cost reimbursement. 
 
-Human
+Examples
+_animal_
+```json
+{
+  "amount_without_benefit": 3050.00,
+  "amount_to_pay": 3050.00
+}  
+```
 
+
+_human_
+```json
+{
+  "amount_with_benefit": 58.27,
+  "amount_without_benefit": 5.38,
+  "amount_to_pay": 5.38
+}  
+```
