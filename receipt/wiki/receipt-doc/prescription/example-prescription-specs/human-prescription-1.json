@@ -1,0 +1,63 @@
+{
+  "business_unit": {
+    "contact": {
+      "address": {
+        "locality": "City",
+        "postal_code": "123 45",
+        "street_address": "Östra storgatan 6",
+        "type": {
+          "type": "business"
+        }
+      },
+      "email": "info@ta.se",
+      "phone": "0123456789"
+    },
+    "name": "Test apoteket",
+    "organization_number": "112233-4455",
+    "service_id": "16399966934684ed5d5d534373b33ef89846460b06",
+    "unit_id": "5"
+  },
+  "cashier": {
+    "id": "T02SUIT"
+  },
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "0123456123",
+      "type": "EAN8",
+      "context": "store"
+    }
+  },
+  "time_of_purchase": "2023-03-27T08:49:00+01:00",
+  "customer": {
+    "id": {
+      "civic_registration_number": "199008051234"
+    },
+    "name": "Knapp, Lena"
+  },
+  "expedition": [
+    "Inköp på expedition T02 AAN631"
+  ],
+  "human": {
+    "high_cost": {
+      "previous_period": {
+        "gross": 8982.64,
+        "net": 2350.0,
+        "start_date": "2021-07-12T08:00:00+02:00"
+      },
+      "current_period": {
+        "gross": 28198.71,
+        "net": 2400.0,
+        "start_date": "2022-08-12T08:00:00+02:00"
+      },
+      "next_period": {
+        "gross": 0.0,
+        "net": 0.0,
+        "start_date": "2023-08-13T08:00:00+02:00"
+      }
+    }
+  },
+  "amount_with_benefit": 58.27,
+  "amount_without_benefit": 5.38,
+  "amount_to_pay": 5.38
+}
