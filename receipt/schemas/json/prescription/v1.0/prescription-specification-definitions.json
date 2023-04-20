@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "definitions": {
+    "prescription_item": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "description"
+      ]
+    },
+    "animal_related": {
+      "type": "object",
+      "description": "Specific properties related to animal prescriptions",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "medications": {
+          "type": "array",
+          "description": "medicals etc, connected to this spec",
+          "items": {
+            "$ref": "#/definitions/prescription_item"
+          }
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "human_related": {
+      "properties": {
+        "high_cost":{
+          "$ref": "#/definitions/high_cost"
+        }
+      },
+      "required": [
+        "high_cost"
+      ]
+    },
+    "high_cost": {
+      "description": "Defines properties related to high cost reimbursement",
+      "type": "object",
+      "properties": {
+        "previous_period": {
+          "$ref": "#/definitions/high_cost_period"
+        },
+        "current_period": {
+          "$ref": "#/definitions/high_cost_period"
+        },
+        "next_period": {
+          "$ref": "#/definitions/high_cost_period"
+        }
+      },
+      "allOf": [
+        {
+          "required": [
+            "previous_period"
+          ]
+        },
+        {
+          "required": [
+            "current_period"
+          ]
+        },
+        {
+          "required": [
+            "next_period"
+          ]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "high_cost_period": {
+      "type": "object",
+      "properties": {
+        "gross": {
+          "type": "number"
+        },
+        "net": {
+          "type": "number"
+        },
+        "start_date": {
+          "description": "high cost period start date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "gross", "net", "start_date"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

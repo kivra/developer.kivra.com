@@ -1,0 +1,52 @@
+{
+  "business_unit": {
+    "contact": {
+      "address": {
+        "locality": "City",
+        "postal_code": "123 45",
+        "street_address": "Östra storgatan 6",
+        "type": {
+          "type": "business"
+        }
+      },
+      "email": "info@testapotek.se",
+      "phone": "0123456789"
+    },
+    "name": "Testapoteket AB",
+    "organization_number": "112233-4455",
+    "service_id": "16399966934684ed5d5d534373b33ef89846460b06",
+    "unit_id": "5"
+  },
+  "cashier": {
+    "id": "T02SUIT"
+  },
+  "receipt_identifier": {
+    "sequence_number": 123457,
+    "extended_number": {
+      "value": "0123457123",
+      "type": "EAN8",
+      "context": "store"
+    }
+  },
+  "time_of_purchase": "2023-03-31T08:49:00+01:00",
+  "customer": {
+    "id": {
+      "civic_registration_number": "199008051234"
+    },
+    "name": "Knapp, Lena"
+  },
+  "expedition": [
+    "Inköp på expedition T02 AAN633"
+  ],
+  "animal": {
+    "id":"Fido",
+    "medications": [
+      {
+        "description":  "Metacam för hund och katt",
+        "amount":  3050.00
+      }
+    ]
+  },
+  "amount_without_benefit": 3050.00,
+  "amount_to_pay": 3050.00
+}

@@ -1,0 +1,65 @@
+{
+  "business_unit": {
+    "contact": {
+      "address": {
+        "locality": "City",
+        "postal_code": "23456",
+        "street_address": "Västra storgatan 99",
+        "type": {
+          "type": "business"
+        }
+      },
+      "email": "info@ata.se",
+      "phone": "0123456788"
+    },
+    "name": "Another test apotek",
+    "organization_number": "112233-4466",
+    "service_id": "16399966934684ed5d5d534373b33ef89846460b07",
+    "unit_id": "ata-01"
+  },
+  "cashier": {
+    "id": "01CSR"
+  },
+  "receipt_identifier": {
+    "sequence_number": 29547,
+    "extended_number": {
+      "value": "029547123",
+      "type": "EAN8",
+      "context": "chain"
+    }
+  },
+  "time_of_purchase": "2015-04-21T16:30:00+02:00",
+  "customer": {
+    "id": {
+      "civic_registration_number": "199008051234"
+    },
+    "name": "Knapp, Lena"
+  },
+  "expedition": [
+    "Inköp på recept 154789798A",
+    "Läkare Kinhult Anna-Carin",
+    "Läkare Winsö Katarina"
+  ],
+  "human": {
+    "high_cost": {
+      "previous_period": {
+        "gross": 0.0,
+        "net": 0.0,
+        "start_date": "2014-02-14T08:00:00+02:00"
+      },
+      "current_period": {
+        "gross": 2116.80,
+        "net": 2116.80,
+        "start_date": "2015-02-14T08:00:00+02:00"
+      },
+      "next_period": {
+        "gross": 0.0,
+        "net": 0.0,
+        "start_date": "2016-02-14T08:00:00+02:00"
+      }
+    }
+  },
+  "amount_with_benefit": 0.0,
+  "amount_without_benefit": 1929.80,
+  "amount_to_pay": 1929.80
+}
