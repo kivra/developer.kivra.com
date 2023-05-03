@@ -35,11 +35,14 @@
     },
     "name": "Knapp, Lena"
   },
-  "expedition": [
-    "Inköp på recept 154789798A",
-    "Läkare Kinhult Anna-Carin",
-    "Läkare Winsö Katarina"
-  ],
+  "expedition": {
+    "id": "154789798A",
+    "details": [
+      "Inköp på recept 154789798A",
+      "Läkare Kinhult Anna-Carin",
+      "Läkare Winsö Katarina"
+    ]
+  },
   "human": {
     "high_cost": {
       "previous_period": {
@@ -61,5 +64,7 @@
   },
   "amount_with_benefit": 0.0,
   "amount_without_benefit": 1929.80,
+  "amount_paid_by_benefit":0.0,
   "amount_to_pay": 1929.80
+  
 }

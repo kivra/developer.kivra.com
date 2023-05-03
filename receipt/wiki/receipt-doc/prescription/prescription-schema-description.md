@@ -43,52 +43,66 @@ These properties are described in more detail [here](../retail/retail-schema-des
 
 ### Expedition
 
-As this part seems to differ a bit between different pharmacies we represent this part as an array of strings in the json specification. So pharmacies can add a list of texts to be shown in the prescription specification.
+As this part seems to differ a bit between different pharmacies we represent this part as an array of strings in the json specification. The “details” section is what is going to be visible to the user. The “id” is for internal use and exchange with other systems.
 
 Examples:
 ```json
 {
-  "expedition": [
-    "Inköp på expedition T02 AAN631"
-  ]
+    "expedition": {
+    "id": "T02 AAN631",
+    "details": ["Inköp på expedition T02 AAN631"]
+  }
 }  
 ```
 
 ```json
 {
-  "expedition": [
-    "Inköp på recept 154789798A",
-    "Läkare Kinhult Anna-Carin",
-    "Läkare Winsö Katarina"
-  ]
+   "expedition": {
+    "id": "154789798A",
+    "details": [
+      "Inköp på recept 154789798A",
+      "Läkare Kinhult Anna-Carin",
+      "Läkare Winsö Katarina"
+    ]
+  }
 }  
 ```
 
 ### Human or animal prescription
 A prescription can be issued to an _animal_ or _human_. The data needed differs slightly based on the target.
 #### Animal prescription
-_animal_ has two properies
-- _id_: identifies to whom the prescription is issued.
-- _medications_:  a list of medicals issued and price.
+_animal_ has one property
+- _id_: identifies the animal to whom the prescription is issued.
 ```json
 {
   "animal": {
-    "id":"Fido",
+    "id":"Fido"
+  }
+}  
+```
+
+#### Medication list
+The medication list is can be used on both animal and human prescriptions. This an animal example.
+- _medications_:  a list of medications issued and cost.
+```json
+{
     "medications": [
       {
         "description":  "Metacam för hund och katt",
         "amount":  3050.00
       }
     ]
-  }
 }  
 ```
-
 #### Human prescription
 _human_ has properties related to high cost reimbursement. These are given in three periods:
 - _previous_period_
 - _current_period_
 - _next_period_
+
+It can also contain 
+- _amount_left_to_reimbursement_
+which is not mandatory.
 
 ```json
 {
@@ -108,7 +122,11 @@ _human_ has properties related to high cost reimbursement. These are given in th
         "gross": 0.0,
         "net": 0.0,
         "start_date": "2016-02-14T08:00:00+02:00"
-      }
+      },
+      "amount_left_to_reimbursement": {
+        "gross": 100.00,
+        "net": 100.00
+      }      
     }
   }
 }  
@@ -119,9 +137,10 @@ The following amounts must be given on both _animal_ and _human_:
 - _amount_without_benefit_ 
 - _amount_to_pay_
 
-_human_ has an additional amount:
+_human_ has two additional amounts:
 - _amount_with_benefit_
-as they are affected by high cost reimbursement. 
+- _amount_paid_by_benefit_
+as they are affected by high cost reimbursement. These amounts are usually the same but will differ in cases where insurances are involved.
 
 Examples
 _animal_
@@ -138,6 +157,7 @@ _human_
 {
   "amount_with_benefit": 58.27,
   "amount_without_benefit": 5.38,
+  "amount_paid_by_benefit": 58.27,  
   "amount_to_pay": 5.38
 }  
 ```

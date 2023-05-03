@@ -1,117 +1,141 @@
 {
-    "$id": "https://se.digitalreceipts.net/schemas/json/prescription/v1.0",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "prescription specification schema",
-    "type": "object",
-    "properties": {
-      "business_unit": {
-        "description": "Merchant information",
-        "$ref": "business-definitions.json#/definitions/business_information"
-      },
-      "cashier": {
-        "description": "Identifies the person handling the purchase if applicable",
-        "$ref": "sales-recording-system-definitions.json#/definitions/cashier"
-      },
-      "receipt_identifier": {
-        "description": "Receipt identifiers: sequence number and/or extended number with or without barcode representation",
-        "$ref": "sales-recording-system-definitions.json#/definitions/receipt_identifier"
-      },
-      "time_of_purchase": {
-        "description": "ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
-        "type": "string",
-        "format": "date-time"
-      },
-      "currency": {
-        "description": "The receipt default currency. This gives the currency for all amounts in the receipt. If applicable overriding currencies can be added to the tender parts",
-        "$ref": "monetary-definitions.json#/definitions/currency_code"
-      },
-      "amount_with_benefit": {
-        "type": "number",
-        "minimum":0
-      },
-      "amount_without_benefit": {
-        "type": "number",
-        "minimum":0
-      },
-      "amount_to_pay": {
-        "type": "number",
-        "minimum":0
-      },
-      "customer": {
-        "description": "Information and/or identification of the customer",
-        "anyOf": [
-          {
-            "$ref": "customer-definitions.json#/definitions/customer_identifier"
-          },
-          {
-            "$ref": "customer-definitions.json#/definitions/customer_information"
+  "$id": "https://se.digitalreceipts.net/schemas/json/prescription/v1.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "prescription specification schema",
+  "type": "object",
+  "properties": {
+    "business_unit": {
+      "description": "Merchant information",
+      "$ref": "business-definitions.json#/definitions/business_information"
+    },
+    "cashier": {
+      "description": "Identifies the person handling the purchase if applicable",
+      "$ref": "sales-recording-system-definitions.json#/definitions/cashier"
+    },
+    "receipt_identifier": {
+      "description": "Receipt identifiers: sequence number and/or extended number with or without barcode representation",
+      "$ref": "sales-recording-system-definitions.json#/definitions/receipt_identifier"
+    },
+    "time_of_purchase": {
+      "description": "ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+      "type": "string",
+      "format": "date-time"
+    },
+    "currency": {
+      "description": "The receipt default currency. This gives the currency for all amounts in the receipt. If applicable overriding currencies can be added to the tender parts",
+      "$ref": "monetary-definitions.json#/definitions/currency_code"
+    },
+    "amount_with_benefit": {
+      "type": "number",
+      "minimum":0
+    },
+    "amount_without_benefit": {
+      "type": "number",
+      "minimum":0
+    },
+    "amount_paid_by_benefit": {
+      "type": "number",
+      "minimum":0
+    },    
+    "amount_to_pay": {
+      "type": "number",
+      "minimum":0
+    },
+    "customer": {
+      "description": "The person or animal owner to whom the prescription is issued.",
+      "anyOf": [
+        {
+          "$ref": "customer-definitions.json#/definitions/customer_identifier"
+        },
+        {
+          "$ref": "customer-definitions.json#/definitions/customer_information"
+        }
+      ]
+    },
+    "animal": {
+      "$ref": "prescription-specification-definitions.json#/definitions/animal_related"
+    },
+    "human": {
+      "$ref": "prescription-specification-definitions.json#/definitions/human_related"
+    },
+    "medications": {
+      "type": "array",
+      "description": "medications etc, connected to this pre. spec",
+      "items": {
+        "$ref": "prescription-specification-definitions.json#/definitions/prescription_item"
+      }
+    },    
+    "expedition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "expedition id, prescription id, etc",
+          "type": "string"          
+        },
+        "details": {
+          "description": "this is what the user will see",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "string"
           }
-        ]
-      },
-      "animal": {
-        "$ref": "prescription-specification-definitions.json#/definitions/animal_related"
-      },
-      "human": {
-        "$ref": "prescription-specification-definitions.json#/definitions/human_related"
-      },
-      "expedition": {
-        "type": "array",
-        "minItems": 1,
-        "items": {
-         "type": "string"
         }
       },
-      "additionalProperties": false
+      "required": [
+        "id",
+        "details"
+      ]
     },
-    "oneOf": [
-      {
-        "required": [
-          "animal"
-        ]
-      },
-      {
-        "required": [
-          "human", "amount_with_benefit"
-        ]
-      }
-    ],
-    "allOf": [
-      {
-        "required": [
-          "business_unit"
-        ]
-      },
-      {
-        "required": [
-          "cashier"
-        ]
-      },
-      {
-        "required": [
-          "receipt_identifier"
-        ]
-      },
-      {
-        "required": [
-          "time_of_purchase"
-        ]
-      },
-      {
-        "required": [
-          "amount_without_benefit"
-        ]
-      },
-      {
-        "required": [
-          "amount_to_pay"
-        ]
-      },
-      {
-        "required": [
-          "expedition"
-        ]
-      }
-    ],
     "additionalProperties": false
-  }
-  
+  },
+  "oneOf": [
+    {
+      "required": [
+        "animal"
+      ]
+    },
+    {
+      "required": [
+        "human", "amount_with_benefit"
+      ]
+    }
+  ],
+  "allOf": [
+    {
+      "required": [
+        "business_unit"
+      ]
+    },
+    {
+      "required": [
+        "cashier"
+      ]
+    },
+    {
+      "required": [
+        "receipt_identifier"
+      ]
+    },
+    {
+      "required": [
+        "time_of_purchase"
+      ]
+    },
+    {
+      "required": [
+        "amount_without_benefit"
+      ]
+    },
+    {
+      "required": [
+        "amount_to_pay"
+      ]
+    },
+    {
+      "required": [
+        "expedition"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}

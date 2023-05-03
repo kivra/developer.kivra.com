@@ -14,7 +14,8 @@
       },
       "required": [
         "description"
-      ]
+      ],
+      "additionalProperties": false
     },
     "animal_related": {
       "type": "object",
@@ -22,13 +23,6 @@
       "properties": {
         "id": {
           "type": "string"
-        },
-        "medications": {
-          "type": "array",
-          "description": "medicals etc, connected to this spec",
-          "items": {
-            "$ref": "#/definitions/prescription_item"
-          }
         }
       },
       "required": [
@@ -40,11 +34,12 @@
       "properties": {
         "high_cost":{
           "$ref": "#/definitions/high_cost"
-        }
+        }        
       },
       "required": [
         "high_cost"
-      ]
+      ],
+      "additionalProperties": false
     },
     "high_cost": {
       "description": "Defines properties related to high cost reimbursement",
@@ -58,6 +53,9 @@
         },
         "next_period": {
           "$ref": "#/definitions/high_cost_period"
+        },
+        "amount_left_to_reimbursement": {
+          "$ref": "#/definitions/amount_left_to_reimbursement_def"
         }
       },
       "allOf": [
@@ -96,6 +94,24 @@
       },
       "required": [
         "gross", "net", "start_date"
+      ],
+      "additionalProperties": false
+    },
+    "amount_left_to_reimbursement_def": {
+      "description": "The amount left to high cost reimbursement",
+      "type": "object",
+      "properties": {
+        "gross": {
+          "type": "number",
+          "minimum": 0
+        },
+        "net": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "gross", "net"
       ],
       "additionalProperties": false
     }
