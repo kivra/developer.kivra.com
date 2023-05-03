@@ -1,21 +1,22 @@
-# *_Example prescription specificaitons_*
+# *_Example prescription specifications_*
 This document links to a number of example specification and contains a short description of each specification provided. 
 
 ## Human specifications
 
 ### [Human specification one](example-prescription-specs/human-prescription-1.json)
-Contains the basic elements of a specification based on expedition id.
+Contains the basic elements of a specification based on expedition id and high cost reimburesement.
 
 #### Characteristics
-* **type**: human
+* **type**: human, with high cost periods.
 * **expedition**: expedition id
+* **amount_left_to_reimbursement**: high cost related
 
 ### [Human specification two](example-prescription-specs/human-prescription-2.json)
 Contains the basic elements of a specification based on prescription id.
 
 #### Characteristics
-* **type**: human
-* **expedition**: prescription id
+* **type**: human, with high cost periods.
+* **expedition**: prescription id and list of prescription issuers.
 
 
 ## Animal specifications
@@ -24,6 +25,6 @@ Contains the basic elements of a specification based on prescription id.
 Contains the basic elements of a animal specification.
 
 #### Characteristics
-* **type**: animal
-* **others**: animal id and list of medications
+* **type**: animal, with animal id.
+* **medications**: list of medications prescribed.
 

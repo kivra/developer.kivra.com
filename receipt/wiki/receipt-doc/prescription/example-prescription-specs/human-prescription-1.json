@@ -35,9 +35,10 @@
     },
     "name": "Knapp, Lena"
   },
-  "expedition": [
-    "Inköp på expedition T02 AAN631"
-  ],
+  "expedition": {
+    "id": "T02 AAN631",
+    "details": ["Inköp på expedition T02 AAN631"]
+  },
   "human": {
     "high_cost": {
       "previous_period": {
@@ -54,10 +55,15 @@
         "gross": 0.0,
         "net": 0.0,
         "start_date": "2023-08-13T08:00:00+02:00"
+      },
+      "amount_left_to_reimbursement": {
+        "gross": 100.00,
+        "net": 100.00
       }
     }
   },
   "amount_with_benefit": 58.27,
   "amount_without_benefit": 5.38,
+  "amount_paid_by_benefit": 58.27,
   "amount_to_pay": 5.38
 }

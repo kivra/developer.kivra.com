@@ -35,17 +35,18 @@
     },
     "name": "Knapp, Lena"
   },
-  "expedition": [
-    "Inköp på expedition T02 AAN633"
-  ],
+  "expedition": {
+    "id": "T02 AAN633",
+    "details": ["Inköp på expedition T02 AAN633"]
+  },
+  "medications": [
+    {
+      "description":  "Metacam för hund och katt",
+      "amount":  3050.00
+    }
+  ],  
   "animal": {
-    "id":"Fido",
-    "medications": [
-      {
-        "description":  "Metacam för hund och katt",
-        "amount":  3050.00
-      }
-    ]
+    "id":"Fido"
   },
   "amount_without_benefit": 3050.00,
   "amount_to_pay": 3050.00
