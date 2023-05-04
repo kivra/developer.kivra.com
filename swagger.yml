@@ -4721,9 +4721,9 @@ components:
       type: object
     
     # ##############################################
-    # SCHEMA DeliveryAddress
+    # SCHEMA ScanningFallbackAddress
     # ##############################################
-    DeliveryAddress:
+    ScanningFallbackAddress:
       description: The delivery address of a company, where mail is delivered when scanning is not possible.
       additionalProperties: false
       properties:
@@ -4822,21 +4822,28 @@ components:
     # SCHEMA FullCompany
     # ##############################################
     FullCompany:
-      description: A company object
+      description: A company object.
       additionalProperties: false
       properties:
         key:
           $ref: '#/components/schemas/CompanyKey'
-        address:
+        scanning_address:
+          description: Postal address for scanning physical post.
           oneOf:
             - $ref: '#/components/schemas/ScanningAddress'
             - type: nil
+        scanning_fallback_address:
+          description: The delivery address of a company, where physical post is delivered when scanning is not possible.
+          oneOf:
+            - $ref: '#/components/schemas/ScanningFallbackAddress'
+            - type: nil
         created_at:
-          description: When the company started to onboard
+          description: When the company started to onboard.
           example: '2019-02-26T14:47:26Z'
           type: string
           format: date-time
         email:
+          description: Email address for receiving emails as content.
           oneOf:
             - $ref: '#/components/schemas/IncomingEmail'
             - $ref: '#/components/schemas/EmptyString'
@@ -4848,10 +4855,6 @@ components:
           $ref: '#/components/schemas/AllServices'
         vat_number:
           $ref: '#/components/schemas/VatNumber'
-        delivery_address:
-          oneOf:
-            - $ref: '#/components/schemas/DeliveryAddress'
-            - type: nil
       required:
         - key
       type: object
