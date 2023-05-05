@@ -4719,6 +4719,46 @@ components:
         - city
         - country
       type: object
+    
+    # ##############################################
+    # SCHEMA ScanningFallbackAddress
+    # ##############################################
+    ScanningFallbackAddress:
+      description: The delivery address of a company, where mail is delivered when scanning is not possible.
+      additionalProperties: false
+      properties:
+        name:
+          description: Name of the recipient (a company or person).
+          type: string
+          example: 'Cornelias Café AB'
+        street:
+          description: Name of the street, including street number.
+          type: string
+          example: 'Klara Norra kyrkogata 33'
+        postal_code:
+          description: Postal code.
+          example: '11122'
+          type: string
+        city:
+          description: Name of the city.
+          example: 'Stockholm'
+          type: string
+        country:
+          description: Name of the country.
+          example: 'Sverige'
+          type: string
+        care_of:
+          description: Address care of (c/o).
+          example: ''
+          type: string
+      required:
+        - name
+        - street
+        - postal_code
+        - city
+        - country
+        - care_of
+      type: object
 
     # ##############################################
     # SCHEMA AllServices
@@ -4782,21 +4822,28 @@ components:
     # SCHEMA FullCompany
     # ##############################################
     FullCompany:
-      description: A company object
+      description: A company object.
       additionalProperties: false
       properties:
         key:
           $ref: '#/components/schemas/CompanyKey'
-        address:
+        scanning_address:
+          description: Postal address for scanning physical post.
           oneOf:
             - $ref: '#/components/schemas/ScanningAddress'
             - type: nil
+        scanning_fallback_address:
+          description: The delivery address of a company, where physical post is delivered when scanning is not possible.
+          oneOf:
+            - $ref: '#/components/schemas/ScanningFallbackAddress'
+            - type: nil
         created_at:
-          description: When the company started to onboard
+          description: When the company started to onboard.
           example: '2019-02-26T14:47:26Z'
           type: string
           format: date-time
         email:
+          description: Email address for receiving emails as content.
           oneOf:
             - $ref: '#/components/schemas/IncomingEmail'
             - $ref: '#/components/schemas/EmptyString'
