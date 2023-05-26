@@ -2260,6 +2260,9 @@ paths:
 
         A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
 
+        Form templates are owned by the client that created them. What this means is that only the client can call the response endpoints.
+        However if the client has the tenant scope it can call form template endpoints and even include a form when sending content.
+
         ### How to send a form to the user
         When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
       security:
@@ -2394,6 +2397,8 @@ paths:
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
+        Only the client that created the form template associated with the response can call this endpoint.
+
         Given a tenant key and a form template key returns the form response key associated with form responses submitted by users.
       security:
         - oAuth2Client:
@@ -2446,6 +2451,8 @@ paths:
       operationId: getFormResponse
       description: |
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
+
+        Only the client that created the form template associated with the response can call this endpoint.
 
         Given a tenant key, form template key and form response key returns the form response submitted by a user.
       security:
@@ -2502,6 +2509,8 @@ paths:
         **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
         Given a tenant key, form template key and form response key deletes the form response submitted by a user.
+
+        Only the client that created the form template associated with the response can call this endpoint.
 
         ### Form responses potentially contain sensitive data. You are recommended to delete form responses from Kivra as you consume them.
       security:
