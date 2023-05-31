@@ -3248,15 +3248,8 @@ components:
               description: Optionally specify booking information
               $ref: "#/components/schemas/Booking"
             form:
-              required:
-                - id
-              type: object
               description: The form you would like to attach to this content.
-              properties:
-                id:
-                  type: string
-                  description: The form template key
-                  example: 2877d684-a340-4e4c-867f-d93283787b01
+              $ref: "#/components/schemas/Form"
 
     # ##############################################
     # SCHEMA Content_user_v2
@@ -3344,6 +3337,10 @@ components:
         booking:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
+        form:
+          description: The form you would like to attach to this content.
+          $ref: "#/components/schemas/Form"
+
 
     # ##############################################
     # SCHEMA Form Template
@@ -4579,6 +4576,19 @@ components:
           description: Link to page with additional information
           type: string
           format: uri
+
+    # ##############################################
+    # SCHEMA Form
+    # ##############################################
+    Form:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: uuid
+          description: The form template key
+          example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
     # SCHEMA Parts
