@@ -789,7 +789,7 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API - Forms (BETA)"
+  - name: "Tenant API - Forms"
     description: |
       **The Forms API is not yet in Production. It is available in Sandbox to try out. Breaking API changes may occur.**
 
@@ -805,7 +805,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
-      - "Tenant API - Forms (BETA)"
+      - "Tenant API - Forms"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2252,7 +2252,7 @@ paths:
   /v1/tenant/{tenantKey}/form:
     post:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Create form template
       operationId: createFormTemplate
       description: |
@@ -2307,7 +2307,7 @@ paths:
               $ref: "#/components/schemas/FormTemplate"
     get:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Get form template keys
       operationId: getFormTemplateKey
       description: |
@@ -2345,7 +2345,7 @@ paths:
   /v1/tenant/{tenantKey}/form/{formTemplateKey}:
     get:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Get form template
       operationId: getFormTemplate
       description: |
@@ -2391,7 +2391,7 @@ paths:
   /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses:
     get:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Get form response keys
       operationId: getFormResponseKeys
       description: |
@@ -2446,7 +2446,7 @@ paths:
   /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
     get:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Get form response
       operationId: getFormResponse
       description: |
@@ -2502,7 +2502,7 @@ paths:
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
     delete:
       tags:
-        - "Tenant API - Forms (BETA)"
+        - "Tenant API - Forms"
       summary: Delete form response
       operationId: deleteFormResponse
       description: |
