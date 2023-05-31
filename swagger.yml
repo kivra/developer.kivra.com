@@ -4582,13 +4582,13 @@ components:
     # ##############################################
     Form:
       required:
-          - id
+        - id
       type: object
       properties:
         id:
-            type: string
-            description: The form template key
-            example: 2877d684-a340-4e4c-867f-d93283787b01
+          type: string
+          description: The form template key
+          example: 2877d684-a340-4e4c-867f-d93283787b01
 
     # ##############################################
     # SCHEMA Parts
