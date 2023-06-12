@@ -2247,7 +2247,7 @@ paths:
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
   # ##############################################
-  /v1/tenant/{tenantKey}/form:
+  /v2/tenant/{tenantKey}/form:
     post:
       tags:
         - "Tenant API - Forms"
@@ -2334,9 +2334,9 @@ paths:
             Not authorized to make the request
 
   # ##############################################
-  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}
+  # GET /v2/tenant/{tenantKey}/form/{formTemplateKey}
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formTemplateKey}:
+  /v2/tenant/{tenantKey}/form/{formTemplateKey}:
     get:
       tags:
         - "Tenant API - Forms"
@@ -2378,9 +2378,9 @@ paths:
             Form template not found
  
   # ##############################################
-  # GET /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses
+  # GET /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses:
+  /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses:
     get:
       tags:
         - "Tenant API - Forms"
@@ -2431,9 +2431,9 @@ paths:
 
 
   # ##############################################
-  # GET, DELETE /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseKey}
+  # GET, DELETE /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseKey}
   # ##############################################
-  /v1/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
+  /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
     get:
       tags:
         - "Tenant API - Forms"
