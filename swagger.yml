@@ -1867,19 +1867,6 @@ paths:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
-              form to user:
-                value:
-                  ssn: "191212121212"
-                  subject: Sample Content to User
-                  generated_at: "2016-12-12"
-                  type: "letter"
-                  files:
-                    - name: filename.pdf
-                      data: REVBREJFRUY=
-                      content_type: application/pdf
-                  context:
-                    form:
-                      id: 2877d684-a340-4e4c-867f-d93283787b01
 
   # ##############################################
   # POST /v2/tenant/TKEY/content
@@ -3233,9 +3220,6 @@ components:
             booking:
               description: Optionally specify booking information
               $ref: "#/components/schemas/Booking"
-            form:
-              description: The form you would like to attach to this content.
-              $ref: "#/components/schemas/Form"
 
     # ##############################################
     # SCHEMA Content_user_v2
