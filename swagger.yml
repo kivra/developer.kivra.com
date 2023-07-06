@@ -5093,6 +5093,12 @@ components:
           type: string
         receiver_vat_number:
           $ref: '#/components/schemas/VatNumber'
+        sender_icon_url:
+          type: string
+          example: "https://sandbox-static.kivra.com/img/tenant/1341573157b3a1c55f220f4007b2e44789d2d04015/icon.png"
+          format: url
+          description: An url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
+          nullable: true
         sender_name:
           type: string
         sender_vat_numbers:
@@ -5135,6 +5141,7 @@ components:
         - receiver_vat_number
         - sender_name
         - sender_vat_numbers
+        - sender_icon_url
         - subject
         - transaction_at
         - type
