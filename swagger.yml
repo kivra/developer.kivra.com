@@ -4589,7 +4589,7 @@ components:
       properties:
         tag:
           type: string
-          description: The tag that refers to the campaign that you want to attach.
+          description: The tag that refers to the campaign that you want to attach. Note that the request will still be processed even if the campaign does not exist.
           example: summer_2023
 
     # ##############################################
