@@ -2230,6 +2230,22 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
+              campaign to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  campaign:
+                    tag: summer_2023
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
               
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -3308,8 +3324,11 @@ components:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
         form:
-          description: The form you would like to attach to this content.
+          description: Optionally attach a form
           $ref: "#/components/schemas/Form"
+        campaign:
+          description: Optionally attach a campaign
+          $ref: "#/components/schemas/Campaign"
 
 
     # ##############################################
@@ -4559,6 +4578,20 @@ components:
           type: uuid
           description: The form template key
           example: 2877d684-a340-4e4c-867f-d93283787b01
+
+    # ##############################################
+    # SCHEMA Campaign
+    # ##############################################
+    Campaign:
+      type: object
+      description: This is BETA and only available in Sandbox. As such this may change.
+      required:
+        - tag
+      properties:
+        tag:
+          type: string
+          description: The tag that refers to the campaign that you want to attach. Note that the request will still be processed even if the campaign does not exist.
+          example: summer_2023
 
     # ##############################################
     # SCHEMA Parts
