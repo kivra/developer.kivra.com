@@ -3324,9 +3324,10 @@ components:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
         form:
-          description: The form you would like to attach to this content.
+          description: Optionally attach a form
           $ref: "#/components/schemas/Form"
         campaign:
+          description: Optionally attach a campaign
           $ref: "#/components/schemas/Campaign"
 
 
