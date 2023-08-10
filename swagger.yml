@@ -3022,9 +3022,11 @@ paths:
         - "Partner API v3"
       summary: List company inbox content
       operationId: GET_company-companyKey-content
-      description: >
+      description: |
         List the content this company has received.
         This may be filtered by certain `labels` and specific fields may be selected using `field`.
+
+        See [Get specific content](#tag/Partner-API-v3/operation/Get%20content) for a more detailed response description.
       parameters:
         - name: companyKey
           in: path
@@ -3063,6 +3065,17 @@ paths:
       tags:
         - "Partner API v3"
       summary: Get specific content
+      description: |
+        Get metadata about a specific content, or get the data of its parts.
+
+        If the interpreter service is enabled for a recipient, it can add structured metadata to content which has been received.
+        The `interpreted` label indicates if the interpreter has run for a given content.
+        Interpreted data is never used in place of metadata provided by the sender or Kivra, it can only be added.
+
+        Any property of the response that was added by the interpreter is clearly identified as such.
+        If an interpreted property is an object, it will have an `interpreted` property which is `true`.
+        If an interpreted property is a primitive value, its key path will be present in the `interpreted_fields` property.
+        See the response schema below for details.
       operationId: Get content
       parameters:
         - name: companyKey
