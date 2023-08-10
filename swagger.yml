@@ -3083,6 +3083,9 @@ paths:
         '200':
           description: Content metadata
           content:
+            application/json:
+               schema:
+                 $ref: '#/components/schemas/ContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
@@ -3106,6 +3109,9 @@ paths:
         '200':
           description: Content metadata
           content:
+            application/json:
+               schema:
+                 $ref: '#/components/schemas/ContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
