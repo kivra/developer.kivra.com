@@ -4937,6 +4937,18 @@ components:
       type: boolean
 
     # ##############################################
+    # SCHEMA InterpretedFields
+    # ##############################################
+    InterpretedFields:
+      description: |
+        Key paths (dot-notation) identifying fields whose values came from the interpreter.
+        The paths are relative to the root of the object.
+      type: array
+      items:
+        type: string
+      example: ["labels.reminder", "sender_vat_numbers", "type"]
+
+    # ##############################################
     # SCHEMA PartnerPaymentOption
     # ##############################################
     PartnerPaymentOption:
@@ -4972,6 +4984,10 @@ components:
             - type: string
               format: date-time
             - type: nil
+        interpreted:
+          description: True if and only if this payment option was interpreted
+          example: true
+          type: boolean
         reference:
           description: |
             The payments reference, could be an OCR number of invoice reference
@@ -5090,6 +5106,8 @@ components:
     ContentMetadata:
       additionalProperties: false
       properties:
+        interpreted_fields:
+          $ref: '#/components/schemas/InterpretedFields'
         key:
           $ref: '#/components/schemas/ContentKey'
         labels:
