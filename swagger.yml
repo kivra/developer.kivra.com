@@ -4575,7 +4575,8 @@ components:
       type: object
       properties:
         id:
-          type: uuid
+          type: string
+          format: uuid
           description: The form template key
           example: 2877d684-a340-4e4c-867f-d93283787b01
 
