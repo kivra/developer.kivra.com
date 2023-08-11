@@ -3142,12 +3142,6 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        email:
-          description: |
-            A kivra user's email address.
-          type: string
-          writeOnly: true
-          example: "Kivra.Sweden@example.com"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
