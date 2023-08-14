@@ -3140,10 +3140,19 @@ components:
     # ##############################################
     Content_user:
       type: object
-      required:
-        - ssn
-        - subject
-        - files
+      oneOf:
+        - required: 
+          - vat_number
+          - subject
+          - parts
+        - required:
+          - ssn
+          - subject
+          - parts
+        - required:
+          - email
+          - subject
+          - parts
       properties:
         ssn:
           description: |
@@ -3151,6 +3160,18 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
+        email:	
+          description: |	
+            A kivra user's verified email address.	
+          type: string	
+          writeOnly: true	
+          example: "Kivra.Sweden@example.com"
+        vat_number:
+          description: |
+            A company's VAT number, in the format SEXXXXXXNNNN01
+          type: string
+          writeOnly: true
+          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
@@ -3245,10 +3266,19 @@ components:
     # ##############################################
     Content_user_v2:
       type: object
-      required:
-        - ssn
-        - subject
-        - parts
+      oneOf:
+        - required: 
+          - vat_number
+          - subject
+          - parts
+        - required:
+          - ssn
+          - subject
+          - parts
+        - required:
+          - email
+          - subject
+          - parts
       properties:
         ssn:
           description: |
@@ -3256,6 +3286,18 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
+        email:	
+          description: |	
+            A kivra user's verified email address.	
+          type: string	
+          writeOnly: true	
+          example: "Kivra.Sweden@example.com"
+        vat_number:
+          description: |
+            A company's VAT number, in the format SEXXXXXXNNNN01
+          type: string
+          writeOnly: true
+          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
