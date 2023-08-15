@@ -3140,19 +3140,6 @@ components:
     # ##############################################
     Content_user:
       type: object
-      oneOf:
-        - required: 
-          - vat_number
-          - subject
-          - parts
-        - required:
-          - ssn
-          - subject
-          - parts
-        - required:
-          - email
-          - subject
-          - parts
       properties:
         ssn:
           description: |
@@ -3266,19 +3253,6 @@ components:
     # ##############################################
     Content_user_v2:
       type: object
-      oneOf:
-        - required: 
-          - vat_number
-          - subject
-          - parts
-        - required:
-          - ssn
-          - subject
-          - parts
-        - required:
-          - email
-          - subject
-          - parts
       properties:
         ssn:
           description: |
