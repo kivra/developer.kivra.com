@@ -1011,7 +1011,7 @@ paths:
       summary: Associate company ID to tenant
       operationId: Add company ID
       description: |
-        Add a new company ID for a tenant. A tenant can be associated with one or several company ids (Vat number and company name)
+        Add a new company ID for a tenant. A tenant can be associated with one or more company ids (Vat number and company name)
       parameters:
         - name: tenantKey
           in: path
@@ -1051,7 +1051,7 @@ paths:
       summary: Delete company ID from tenant
       operationId: Delete company ID
       description: |
-        Delete a  company ID from a tenant. A tenant can be associated with one or several company ids (Vat number and company name)
+        Delete a  company ID from a tenant. A tenant can be associated with one or more company ids (Vat number and company name)
       parameters:
         - name: tenantKey
           in: path
@@ -1568,23 +1568,19 @@ paths:
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
-        As a minimum a valid recipient identifier is required (`vat_number`, `ssn`, `email`).
+        As a minimum one valid recipient identifier is required (`vat_number`, `ssn` or `email`).
 
-        <aside class="notice">
-        Note: Kivra will not fall through to next field if there is no match on the first defined recipeient identifier field.
+        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers. 
+        More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
 
-        Kivra(se) will in order look for
-            1. `vat_number`
-            2. `ssn`
-            3. `email`
-
-        E.g. if a content has both an ssn and an email, only the ssn will be used to find a receiver, even if there is no ssn match.
+        E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
 
         ### Content (PDF) vs Responsive content (HTML+PDF)
         There are two API resources to send content to a recipient:
-          - `/v1/tenant/TKEY/content`, the one documented here, is used to send one or several PDFs to a recipient. 
-          - `/v2/tenant/TKEY/content` is used to send one or several HTML+PDF pairs (referred to as responsive content) to a recipient. To learn more about the advantages of responsive content see the relative section below   in this documentation.
+          - `/v1/tenant/TKEY/content` can be used to send one or more PDFs to a recipient.
+          - `/v2/tenant/TKEY/content` (documented below) can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
+          To learn more about the advantages of responsive content see the relative section below in this documentation.
 
         ### Retained Content
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
@@ -1739,10 +1735,10 @@ paths:
                               content_type: "image/png"
                               data: "A different base64-encoded string with PNG data"
                       invoice_reference: "Invoice #23"
-              content to user:
+              letter to user:
                 value:
                   ssn: "191212121212"
-                  subject: Sample Content to User
+                  subject: Sample Letter to User
                   generated_at: "2016-12-12"
                   type: "letter"
                   files:
@@ -1881,16 +1877,19 @@ paths:
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
-        As a minimum a valid `ssn` or `vat_number` is required.
+        As a minimum one valid recipient identifier is required (`vat_number`, `ssn` or `email`).
 
-        <aside class="notice">
-        Note: Kivra will reject Content using both `ssn` and `vat_number` in the same metadata as this is ambiguous.
+        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers. 
+        More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
+
+        E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
 
         ### Content (PDF) vs Responsive content (HTML+PDF)
         There are two API resources to send content to a recipient:
-          - `/v1/tenant/TKEY/content`, is used to send one or several PDFs to a recipient. see related section above to learn more about it
-          - `/v2/tenant/TKEY/content` is used to send one or several HTML+PDF pairs (referred to as responsive content) to a recipient. 
+          - `/v1/tenant/TKEY/content` (documented above) can be used only to send one or more PDFs to a recipient.
+          - `/v2/tenant/TKEY/content` can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
+          To learn more about the advantages of responsive content see the relative section below in this documentation.
 
         ### Benefits and usage of responsive content
         As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easyly readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
@@ -2078,6 +2077,16 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
+              letter to user (identified by email):
+                value:
+                  email: "someone@example.com"
+                  subject: Sample Letter to User (identified by email)
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  files:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
               payslip to user:
                 value:
                   ssn: "191212121212"
@@ -3131,10 +3140,6 @@ components:
     # ##############################################
     Content_user:
       type: object
-      required:
-        - ssn
-        - subject
-        - files
       properties:
         ssn:
           description: |
@@ -3142,12 +3147,18 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        email:
+        email:	
+          description: |	
+            A kivra user's verified email address.	
+          type: string	
+          writeOnly: true	
+          example: "Kivra.Sweden@example.com"
+        vat_number:
           description: |
-            A kivra user's email address.
+            A company's VAT number, in the format SEXXXXXXNNNN01
           type: string
           writeOnly: true
-          example: "Kivra.Sweden@example.com"
+          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
@@ -3242,10 +3253,6 @@ components:
     # ##############################################
     Content_user_v2:
       type: object
-      required:
-        - ssn
-        - subject
-        - parts
       properties:
         ssn:
           description: |
@@ -3253,6 +3260,18 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
+        email:	
+          description: |	
+            A kivra user's verified email address.	
+          type: string	
+          writeOnly: true	
+          example: "Kivra.Sweden@example.com"
+        vat_number:
+          description: |
+            A company's VAT number, in the format SEXXXXXXNNNN01
+          type: string
+          writeOnly: true
+          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
@@ -4575,7 +4594,8 @@ components:
       type: object
       properties:
         id:
-          type: uuid
+          type: string
+          format: uuid
           description: The form template key
           example: 2877d684-a340-4e4c-867f-d93283787b01
 
