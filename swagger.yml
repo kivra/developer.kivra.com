@@ -1562,7 +1562,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send content (PDF) to a recipient (user or company)
+      summary: Send content (v1)
       operationId: Send content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
@@ -1576,7 +1576,7 @@ paths:
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
 
-        ### Content (PDF) vs Responsive content (HTML+PDF)
+        ### Content v1 vs v2
         There are two API resources to send content to a recipient:
           - `/v1/tenant/TKEY/content` can be used to send one or more PDFs to a recipient.
           - `/v2/tenant/TKEY/content` (documented below) can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
@@ -1696,7 +1696,7 @@ paths:
                         variable_amount: true
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
-              content with multiple payment options to user:
+              invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice to User
@@ -1871,7 +1871,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send responsive content (HTML+PDF) to a recipient (user or company)
+      summary: Send content (v2)
       operationId: Send responsive content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
@@ -1885,7 +1885,7 @@ paths:
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
 
-        ### Content (PDF) vs Responsive content (HTML+PDF)
+        ### Content v1 vs v2
         There are two API resources to send content to a recipient:
           - `/v1/tenant/TKEY/content` (documented above) can be used only to send one or more PDFs to a recipient.
           - `/v2/tenant/TKEY/content` can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
@@ -2023,7 +2023,7 @@ paths:
                     reference: 426523791
                     variable_amount: true
                     min_amount: "50.00"
-              content with multiple payment options to user:
+              invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice to User
@@ -2083,10 +2083,14 @@ paths:
                   subject: Sample Letter to User (identified by email)
                   generated_at: "2016-12-12"
                   type: "letter"
-                  files:
-                    - name: filename.pdf
-                      data: REVBREJFRUY=
-                      content_type: application/pdf
+                  parts:
+                    name: document.pdf
+                    data: REVBREJFRUY=
+                    content_type: application/pdf
+                    responsive_part:
+                      name: document.html
+                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                      content_type: text/html
               payslip to user:
                 value:
                   ssn: "191212121212"
@@ -3153,12 +3157,6 @@ components:
           type: string	
           writeOnly: true	
           example: "Kivra.Sweden@example.com"
-        vat_number:
-          description: |
-            A company's VAT number, in the format SEXXXXXXNNNN01
-          type: string
-          writeOnly: true
-          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
@@ -3266,12 +3264,6 @@ components:
           type: string	
           writeOnly: true	
           example: "Kivra.Sweden@example.com"
-        vat_number:
-          description: |
-            A company's VAT number, in the format SEXXXXXXNNNN01
-          type: string
-          writeOnly: true
-          example: "SE556840226601"
         subject:
           description: |
             The subject/title will be visibile in the Recipients Inbox. 
