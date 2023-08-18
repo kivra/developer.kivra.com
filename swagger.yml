@@ -3388,6 +3388,7 @@ components:
             - label: Do you have any further comments?
               name: comments
               type: free_text
+              help_text: This can be any type of feedback that you have.
         form_template_key:
           type: string
           format: uuid
@@ -3434,6 +3435,10 @@ components:
           type: string
           description: |
             A key used to identify the question.
+        help_text:
+          type: string
+          description: |
+            Provides the user with more information about the question.
         values:
           type: array
           description: |
