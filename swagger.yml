@@ -4723,6 +4723,7 @@ components:
     # ##############################################
     ScanningAddress:
       description: K4B+ postal address for scanning physical post
+      nullable: true
       additionalProperties: false
       properties:
         name:
@@ -4760,12 +4761,13 @@ components:
         - city
         - country
       type: object
-    
+
     # ##############################################
     # SCHEMA ScanningFallbackAddress
     # ##############################################
     ScanningFallbackAddress:
       description: The delivery address of a company, where mail is delivered when scanning is not possible.
+      nullable: true
       additionalProperties: false
       properties:
         name:
@@ -4870,14 +4872,10 @@ components:
           $ref: '#/components/schemas/CompanyKey'
         scanning_address:
           description: Postal address for scanning physical post.
-          oneOf:
-            - $ref: '#/components/schemas/ScanningAddress'
-            - type: nil
+          $ref: '#/components/schemas/ScanningAddress'
         scanning_fallback_address:
           description: The delivery address of a company, where physical post is delivered when scanning is not possible.
-          oneOf:
-            - $ref: '#/components/schemas/ScanningFallbackAddress'
-            - type: nil
+          $ref: '#/components/schemas/ScanningFallbackAddress'
         created_at:
           description: When the company started to onboard.
           example: '2019-02-26T14:47:26Z'
@@ -4971,59 +4969,55 @@ components:
         account:
           description: The account to pay to
           example: '12345678'
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         amount:
           minimum: 0
           description: The amount to pay in öre, or equivalent
           example: 150000
           type: integer
+          nullable: true
         currency:
           description: The currency used for this payment option
           example: SEK
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         description:
-          description: The description of this payment, if available
+          description: The description of this payment
           example: Takplåt
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         due_at:
+          description: Due date of this payment option
           example: '2022-03-30T00:00:00Z'
-          oneOf:
-            - type: string
-              format: date-time
-            - type: nil
+          type: string
+          format: date-time
+          nullable: true
         interpreted:
           description: True if and only if this payment option was interpreted
           example: true
           type: boolean
         reference:
           description: |
-            The payments reference, could be an OCR number of invoice reference
+            The payments reference, could be an OCR number or invoice reference
           example: 987654321
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         reference_type:
           description: The type of reference
-          oneOf:
-            - type: string
-            - type: nil
+          example: OCR
+          type: string
+          nullable: true
         type:
           description: The type of the the payment, aka the type of the account
-          oneOf:
-            - type: string
-            - type: nil
+          example: bankgiro
+          type: string
+          nullable: true
         vat_amount:
           description: The VAT in öre for this invoice, if available
           example: 1500
-          oneOf:
-            - type: integer
-            - type: nil
+          type: integer
+          nullable: true
       required:
         - account
         - amount
@@ -5040,15 +5034,19 @@ components:
     # SCHEMA InvoiceReferences
     # ##############################################
     InvoiceReferences:
-      description: Invoice references
+      description: References for this invoice
       additionalProperties: false
       properties:
         our:
           description: Our reference, "vår referens" in Swedish
           type: string
+          nullable: true
+          example: "Gustav Larsson"
         your:
           description: Your reference, "er referens" in Swedish
           type: string
+          nullable: true
+          example: null
       required:
         - our
         - your
@@ -5091,13 +5089,16 @@ components:
         sha256:
           description: The SHA256 digest of this content part
           type: string
+          example: 060bed374498fe2f36a5f2e1abf217a90beb46e8fe4ec1d9d5ce7746
         size:
           minimum: 0
           description: The size in bytes of this content part
           type: integer
+          example: 4711
         url:
           description: The URL to fetch this content part
           type: string
+          example: "https://sender.sandbox-api.kivra.com/v3/partner/company/1691677086a57b73569d594df5abad7fd2575c1070/content/1691677075a9813e08f783496382b0bff743ec34ae?part=1"
       required:
         - content_type
         - name
@@ -5170,12 +5171,17 @@ components:
           description: An url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
           nullable: true
         sender_name:
+          example: Lenas Konditori AB
           type: string
+          nullable: true
         sender_vat_numbers:
+          description: VAT numbers representing the sender
           type: array
           items:
             $ref: '#/components/schemas/VatNumber'
+          nullable: true
         subject:
+          example: "Faktura: tusen rulltårtor"
           type: string
         transaction_at:
           description: |
@@ -5187,8 +5193,10 @@ components:
             + For a `receipt` it is its transaction date.
             + For all `other` types of content it is when the sender
               generated/created the content.
+            + `null` if no date was provided or could be interpreted.
           type: string
           format: date-time
+          nullable: true
         type:
           description: |
             The type of the content
