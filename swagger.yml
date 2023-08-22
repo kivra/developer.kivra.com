@@ -3026,7 +3026,9 @@ paths:
         List the content this company has received.
         This may be filtered by certain `labels` and specific fields may be selected using `field`.
 
-        See [Get specific content](#tag/Partner-API-v3/operation/Get%20content) for a more detailed response description.
+        Since the list can be long, not all details about each content are in the response.
+        More detail is available via the
+        [Get specific content](#tag/Partner-API-v3/operation/Get%20content) endpoint.
       parameters:
         - name: companyKey
           in: path
@@ -3055,7 +3057,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContentMetadata'
+                  $ref: '#/components/schemas/BaseContentMetadata'
 
   # ##############################################
   # GET,PATCH /v3/partner/company/COMPKEY/content/CONTKEY
@@ -3066,7 +3068,9 @@ paths:
         - "Partner API v3"
       summary: Get specific content
       description: |
-        Get metadata about a specific content, or get the data of its parts.
+        ### Content metadata
+
+        Get metadata about a specific content in JSON format.
 
         If the interpreter service is enabled for a recipient, it can add structured metadata to content which has been received.
         The `interpreted` label indicates if the interpreter has run for a given content.
@@ -3076,6 +3080,14 @@ paths:
         If an interpreted property is an object, it will have an `interpreted` property which is `true`.
         If an interpreted property is a primitive value, its key path will be present in the `interpreted_fields` property.
         See the response schema below for details.
+
+        ### Content file data
+
+        A given content can contain multiple files ("parts"), to download one, pass the `part` query parameter.
+
+        A part can also be selected by setting the `Accept` header to the MIME type of the part you want
+        (see `parts` in the metadata JSON response). You will receive the first part that matches the given
+        MIME type.
       operationId: Get content
       parameters:
         - name: companyKey
@@ -3097,8 +3109,8 @@ paths:
           description: Content metadata
           content:
             application/json:
-               schema:
-                 $ref: '#/components/schemas/ContentMetadata'
+              schema:
+                $ref: '#/components/schemas/FullContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
@@ -3123,8 +3135,8 @@ paths:
           description: Content metadata
           content:
             application/json:
-               schema:
-                 $ref: '#/components/schemas/ContentMetadata'
+              schema:
+                $ref: '#/components/schemas/FullContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
@@ -5024,6 +5036,7 @@ components:
         - currency
         - description
         - due_at
+        - interpreted
         - reference
         - reference_type
         - type
@@ -5116,13 +5129,12 @@ components:
        describes its file type.
 
     # ##############################################
-    # SCHEMA ContentMetadata
+    # SCHEMA BaseContentMetadata
     # ##############################################
+    BaseContentMetadata:
       description: Listing summary of content metadata
       additionalProperties: false
       properties:
-        interpreted_fields:
-          $ref: '#/components/schemas/InterpretedFields'
         key:
           $ref: '#/components/schemas/ContentKey'
         labels:
@@ -5153,12 +5165,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PartMetadata'
-        payment_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/PartnerPaymentOption'
-        references:
-          $ref: '#/components/schemas/InvoiceReferences'
         received_at:
           description: When the content was received by Kivra
           type: string
@@ -5214,18 +5220,56 @@ components:
         - key
         - labels
         - parts
-        - payment_options
-        - references
         - received_at
         - receiver_name
         - receiver_vat_number
+        - sender_icon_url
         - sender_name
         - sender_vat_numbers
-        - sender_icon_url
         - subject
         - transaction_at
         - type
       type: object
+
+    # ##############################################
+    # SCHEMA FullContentMetadata
+    # ##############################################
+    FullContentMetadata:
+      description: Details of content metadata
+      allOf:
+        - type: object
+          properties:
+            interpreted_fields:
+              $ref: '#/components/schemas/InterpretedFields'
+            parts:
+              description: The files in the content
+              type: array
+              items:
+                $ref: '#/components/schemas/PartMetadata'
+            payment_options:
+              description: Different ways to pay an invoice
+              type: array
+              items:
+                $ref: '#/components/schemas/PartnerPaymentOption'
+            references:
+              $ref: '#/components/schemas/InvoiceReferences'
+          required:
+            - interpreted_fields
+            - key
+            - labels
+            - parts
+            - payment_options
+            - references
+            - received_at
+            - receiver_name
+            - receiver_vat_number
+            - sender_icon_url
+            - sender_name
+            - sender_vat_numbers
+            - subject
+            - transaction_at
+            - type
+        - $ref: '#/components/schemas/BaseContentMetadata'
 
   # ##############################################
   # SECURITY oAuth2Client
