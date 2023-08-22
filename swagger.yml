@@ -5111,13 +5111,14 @@ components:
     # SCHEMA ContentPart
     # ##############################################
     ContentPart:
-      description: The actual content, mostly PDF's, but can one of serveral formats.
-      type: string
+      description: |
+       The file data of the content part, `content_type` in the part metadata
+       describes its file type.
 
     # ##############################################
     # SCHEMA ContentMetadata
     # ##############################################
-    ContentMetadata:
+      description: Listing summary of content metadata
       additionalProperties: false
       properties:
         interpreted_fields:
@@ -5125,6 +5126,7 @@ components:
         key:
           $ref: '#/components/schemas/ContentKey'
         labels:
+          description: The labels that apply to this content
           additionalProperties: false
           properties:
             governmental:
@@ -5158,9 +5160,11 @@ components:
         references:
           $ref: '#/components/schemas/InvoiceReferences'
         received_at:
+          description: When the content was received by Kivra
           type: string
           format: date-time
         receiver_name:
+          description: The name of the recipient company
           type: string
         receiver_vat_number:
           $ref: '#/components/schemas/VatNumber'
@@ -5168,9 +5172,10 @@ components:
           type: string
           example: "https://sandbox-static.kivra.com/img/tenant/1341573157b3a1c55f220f4007b2e44789d2d04015/icon.png"
           format: url
-          description: An url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
+          description: A url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
           nullable: true
         sender_name:
+          description: The name of the sender
           example: Lenas Konditori AB
           type: string
           nullable: true
@@ -5181,6 +5186,7 @@ components:
             $ref: '#/components/schemas/VatNumber'
           nullable: true
         subject:
+          description: Subject of the content
           example: "Faktura: tusen rulltårtor"
           type: string
         transaction_at:
@@ -5198,11 +5204,7 @@ components:
           format: date-time
           nullable: true
         type:
-          description: |
-            The type of the content
-
-            This is reduced to just three things, an `invoice`, a `receipt` and
-            all `other` types of content.
+          description: The type of the content
           enum:
             - invoice
             - receipt
