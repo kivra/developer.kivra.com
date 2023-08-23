@@ -4724,7 +4724,7 @@ components:
     # ##############################################
     IncomingEmail:
       pattern: ^[a-tv-zA-TV-Z0-9]{9}@(sandbox\.)?kivramail.com$
-      description: K4B+ email address for receiving emails as content
+      description: Email address for receiving emails as content
       type: string
       example: xxcsn2psy@kivramail.com
 
@@ -4732,7 +4732,7 @@ components:
     # SCHEMA ScanningAddress
     # ##############################################
     ScanningAddress:
-      description: K4B+ postal address for scanning physical post
+      description: Postal address for receiving physical mail as scanned content
       nullable: true
       additionalProperties: false
       properties:
@@ -4776,7 +4776,7 @@ components:
     # SCHEMA ScanningFallbackAddress
     # ##############################################
     ScanningFallbackAddress:
-      description: The delivery address of a company, where mail is delivered when scanning is not possible.
+      description: The address to deliver physical post to when scanning is not possible, such as for parcels.
       nullable: true
       additionalProperties: false
       properties:
@@ -4817,31 +4817,32 @@ components:
     # SCHEMA AllServices
     # ##############################################
     AllServices:
-      description: All K4B and K4B+ services
+      description: |
+        The status of each Kivra Business and Kivra Business Plus service
+        for the company.
       additionalProperties: false
       properties:
         email:
-          description: The K4B+ email service
+          description: Indicates if the Kivra email service is active
           example: false
           type: boolean
         scanning:
-          description: The K4B+ physical scanned post service
+          description: Indicates if the scanned mail service is active
           example: false
           type: boolean
         interpreter:
-          description: The K4B+ interpreter (ML) service
+          description: Indicates if the interpreter service is active
           example: false
           type: boolean
         kivra:
-          description: Kivra's normal postal service, is always enabled
+          description: Indicates that the Kivra digital mail service is active (always true)
           example: true
           enum:
             - true
           type: boolean
         minameddelanden:
           description: |
-            Governmental posts, only available for companies with `type`
-            `company`
+            Indicates if the Kivra public authority mail service is active.
           example: true
           type: boolean
       type: object
@@ -4881,10 +4882,8 @@ components:
         key:
           $ref: '#/components/schemas/CompanyKey'
         scanning_address:
-          description: Postal address for scanning physical post.
           $ref: '#/components/schemas/ScanningAddress'
         scanning_fallback_address:
-          description: The delivery address of a company, where physical post is delivered when scanning is not possible.
           $ref: '#/components/schemas/ScanningFallbackAddress'
         created_at:
           description: When the company started to onboard.
@@ -4892,7 +4891,9 @@ components:
           type: string
           format: date-time
         email:
-          description: Email address for receiving emails as content.
+          description: |
+            Email address for receiving emails as content.
+            Empty if the Kivra email service is not active.
           oneOf:
             - $ref: '#/components/schemas/IncomingEmail'
             - $ref: '#/components/schemas/EmptyString'
