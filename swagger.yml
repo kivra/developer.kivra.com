@@ -3035,9 +3035,12 @@ paths:
         - "Partner API v3"
       summary: List company inbox content
       operationId: GET_company-companyKey-content
-      description: >
+      description: |
         List the content this company has received.
         This may be filtered by certain `labels` and specific fields may be selected using `field`.
+
+        Note that more content metadata is available via the
+        [Get specific content](#tag/Partner-API-v3/operation/Get%20content) endpoint.
       parameters:
         - name: companyKey
           in: path
@@ -3066,7 +3069,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContentMetadata'
+                  $ref: '#/components/schemas/BaseContentMetadata'
 
   # ##############################################
   # GET,PATCH /v3/partner/company/COMPKEY/content/CONTKEY
@@ -3076,6 +3079,26 @@ paths:
       tags:
         - "Partner API v3"
       summary: Get specific content
+      description: |
+        ### Content metadata
+
+        Get metadata about a specific content in JSON format.
+
+        If the interpreter service is enabled for a recipient, it can add structured metadata to content which has been received.
+        The `interpreted` label indicates if the interpreter has run for a given content.
+        Interpreted data is never used in place of metadata provided by the sender or Kivra, it can only be added.
+        Any property of the response that was added by the interpreter is clearly identified as such.
+        If an interpreted property is an object, it will have an `interpreted` property which is `true`.
+        If an interpreted property is a primitive value, its key path will be present in the `interpreted_fields` property.
+        See the response schema below for details.
+
+        ### Content file data
+
+        A given content can contain multiple files ("parts"). Fetching of such parts is done by passing the `part` query parameter.
+
+        A part can also be selected by setting the `Accept` header to the MIME type of the part you want
+        (see `parts` in the metadata JSON response). You will receive the first part that matches the given
+        MIME type.
       operationId: Get content
       parameters:
         - name: companyKey
@@ -3096,6 +3119,9 @@ paths:
         '200':
           description: Content metadata
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
@@ -3119,6 +3145,9 @@ paths:
         '200':
           description: Content metadata
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullContentMetadata'
             '*/*':
               schema:
                 $ref: '#/components/schemas/ContentPart'
@@ -4733,7 +4762,7 @@ components:
     # ##############################################
     IncomingEmail:
       pattern: ^[a-tv-zA-TV-Z0-9]{9}@(sandbox\.)?kivramail.com$
-      description: K4B+ email address for receiving emails as content
+      description: Email address for receiving emails as content
       type: string
       example: xxcsn2psy@kivramail.com
 
@@ -4741,7 +4770,8 @@ components:
     # SCHEMA ScanningAddress
     # ##############################################
     ScanningAddress:
-      description: K4B+ postal address for scanning physical post
+      description: Postal address for receiving physical mail as scanned content in Kivra.
+      nullable: true
       additionalProperties: false
       properties:
         name:
@@ -4779,12 +4809,13 @@ components:
         - city
         - country
       type: object
-    
+
     # ##############################################
     # SCHEMA ScanningFallbackAddress
     # ##############################################
     ScanningFallbackAddress:
-      description: The delivery address of a company, where mail is delivered when scanning is not possible.
+      description: If a mailpiece cannot be scanned, it will be forwarded to this address instead.
+      nullable: true
       additionalProperties: false
       properties:
         name:
@@ -4824,31 +4855,32 @@ components:
     # SCHEMA AllServices
     # ##############################################
     AllServices:
-      description: All K4B and K4B+ services
+      description: |
+        The status of each Kivra Business and Kivra Business Plus service
+        for the company.
       additionalProperties: false
       properties:
         email:
-          description: The K4B+ email service
+          description: Indicates if the Kivra email service is active
           example: false
           type: boolean
         scanning:
-          description: The K4B+ physical scanned post service
+          description: Indicates if the scanned mail service is active
           example: false
           type: boolean
         interpreter:
-          description: The K4B+ interpreter (ML) service
+          description: Indicates if the interpreter service is active
           example: false
           type: boolean
         kivra:
-          description: Kivra's normal postal service, is always enabled
+          description: Indicates that the Kivra digital mail service is active (always true)
           example: true
           enum:
             - true
           type: boolean
         minameddelanden:
           description: |
-            Governmental posts, only available for companies with `type`
-            `company`
+            Indicates if the Kivra public authority mail service is active.
           example: true
           type: boolean
       type: object
@@ -4888,22 +4920,18 @@ components:
         key:
           $ref: '#/components/schemas/CompanyKey'
         scanning_address:
-          description: Postal address for scanning physical post.
-          oneOf:
-            - $ref: '#/components/schemas/ScanningAddress'
-            - type: nil
+          $ref: '#/components/schemas/ScanningAddress'
         scanning_fallback_address:
-          description: The delivery address of a company, where physical post is delivered when scanning is not possible.
-          oneOf:
-            - $ref: '#/components/schemas/ScanningFallbackAddress'
-            - type: nil
+          $ref: '#/components/schemas/ScanningFallbackAddress'
         created_at:
           description: When the company started to onboard.
           example: '2019-02-26T14:47:26Z'
           type: string
           format: date-time
         email:
-          description: Email address for receiving emails as content.
+          description: |
+            Email address for receiving emails as content.
+            Empty if the Kivra email service is not active.
           oneOf:
             - $ref: '#/components/schemas/IncomingEmail'
             - $ref: '#/components/schemas/EmptyString'
@@ -4969,6 +4997,18 @@ components:
       type: boolean
 
     # ##############################################
+    # SCHEMA InterpretedFields
+    # ##############################################
+    InterpretedFields:
+      description: |
+        Key paths (dot-notation) identifying fields whose values came from the interpreter.
+        The paths are relative to the root of the object.
+      type: array
+      items:
+        type: string
+      example: ["labels.reminder", "sender_vat_numbers", "type"]
+
+    # ##############################################
     # SCHEMA PartnerPaymentOption
     # ##############################################
     PartnerPaymentOption:
@@ -4978,61 +5018,62 @@ components:
         account:
           description: The account to pay to
           example: '12345678'
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         amount:
           minimum: 0
           description: The amount to pay in öre, or equivalent
           example: 150000
           type: integer
+          nullable: true
         currency:
           description: The currency used for this payment option
           example: SEK
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         description:
-          description: The description of this payment, if available
-          example: Takplåt
-          oneOf:
-            - type: string
-            - type: nil
+          description: The description of this payment option
+          example: 12 month subscription
+          type: string
+          nullable: true
         due_at:
+          description: Due date of this payment option
           example: '2022-03-30T00:00:00Z'
-          oneOf:
-            - type: string
-              format: date-time
-            - type: nil
+          type: string
+          format: date-time
+          nullable: true
+        interpreted:
+          description: True if and only if this payment option was interpreted
+          example: true
+          type: boolean
         reference:
           description: |
-            The payments reference, could be an OCR number of invoice reference
+            The payments reference, could be an OCR number or invoice reference
           example: 987654321
-          oneOf:
-            - type: string
-            - type: nil
+          type: string
+          nullable: true
         reference_type:
           description: The type of reference
-          oneOf:
-            - type: string
-            - type: nil
+          example: OCR
+          type: string
+          nullable: true
         type:
           description: The type of the the payment, aka the type of the account
-          oneOf:
-            - type: string
-            - type: nil
+          example: bankgiro
+          type: string
+          nullable: true
         vat_amount:
           description: The VAT in öre for this invoice, if available
           example: 1500
-          oneOf:
-            - type: integer
-            - type: nil
+          type: integer
+          nullable: true
       required:
         - account
         - amount
         - currency
         - description
         - due_at
+        - interpreted
         - reference
         - reference_type
         - type
@@ -5043,15 +5084,20 @@ components:
     # SCHEMA InvoiceReferences
     # ##############################################
     InvoiceReferences:
-      description: Invoice references
+      description: References for this invoice
       additionalProperties: false
+      nullable: true
       properties:
         our:
           description: Our reference, "vår referens" in Swedish
           type: string
+          nullable: true
+          example: "Gustav Larsson"
         your:
           description: Your reference, "er referens" in Swedish
           type: string
+          nullable: true
+          example: null
       required:
         - our
         - your
@@ -5094,13 +5140,16 @@ components:
         sha256:
           description: The SHA256 digest of this content part
           type: string
+          example: 060bed374498fe2f36a5f2e1abf217a90beb46e8fe4ec1d9d5ce7746
         size:
           minimum: 0
           description: The size in bytes of this content part
           type: integer
+          example: 4711
         url:
           description: The URL to fetch this content part
           type: string
+          example: "https://sender.sandbox-api.kivra.com/v3/partner/company/1691677086a57b73569d594df5abad7fd2575c1070/content/1691677075a9813e08f783496382b0bff743ec34ae?part=1"
       required:
         - content_type
         - name
@@ -5113,18 +5162,21 @@ components:
     # SCHEMA ContentPart
     # ##############################################
     ContentPart:
-      description: The actual content, mostly PDF's, but can one of serveral formats.
-      type: string
+      description: |
+       The file data of the content part, `content_type` in the part metadata
+       describes its file type.
 
     # ##############################################
-    # SCHEMA ContentMetadata
+    # SCHEMA BaseContentMetadata
     # ##############################################
-    ContentMetadata:
+    BaseContentMetadata:
+      description: Listing summary of content metadata
       additionalProperties: false
       properties:
         key:
           $ref: '#/components/schemas/ContentKey'
         labels:
+          description: The labels that apply to this content
           additionalProperties: false
           properties:
             governmental:
@@ -5151,32 +5203,36 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PartMetadata'
-        payment_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/PartnerPaymentOption'
-        references:
-          $ref: '#/components/schemas/InvoiceReferences'
         received_at:
+          description: When the content was received by Kivra
           type: string
           format: date-time
         receiver_name:
+          description: The name of the recipient company
           type: string
+          example: Developers Developers Developers AB
         receiver_vat_number:
           $ref: '#/components/schemas/VatNumber'
         sender_icon_url:
           type: string
           example: "https://sandbox-static.kivra.com/img/tenant/1341573157b3a1c55f220f4007b2e44789d2d04015/icon.png"
           format: url
-          description: An url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
+          description: A url to the icon used by the sender within Kivra, or `null` if no corresponding icon exists.
           nullable: true
         sender_name:
+          description: The name of the sender
+          example: Lenas Konditori AB
           type: string
+          nullable: true
         sender_vat_numbers:
+          description: VAT numbers representing the sender
           type: array
           items:
             $ref: '#/components/schemas/VatNumber'
+          nullable: true
         subject:
+          description: Subject of the content
+          example: "Invoice: a thousand Swiss rolls"
           type: string
         transaction_at:
           description: |
@@ -5188,14 +5244,12 @@ components:
             + For a `receipt` it is its transaction date.
             + For all `other` types of content it is when the sender
               generated/created the content.
+            + `null` if no date was provided or could be interpreted.
           type: string
           format: date-time
+          nullable: true
         type:
-          description: |
-            The type of the content
-
-            This is reduced to just three things, an `invoice`, a `receipt` and
-            all `other` types of content.
+          description: The type of the content
           enum:
             - invoice
             - receipt
@@ -5205,18 +5259,56 @@ components:
         - key
         - labels
         - parts
-        - payment_options
-        - references
         - received_at
         - receiver_name
         - receiver_vat_number
+        - sender_icon_url
         - sender_name
         - sender_vat_numbers
-        - sender_icon_url
         - subject
         - transaction_at
         - type
       type: object
+
+    # ##############################################
+    # SCHEMA FullContentMetadata
+    # ##############################################
+    FullContentMetadata:
+      description: Details of content metadata
+      allOf:
+        - type: object
+          properties:
+            interpreted_fields:
+              $ref: '#/components/schemas/InterpretedFields'
+            parts:
+              description: The files in the content
+              type: array
+              items:
+                $ref: '#/components/schemas/PartMetadata'
+            payment_options:
+              description: Different ways to pay an invoice
+              type: array
+              items:
+                $ref: '#/components/schemas/PartnerPaymentOption'
+            references:
+              $ref: '#/components/schemas/InvoiceReferences'
+          required:
+            - interpreted_fields
+            - key
+            - labels
+            - parts
+            - payment_options
+            - references
+            - received_at
+            - receiver_name
+            - receiver_vat_number
+            - sender_icon_url
+            - sender_name
+            - sender_vat_numbers
+            - subject
+            - transaction_at
+            - type
+        - $ref: '#/components/schemas/BaseContentMetadata'
 
   # ##############################################
   # SECURITY oAuth2Client
