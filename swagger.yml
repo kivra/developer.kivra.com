@@ -4732,7 +4732,7 @@ components:
     # SCHEMA ScanningAddress
     # ##############################################
     ScanningAddress:
-      description: Postal address for receiving physical mail as scanned content
+      description: Postal address for receiving physical mail as scanned content in Kivra.
       nullable: true
       additionalProperties: false
       properties:
@@ -4776,7 +4776,7 @@ components:
     # SCHEMA ScanningFallbackAddress
     # ##############################################
     ScanningFallbackAddress:
-      description: The address to deliver physical post to when scanning is not possible, such as for parcels.
+      description: If a mailpiece cannot be scanned, it will be forwarded to this address instead.
       nullable: true
       additionalProperties: false
       properties:
