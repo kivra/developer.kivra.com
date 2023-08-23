@@ -4993,8 +4993,8 @@ components:
           type: string
           nullable: true
         description:
-          description: The description of this payment
-          example: Takplåt
+          description: The description of this payment option
+          example: 12 month subscription
           type: string
           nullable: true
         due_at:
@@ -5170,6 +5170,7 @@ components:
         receiver_name:
           description: The name of the recipient company
           type: string
+          example: Developers Developers Developers AB
         receiver_vat_number:
           $ref: '#/components/schemas/VatNumber'
         sender_icon_url:
