@@ -5048,6 +5048,7 @@ components:
     InvoiceReferences:
       description: References for this invoice
       additionalProperties: false
+      nullable: true
       properties:
         our:
           description: Our reference, "vår referens" in Swedish
