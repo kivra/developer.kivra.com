@@ -3537,7 +3537,8 @@ components:
         - form_template_key
         - responses
         - matched_by
-        - metadata
+        - login_method
+        - responded_at
       properties:
         form_response_key:
           type: string
@@ -3614,26 +3615,18 @@ components:
               description:
                 Represents a value used to identify a user e.g. ssn or email.
               example: 199202286837
-        metadata:
-            type: object
-            description:
-              Metadata relating to the form response
-            required:
-              - login_method
-              - responded_at
-            properties:
-              login_method:
-                type: string
-                enum: [bankid]
-                description:
-                  How the user that submited the form logged into Kivra
-                example: bankid
-              responded_at:
-                type: string
-                format: ISO8601
-                description:
-                  When Kivra received a response to the form
-                example: 2023-08-22T12:39:29.000000Z
+        login_method:
+          type: string
+          enum: [bankid]
+          description:
+                How the user that submitted the form logged into Kivra
+          example: bankid
+        responded_at:
+          type: string
+          format: ISO8601
+          description:
+                When Kivra received a response to the form
+          example: 2023-08-22T12:39:29.000000Z
     BasicErrorResponse:
       type: object
       required:
