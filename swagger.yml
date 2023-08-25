@@ -3619,7 +3619,7 @@ components:
           type: string
           enum: [bankid]
           description:
-                How the user that submited the form logged into Kivra
+                How the user that submitted the form logged into Kivra
           example: bankid
         responded_at:
           type: string
