@@ -3322,6 +3322,7 @@ components:
             - `"invoice"`: |
               indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. 
               This is the default type for all payable content.
+            - `"letter.form"`: indicating that the content contains a form.
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice. 
               The invoice might include late fees and other differences compared to the original invoice. 
