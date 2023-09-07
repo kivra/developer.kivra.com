@@ -2232,7 +2232,7 @@ paths:
                   ssn: "191212121212"
                   subject: Sample Content to User
                   generated_at: "2016-12-12"
-                  type: "letter"
+                  type: "letter.form"
                   form:
                     id: 2877d684-a340-4e4c-867f-d93283787b01
                     sender_reference:
