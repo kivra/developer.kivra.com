@@ -2235,6 +2235,8 @@ paths:
                   type: "letter"
                   form:
                     id: 2877d684-a340-4e4c-867f-d93283787b01
+                    sender_reference:
+                      internal_id: 6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf
                   parts:
                     name: document.pdf
                     data: REVBREJFRUY=
@@ -3539,6 +3541,7 @@ components:
         - matched_by
         - login_method
         - responded_at
+        - sender_reference
       properties:
         form_response_key:
           type: string
@@ -3627,6 +3630,12 @@ components:
           description:
                 When Kivra received a response to the form
           example: 2023-08-22T12:39:29.000000Z
+        sender_reference:
+          type: object
+          nullable: true
+          description: Provided reference data in content sendout is included in the form response.
+          example:
+            internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
     BasicErrorResponse:
       type: object
       required:
@@ -4638,6 +4647,12 @@ components:
           format: uuid
           description: The form template key
           example: 2877d684-a340-4e4c-867f-d93283787b01
+        sender_reference:
+          type: object
+          description: Reference data you want to include in the form response.
+          example:
+            internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
+
 
     # ##############################################
     # SCHEMA Campaign
