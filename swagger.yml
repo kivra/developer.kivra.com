@@ -4660,8 +4660,9 @@ components:
           description: >
             Number of days during which the form can accept answers (until 23:59:59).
 
-            As an *example*, if now is September 8th, and the form expires in 30 days,
-            it will effectively expire on October 7th 23:59:59.
+            As an *example*, if *the content is sent* on September 8th,
+            and the form expires in 30 days, it will effectively expire
+            on October 7th 23:59:59.
           example: 30
 
     # ##############################################
