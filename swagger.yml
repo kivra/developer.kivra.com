@@ -4657,6 +4657,8 @@ components:
             internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
         days_to_expiry:
           type: integer
+          minimum: 1
+          maximum: 90
           description: >
             Number of days during which the form can accept answers (until 23:59:59).
 
