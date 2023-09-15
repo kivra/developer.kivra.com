@@ -2237,6 +2237,7 @@ paths:
                     id: 2877d684-a340-4e4c-867f-d93283787b01
                     sender_reference:
                       internal_id: 6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf
+                    days_to_expiry: 30
                   parts:
                     name: document.pdf
                     data: REVBREJFRUY=
@@ -4641,6 +4642,7 @@ components:
     Form:
       required:
         - id
+        - days_to_expiry
       type: object
       properties:
         id:
@@ -4653,6 +4655,18 @@ components:
           description: Reference data you want to include in the form response.
           example:
             internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
+        days_to_expiry:
+          type: integer
+          minimum: 1
+          maximum: 90
+          description: >
+            Number of days in which a response to the form can be submitted
+            (until 23:59:59).
+
+            As an *example*, if *the content is sent* on September 8th,
+            and the form expires in 30 days, it will effectively expire
+            on October 7th 23:59:59.
+          example: 30
 
     # ##############################################
     # SCHEMA Campaign
