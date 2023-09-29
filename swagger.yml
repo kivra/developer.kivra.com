@@ -58,13 +58,13 @@ info:
     Recipients are responsible for reading and processing the received content.
 
     ## Policy for Personal Information in the metadata
-    It is not allowed to include so called sensitive personal data in any of the free-text metadata fields. 
+    It is not allowed to include so called sensitive personal data in any of the free-text metadata fields.
 
-    Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin, 
-    political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or 
-    sexual orientation, genetic data, biometric data that is being used to uniquely identify a person), and this means 
-    for example that it is not allowed to state the reason for a booking in either of the Title field or the Description 
-    field when sending medical care notices. 
+    Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin,
+    political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or
+    sexual orientation, genetic data, biometric data that is being used to uniquely identify a person), and this means
+    for example that it is not allowed to state the reason for a booking in either of the Title field or the Description
+    field when sending medical care notices.
 
     The sender is responsible for ensuring no sensitive personal data is included in any of the free-text metadata fields.
 
@@ -108,9 +108,9 @@ info:
 
     # Terminology
     ### User
-    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person. 
+    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person.
     Users are required to login at least once every 12 month to be considered active. A user that has not logged in since longer than 12 months will no longer be listed for matching to inform the tenant that they should not send content to this user.
-    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active Users are available for receiving Content. 
+    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active Users are available for receiving Content.
     See below for more information on Dormant and Grace period.
 
     ### Company
@@ -150,10 +150,10 @@ info:
     is a data object that contains information about the document and the document itself
 
     ### Retained functionality
-    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database. 
-    Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient 
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database.
+    Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient
     registers with Kivra within this period of time.
-   
+
     <aside class="notice">
     Note: Usage of retained functionality is only allowed for documents of type credit notice and salary slip.
     </aside>
@@ -229,7 +229,7 @@ info:
 
     ### Payload size
     Unless specified otherwise the payload for all requests have a max limit of `10MB`. Requests with payload larger than the max size will be rejected with error 413.
-    
+
     # Interacting with the API
     All API access is performed over HTTPS through sender.[api, sandbox-api].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox environment.
     In order to ensure data privacy the following choices have been made, to name some that directly impact API workflows:
@@ -262,7 +262,7 @@ info:
     The sandbox is not to be used with any critical or production data. We make no guarantees as to the availability of the service, or the data stored by it.
 
     We usually deploy the latest production environment to our Sandbox, but may occasionally update it with newer builds, which may not be as reliable or well tested.
-    
+
     The Sandbox environment cannot be used for capacity or volume tests as it has a much smaller capacity and performance than our production environment.
 
     ## URL Components
@@ -477,8 +477,8 @@ info:
 
     ### State generating
 
-    When the last of all parties sign the agreement, the agreement transition to state `generating` while the covenant PDF is generated 
-    and all necessary operations required for PAdES are applied to it. The `generating` state will then automatically transition to `completed` 
+    When the last of all parties sign the agreement, the agreement transition to state `generating` while the covenant PDF is generated
+    and all necessary operations required for PAdES are applied to it. The `generating` state will then automatically transition to `completed`
     as soon as the covenant file is ready.
 
     ### State completed
@@ -499,7 +499,7 @@ info:
 
     The verification value is used solely for verification purposes. This means that if you have access to the signed document, you can use this for verification through our services where we run the obtained file through our internal algorithm to produce the value string for that exact file.
 
-    Since 2022-03-15 the covenant file is also digitally signed according to PAdES (PDF Advanced Electronic Signatures). PAdES is a standard for digital signatures which is adopted by the European eIDAS standard, meaning that agreements signed according to PAdES are legally binding in all EU member states since July 2014. For more information on PAdES: [Wikipedia article](https://en.wikipedia.org/wiki/PAdES) or [EU e-Signature page](https://ec.europa.eu/digital-building-blocks/wikis/display/CEFDIGITAL/Standards+and+specifications). This means that covenant PDFs produced by Kivra Signatures are self-bearing and their validity and authenticity can be easily determined by free PDF readers like Abobe Acrobat Reader, completely independently of Kivra. The PAdES signature can also be verified programmatically if one would like to do so. 
+    Since 2022-03-15 the covenant file is also digitally signed according to PAdES (PDF Advanced Electronic Signatures). PAdES is a standard for digital signatures which is adopted by the European eIDAS standard, meaning that agreements signed according to PAdES are legally binding in all EU member states since July 2014. For more information on PAdES: [Wikipedia article](https://en.wikipedia.org/wiki/PAdES) or [EU e-Signature page](https://ec.europa.eu/digital-building-blocks/wikis/display/CEFDIGITAL/Standards+and+specifications). This means that covenant PDFs produced by Kivra Signatures are self-bearing and their validity and authenticity can be easily determined by free PDF readers like Abobe Acrobat Reader, completely independently of Kivra. The PAdES signature can also be verified programmatically if one would like to do so.
 
     For more information on how we handle PDF files in Kivra Signatures and PAdES, please refer to [this document](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc/edit?usp=sharing).
     ## Notifications
@@ -526,12 +526,12 @@ info:
 
     # Errors
 
-    Kivra uses conventional HTTP response codes to indicate the success or failure of an API request. 
+    Kivra uses conventional HTTP response codes to indicate the success or failure of an API request.
 
-    In general: 
+    In general:
 
-    * Codes in the `2xx` range indicate success. 
-    * Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.). 
+    * Codes in the `2xx` range indicate success.
+    * Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.).
     * Codes in the `5xx` range indicate an error with Kivra's servers or a timeout. In this case it is safe to retry the request.
 
     ## Error handling
@@ -576,13 +576,13 @@ info:
     | long_message  | A longer and more verbose error message                    |
 
     ## Extended error code
-    
+
     The 5-digits extended error code is provided both in the body of the response and in the `x-error-code` filed of the response header.
-    
+
     ## Error codes
 
-    In addition to descriptive error text, error messages contain machine-parseable codes. 
-    While the text for an error message may change, the codes will stay the same. 
+    In addition to descriptive error text, error messages contain machine-parseable codes.
+    While the text for an error message may change, the codes will stay the same.
     The following table describes the codes which may appear when working with the API:
 
     | Code | Short Message | Long Message |
@@ -1318,8 +1318,8 @@ paths:
         - name: diffId
           in: path
           description: |
-            ID that was returned in header in a previous request and is used 
-            to calculate what users have been added/removed between that 
+            ID that was returned in header in a previous request and is used
+            to calculate what users have been added/removed between that
             request and now
           required: true
           schema:
@@ -1362,7 +1362,7 @@ paths:
                 $ref: "#/components/schemas/UserDiff"
         404:
           description: |
-            This error could indicate that the diffId is no longer valid 
+            This error could indicate that the diffId is no longer valid
             and therefore the URL points to a resource that is no longer
             available
 
@@ -1392,8 +1392,8 @@ paths:
             format: hexadecimal
       requestBody:
         description: |
-          List of SSNs to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 SSNs. 
-          If the payload exceeds 10MB, Kivra will respond with a 413 error. 
+          List of SSNs to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 SSNs.
+          If the payload exceeds 10MB, Kivra will respond with a 413 error.
         content:
           application/json:
             schema:
@@ -1425,7 +1425,7 @@ paths:
       operationId: Match Users ssn v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
-        The request contains a list of recipient SSNs to be matched, and the response is a filtered list containing only the SSNs 
+        The request contains a list of recipient SSNs to be matched, and the response is a filtered list containing only the SSNs
         that are eligible to receive content from the tenant.
         <aside class="notice">
           If none of the provided SSNs are eligible to receive content from this tenant, an empty list will be returned.
@@ -1440,8 +1440,8 @@ paths:
             format: hexadecimal
       requestBody:
         description: |
-          List of SSNs to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 SSNs. 
-          If the payload exceeds 10MB, Kivra will respond with a 413 error. 
+          List of SSNs to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 SSNs.
+          If the payload exceeds 10MB, Kivra will respond with a 413 error.
         content:
           application/json:
             schema:
@@ -1470,7 +1470,7 @@ paths:
       operationId: Match Users verified_email v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
-        The request contains a list of recipient email addresses to be matched, and the response is a filtered list containing only the 
+        The request contains a list of recipient email addresses to be matched, and the response is a filtered list containing only the
         email addresses that are eligible to receive content from the tenant.
         Email matching is case insensitive, but the queried email case is returned as submitted.
         <aside class="notice">
@@ -1486,8 +1486,8 @@ paths:
             format: hexadecimal
       requestBody:
         description: |
-          List of email addresses to be matched. The payload can be up to 10MB in size. 
-          If the payload exceeds 10MB, Kivra will respond with a 413 error. 
+          List of email addresses to be matched. The payload can be up to 10MB in size.
+          If the payload exceeds 10MB, Kivra will respond with a 413 error.
         content:
           application/json:
             schema:
@@ -1570,7 +1570,7 @@ paths:
         ### Minimum Metadata
         As a minimum one valid recipient identifier is required (`vat_number`, `ssn` or `email`).
 
-        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers. 
+        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers.
         More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
 
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
@@ -1879,7 +1879,7 @@ paths:
         ### Minimum Metadata
         As a minimum one valid recipient identifier is required (`vat_number`, `ssn` or `email`).
 
-        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers. 
+        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers.
         More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
 
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
@@ -2262,7 +2262,7 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-              
+
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
   # ##############################################
@@ -2395,7 +2395,7 @@ paths:
         404:
           description: |
             Form template not found
- 
+
   # ##############################################
   # GET /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses
   # ##############################################
@@ -3183,15 +3183,15 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        email:	
-          description: |	
-            A kivra user's verified email address.	
-          type: string	
-          writeOnly: true	
+        email:
+          description: |
+            A kivra user's verified email address.
+          type: string
+          writeOnly: true
           example: "Kivra.Sweden@example.com"
         subject:
           description: |
-            The subject/title will be visibile in the Recipients Inbox. 
+            The subject/title will be visibile in the Recipients Inbox.
             Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
             Avoid using personal and sensitive information in the subject.
           type: string
@@ -3201,13 +3201,13 @@ components:
           format: ISO8601
           example: "2022-12-31"
           description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site.
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         type:
           type: string
           example: "letter"
           description: |
-            Optional attribute providing information about the type of content being sent. 
+            Optional attribute providing information about the type of content being sent.
             The type of a content may influence how the user interacts with the content and how the user is notified about the content.
             Allowed values are:
             - `"letter"`: |
@@ -3217,20 +3217,20 @@ components:
             - `"letter.creditnotice"`: |
               indicating that the content is a creditnotice.
             - `"invoice"`: |
-              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. 
+              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               This is the default type for all payable content.
             - `"invoice.reminder"`: |
-              indicating that the content is an invoice, a reminder for a previously unpaid invoice. 
-              The invoice might include late fees and other differences compared to the original invoice. 
+              indicating that the content is an invoice, a reminder for a previously unpaid invoice.
+              The invoice might include late fees and other differences compared to the original invoice.
               A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"invoice.debtcampaign"`: |
-              indicating that the content is an invoice or payment plan from a debt collection company. 
-              The invoice might include fees such as interest and reminder fees. 
-              A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". 
+              indicating that the content is an invoice or payment plan from a debt collection company.
+              The invoice might include fees such as interest and reminder fees.
+              A valid "payment" object needs to be provided and the "payable" attribute must be set to "true".
               This content type enables long due dates with a longer notification scheme
             - `"invoice.renewal"`: |
-              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. 
-              It can be used to send an offer to renew a subscription, insurance or similar. 
+              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
+              It can be used to send an offer to renew a subscription, insurance or similar.
               A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"invoice.debtcollection"`: |
                 indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
@@ -3239,7 +3239,7 @@ components:
             indicating that the content is a booking/appointement.
         retain:
           description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. 
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
             Please note that retain must never be set to `true` for payable content.
           type: boolean
           writeOnly: true
@@ -3290,15 +3290,15 @@ components:
           type: string
           writeOnly: true
           example: "191212121212"
-        email:	
-          description: |	
-            A kivra user's verified email address.	
-          type: string	
-          writeOnly: true	
+        email:
+          description: |
+            A kivra user's verified email address.
+          type: string
+          writeOnly: true
           example: "Kivra.Sweden@example.com"
         subject:
           description: |
-            The subject/title will be visibile in the Recipients Inbox. 
+            The subject/title will be visibile in the Recipients Inbox.
             Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
             Avoid using personal and sensitive information in the subject.
           type: string
@@ -3308,37 +3308,37 @@ components:
           format: ISO8601
           example: "2022-12-31"
           description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site. 
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site.
             The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
         type:
           type: string
           example: "letter"
           description: |
-            Optional attribute providing information about the type of content being sent. 
+            Optional attribute providing information about the type of content being sent.
             The type of a content may influence how the user interacts with the content and how the user is notified about the content.
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
             - `"letter.salary"`: indicating that the content is a salary specification.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"invoice"`: |
-              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true. 
+              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               This is the default type for all payable content.
             - `"letter.form"`: indicating that the content contains a form.
             - `"invoice.reminder"`: |
-              indicating that the content is an invoice, a reminder for a previously unpaid invoice. 
-              The invoice might include late fees and other differences compared to the original invoice. 
+              indicating that the content is an invoice, a reminder for a previously unpaid invoice.
+              The invoice might include late fees and other differences compared to the original invoice.
               A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"invoice.debtcampaign"`: |
-              indicating that the content is an invoice or payment plan from a debt collection company. 
-              The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true". 
+              indicating that the content is an invoice or payment plan from a debt collection company.
+              The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true".
               This content types enables long due dates with a longer notification scheme
             - `"invoice.renewal"`: |
-              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver. 
+              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
               It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`. 
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
             Please note that retain must never be set to `true` for payable content.
           type: boolean
           writeOnly: true
@@ -3404,7 +3404,7 @@ components:
             The questions that you want to ask the user.
           items:
             $ref: "#/components/schemas/FormField"
-          example: 
+          example:
             - label: How many times per month do you deposit into your account?
               name: number_deposits
               type: number
@@ -3501,12 +3501,12 @@ components:
           type: string
           description: |
             A key used to identify the form template.
-          example: 
+          example:
             2877d684-a340-4e4c-867f-d93283787b01
-    
+
     # ##############################################
     # SCHEMA Form Response
-    # ##############################################  
+    # ##############################################
     FormResponseKeys:
       type: object
       required:
@@ -3518,12 +3518,12 @@ components:
           format: uuid
           description: |
             The form template key associated with the form responses.
-          example: 
+          example:
             2877d684-a340-4e4c-867f-d93283787b01
         responses:
           type: array
           description: |
-            Metadata about the form response 
+            Metadata about the form response
           items:
             type: object
             properties:
@@ -3532,7 +3532,7 @@ components:
                 format: uuid
                 description: |
                   A key used to identify the individual form response.
-                example: 
+                example:
                   bed773d7-9029-42f2-9f0b-0729390c962c
     FormResponse:
       type: object
@@ -3550,14 +3550,14 @@ components:
           format: uuid
           description:
               The form response key
-          example: 
+          example:
             2877d684-a340-4e4c-867f-d93283787b01
         form_template_key:
           type: string
           format: uuid
           description:
              The form template key.
-          example: 
+          example:
             2877d684-a340-4e4c-867f-d93283787b01
         responses:
           type: object
@@ -5195,6 +5195,14 @@ components:
       description: Listing summary of content metadata
       additionalProperties: false
       properties:
+        created_at:
+          description: |
+            This is the same date and time as `transaction_at`, except for
+            reminder invoices, where it is the reminder date and not the
+            original invoice date.
+          type: string
+          format: date-time
+          nullable: false
         key:
           $ref: '#/components/schemas/ContentKey'
         labels:
@@ -5261,12 +5269,11 @@ components:
             The date and time this content conceptually took place.
 
             + For a normal `invoice` it is the invoice date.
-            + For a reminder `invoice` it is the reminder data, not the original
-              invoice date.
+            + For a reminder `invoice` it the original invoice date and not
+              the reminders invoice date.
             + For a `receipt` it is its transaction date.
-            + For all `other` types of content it is when the sender
-              generated/created the content.
-            + `null` if no date was provided or could be interpreted.
+            + For all `other` types of content it is `null`.
+            + If no date could be found, it is `null`.
           type: string
           format: date-time
           nullable: true
@@ -5278,6 +5285,7 @@ components:
             - other
           type: string
       required:
+        - created_at
         - key
         - labels
         - parts
