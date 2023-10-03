@@ -567,7 +567,7 @@ info:
     }
     ```
 
-    ### An error has four properties:
+    ### An error has three properties:
 
     | Property      | Description                                                |
     | ------------- | ---------------------------------------------------------- |
@@ -1903,7 +1903,7 @@ paths:
         -  Let's consider a salary specification where the PDF contains all the details and how the salary was calculated while the HTML presentes only some key information like the salary total, when the money will be paid and the number of vacation days left.
 
         ### Restrictions for the HTML part
-        Kivra is an archive and it is very important that content sent in Kivra is immutable and does not update itself over time. The recipient should be able to return to a received docucontentment at any point in time and see the content exactly as it was when it was received.
+        Kivra is an archive and it is very important that content sent in Kivra is immutable and does not update itself over time. The recipient should be able to return to a received content at any point in time and see it exactly as it was when it was received.
 
         As HTML is a format that offers many possibilities there are restrictions on how the HTML is formed:
         - No javascript: **no javascript allowed**, neither inline or fetched from external resources
