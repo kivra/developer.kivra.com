@@ -501,7 +501,7 @@ info:
 
     Since 2022-03-15 the covenant file is also digitally signed according to PAdES (PDF Advanced Electronic Signatures). PAdES is a standard for digital signatures which is adopted by the European eIDAS standard, meaning that agreements signed according to PAdES are legally binding in all EU member states since July 2014. For more information on PAdES: [Wikipedia article](https://en.wikipedia.org/wiki/PAdES) or [EU e-Signature page](https://ec.europa.eu/digital-building-blocks/wikis/display/CEFDIGITAL/Standards+and+specifications). This means that covenant PDFs produced by Kivra Signatures are self-bearing and their validity and authenticity can be easily determined by free PDF readers like Abobe Acrobat Reader, completely independently of Kivra. The PAdES signature can also be verified programmatically if one would like to do so.
 
-    For more information on how we handle PDF files in Kivra Signatures and PAdES, please refer to [this document](https://docs.google.com/document/d/1a_HFN-9gtB16RyXm-VVDwMhgJfnh-kZCj8G3QwzzIVc/edit?usp=sharing).
+    For more information on how we handle PDF files in Kivra Signatures and PAdES, please refer to [this document](https://docs.google.com/document/d/1OFBI3wa1iDxzGrbXY0o1HMavGJCLrNCU2Pt-1EdQTmI/edit?usp=sharing).
     ## Notifications
 
     After creating the agreement, the tenant is responsible to inform the parties that there is a document waiting to be signed at [signatures.kivra.com](http://signatures.kivra.com/).
