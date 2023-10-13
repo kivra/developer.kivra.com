@@ -3469,10 +3469,11 @@ components:
       required:
         - title
         - description
-        - fields
-        - form_template_key
-        - tenant_key
+        - questions
+        - key
         - created_at
+        - start_question
+        - version
       properties:
         title:
           type: string
@@ -3484,7 +3485,12 @@ components:
           description: |
             The purpose of the form.
           example: Your bank has some questions
-        fields:
+        start_question:
+          type: string
+          description: |
+            The id of the first question in questions that will be asked
+          example: number_deposits
+        questions:
           type: array
           description: |
             The questions that you want to ask the user.
@@ -3492,12 +3498,12 @@ components:
             $ref: "#/components/schemas/FormField"
           example:
             - label: How many times per month do you deposit into your account?
-              name: number_deposits
+              id: number_deposits
               type: number
             - label: What is the largest amount deposited?
-              name: largest_sum
+              id: largest_sum
               type: options
-              values:
+              options:
                 - id: small
                   label: 10000 - 20000
                 - id: medium
@@ -3505,39 +3511,38 @@ components:
                 - id: large
                   label: 30000 - 40000
             - label: Do you have any further comments?
-              name: comments
+              id: comments
               type: free_text
               help_text: This can be any type of feedback that you have.
-        form_template_key:
+        key:
           type: string
           format: uuid
           description: |
-            The id of the newly created form template.
+            The key of the newly created form template.
           readOnly: true
           example: "2877d684-a340-4e4c-867f-d93283787b01"
-        tenant_key:
-          type: string
-          format: hexadecimal
-          description: |
-            The tenant key of the tenant that created the form template.
-          readOnly: true
-          example: "1341543157b3a8c66f220b2164b2e13789d2d04015"
         created_at:
           type: string
           description: |
             The date the form template was created.
           readOnly: true
           example: "2022-11-23T14:51:23.874434Z"
+        version:
+          type: integer
+          description: |
+            The form template version
+          readOnly: true
+          example: 1
     FormField:
       type: object
       required:
         - type
         - label
-        - name
+        - id
       properties:
         type:
           type: string
-          enum: [free_text, number, options]
+          enum: [free_text, number, options, verified_account]
           description: |
             The input type required to answer the question.
 
@@ -3546,11 +3551,13 @@ components:
             `number` is an integer or a floating point number.
 
             `options` is a string that has a finite amount of values e.g. yes or no question.
+
+            `verified_account` is a string containing the IBAN of the account.
         label:
           type: string
           description: |
             Human readable description of what the question is.
-        name:
+        id:
           type: string
           description: |
             A key used to identify the question.
@@ -3558,7 +3565,7 @@ components:
           type: string
           description: |
             Provides the user with more information about the question.
-        values:
+        options:
           type: array
           description: |
             When `type` is `options` then use this to specify the answers that the user can select.
@@ -3619,7 +3626,7 @@ components:
                 description: |
                   A key used to identify the individual form response.
                 example:
-                  bed773d7-9029-42f2-9f0b-0729390c962c
+                  bed773d7902942f29f0b0729390c962c
     FormResponse:
       type: object
       required:
@@ -3650,11 +3657,11 @@ components:
           description:
             The form response that the user submitted.
           required:
-            - name
+            - id
             - value
             - type
           properties:
-            name:
+            id:
               type: string
               description: |
                 A key used to identify the question.
@@ -3677,14 +3684,16 @@ components:
                 `number` is an integer or a floating point number.
 
                 `options` is a string that has a finite amount of values e.g. yes or no question.
+
+                `verified_account` is a string containing the IBAN of the account.
           example:
-             - name: number_deposits
+             - id: number_deposits
                value: 1
                type: number
-             - name: largest_sum
+             - id: largest_sum
                value: small
                type: options
-             - name: comments
+             - id: comments
                value: No further comments
                type: free_text
         matched_by:
