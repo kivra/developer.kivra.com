@@ -3500,6 +3500,7 @@ components:
             - label: How many times per month do you deposit into your account?
               id: number_deposits
               type: number
+              next_question: largest_sum
             - label: What is the largest amount deposited?
               id: largest_sum
               type: options
@@ -3510,6 +3511,12 @@ components:
                   label: 20000 - 30000
                 - id: large
                   label: 30000 - 40000
+                  next_question: source
+              next_question: comments
+            - label: What is the source of the deposit?
+              id: source
+              type: free_text
+              next_question: comments
             - label: Do you have any further comments?
               id: comments
               type: free_text
@@ -3570,7 +3577,7 @@ components:
           description: |
             The question id of the next question that the user will be asked.
 
-            If question is of type `options` then this value is overiden if `next_question` is present on the option that the user selects.
+            If question is of type `options` then this value is overridden if `next_question` is present on the option that the user selects.
 
             If `next_question` is not present on the question or option then this will be the last question that the user is asked.
         options:
@@ -3598,7 +3605,7 @@ components:
           description: |
             The question id of the next question that the user will be asked.
 
-            This value overides any potential `next_question` value on the question level.
+            This value overrides any potential `next_question` value on the question level.
 
             If `next_question` is not present on the question or option then this will be the last question that the user is asked.
     FormTemplateKey:
