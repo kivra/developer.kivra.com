@@ -3488,14 +3488,14 @@ components:
         start_question:
           type: string
           description: |
-            The id of the first question in questions that will be asked
+            The id of the first question in questions that will be asked to the user.
           example: number_deposits
         questions:
           type: array
           description: |
             The questions that you want to ask the user.
           items:
-            $ref: "#/components/schemas/FormField"
+            $ref: "#/components/schemas/FormQuestion"
           example:
             - label: How many times per month do you deposit into your account?
               id: number_deposits
@@ -3533,7 +3533,7 @@ components:
             The form template version
           readOnly: true
           example: 1
-    FormField:
+    FormQuestion:
       type: object
       required:
         - type
@@ -3565,6 +3565,14 @@ components:
           type: string
           description: |
             Provides the user with more information about the question.
+        next_question:
+          type: string
+          description: |
+            The question id of the next question that the user will be asked.
+
+            If question is of type `options` then this value is overiden if `next_question` is present on the option that the user selects.
+
+            If `next_question` is not present on the question or option then this will be the last question that the user is asked.
         options:
           type: array
           description: |
@@ -3585,6 +3593,14 @@ components:
           type: string
           description: |
             A human readable description of the answer.
+        next_question:
+          type: string
+          description: |
+            The question id of the next question that the user will be asked.
+
+            This value overides any potential `next_question` value on the question level.
+
+            If `next_question` is not present on the question or option then this will be the last question that the user is asked.
     FormTemplateKey:
       type: object
       required:
