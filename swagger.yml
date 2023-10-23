@@ -3694,6 +3694,7 @@ components:
                 oneOf:
                   - type: string
                   - type: number
+                  - $ref: "#/components/schemas/VerifiedAccount"
               description: |
                 The response to the question.
             type:
@@ -3708,7 +3709,7 @@ components:
 
                 `options` is a string that has a finite amount of values e.g. yes or no question.
 
-                `verified_account` is a string containing the IBAN of the account.
+                `verified_account` an object containing account information.
           example:
              - id: number_deposits
                value: 1
@@ -3719,6 +3720,14 @@ components:
              - id: comments
                value: No further comments
                type: free_text
+             - id: account
+               type: verified_account
+               value: 
+                account_number: "1234-5678"
+                bank_name: "Bank"
+                bic: "1234"
+                clearing_number: "1234"
+                iban: "SE556840226601"
         matched_by:
           type: object
           description:
@@ -3777,6 +3786,28 @@ components:
         - $ref: "#/components/schemas/BasicErrorResponse"
         - type: object
 
+    # ##############################################
+    # SCHEMA Verified Account
+    # ##############################################
+    VerifiedAccount:
+      type: object
+      description: Account information for verified account
+      properties:
+        account_number:
+          type: string
+          description: User's account number.
+        bank_name:
+          type: string
+          description:  Name of the bank the account belongs to.
+        bic:
+          type: string
+          description: Bank Identifier Code for the provided bank.
+        clearing_number:
+          type: string
+          description: The number used for the identification of financial institutions.
+        iban:
+          type: string
+          description: The International Bank Account Number for the provided account.
 
     # ##############################################
     # SCHEMA Content_company
