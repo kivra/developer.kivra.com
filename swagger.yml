@@ -3725,9 +3725,7 @@ components:
                value: 
                 account_number: "1234-5678"
                 bank_name: "Bank"
-                bic: "1234"
                 clearing_number: "1234"
-                iban: "SE556840226601"
         matched_by:
           type: object
           description:
@@ -3792,6 +3790,9 @@ components:
     VerifiedAccount:
       type: object
       description: Account information for verified account
+      required:
+        - account_number
+        - bank_name
       properties:
         account_number:
           type: string
@@ -3799,15 +3800,9 @@ components:
         bank_name:
           type: string
           description:  Name of the bank the account belongs to.
-        bic:
-          type: string
-          description: Bank Identifier Code for the provided bank.
         clearing_number:
           type: string
           description: The number used for the identification of financial institutions.
-        iban:
-          type: string
-          description: The International Bank Account Number for the provided account.
 
     # ##############################################
     # SCHEMA Content_company
