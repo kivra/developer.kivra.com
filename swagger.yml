@@ -2359,6 +2359,8 @@ paths:
       summary: Create form template
       operationId: createFormTemplate
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
 
         Form templates are owned by the client that created them. What this means is that only the client can call the response endpoints.
@@ -2412,6 +2414,8 @@ paths:
       summary: Get form template keys
       operationId: getFormTemplateKey
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+         
         Given a tenant key returns all form template keys associated with forms they created.
       security:
         - oAuth2Client:
@@ -2427,6 +2431,8 @@ paths:
       responses:
         200:
           description: |
+            **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
             List of form template keys
           content:
             application/json:
@@ -2448,6 +2454,8 @@ paths:
       summary: Get form template
       operationId: getFormTemplate
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Given a tenant key and a form template key returns the form template that the tenant created.
       security:
         - oAuth2Client:
@@ -2492,6 +2500,8 @@ paths:
       summary: Get form response keys
       operationId: getFormResponseKeys
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Only the client that created the form template associated with the response can call this endpoint.
 
         Given a tenant key and a form template key returns the form response key associated with form responses submitted by users.
@@ -2545,6 +2555,8 @@ paths:
       summary: Get form response
       operationId: getFormResponse
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Only the client that created the form template associated with the response can call this endpoint.
 
         Given a tenant key, form template key and form response key returns the form response submitted by a user.
@@ -2599,6 +2611,8 @@ paths:
       summary: Delete form response
       operationId: deleteFormResponse
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Given a tenant key, form template key and form response key deletes the form response submitted by a user.
 
         Only the client that created the form template associated with the response can call this endpoint.
