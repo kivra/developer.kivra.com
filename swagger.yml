@@ -789,7 +789,7 @@ info:
 tags:
   - name: "Tenant API - Content"
     description: Endpoints for matching users and sending content
-  - name: "Tenant API - Forms"
+  - name: "Tenant API - Forms (BETA)"
     description: |
       Endpoints for working with form templates and responses
   - name: "Tenant API - Tenant Management"
@@ -803,7 +803,7 @@ x-tagGroups:
   - name: Tenant API
     tags:
       - "Tenant API - Content"
-      - "Tenant API - Forms"
+      - "Tenant API - Forms (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2355,10 +2355,12 @@ paths:
   /v2/tenant/{tenantKey}/form:
     post:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Create form template
       operationId: createFormTemplate
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         A form template is a list of questions you would like to ask users. When sending content you can attach a form you would like a user to complete.
 
         Form templates are owned by the client that created them. What this means is that only the client can call the response endpoints.
@@ -2408,10 +2410,12 @@ paths:
               $ref: "#/components/schemas/FormTemplate"
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form template keys
       operationId: getFormTemplateKey
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+         
         Given a tenant key returns all form template keys associated with forms they created.
       security:
         - oAuth2Client:
@@ -2427,6 +2431,8 @@ paths:
       responses:
         200:
           description: |
+            **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
             List of form template keys
           content:
             application/json:
@@ -2444,10 +2450,12 @@ paths:
   /v2/tenant/{tenantKey}/form/{formTemplateKey}:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form template
       operationId: getFormTemplate
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Given a tenant key and a form template key returns the form template that the tenant created.
       security:
         - oAuth2Client:
@@ -2488,10 +2496,12 @@ paths:
   /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form response keys
       operationId: getFormResponseKeys
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Only the client that created the form template associated with the response can call this endpoint.
 
         Given a tenant key and a form template key returns the form response key associated with form responses submitted by users.
@@ -2541,10 +2551,12 @@ paths:
   /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses/{formResponseKey}:
     get:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Get form response
       operationId: getFormResponse
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Only the client that created the form template associated with the response can call this endpoint.
 
         Given a tenant key, form template key and form response key returns the form response submitted by a user.
@@ -2595,10 +2607,12 @@ paths:
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
     delete:
       tags:
-        - "Tenant API - Forms"
+        - "Tenant API - Forms (BETA)"
       summary: Delete form response
       operationId: deleteFormResponse
       description: |
+        **The Forms API is currently in BETA. As such breaking API changes may occur.**
+
         Given a tenant key, form template key and form response key deletes the form response submitted by a user.
 
         Only the client that created the form template associated with the response can call this endpoint.
