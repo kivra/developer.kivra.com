@@ -1145,7 +1145,7 @@ paths:
 
         The meaning of the conflict error is that a tenant is already associated to a `company_id` including the same `orgnr` as in the tenant that the client attempted to post, and the tenant who owns the `orgnr` is outside the scope for the client.
 
-        In Kivra it is allowed to have several different flows on the same tenant, as for instance one flow for invoices and one flow for salary slips. As this flows could be managed by different clients, we need a mechanism to allow sharing a tenant between clients.
+        In Kivra, it is allowed to have several different flows on the same tenant, for example one flow for invoices and another flow for salary slips. As these flows could be managed by different clients, we need a mechanism to allow sharing a tenant between clients.
         The `request_access` endpoint provide this functionality. As the request may be granted (or denied) asynchronously, after a successfull call to `request_access` the client will need to poll the request until it becomes `accepted` or `rejected`.
 
         As allowing access to a new tenant requires modification of the scope for the client, an authorization must be performed once the request has been accepted, to retrieve an access token with the new scope.
