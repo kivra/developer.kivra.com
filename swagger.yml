@@ -3600,6 +3600,14 @@ components:
             When `type` is `options` then use this to specify the answers that the user can select.
           items:
             $ref: "#/components/schemas/FormOption"
+        min:
+          type: number
+          description: |
+            When `type` is `number` then use this to specify the minimum (inclusive) value to accept in the response.
+        max:
+          type: number
+          description: |
+            When `type` is `number` then use this to specify the maximum (inclusive) value to accept in the response.
     FormOption:
       type: object
       required:
