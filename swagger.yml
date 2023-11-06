@@ -2367,7 +2367,7 @@ paths:
         However if the client has the tenant scope it can call form template endpoints and even include a form when sending content.
 
         ### How to send a form to the user
-        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
+        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (v2)` for more information.
       security:
         - oAuth2Client:
             - "post:kivra.v1.tenant.{tenantKey}"
