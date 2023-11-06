@@ -3569,7 +3569,7 @@ components:
 
             `free_text` is a string.
 
-            `number` is an integer or a floating point number.
+            `number` is an integer.
 
             `options` is a string that has a finite amount of values e.g. yes or no question.
 
@@ -3727,7 +3727,7 @@ components:
 
                 `free_text` is a string.
 
-                `number` is an integer or a floating point number.
+                `number` is an integer.
 
                 `options` is a string that has a finite amount of values e.g. yes or no question.
 
