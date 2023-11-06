@@ -2367,7 +2367,7 @@ paths:
         However if the client has the tenant scope it can call form template endpoints and even include a form when sending content.
 
         ### How to send a form to the user
-        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (PDF) to a recipient (user or company)` for more information.
+        When sending a content to the user include the form template key in the context object. See `Tenant API - Content` -> `Send content (v2)` for more information.
       security:
         - oAuth2Client:
             - "post:kivra.v1.tenant.{tenantKey}"
@@ -3569,9 +3569,9 @@ components:
 
             `free_text` is a string.
 
-            `number` is an integer or a floating point number.
+            `number` is an integer.
 
-            `options` is a string that has a finite amount of values e.g. yes or no question.
+            `options` is a list of `FormOption` objects.
 
             `verified_account` is a string containing the IBAN of the account.
         label:
@@ -3727,9 +3727,9 @@ components:
 
                 `free_text` is a string.
 
-                `number` is an integer or a floating point number.
+                `number` is an integer.
 
-                `options` is a string that has a finite amount of values e.g. yes or no question.
+                `options` is a list of `FormOption` objects.
 
                 `verified_account` an object containing account information.
           example:
