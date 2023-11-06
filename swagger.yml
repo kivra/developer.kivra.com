@@ -3571,7 +3571,7 @@ components:
 
             `number` is an integer.
 
-            `options` is a string that has a finite amount of values e.g. yes or no question.
+            `options` is a list of `FormOption` objects.
 
             `verified_account` is a string containing the IBAN of the account.
         label:
@@ -3729,7 +3729,7 @@ components:
 
                 `number` is an integer.
 
-                `options` is a string that has a finite amount of values e.g. yes or no question.
+                `options` is a list of `FormOption` objects.
 
                 `verified_account` an object containing account information.
           example:
