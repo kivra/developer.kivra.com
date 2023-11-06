@@ -3601,11 +3601,11 @@ components:
           items:
             $ref: "#/components/schemas/FormOption"
         min:
-          type: number
+          type: integer
           description: |
             When `type` is `number` then use this to specify the minimum (inclusive) value to accept in the response.
         max:
-          type: number
+          type: integer
           description: |
             When `type` is `number` then use this to specify the maximum (inclusive) value to accept in the response.
     FormOption:
