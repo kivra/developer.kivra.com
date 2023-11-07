@@ -5338,6 +5338,10 @@ components:
           description: The URL to fetch this content part
           type: string
           example: "https://sender.sandbox-api.kivra.com/v3/partner/company/1691677086a57b73569d594df5abad7fd2575c1070/content/1691677075a9813e08f783496382b0bff743ec34ae?part=1"
+        responsive_body:
+          description: The responsive content HTML of the part, if and only if this part has a corresponding responsive part
+          type: string
+          example: "<h1>Faktura</h1>\n<p>Totalt: 1 500,00 kr/p>"
       required:
         - content_type
         - name
