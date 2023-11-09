@@ -577,7 +577,7 @@ info:
 
     Extra properties, for further context, can also exist in the error object, for which
     `long_message` should include human-readable information on how to proceed.
-    These are usually documented on a per-path/verb basis.
+    These are documented on a per-path/verb basis.
 
     ## Extended error code
 
