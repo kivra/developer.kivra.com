@@ -575,6 +575,10 @@ info:
     | short_message | A short description of the error                           |
     | long_message  | A longer and more verbose error message                    |
 
+    Extra properties, for further context, can also exist in the error object, for which
+    `long_message` will usually include human-readable information on how to handle the error.
+    These are usually documented on a per-path/verb basis.
+
     ## Extended error code
 
     The 5-digits extended error code is provided both in the body of the response and in the `x-error-code` filed of the response header.
