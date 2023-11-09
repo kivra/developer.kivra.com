@@ -3697,57 +3697,55 @@ components:
              The form template key.
           example:
             2877d684-a340-4e4c-867f-d93283787b01
-        responses:
-          type: object
+        response:
+          type: array
           description:
             The form response that the user submitted.
-          required:
-            - id
-            - value
-            - type
-          properties:
-            id:
-              type: string
-              description: |
-                A key used to identify the question.
-            value:
-              type: object
-              additionalProperties:
-                oneOf:
-                  - type: string
-                  - type: number
-                  - $ref: "#/components/schemas/VerifiedAccount"
-              description: |
-                The response to the question.
-            type:
-              type: string
-              enum: [free_text, number, options]
-              description: |
-                The input type required to answer the question.
+          items:
+            type: object  
+            properties:
+              id:
+                type: string
+                description: |
+                  A key used to identify the question.
+              value:
+                type: object
+                additionalProperties:
+                  oneOf:
+                    - type: string
+                    - type: number
+                    - $ref: "#/components/schemas/VerifiedAccount"
+                description: |
+                  The response to the question.
+              type:
+                type: string
+                enum: [free_text, number, options]
+                description: |
+                  The input type required to answer the question.
 
-                `free_text` is a string.
+                  `free_text` is a string.
 
-                `number` is an integer.
+                  `number` is an integer.
 
-                `options` is a list of `FormOption` objects.
+                  `options` is a list of `FormOption` objects.
 
-                `verified_account` an object containing account information.
-          example:
-             - id: number_deposits
-               value: 1
-               type: number
-             - id: largest_sum
-               value: small
-               type: options
-             - id: comments
-               value: No further comments
-               type: free_text
-             - id: account
-               type: verified_account
-               value: 
-                account_number: "1234-5678"
-                bank_name: "Bank"
-                clearing_number: "1234"
+                  `verified_account` an object containing account information.
+            example:
+              - id: number_deposits
+                value: 1
+                type: number
+              - id: largest_sum
+                value: small
+                type: options
+              - id: comments
+                value: No further comments
+                type: free_text
+              - id: account
+                type: verified_account
+                value: 
+                  account_number: "1234-5678"
+                  bank_name: "Bank"
+                  clearing_number: "1234"
         matched_by:
           type: object
           description:
