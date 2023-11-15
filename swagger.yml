@@ -2441,9 +2441,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FormTemplateKey"
+                $ref: "#/components/schemas/FormTemplateListing"
         401:
           description: |
             Not authorized to make the request
@@ -3639,12 +3637,33 @@ components:
       required:
         - form_template_key
       properties:
-        form_template_key:
+        key:
           type: string
           description: |
             A key used to identify the form template.
           example:
             2877d684-a340-4e4c-867f-d93283787b01
+
+    FormTemplateListing:
+      type: object
+      required:
+        - forms
+      properties:
+        forms:
+          type: array
+          description: |
+            An entry per form template
+          items:
+            type: object
+            required:
+              - key
+              - response_count
+            properties:
+              key:
+                $ref: "#/components/schemas/FormTemplateKey"
+              response_count:
+                type: integer
+                minimum: 0
 
     # ##############################################
     # SCHEMA Form Response
