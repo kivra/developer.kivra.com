@@ -3636,6 +3636,7 @@ components:
       type: object
       required:
         - form_template_key
+        - response_count
       properties:
         key:
           type: string
@@ -3643,6 +3644,11 @@ components:
             A key used to identify the form template.
           example:
             2877d684-a340-4e4c-867f-d93283787b01
+        response_count:
+          type: integer
+          minimum: 0
+          description: |
+            Count of responses available to collect from this template key
 
     FormTemplateListing:
       type: object
@@ -3652,18 +3658,9 @@ components:
         forms:
           type: array
           description: |
-            An entry per form template
+            form template details
           items:
-            type: object
-            required:
-              - key
-              - response_count
-            properties:
-              key:
-                $ref: "#/components/schemas/FormTemplateKey"
-              response_count:
-                type: integer
-                minimum: 0
+            $ref: "#/components/schemas/FormTemplateKey"
 
     # ##############################################
     # SCHEMA Form Response
