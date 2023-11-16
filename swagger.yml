@@ -2116,43 +2116,40 @@ paths:
                   subject: Flexible Invoice to User
                   generated_at: "2022-12-12"
                   type: "invoice"
-                  files:
+                  parts:
                     - name: filename.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
-                  context:
-                    invoice:
-                      payment_multiple_options:
-                        payable: true
-                        currency: SEK
-                        account: "123456"
-                        method: "1"
-                        options:
-                          - due_date: "2024-02-29"
-                            amount: "4711.23"
-                            type: "SE_OCR"
-                            reference: "771554193"
-                            title: "Option 1"
-                            description: "The first options in this invoice."
-                            icon:
-                              name: "this_will_be_ignored.png"
-                              content_type: "image/png"
-                              data: "Base64-encoded string with PNG data"
-                        flexible_option:
-                          due_date: "2024-02-29"
-                          type: "SE_OCR"
-                          reference: "771554195"
-                          title: "Flexible Option"
-                          description: "A flexible option."
-                          icon:
-                            name: "this_will_be_ignored.png"
-                            content_type: "image/png"
-                            data: "Base64-encoded string with PNG data"
-                            min_limit: "17.00"
-                            min_suggested: "23.50"
-                            max_suggested: "235.00"
-                            max_limit: "500"
-                      invoice_reference: "Invoice #23"
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    account: "123456"
+                    method: "1"
+                    options:
+                      - due_date: "2024-02-29"
+                        amount: "4711.23"
+                        type: "SE_OCR"
+                        reference: "771554193"
+                        title: "Option 1"
+                        description: "The first options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "Base64-encoded string with PNG data"
+                    flexible_option:
+                      due_date: "2024-02-29"
+                      type: "SE_OCR"
+                      reference: "771554195"
+                      title: "Flexible Option"
+                      description: "A flexible option."
+                      icon:
+                        name: "this_will_be_ignored.png"
+                        content_type: "image/png"
+                        data: "Base64-encoded string with PNG data"
+                        min_limit: "17.00"
+                        min_suggested: "23.50"
+                        max_suggested: "235.00"
+                        max_limit: "500"
               letter to user:
                 value:
                   ssn: "191212121212"
