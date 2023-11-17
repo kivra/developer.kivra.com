@@ -3434,6 +3434,9 @@ components:
             - `"invoice.renewal"`: |
               indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
               It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+            - `"invoice.debtcollection"`: |
+              indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
+                A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: |
