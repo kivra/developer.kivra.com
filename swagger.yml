@@ -457,7 +457,7 @@ info:
 
     Kivra's agreement service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
 
-    Note: the Signatures service works best when the original PDF content is a A4 document in portrait mode. If size and orientation are different, 
+    Note: the Signatures service works best when the original PDF content is an A4 document with all its pages in portrait mode. If size and orientation are different, 
     the resulting covenant might look stretched, while the original document (included in the covenant) will be preserved in its original 
     size and orientation.
     
