@@ -3382,6 +3382,9 @@ components:
     # ##############################################
     Content_user_v2:
       type: object
+      required:
+        - type
+        - subject
       properties:
         ssn:
           description: |
