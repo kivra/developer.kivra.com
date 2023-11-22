@@ -4858,7 +4858,6 @@ components:
     # ##############################################
     Campaign:
       type: object
-      description: This is BETA and only available in Sandbox. As such this may change.
       required:
         - tag
       properties:
