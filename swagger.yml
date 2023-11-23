@@ -135,7 +135,7 @@ info:
     Recipient who can’t be reached by email and sms-notifications are put in a "dormant"-state. During this dormant state the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again they are awaken from dormant state and will start appearing in the matching functionalities again.
 
     ### Grace period
-    Kivra employs a `45` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive.
+    Kivra employs a `10` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive.
 
     ### User object
     is a data object that contains all the available information about a user
@@ -381,13 +381,13 @@ info:
 
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
 
-    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `10`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
 
     Recipients will automatically start receiving Content from new Tenants.
 
-    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `45`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `10`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
 
@@ -399,7 +399,7 @@ info:
 
     ## Step 1: Matching Recipients
 
-    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `45` days’ grace period with that Tenant.
+    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `10` days’ grace period with that Tenant.
 
     This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
