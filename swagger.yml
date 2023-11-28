@@ -2047,13 +2047,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "invoice"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2071,13 +2071,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "invoice"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2151,13 +2151,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "letter"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               letter to user (identified by email):
                 value:
                   email: "someone@example.com"
@@ -2165,13 +2165,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "letter"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               payslip to user:
                 value:
                   ssn: "191212121212"
@@ -2181,13 +2181,13 @@ paths:
                   retain: true
                   retention_time: "390"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               creditnotice to user:
                 value:
                   ssn: "191212121212"
@@ -2197,13 +2197,13 @@ paths:
                   retain: true
                   retention_time: "30"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               booking to user:
                 value:
                   ssn: "191212121212"
@@ -2211,13 +2211,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "booking"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   booking:
                     title: "Appointment"
                     start_time: "2026-12-12T10:00:00Z"
@@ -2232,13 +2232,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "invoice.debtcampaign"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2256,13 +2256,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "invoice.reminder"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2280,13 +2280,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "invoice.renewal"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2304,13 +2304,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "letter"
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               form to user:
                 value:
                   ssn: "191212121212"
@@ -2323,13 +2323,13 @@ paths:
                       internal_id: 6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf
                     days_to_expiry: 30
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               campaign to user:
                 value:
                   ssn: "191212121212"
@@ -2339,13 +2339,13 @@ paths:
                   campaign:
                     tag: summer_2023
                   parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
