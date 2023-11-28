@@ -3520,7 +3520,10 @@ components:
             $ref: "#/components/schemas/Parts_Responsive"
         payment:
           type: object
-          description: Optionally specify invoice information, please notice that you cannot have both payment and payment_multiple_options in the same payload
+          description: |
+            Optionally specify invoice information, please notice that you
+            cannot have both payment and payment_multiple_options in the same
+            payload. Also note that `payment` is deprecated and will be removed.
           $ref: "#/components/schemas/Payment"
         payment_multiple_options:
           type: object
@@ -3965,7 +3968,9 @@ components:
     # ##############################################
     Payment:
       type: object
-      description: Optionally specify payment information
+      description: |
+        Optionally specify payment information. This object is
+        deprecated and will be removed. Use `payment_multiple_options` instead.
       required:
         - payable
         - currency
