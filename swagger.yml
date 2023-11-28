@@ -1796,9 +1796,9 @@ paths:
                             content_type: "image/png"
                             data: "Base64-encoded string with PNG data"
                             min_limit: "17.00"
-                            min_suggested: "23.50"
-                            max_suggested: "235.00"
-                            max_limit: "500"
+                          min_suggested: "23.50"
+                          max_suggested: "235.00"
+                          max_limit: "500"
                       invoice_reference: "Invoice #23"
               letter to user:
                 value:
@@ -2054,40 +2054,16 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-                  payment:
+                  payment_multiple_options:
                     payable: true
                     currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
                     method: "1"
                     account: "12345"
-                    reference: 426523791
-              invoice with variable amount to user:
-                value:
-                  ssn: "191212121212"
-                  subject: Sample Invoice to User
-                  generated_at: "2016-12-12"
-                  type: "invoice"
-                  parts:
-                    name: document.pdf
-                    data: REVBREJFRUY=
-                    content_type: application/pdf
-                    responsive_part:
-                      name: document.html
-                      data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
-                      content_type: text/html
-                  payment:
-                    payable: true
-                    currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
-                    method: "1"
-                    account: "12345"
-                    reference: 426523791
-                    variable_amount: true
-                    min_amount: "50.00"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: 426523791
               invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
@@ -2263,15 +2239,16 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-                  payment:
+                  payment_multiple_options:
                     payable: true
                     currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
                     method: "1"
                     account: "12345"
-                    reference: 426523791
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: 426523791
               invoice reminder to user:
                 value:
                   ssn: "191212121212"
@@ -2286,15 +2263,16 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-                  payment:
+                  payment_multiple_options:
                     payable: true
                     currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
                     method: "1"
                     account: "12345"
-                    reference: 426523791
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: 426523791
               invoice renewal to user:
                 value:
                   ssn: "191212121212"
@@ -2309,15 +2287,16 @@ paths:
                       name: document.html
                       data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                       content_type: text/html
-                  payment:
+                  payment_multiple_options:
                     payable: true
                     currency: SEK
-                    due_date: "2017-01-01"
-                    total_owed: "123.50"
-                    type: SE_OCR
                     method: "1"
                     account: "12345"
-                    reference: 426523791
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: 426523791
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -3993,7 +3972,15 @@ components:
     # ##############################################
     PaymentMultipleOptions:
       type: object
-      description: Payment information when multiple options are available. Note that the first options is special. Notifications about the invoice will be based on the due date specified in the first option, and in the case where a user looks at the invoice in a client that does not know about multiple options, the first one will be the only one presented. For example, if the invoice offers the choice of paying the entire debt or to start a payment plan, the first option should be to pay the entire debt.
+      description: |
+        Payment information with the possibility of multiple payment options.
+        Note that the first option is special. Notifications about the invoice
+        will be based on the due date specified in the first option, and in the
+        case where a user looks at the invoice in a client that does not know
+        about multiple options, the first one will be the only one presented.
+        For example, if the invoice offers the choice of paying the entire debt
+        or to start a payment plan, the first option should be to pay the entire
+        debt.
       required:
         - payable
         - account
@@ -4078,10 +4065,21 @@ components:
                 type: string
                 description: "Optional description for this option"
               icon:
-                $ref: '#/components/schemas/PaymentOptionIcon'
+                $ref: "#/components/schemas/PaymentOptionIcon"
         flexible_option:
           type: object
-          description: "A flexible payment option."
+          description: |
+            A flexible payment option. This replaces the old variable amount
+            functionality. A content with a flexible option must also have at
+            least one fixed option, to allow for old clients that don't know how
+            to deal with flexible options.
+            The flexible option can have up to four limits: suggested maximum
+            and minimum, and mandatory maximum and minimum. For the suggested
+            limits, the user will be shown a warning when entering a sum outside
+            them, but will be allowed to proceeed if they want to. The mandatory
+            limits will be enforced, and paying amounts outside them will not be
+            allowed. The closest behaviour to that of the old variable amount is
+            achieved by setting `max_limit` and `min_suggested`.
           required:
             - due_date
             - type
@@ -4108,7 +4106,7 @@ components:
               type: string
               description: "Optional description for this option"
             icon:
-              $ref: '#/components/schemas/PaymentOptionIcon'
+              $ref: "#/components/schemas/PaymentOptionIcon"
             min_limit:
               type: string
               format: float
