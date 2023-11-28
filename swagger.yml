@@ -2078,6 +2078,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                   payment_multiple_options:
                     payable: true
                     currency: SEK
@@ -2158,6 +2165,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               letter to user (identified by email):
                 value:
                   email: "someone@example.com"
@@ -2165,6 +2179,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "letter"
                   parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                     - name: document.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
@@ -2188,6 +2209,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               creditnotice to user:
                 value:
                   ssn: "191212121212"
@@ -2204,6 +2232,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               booking to user:
                 value:
                   ssn: "191212121212"
@@ -2211,6 +2246,13 @@ paths:
                   generated_at: "2016-12-12"
                   type: "booking"
                   parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                     - name: document.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
@@ -2311,6 +2353,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               form to user:
                 value:
                   ssn: "191212121212"
@@ -2330,6 +2379,13 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               campaign to user:
                 value:
                   ssn: "191212121212"
@@ -2339,6 +2395,13 @@ paths:
                   campaign:
                     tag: summer_2023
                   parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
                     - name: document.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
