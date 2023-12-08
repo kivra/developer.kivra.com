@@ -105,6 +105,7 @@ info:
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
     | 2022-12-02 | Added Forms BETA endpoints for Sandbox. API not stable. Breaking changes may happen.  |
     | 2023-03-08 | Added v3 of the company Partner API |
+    | 2023-12-08 | Added dates for when we close `v1/tenant/{TKEY}/content` and forms is not in Beta anymore |
 
     # Terminology
     ### User
@@ -1566,9 +1567,10 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send content (v1)
+      summary: Send content (v1) will be closed 2024-05-31
       operationId: Send content
       description: |
+        Will be closed 2024-05-31
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
@@ -1931,12 +1933,6 @@ paths:
 
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
-
-        ### Content v1 vs v2
-        There are two API resources to send content to a recipient:
-          - `/v1/tenant/TKEY/content` (documented above) can be used only to send one or more PDFs to a recipient.
-          - `/v2/tenant/TKEY/content` can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
-          To learn more about the advantages of responsive content see the relative section below in this documentation.
 
         ### Benefits and usage of responsive content
         As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easyly readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
@@ -3460,7 +3456,7 @@ components:
             $ref: "#/components/schemas/Parts_Responsive"
         payment:
           type: object
-          description: Optionally specify invoice information, please notice that you cannot have both payment and payment_multiple_options in the same payload
+          description: Will be deprecated 2024-05-31, use `payment_multiple_options`. Optionally specify invoice information, please notice that you cannot have both payment and payment_multiple_options in the same payload
           $ref: "#/components/schemas/Payment"
         payment_multiple_options:
           type: object
