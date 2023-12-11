@@ -57,8 +57,8 @@ info:
     means that the Sender is responsible for the design and content whereas
     Recipients are responsible for reading and processing the received content.
 
-    ## Policy for Personal Information in the metadata
-    It is not allowed to include so called sensitive personal data in any of the free-text metadata fields.
+    ## Policy for personal or sensitive Information in the metadata
+    It is not allowed to include personal or sensitive data in any of the free-text metadata fields.
 
     Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin,
     political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or
@@ -66,7 +66,7 @@ info:
     for example that it is not allowed to state the reason for a booking in either of the Title field or the Description
     field when sending medical care notices.
 
-    The sender is responsible for ensuring no sensitive personal data is included in any of the free-text metadata fields.
+    The sender is responsible for ensuring no personal or sensitive personal data is included in any of the free-text metadata fields.
 
     # Change Mangement
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
@@ -105,6 +105,10 @@ info:
     | 2022-09-09 | Added v2 of tenant/TKEY/content endpoint |
     | 2022-12-02 | Added Forms BETA endpoints for Sandbox. API not stable. Breaking changes may happen.  |
     | 2023-03-08 | Added v3 of the company Partner API |
+    | 2023-11-22 | Added campaigns by tag to content |
+    | 2023-11-23 | Grace period changed from 45 to 10 days |
+    | 2023-12-11 | Declared v1 of content & payment metadata as obsolete, added type and subject as mandatory |
+  
 
     # Terminology
     ### User
@@ -1584,9 +1588,11 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send content (v1)
-      operationId: Send content
+      summary: Send content (OBSOLETE)
+      operationId: Send content (OBSOLETE)
       description: |
+        This resource will be removed 31st May 2024. To send content please refer to the v2 of this resource.
+
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ### Minimum Metadata
@@ -1599,10 +1605,7 @@ paths:
         </aside>
 
         ### Content v1 vs v2
-        There are two API resources to send content to a recipient:
-          - `/v1/tenant/TKEY/content` can be used to send one or more PDFs to a recipient.
-          - `/v2/tenant/TKEY/content` (documented below) can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
-          To learn more about the advantages of responsive content see the relative section below in this documentation.
+        v1 of content resource is obsolete and will be removed on 31st May 2024. v2 of the same resource includes all functionality of v1 plus some more functionalities as Forms, Responsive Content, Campaigns by tag and all new developement.
 
         ### Retained Content
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
@@ -1936,13 +1939,13 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Send content (v2)
-      operationId: Send responsive content
+      summary: Send content
+      operationId: Send content
       description: |
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
-        ### Minimum Metadata
-        As a minimum one valid recipient identifier is required (`vat_number`, `ssn` or `email`).
+        ## Minimum Metadata
+        As a minimum one valid recipient identifier (`vat_number`, `ssn` or `email`), a subject and a type are required.
 
         In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers.
         More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
@@ -1950,13 +1953,7 @@ paths:
         E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
         </aside>
 
-        ### Content v1 vs v2
-        There are two API resources to send content to a recipient:
-          - `/v1/tenant/TKEY/content` (documented above) can be used only to send one or more PDFs to a recipient.
-          - `/v2/tenant/TKEY/content` can be used to send PDFs (same as `v1`) or sending one or more HTML+PDF pairs (referred to as responsive content) to a recipient.
-          To learn more about the advantages of responsive content see the relative section below in this documentation.
-
-        ### Benefits and usage of responsive content
+        ## Responsive content
         As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easyly readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
 
          Responsive content solve this problem by allowing senders to provide 2 versions of the content:
@@ -1976,7 +1973,7 @@ paths:
 
         Privacy is also an important concern for Kivra. For this reason common links are allowed in the HTML but **no user-specific tracking links are allowed**, for instance links containing UTMs or other technology to track the behavior of each particular user.
 
-        ### Retained Content
+        ## Retained Content
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
@@ -1988,7 +1985,7 @@ paths:
 
         If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
 
-        ### Duplicate control
+        ## Duplicate control
         If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
 
         <aside class="notice">
@@ -3352,7 +3349,7 @@ components:
           description: |
             The subject/title will be visibile in the Recipients Inbox.
             Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
-            Avoid using personal and sensitive information in the subject.
+            Avoid using personal or sensitive information in the subject.
           type: string
           example: "Invoice for March 2022"
         generated_at:
@@ -3442,6 +3439,9 @@ components:
     # ##############################################
     Content_user_v2:
       type: object
+      required:
+        - subject
+        - type
       properties:
         ssn:
           description: |
@@ -3459,7 +3459,7 @@ components:
           description: |
             The subject/title will be visibile in the Recipients Inbox.
             Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
-            Avoid using personal and sensitive information in the subject.
+            Avoid using personal or sensitive information in the subject.
           type: string
           example: "Invoice for March 2022"
         generated_at:
@@ -3479,24 +3479,25 @@ components:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
             - `"letter.salary"`: indicating that the content is a salary specification.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
-            - `"invoice"`: |
-              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-              This is the default type for all payable content.
             - `"letter.form"`: indicating that the content contains a form.
+            - `"invoice"`: |
+              indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+              This is the default type for all payable content.
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice.
               The invoice might include late fees and other differences compared to the original invoice.
-              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"invoice.debtcampaign"`: |
               indicating that the content is an invoice or payment plan from a debt collection company.
-              The invoice might include fees such as interest and reminder fees. A valid "payment" object needs to be provided and the "payable" attribute must be set to "true".
+              The invoice might include fees such as interest and reminder fees. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This content types enables long due dates with a longer notification scheme
             - `"invoice.renewal"`: |
               indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
-              It can be used to send an offer to renew a subscription, insurance or similar. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              It can be used to send an offer to renew a subscription, insurance or similar. 
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"invoice.debtcollection"`: |
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
-                A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
         retain:
           description: |
@@ -3521,13 +3522,12 @@ components:
         payment:
           type: object
           description: |
-            Optionally specify invoice information, please notice that you
-            cannot have both payment and payment_multiple_options in the same
-            payload. Also note that `payment` is deprecated and will be removed.
+            NOTE: 'payment' is obsolete and will be removed on May 31st 2024, please use 'payment_multiple_options' instead
           $ref: "#/components/schemas/Payment"
         payment_multiple_options:
           type: object
-          description: Optionally specify multiple payment options, please notice that you cannot have both payment and payment_multiple_options in the same payload
+          description: |
+            Specify payment information for both single and multiple payment options
           $ref: "#/components/schemas/PaymentMultipleOptions"
         booking:
           description: Optionally specify booking information
@@ -3969,8 +3969,7 @@ components:
     Payment:
       type: object
       description: |
-        Optionally specify payment information. This object is
-        deprecated and will be removed. Use `payment_multiple_options` instead.
+        NOTE: payment is deprecated and will be removed on 31st May 2024. Use `payment_multiple_options` instead.
       required:
         - payable
         - currency
@@ -4876,7 +4875,7 @@ components:
       properties:
         title:
           description: |
-            Booking name that is used when creating a post in an external calendar. Note! Don’t include any sensitive information here.
+            Booking name that is used when creating a post in an external calendar. Note! Don’t include any personal or sensitive information here.
           type: string
           example: "Kontroll av tandhälsa"
         start_time:
@@ -4897,7 +4896,7 @@ components:
           example: "Strandvägen 61, Stockholm"
         description:
           description: |
-            Additional information. Note! Don’t include any sensitive information here.
+            Additional information. Note! Don’t include any personal or sensitive information here.
           type: string
           example: "Brush your teeth before coming"
         info_url:
