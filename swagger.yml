@@ -1945,7 +1945,7 @@ paths:
         Metadata is data that Kivra needs to send the Content to the right User. It may also determine how a User can interact with the Content.
 
         ## Minimum Metadata
-        As a minimum one valid recipient identifier (`vat_number`, `ssn` or `email`), a subject and a type are required.
+        As a minimum one valid recipient identifier (`vat_number`, `ssn` or `email`), a `subject` and `type` are required.
 
         In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers.
         More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
