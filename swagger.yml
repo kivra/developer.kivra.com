@@ -3583,6 +3583,17 @@ components:
                   label: 30000 - 40000
                   next_question: source
               next_question: comments
+            - label: Select your country of citizenship
+              id: citizenship
+              type: multi_options
+              options:
+                - id: swe
+                  label: Sweden
+                - id: no
+                  label: Norway
+                - id: dk
+                  label: Denmark
+              next_question: comments     
             - label: What is the source of the deposit?
               id: source
               type: free_text
@@ -3619,7 +3630,7 @@ components:
       properties:
         type:
           type: string
-          enum: [free_text, number, options, verified_account]
+          enum: [free_text, number, options,multi_options, verified_account]
           description: |
             The input type required to answer the question.
 
@@ -3628,6 +3639,8 @@ components:
             `number` is an integer.
 
             `options` is a list of `FormOption` objects.
+
+            `multi_options` is a list of `FormMultiOption` objects.
 
             `verified_account` is a string containing the IBAN of the account.
         label:
@@ -3656,6 +3669,12 @@ components:
             When `type` is `options` then use this to specify the answers that the user can select.
           items:
             $ref: "#/components/schemas/FormOption"
+        multi_options:
+          type: array
+          description: |
+            When `type` is `multi_options` then use this to specify the answers that the user can select.
+          items:
+            $ref: "#/components/schemas/FormMultiOption"
         min:
           type: integer
           description: |
@@ -3686,6 +3705,23 @@ components:
             This value overrides any potential `next_question` value on the question level.
 
             If `next_question` is not present on the question or option then this will be the last question that the user is asked.
+    FormMultiOption:
+      type: object
+      required:
+        - id
+        - label
+      properties:
+        id:
+          type: string
+          description: |
+            A key used to identify the answer.
+        label:
+          type: string
+          description: |
+            A human readable description of the answer.
+        help_text:
+          type: string
+          description: Provides the user with more information about the option.
     FormTemplateKey:
       type: object
       required:
@@ -3793,7 +3829,7 @@ components:
                   The response to the question.
               type:
                 type: string
-                enum: [free_text, number, options]
+                enum: [free_text, number, options, multi_options]
                 description: |
                   The input type required to answer the question.
 
@@ -3801,7 +3837,9 @@ components:
 
                   `number` is an integer.
 
-                  `options` is a list of `FormOption` objects.
+                  `options` can be a string or an integer.
+
+                  `multi_options` is a list of `options`.
 
                   `verified_account` an object containing account information.
             example:
@@ -3820,6 +3858,9 @@ components:
                   account_number: "1234-5678"
                   bank_name: "Bank"
                   clearing_number: "1234"
+              - id: citizenship
+                type: multi_options
+                value: ["Swedish", "German"]    
         matched_by:
           type: object
           description:
