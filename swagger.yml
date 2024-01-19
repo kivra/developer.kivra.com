@@ -3593,6 +3593,8 @@ components:
                   label: Norway
                 - id: dk
                   label: Denmark
+              min: 1
+              max: 2    
               next_question: comments     
             - label: What is the source of the deposit?
               id: source
@@ -3679,10 +3681,12 @@ components:
           type: integer
           description: |
             When `type` is `number` then use this to specify the minimum (inclusive) value to accept in the response.
+            When `type` is `multi_option` then use this to specify the minimum number of options that the user can select.
         max:
           type: integer
           description: |
             When `type` is `number` then use this to specify the maximum (inclusive) value to accept in the response.
+            When `type` is `multi_option` then use this to specify the maximum number of options that the user can select.
     FormOption:
       type: object
       required:
