@@ -669,9 +669,9 @@ info:
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
 
     ## Troubleshooting
-    In case you’re experiencing problems interacting with the API, make sure to collect the correlation id and provide our sender support 
+    In case you're experiencing problems interacting with the API, make sure to collect the correlation id and provide our sender support
     (avsandare.support@kivra.com) with this information.
-    The correlation id can be found in the `x-correlation-id` field of the header of all Kivra’s API responses.
+    The correlation Id can be found in the `x-correlation-id` header of all of Kivra's API responses.
 
     # API - Authentication
     Kivra supports Oauth2 with Client Credentials flow. Each client has a `client_id` and a `client_secret` and these need to be base64 encoded and sent to the API via POST to receive an access token which is used for subsequent calls.
