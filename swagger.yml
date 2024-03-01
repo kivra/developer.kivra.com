@@ -2362,6 +2362,20 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+              invite research to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Research Invite to User
+                  generated_at: "2023-12-12"
+                  type: "invite.research"
+                  invite:
+                    title: "Title"
+                    description: "We're investigating you"
+                    uri: https://example.com
+                    behalf_of:
+                      name: Folktestmyndigheten
+                      vat_number: 112233
+                    expires_at: "2024-12-12"
               form to user:
                 value:
                   ssn: "191212121212"
