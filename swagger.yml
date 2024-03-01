@@ -3538,13 +3538,15 @@ components:
         booking:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
-        form:
-          description: Optionally attach a form
-          $ref: "#/components/schemas/Form"
         campaign:
           description: Optionally attach a campaign
           $ref: "#/components/schemas/Campaign"
-
+        form:
+          description: Optionally attach a form
+          $ref: "#/components/schemas/Form"
+        invite:
+          description: Optional invite
+          $ref: "#/components/schemas/Invite"
 
     # ##############################################
     # SCHEMA Form Template
@@ -4986,6 +4988,45 @@ components:
             and the form expires in 30 days, it will effectively expire
             on October 7th 23:59:59.
           example: 30
+
+    # ##############################################
+    # SCHEMA Invite
+    # ##############################################
+    Invite:
+      type: object
+      required:
+        - title
+        - description
+        - uri
+        - behalf_of
+      properties:
+        title:
+          type: string
+          description: Title to present
+          example: Hey you, dont watch that, watch this
+        description:
+          type: string
+          description: longer description
+          example: |
+            This is the heavy heavy monster sound
+            The nuttiest sound around
+        uri:
+          type: string
+          description: The uri to open when the user clicks the invitation
+          example: https://example.com
+        behalf_of:
+          type: object
+          description: Who this research is conducted on behalf of
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: Something
+              example: Test Inc
+            vat_number:
+              type: string
+              description: Something
 
     # ##############################################
     # SCHEMA Campaign
