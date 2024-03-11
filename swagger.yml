@@ -1256,9 +1256,12 @@ paths:
     get:
       tags:
         - "Tenant API - Content"
-      summary: List available recipient users for a tenant
+      summary: List available recipient users for a tenant (LEGACY)
       operationId: List Users
       description: |
+        This resource is provided for legacy and requires an additional agreement with Kivra
+        to be used. Please refer to v2 of usermatch for user matching needs.
+
         This resource is used to list all or search for users that are eligible
         for receiving Content from the specific Tenant. The response is a JSON
         list of Objects containing the User's key and SSN. The `diffId`
@@ -1269,9 +1272,6 @@ paths:
         If a search is done with a query string and the user doesn’t exist or
         has Opt-ed out from receiving Content from the Tenant, an empty list
         is returned.
-
-        Access to this resource might be enabled or disabled via agreement. To
-        match a given list of users, please use the `usermatch` resource.
       parameters:
         - name: tenantKey
           in: path
@@ -1328,9 +1328,12 @@ paths:
       tags:
         - "Tenant API - Content"
       summary: |
-        List recipient users that were added/removed since a previous request
+        List recipient added/removed since a previous request (LEGACY)
       operationId: List Users Diff
       description: |
+        This resource is provided for legacy and requires an additional agreement with Kivra
+        to be used. Please refer to v2 of usermatch for user matching needs.
+
         This resource is used to list users that were added/removed since
         `diffId` was obtained, either from an initial request to the
         `/v1/tenant/{tenantKey}/user` endpoint, or from a subsequent request
@@ -1404,12 +1407,17 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Match a list of recipient users for a specific tenant
+      summary: Match a list of recipients (v1 LEGACY)
       operationId: Match Users
       description: |
+        Please note that a newer version (v2) of this resource is now available.
+
         This resource is used to match a list of users to check that they are eligible for receiving Content from
-          the specific Tenant.
-        The request contains a list of SSNs to be matched, and the response is a filtered list containing only the SSNs that are eligible to receive content from the tenant.
+        the specific Tenant.
+        
+        The request contains a list of SSNs to be matched, and the response is a filtered list containing only the 
+        SSNs that are eligible to receive content from the tenant.
+        
         <aside class="notice">
           If none of the provided SSNs are eligible to receive content from this tenant, an empty list will be returned.
         </aside>
@@ -1452,7 +1460,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Match a list of ssns to recipient for a specific tenant (v2)
+      summary: Match a list of SSNs to recipients (v2)
       operationId: Match Users ssn v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
@@ -1497,7 +1505,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Match a list of emails to recipients for a specific tenant (v2)
+      summary: Match a list of emails to recipients (v2)
       operationId: Match Users verified_email v2
       description: |
         This resource is used to match a list of users to check that they are eligible for receiving Content from the specific Tenant.
