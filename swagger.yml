@@ -1700,7 +1700,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 426523791
+                        reference: "426523791"
                       invoice_reference: "Invoice Nr #123"
               invoice with variable amount to user:
                 value:
@@ -1722,7 +1722,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 426523791
+                        reference: "426523791"
                         variable_amount: true
                         min_amount: "50.00"
                       invoice_reference: "Invoice Nr #123"
@@ -1880,7 +1880,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 426523791
+                        reference: "426523791"
                       invoice_reference: "Invoice Nr #123"
               invoice reminder to user:
                 value:
@@ -1902,7 +1902,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 426523791
+                        reference: "426523791"
                       invoice_reference: "Invoice Nr #123"
               invoice renewal to user:
                 value:
@@ -1924,7 +1924,7 @@ paths:
                         type: SE_OCR
                         method: "1"
                         account: "12345"
-                        reference: 426523791
+                        reference: "426523791"
                       invoice_reference: "Invoice Nr #123"
               content to company:
                 value:
@@ -2065,7 +2065,7 @@ paths:
                       - due_date: "2017-01-01"
                         amount: "123.50"
                         type: SE_OCR
-                        reference: 426523791
+                        reference: "426523791"
               invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
@@ -2292,7 +2292,7 @@ paths:
                       - due_date: "2017-01-01"
                         amount: "123.50"
                         type: SE_OCR
-                        reference: 426523791
+                        reference: "426523791"
               invoice reminder to user:
                 value:
                   ssn: "191212121212"
@@ -2316,7 +2316,7 @@ paths:
                       - due_date: "2017-01-01"
                         amount: "123.50"
                         type: SE_OCR
-                        reference: 426523791
+                        reference: "426523791"
               invoice renewal to user:
                 value:
                   ssn: "191212121212"
@@ -2340,7 +2340,7 @@ paths:
                       - due_date: "2017-01-01"
                         amount: "123.50"
                         type: SE_OCR
-                        reference: 426523791
+                        reference: "426523791"
               content to company:
                 value:
                   vat_number: SE556840226601
