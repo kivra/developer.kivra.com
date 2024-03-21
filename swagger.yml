@@ -109,6 +109,7 @@ info:
     | 2023-11-23 | Grace period changed from 45 to 10 days |
     | 2023-12-11 | Declared v1 of content & payment metadata as obsolete, added type and subject as mandatory |
     | 2023-12-12 | Removed Forms BETA tags since all Forms features are live | 
+    | 2024-03-21 | Added Invite to content with BETA tags | 
 
     # Terminology
     ### User
@@ -464,7 +465,7 @@ info:
     Note: the Signatures service works best when the original PDF content is an A4 document with all its pages in portrait mode. If size and orientation are different, 
     the resulting covenant might look stretched, while the original document (included in the covenant) will be preserved in its original 
     size and orientation.
-    
+
     ## Signers, Delegates and Parties
 
     Each individual signer in an agreement is categorized as either `signer`or `delegate`:
@@ -1478,7 +1479,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UserMatchV2SSN"
             example:
-              list: ["191212121212","197701032380","198112172385"]
+              list: ["191212121212", "197701032380", "198112172385"]
         required: true
       security:
         - oAuth2Client:
@@ -1524,7 +1525,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UserMatchV2Email"
             example:
-              list: ["fOO@example.com","bAr@EXAMPLE.COM","XYZ@example.COM"]
+              list: ["fOO@example.com", "bAr@EXAMPLE.COM", "XYZ@example.COM"]
         required: true
       security:
         - oAuth2Client:
@@ -2362,6 +2363,20 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+              invite research to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Research Invite to User
+                  generated_at: "2023-12-12"
+                  type: "invite.research"
+                  invite:
+                    title: "Title"
+                    description: "We're investigating you"
+                    uri: https://example.com
+                    behalf_of:
+                      name: Folktestmyndigheten
+                      vat_number: 112233
+                    expires_at: "2024-12-12"
               form to user:
                 value:
                   ssn: "191212121212"
@@ -2594,7 +2609,6 @@ paths:
         404:
           description: |
             The form template associated with formTemplateKey does not exist.
-
 
   # ##############################################
   # GET, DELETE /v2/tenant/{tenantKey}/form/{formTemplateKey}/responses/{responseKey}
@@ -3122,22 +3136,22 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/FieldQueryParameter'
+              $ref: "#/components/schemas/FieldQueryParameter"
         - name: vat_number
           in: query
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/VatNumber'
+              $ref: "#/components/schemas/VatNumber"
       responses:
-        '200':
+        "200":
           description: >
             If `vat_number` is given, the repsonse will only include companies with VAT numbers in that list.
             The `field` parameter controls which columns (CSV) or properties (JSON) to include in the response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseCompany'
+                $ref: "#/components/schemas/BaseCompany"
             text/csv:
               schema:
                 example: |
@@ -3161,20 +3175,20 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/CompanyKey'
+            $ref: "#/components/schemas/CompanyKey"
         - name: field
           in: query
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/FieldQueryParameter'
+              $ref: "#/components/schemas/FieldQueryParameter"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FullCompany'
+                $ref: "#/components/schemas/FullCompany"
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY/content
@@ -3196,30 +3210,30 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/CompanyKey'
+            $ref: "#/components/schemas/CompanyKey"
         - name: handled
           in: query
           schema:
-            $ref: '#/components/schemas/HandledLabel'
+            $ref: "#/components/schemas/HandledLabel"
         - name: viewed
           in: query
           schema:
-            $ref: '#/components/schemas/ViewedLabel'
+            $ref: "#/components/schemas/ViewedLabel"
         - name: field
           in: query
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/FieldQueryParameter'
+              $ref: "#/components/schemas/FieldQueryParameter"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BaseContentMetadata'
+                  $ref: "#/components/schemas/BaseContentMetadata"
 
   # ##############################################
   # GET,PATCH /v3/partner/company/COMPKEY/content/CONTKEY
@@ -3255,26 +3269,26 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/CompanyKey'
+            $ref: "#/components/schemas/CompanyKey"
         - name: contentKey
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ContentKey'
+            $ref: "#/components/schemas/ContentKey"
         - name: part
           in: query
           schema:
-            $ref: '#/components/schemas/PartQueryParameter'
+            $ref: "#/components/schemas/PartQueryParameter"
       responses:
-        '200':
+        "200":
           description: Content metadata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FullContentMetadata'
-            '*/*':
+                $ref: "#/components/schemas/FullContentMetadata"
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ContentPart'
+                $ref: "#/components/schemas/ContentPart"
     patch:
       tags:
         - "Partner API v3"
@@ -3285,22 +3299,22 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/CompanyKey'
+            $ref: "#/components/schemas/CompanyKey"
         - name: contentKey
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ContentKey'
+            $ref: "#/components/schemas/ContentKey"
       responses:
-        '200':
+        "200":
           description: Content metadata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FullContentMetadata'
-            '*/*':
+                $ref: "#/components/schemas/FullContentMetadata"
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ContentPart'
+                $ref: "#/components/schemas/ContentPart"
       requestBody:
         content:
           application/json:
@@ -3309,10 +3323,10 @@ paths:
               properties:
                 handled:
                   description: Mark the content as `handled`/`unhandled`
-                  $ref: '#/components/schemas/HandledLabel'
+                  $ref: "#/components/schemas/HandledLabel"
                 viewed:
                   description: Mark the content as `viewed`/`unviewed`
-                  $ref: '#/components/schemas/ViewedLabel'
+                  $ref: "#/components/schemas/ViewedLabel"
               type: object
         required: true
 
@@ -3490,6 +3504,7 @@ components:
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
+            - `"invite.research"` for invitations to participate in surveys and polls (BETA)
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -3523,13 +3538,15 @@ components:
         booking:
           description: Optionally specify booking information
           $ref: "#/components/schemas/Booking"
-        form:
-          description: Optionally attach a form
-          $ref: "#/components/schemas/Form"
         campaign:
           description: Optionally attach a campaign
           $ref: "#/components/schemas/Campaign"
-
+        form:
+          description: Optionally attach a form
+          $ref: "#/components/schemas/Form"
+        invite:
+          description: Optional invite
+          $ref: "#/components/schemas/Invite"
 
     # ##############################################
     # SCHEMA Form Template
@@ -3594,8 +3611,8 @@ components:
                 - id: dk
                   label: Denmark
               min: 1
-              max: 2    
-              next_question: comments     
+              max: 2
+              next_question: comments
             - label: What is the source of the deposit?
               id: source
               type: free_text
@@ -3632,7 +3649,7 @@ components:
       properties:
         type:
           type: string
-          enum: [free_text, number, options,multi_options, verified_account]
+          enum: [free_text, number, options, multi_options, verified_account]
           description: |
             The input type required to answer the question.
 
@@ -3736,8 +3753,7 @@ components:
           type: string
           description: |
             A key used to identify the form template.
-          example:
-            2877d684-a340-4e4c-867f-d93283787b01
+          example: 2877d684-a340-4e4c-867f-d93283787b01
         response_count:
           type: integer
           minimum: 0
@@ -3770,8 +3786,7 @@ components:
           format: uuid
           description: |
             The form template key associated with the form responses.
-          example:
-            2877d684-a340-4e4c-867f-d93283787b01
+          example: 2877d684-a340-4e4c-867f-d93283787b01
         responses:
           type: array
           description: |
@@ -3784,8 +3799,7 @@ components:
                 format: uuid
                 description: |
                   A key used to identify the individual form response.
-                example:
-                  bed773d7902942f29f0b0729390c962c
+                example: bed773d7902942f29f0b0729390c962c
     FormResponse:
       type: object
       required:
@@ -3800,23 +3814,18 @@ components:
         form_response_key:
           type: string
           format: uuid
-          description:
-              The form response key
-          example:
-            2877d684-a340-4e4c-867f-d93283787b01
+          description: The form response key
+          example: 2877d684-a340-4e4c-867f-d93283787b01
         form_template_key:
           type: string
           format: uuid
-          description:
-             The form template key.
-          example:
-            2877d684-a340-4e4c-867f-d93283787b01
+          description: The form template key.
+          example: 2877d684-a340-4e4c-867f-d93283787b01
         response:
           type: array
-          description:
-            The form response that the user submitted.
+          description: The form response that the user submitted.
           items:
-            type: object  
+            type: object
             properties:
               id:
                 type: string
@@ -3858,17 +3867,16 @@ components:
                 type: free_text
               - id: account
                 type: verified_account
-                value: 
+                value:
                   account_number: "1234-5678"
                   bank_name: "Bank"
                   clearing_number: "1234"
               - id: citizenship
                 type: multi_options
-                value: ["Swedish", "German"]    
+                value: ["Swedish", "German"]
         matched_by:
           type: object
-          description:
-            Used to identify the user that answered the form
+          description: Used to identify the user that answered the form
           required:
             - type
             - value
@@ -3876,25 +3884,21 @@ components:
             type:
               type: string
               enum: [ssn, email]
-              description:
-                How the user that answered the form was identified.
+              description: How the user that answered the form was identified.
               example: ssn
             value:
               type: string
-              description:
-                Represents a value used to identify a user e.g. ssn or email.
+              description: Represents a value used to identify a user e.g. ssn or email.
               example: 199202286837
         login_method:
           type: string
           enum: [bankid]
-          description:
-                How the user that submitted the form logged into Kivra
+          description: How the user that submitted the form logged into Kivra
           example: bankid
         responded_at:
           type: string
           format: ISO8601
-          description:
-                When Kivra received a response to the form
+          description: When Kivra received a response to the form
           example: 2023-08-22T12:39:29.000000Z
         sender_reference:
           type: object
@@ -3938,7 +3942,7 @@ components:
           description: User's account number.
         bank_name:
           type: string
-          description:  Name of the bank the account belongs to.
+          description: Name of the bank the account belongs to.
         clearing_number:
           type: string
           description: The number used for the identification of financial institutions.
@@ -4230,7 +4234,6 @@ components:
               format: float
               example: "123.50"
               description: The largest allowed amount to be paid. Note that even if this amount is not given or very high, limits from the payment provider or bank will still apply.
-
 
     # ##############################################
     # SCHEMA CompanyList
@@ -4973,6 +4976,52 @@ components:
           example: 30
 
     # ##############################################
+    # SCHEMA Invite
+    # ##############################################
+    Invite:
+      type: object
+      required:
+        - description
+        - uri
+      properties:
+        title:
+          type: string
+          nullable: true
+          description: Title to present
+          example: Hey you, dont watch that, watch this
+        description:
+          type: string
+          description: longer description
+          example: |
+            This is the heavy heavy monster sound
+            The nuttiest sound around
+        uri:
+          type: string
+          description: The uri to open when the user clicks the invitation
+          example: https://example.com
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this research is conducted on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Something
+              example: Test Inc
+            vat_number:
+              type: string
+              description: Something
+        expires_at:
+          description: |
+            The expiration time for the survey, after this date, it will no longer be available.
+          type: string
+          nullable: true
+          example: "2024-05-09T13:42:26Z"
+
+    # ##############################################
     # SCHEMA Campaign
     # ##############################################
     Campaign:
@@ -5023,7 +5072,7 @@ components:
     EmptyString:
       description: The empty string
       enum:
-        - ''
+        - ""
       type: string
 
     # ##############################################
@@ -5100,14 +5149,14 @@ components:
       additionalProperties: false
       properties:
         name:
-          $ref: '#/components/schemas/CompanyName'
+          $ref: "#/components/schemas/CompanyName"
         street:
           description: |
             A special "street" that allows the scanning facility to send to the correct company.
 
             It's on the format "Kivra: <organisation number>"
           type: string
-          example: 'Kivra: 556000-4755'
+          example: "Kivra: 556000-4755"
         postal_code:
           description: |
             The special postal code that goes to Kivra's scanning facility
@@ -5146,26 +5195,26 @@ components:
         name:
           description: Name of the recipient (a company or person).
           type: string
-          example: 'Cornelias Café AB'
+          example: "Cornelias Café AB"
         street:
           description: Name of the street, including street number.
           type: string
-          example: 'Klara Norra kyrkogata 33'
+          example: "Klara Norra kyrkogata 33"
         postal_code:
           description: Postal code.
-          example: '11122'
+          example: "11122"
           type: string
         city:
           description: Name of the city.
-          example: 'Stockholm'
+          example: "Stockholm"
           type: string
         country:
           description: Name of the country.
-          example: 'Sverige'
+          example: "Sverige"
           type: string
         care_of:
           description: Address care of (c/o).
-          example: ''
+          example: ""
           type: string
       required:
         - name
@@ -5226,13 +5275,13 @@ components:
       additionalProperties: false
       properties:
         key:
-          $ref: '#/components/schemas/CompanyKey'
+          $ref: "#/components/schemas/CompanyKey"
         name:
-          $ref: '#/components/schemas/CompanyName'
+          $ref: "#/components/schemas/CompanyName"
         type:
-          $ref: '#/components/schemas/CompanyType'
+          $ref: "#/components/schemas/CompanyType"
         vat_number:
-          $ref: '#/components/schemas/VatNumber'
+          $ref: "#/components/schemas/VatNumber"
       type: object
 
     # ##############################################
@@ -5243,14 +5292,14 @@ components:
       additionalProperties: false
       properties:
         key:
-          $ref: '#/components/schemas/CompanyKey'
+          $ref: "#/components/schemas/CompanyKey"
         scanning_address:
-          $ref: '#/components/schemas/ScanningAddress'
+          $ref: "#/components/schemas/ScanningAddress"
         scanning_fallback_address:
-          $ref: '#/components/schemas/ScanningFallbackAddress'
+          $ref: "#/components/schemas/ScanningFallbackAddress"
         created_at:
           description: When the company started to onboard.
-          example: '2019-02-26T14:47:26Z'
+          example: "2019-02-26T14:47:26Z"
           type: string
           format: date-time
         email:
@@ -5258,16 +5307,16 @@ components:
             Email address for receiving emails as content.
             Empty if the Kivra email service is not active.
           oneOf:
-            - $ref: '#/components/schemas/IncomingEmail'
-            - $ref: '#/components/schemas/EmptyString'
+            - $ref: "#/components/schemas/IncomingEmail"
+            - $ref: "#/components/schemas/EmptyString"
         name:
-          $ref: '#/components/schemas/CompanyName'
+          $ref: "#/components/schemas/CompanyName"
         type:
-          $ref: '#/components/schemas/CompanyType'
+          $ref: "#/components/schemas/CompanyType"
         services:
-          $ref: '#/components/schemas/AllServices'
+          $ref: "#/components/schemas/AllServices"
         vat_number:
-          $ref: '#/components/schemas/VatNumber'
+          $ref: "#/components/schemas/VatNumber"
       required:
         - key
       type: object
@@ -5342,7 +5391,7 @@ components:
       properties:
         account:
           description: The account to pay to
-          example: '12345678'
+          example: "12345678"
           type: string
           nullable: true
         amount:
@@ -5363,7 +5412,7 @@ components:
           nullable: true
         due_at:
           description: Due date of this payment option
-          example: '2022-03-30T00:00:00Z'
+          example: "2022-03-30T00:00:00Z"
           type: string
           format: date-time
           nullable: true
@@ -5492,8 +5541,8 @@ components:
     # ##############################################
     ContentPart:
       description: |
-       The file data of the content part, `content_type` in the part metadata
-       describes its file type.
+        The file data of the content part, `content_type` in the part metadata
+        describes its file type.
 
     # ##############################################
     # SCHEMA BaseContentMetadata
@@ -5511,23 +5560,23 @@ components:
           format: date-time
           nullable: false
         key:
-          $ref: '#/components/schemas/ContentKey'
+          $ref: "#/components/schemas/ContentKey"
         labels:
           description: The labels that apply to this content
           additionalProperties: false
           properties:
             governmental:
-              $ref: '#/components/schemas/GovernmentalLabel'
+              $ref: "#/components/schemas/GovernmentalLabel"
             handled:
-              $ref: '#/components/schemas/HandledLabel'
+              $ref: "#/components/schemas/HandledLabel"
             interpreted:
-              $ref: '#/components/schemas/InterpretedLabel'
+              $ref: "#/components/schemas/InterpretedLabel"
             reminder:
-              $ref: '#/components/schemas/ReminderLabel'
+              $ref: "#/components/schemas/ReminderLabel"
             trashed:
-              $ref: '#/components/schemas/TrashedLabel'
+              $ref: "#/components/schemas/TrashedLabel"
             viewed:
-              $ref: '#/components/schemas/ViewedLabel'
+              $ref: "#/components/schemas/ViewedLabel"
           required:
             - governmental
             - handled
@@ -5539,7 +5588,7 @@ components:
         parts:
           type: array
           items:
-            $ref: '#/components/schemas/PartMetadata'
+            $ref: "#/components/schemas/PartMetadata"
         received_at:
           description: When the content was received by Kivra
           type: string
@@ -5549,7 +5598,7 @@ components:
           type: string
           example: Developers Developers Developers AB
         receiver_vat_number:
-          $ref: '#/components/schemas/VatNumber'
+          $ref: "#/components/schemas/VatNumber"
         sender_icon_url:
           type: string
           example: "https://sandbox-static.kivra.com/img/tenant/1341573157b3a1c55f220f4007b2e44789d2d04015/icon.png"
@@ -5565,7 +5614,7 @@ components:
           description: VAT numbers representing the sender
           type: array
           items:
-            $ref: '#/components/schemas/VatNumber'
+            $ref: "#/components/schemas/VatNumber"
           nullable: true
         subject:
           description: Subject of the content
@@ -5616,19 +5665,19 @@ components:
         - type: object
           properties:
             interpreted_fields:
-              $ref: '#/components/schemas/InterpretedFields'
+              $ref: "#/components/schemas/InterpretedFields"
             parts:
               description: The files in the content
               type: array
               items:
-                $ref: '#/components/schemas/PartMetadata'
+                $ref: "#/components/schemas/PartMetadata"
             payment_options:
               description: Different ways to pay an invoice
               type: array
               items:
-                $ref: '#/components/schemas/PartnerPaymentOption'
+                $ref: "#/components/schemas/PartnerPaymentOption"
             references:
-              $ref: '#/components/schemas/InvoiceReferences'
+              $ref: "#/components/schemas/InvoiceReferences"
           required:
             - interpreted_fields
             - key
@@ -5645,7 +5694,7 @@ components:
             - subject
             - transaction_at
             - type
-        - $ref: '#/components/schemas/BaseContentMetadata'
+        - $ref: "#/components/schemas/BaseContentMetadata"
 
   # ##############################################
   # SECURITY oAuth2Client
