@@ -4235,7 +4235,6 @@ components:
               example: "123.50"
               description: The largest allowed amount to be paid. Note that even if this amount is not given or very high, limits from the payment provider or bank will still apply.
 
-
     # ##############################################
     # SCHEMA CompanyList
     # ##############################################
@@ -5019,6 +5018,7 @@ components:
           description: |
             The expiration time for the survey, after this date, it will no longer be available.
           type: string
+          nullable: true
           example: "2024-05-09T13:42:26Z"
 
     # ##############################################
