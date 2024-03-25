@@ -2370,12 +2370,37 @@ paths:
                   generated_at: "2023-12-12"
                   type: "invite.research"
                   invite:
-                    title: "Title"
                     description: "We're investigating you"
                     uri: https://example.com
                     behalf_of:
                       name: Folktestmyndigheten
-                      vat_number: 112233
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12"
+              invite gift to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: Gift for you
+                  generated_at: "2023-12-12"
+                  type: "invite.gift"
+                  invite:
+                    description: "Something for you"
+                    uri: https://example.com
+                    behalf_of:
+                      name: Givmild AB
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12"
+              invite voucher to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: Voucher for you
+                  generated_at: "2023-12-12"
+                  type: "invite.voucher"
+                  invite:
+                    description: "Redeemable value"
+                    uri: https://example.com
+                    behalf_of:
+                      name: Compensation Inc
+                      vat_number: "SE556840226601"
                     expires_at: "2024-12-12"
               form to user:
                 value:
@@ -3486,6 +3511,8 @@ components:
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"letter.form"`: indicating that the content contains a form.
             - `"invite.research"` for invitations to participate in surveys and polls (BETA)
+            - `"invite.gift"` for invitations to chose a gift (BETA)
+            - `"invite.voucher"` for invitations to use a voucher (BETA)
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
@@ -4983,6 +5010,8 @@ components:
       required:
         - description
         - uri
+        - expires_at
+        - behalf_of
       properties:
         title:
           type: string
