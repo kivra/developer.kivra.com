@@ -3516,7 +3516,7 @@ components:
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"letter.form"`: indicating that the content contains a form.
             - `"invite.research"` for invitations to participate in surveys and polls (BETA)
-            - `"invite.gift"` for invitations to chose a gift (BETA)
+            - `"invite.gift"` for invitations to collect a gift (BETA)
             - `"invite.voucher"` for invitations to use a voucher (BETA)
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
