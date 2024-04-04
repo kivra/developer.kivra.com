@@ -2367,7 +2367,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Research Invite to User
-                  generated_at: "2023-12-12"
+                  generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.research"
                   invite:
                     description: "We're investigating you"
@@ -2380,7 +2380,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Gift for you
-                  generated_at: "2023-12-12"
+                  generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.gift"
                   invite:
                     description: "Something for you"
@@ -2393,7 +2393,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Voucher for you
-                  generated_at: "2023-12-12"
+                  generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.voucher"
                   invite:
                     description: "Redeemable value"
