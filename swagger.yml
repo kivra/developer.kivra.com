@@ -2370,7 +2370,8 @@ paths:
                   generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.research"
                   invite:
-                    description: "We're investigating you"
+                    title: "We want to know"
+                    description: "Your answers will help us."
                     uri: https://example.com
                     behalf_of:
                       name: Folktestmyndigheten
@@ -2383,7 +2384,8 @@ paths:
                   generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.gift"
                   invite:
-                    description: "Something for you"
+                    title: "For you"
+                    description: "Thank you for everything."
                     uri: https://example.com
                     behalf_of:
                       name: Givmild AB
@@ -2396,7 +2398,8 @@ paths:
                   generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.voucher"
                   invite:
-                    description: "Redeemable value"
+                    title: "Something of value"
+                    description: "Hope you will like it."
                     uri: https://example.com
                     behalf_of:
                       name: Compensation Inc
