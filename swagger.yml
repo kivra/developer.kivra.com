@@ -2366,17 +2366,47 @@ paths:
               invite research to user (BETA):
                 value:
                   ssn: "191212121212"
-                  subject: Sample Research Invite to User
-                  generated_at: "2023-12-12"
+                  subject: "Sample Research Invite to User"
+                  generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.research"
                   invite:
-                    title: "Title"
-                    description: "We're investigating you"
-                    uri: https://example.com
+                    title: "We want to know"
+                    description: "Your answers will help us."
+                    uri: "https://example.com"
                     behalf_of:
-                      name: Folktestmyndigheten
-                      vat_number: 112233
-                    expires_at: "2024-12-12"
+                      name: "Folktestmyndigheten"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+              invite gift to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: "Gift for you"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.gift"
+                  invite:
+                    title: "For you"
+                    description: "Thank you for everything."
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Givmild AB"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+              invite voucher to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: "Voucher for you"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.voucher"
+                  invite:
+                    title: "Something of value"
+                    description: "Hope you will like it."
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Compensation Inc"
+                      vat_number: "SE556840226601"
+                    store:
+                      name: "Redeem Store AB"
+                    expires_at: "2024-12-12T12:00:00Z"
               form to user:
                 value:
                   ssn: "191212121212"
@@ -3485,6 +3515,9 @@ components:
             - `"letter.salary"`: indicating that the content is a salary specification.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"letter.form"`: indicating that the content contains a form.
+            - `"invite.research"` for invitations to participate in surveys and polls (BETA)
+            - `"invite.gift"` for invitations to collect a gift (BETA)
+            - `"invite.voucher"` for invitations to use a voucher (BETA)
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
@@ -3504,7 +3537,6 @@ components:
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
-            - `"invite.research"` for invitations to participate in surveys and polls (BETA)
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -4983,6 +5015,8 @@ components:
       required:
         - description
         - uri
+        - expires_at
+        - behalf_of
       properties:
         title:
           type: string
