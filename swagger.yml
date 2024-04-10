@@ -2384,8 +2384,6 @@ paths:
                   generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.gift"
                   invite:
-                    title: "For you"
-                    description: "Thank you for everything."
                     uri: "https://example.com"
                     behalf_of:
                       name: "Givmild AB"
@@ -2398,8 +2396,6 @@ paths:
                   generated_at: "2024-03-12T00:00:00Z"
                   type: "invite.voucher"
                   invite:
-                    title: "Something of value"
-                    description: "Hope you will like it."
                     uri: "https://example.com"
                     behalf_of:
                       name: "Compensation Inc"
