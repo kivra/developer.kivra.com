@@ -1257,7 +1257,7 @@ paths:
     get:
       tags:
         - "Tenant API - Content"
-      summary: List available recipient users for a tenant
+      summary: List available recipient users for a tenant (LEGACY)
       operationId: List Users
       description: |
         This resource is used to list all or search for users that are eligible
@@ -1329,7 +1329,7 @@ paths:
       tags:
         - "Tenant API - Content"
       summary: |
-        List recipient users that were added/removed since a previous request
+        List recipient users that were added/removed since a previous request (LEGACY)
       operationId: List Users Diff
       description: |
         This resource is used to list users that were added/removed since
@@ -1339,6 +1339,10 @@ paths:
         series of requests expire 31 days after the **initial** request.
         Therefore, API users must fetch the complete user set at least once
         every 31 days.
+        Also, due to the fact that grace period for users leaving Kivra is 10 days, after which
+        all data about the user is erased from Kivra, it is crucial
+        that a new DIFF is requested at least once every 10 days to make sure that the list 
+        of removed users is complete.
       parameters:
         - name: tenantKey
           in: path
