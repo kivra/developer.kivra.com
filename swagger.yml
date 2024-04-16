@@ -4424,29 +4424,6 @@ components:
           - "SE25555555552"
 
     # ##############################################
-    # SCHEMA V2 CompanyMatch
-    # ##############################################
-    CompanyMatchV2VatNr:
-      required:
-        - list
-      type: object
-      properties:
-        list:
-          type: array
-          items:
-            type: string
-            example:
-              - "191212121212"
-              - "197701032380"
-              - "198112172385"
-          description: list of recipient addresses to be matched
-      example:
-        list:
-          - "191212121212"
-          - "197701032380"
-          - "198112172385"
-
-    # ##############################################
     # SCHEMA Tenant_v2
     # ##############################################
     Tenant_v2:
