@@ -1575,7 +1575,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/VatNumber'
             example:
-              list: ["SE559408724801","SE559408724801","SE556917354401"]
+              list: ["SE559408724801","SE556917354401","SE556840226601"]
         required: true
       security:
         - oAuth2Client:
