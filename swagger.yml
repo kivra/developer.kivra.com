@@ -214,12 +214,12 @@ info:
     ## Identifying users
     Kivra uses the social security number/personal-number as key when accepting content. The format must adhere to the format `YYYYMMDDnnnn` that is including century-digits, i.e. `191212121212`.
 
-    ## VAT identifier
-    In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT identifier may reflect the grouping by e.g. suffixing the number.
+    ## VAT number
+    In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT number may reflect the grouping by e.g. suffixing the number.
 
     The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters.
 
-    Kivra only uses and recognizes the Swedish VAT number which is composed of the prefix `SE` followed by 12 digits. For instance, Kivra’s VAT Id would be: `SE556840226601`.
+    Kivra only handles and recognizes Swedish VAT numbers ("momsregistreringsnummer")  which is composed of the prefix `SE` followed by 10 digits (an organisation number) followed by `01`. As an example, Kivra AB's VAT number is: `SE556840226601`.
 
     # Limits
     Kivra handles millions of documents. We put limits to protect the system from receiving more data than it can handle, and to ensure an equitable distribution of system resources. There’s also various practical reasons for this, such as reducing Head-of-line blocking and providing a optimal experience for the enduser.
@@ -408,9 +408,9 @@ info:
 
     This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
-    Matching of recipients is done via the `usermatch` resource.
+    Matching of Recipients is done via the `usermatch` and `companymatch` resources.
 
-    Matching of recipients is strongly recommended with the exception of flows using the "retain" functionality.
+    Matching of Recipients is strongly recommended with the exception of flows using the "retain" functionality.
 
     ## Step 2: Send Content
 
@@ -1544,6 +1544,69 @@ paths:
               example:
                 list: ["fOO@example.COM", "bAr@EXAMPLE.COM"]
 
+  /v2/tenant/{tenantKey}/companymatch/vatnr:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Match a list of VAT numbers to recipients for a specific tenant (v2)
+      operationId: Match Companies VatNr v2
+      description: |
+        This resource is used to match a list of Companies to check that they are eligible for receiving Content from a specific Tenant.
+        The request contains a list of VAT numbers to be matched, and the response is a filtered subset of said list containing only those VAT numbers matching a Company Recipient for which the Tenant is eligible to send Content to.
+        <aside class="notice">
+          If none of the provided VAT numbers match a Recipient eligible to receive content from the given Tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The Tenant key that the matching should be done on behalf of.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: |
+          List of VAT numbers to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 VAT numbers.
+        content:
+          application/json:
+            schema:
+                required:
+                  - list
+                type: object
+                properties:
+                  list:
+                    description: List of VAT numbers to match.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VatNumber'
+            example:
+              list: ["SE559408724801","SE556917354401","SE556840226601"]
+        required: true
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}.companymatch.vatnr"
+      responses:
+        200:
+          description: Filtered list of VAT numbers that matched.
+          content:
+            application/json:
+              schema:
+                required:
+                  - list
+                type: object
+                properties:
+                  list:
+                    description: List of VAT numbers which are eligible Recipients of the Tenant.
+                    type: array
+                    minItems: 0
+                    maxItems: length(input-list)
+                    items:
+                      $ref: '#/components/schemas/VatNumber'
+              example:
+                list: ["SE556840226601", "SE559408724801"]
+        413:
+          description: Payload exceeded 10MB — try splitting into multiple calls instead.
+
   # ##############################################
   # GET /v1/tenant/TKEY/company
   # ##############################################
@@ -1554,42 +1617,38 @@ paths:
       summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
-        This resource is used to list all or search for companies that eligible for receiving Content from the specific Tenant.
-        The response is a JSON list of Objects containing the Companies key and Vat Number.
+        This resource is used to list all, or search for specific, Companies that are eligible for receiving Content from the specific Tenant. The response is a JSON list of Objects containing the eligible Companies' key and VAT number.
 
-        <aside class="notice">
-        If a search is done and the Company doesn’t exist or have Opt-ed out of receiving Content from the Tenant an empty list will be returned.
-        </aside>
+        A search is done by providing the `vat_number` query parameter. If a search is done and the Company does not exist or have opted out of receiving Content from the Tenant an empty list will be returned.
       parameters:
         - name: tenantKey
           in: path
-          description: The unique Key for a Tenant
+          description: The unique Key for a Tenant.
           required: true
           schema:
             type: string
             format: hexadecimal
         - name: vat_number
           in: query
-          description: Perform a search to see if a specific Company is available
+          description: Perform a search to see if a VAT number matches an eligible Company Recipient of the Tenant.
           required: false
           schema:
-            description: Companies unique Vat Number
-            type: string
-            example: SE556840226601
+            $ref: '#/components/schemas/VatNumber'
       security:
         - oAuth2Client:
             - "get:kivra.v1.tenant.{tenantKey}.company"
       responses:
         200:
           description: |
-            List of available companies
+            List of Companies' keys and VAT numbers which are eligible Recipients of the Tenant.
           content:
             application/json:
               schema:
                 type: array
-                description: List of available companies, can be empty
                 items:
                   $ref: "#/components/schemas/CompanyList"
+        400:
+          description: Bad Request — e.g., Luhn algorithm validation failed for the provided `vat_number`.
 
   # ##############################################
   # POST /v1/tenant/TKEY/content
@@ -4278,9 +4337,7 @@ components:
           type: string
           example: "15236156848eefa1dc75364af2be38c98eb3aae223"
         vatnr:
-          description: Company's unique Vat Number
-          type: string
-          example: "SE556840226601"
+          $ref: '#/components/schemas/VatNumber'
 
     # ##############################################
     # SCHEMA UserList
@@ -5156,12 +5213,8 @@ components:
     # SCHEMA VatNumber
     # ##############################################
     VatNumber:
-      pattern: ^[A-Z]{2}[0-9]{10}[0-9]{2}$
-      description: |
-        The VAT number of the company.
-
-        It follows this format:
-        Land code - Organisation number - Serial number
+      pattern: ^SE[0-9]{10}01$
+      description: A Swedish VAT number ("momsregistreringsnummer").
       example: SE556000475501
       type: string
 
