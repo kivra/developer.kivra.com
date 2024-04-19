@@ -1570,17 +1570,17 @@ paths:
         content:
           application/json:
             schema:
-                required:
-                  - list
-                type: object
-                properties:
-                  list:
-                    description: List of VAT numbers to match.
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/VatNumber'
+              required:
+                - list
+              type: object
+              properties:
+                list:
+                  description: List of VAT numbers to match.
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/VatNumber"
             example:
-              list: ["SE559408724801","SE556917354401","SE556840226601"]
+              list: ["SE559408724801", "SE556917354401", "SE556840226601"]
         required: true
       security:
         - oAuth2Client:
@@ -1601,7 +1601,7 @@ paths:
                     minItems: 0
                     maxItems: length(input-list)
                     items:
-                      $ref: '#/components/schemas/VatNumber'
+                      $ref: "#/components/schemas/VatNumber"
               example:
                 list: ["SE556840226601", "SE559408724801"]
         413:
@@ -1633,7 +1633,7 @@ paths:
           description: Perform a search to see if a VAT number matches an eligible Company Recipient of the Tenant.
           required: false
           schema:
-            $ref: '#/components/schemas/VatNumber'
+            $ref: "#/components/schemas/VatNumber"
       security:
         - oAuth2Client:
             - "get:kivra.v1.tenant.{tenantKey}.company"
@@ -3635,9 +3635,15 @@ components:
         form:
           description: Optionally attach a form
           $ref: "#/components/schemas/Form"
-        invite:
-          description: Optional invite
-          $ref: "#/components/schemas/Invite"
+        invite_research:
+          description: Optional invite research
+          $ref: "#/components/schemas/InviteResearch"
+        invite_gift:
+          description: Optional invite gift
+          $ref: "#/components/schemas/InviteGift"
+        invite_voucher:
+          description: Optional invite voucher
+          $ref: "#/components/schemas/InviteVoucher"
 
     # ##############################################
     # SCHEMA Form Template
@@ -4337,7 +4343,7 @@ components:
           type: string
           example: "15236156848eefa1dc75364af2be38c98eb3aae223"
         vatnr:
-          $ref: '#/components/schemas/VatNumber'
+          $ref: "#/components/schemas/VatNumber"
 
     # ##############################################
     # SCHEMA UserList
@@ -5065,9 +5071,9 @@ components:
           example: 30
 
     # ##############################################
-    # SCHEMA Invite
+    # SCHEMA InviteResearch
     # ##############################################
-    Invite:
+    InviteResearch:
       type: object
       required:
         - description
@@ -5104,10 +5110,88 @@ components:
               example: Test Inc
             vat_number:
               type: string
-              description: Something
+              description: A Swedish VAT number ("momsregistreringsnummer").
+              example: "SE556840226601"
         expires_at:
           description: |
             The expiration time for the survey, after this date, it will no longer be available.
+          type: string
+          nullable: true
+          example: "2024-05-09T13:42:26Z"
+    # ##############################################
+    # SCHEMA InviteGift
+    # ##############################################
+    InviteGift:
+      type: object
+      required:
+        - uri
+        - expires_at
+        - behalf_of
+      properties:
+        uri:
+          type: string
+          description: The uri to open when the user clicks the invitation
+          example: https://example.com
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this gift is conducted on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Something
+            vat_number:
+              type: string
+              description: A Swedish VAT number ("momsregistreringsnummer").
+        expires_at:
+          description: |
+            The expiration time for the gift, after this date, it will no longer be available.
+          type: string
+          nullable: true
+          example: "2024-05-09T13:42:26Z"
+
+    # ##############################################
+    # SCHEMA InviteVoucher
+    # ##############################################
+    InviteVoucher:
+      type: object
+      required:
+        - uri
+        - expires_at
+        - behalf_of
+      properties:
+        store:
+          type: object
+          description: Where this voucher valid
+          required:
+            - name
+          properties:
+            name:
+              type: string
+        uri:
+          type: string
+          description: The uri to open when the user clicks the invitation
+          example: https://example.com
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this voucher is conducted on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Test AB
+            vat_number:
+              type: string
+              description: A Swedish VAT number ("momsregistreringsnummer").
+        expires_at:
+          description: |
+            The expiration time for the voucher, after this date, it will no longer be available.
           type: string
           nullable: true
           example: "2024-05-09T13:42:26Z"
