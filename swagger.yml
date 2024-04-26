@@ -2213,10 +2213,10 @@ paths:
                         name: "this_will_be_ignored.png"
                         content_type: "image/png"
                         data: "Base64-encoded string with PNG data"
-                        min_limit: "17.00"
-                        min_suggested: "23.50"
-                        max_suggested: "235.00"
-                        max_limit: "500"
+                      min_limit: "17.00"
+                      min_suggested: "23.50"
+                      max_suggested: "235.00"
+                      max_limit: "500"
               letter to user:
                 value:
                   ssn: "191212121212"
