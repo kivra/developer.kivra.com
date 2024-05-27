@@ -3696,7 +3696,7 @@ components:
                 - id: large
                   label: 30000 - 40000
                   next_question: source
-              next_question: comments
+              next_question: citizenship
             - label: Select your country of citizenship
               id: citizenship
               type: multi_options
@@ -3837,9 +3837,6 @@ components:
           type: string
           description: |
             A human readable description of the answer.
-        help_text:
-          type: string
-          description: Provides the user with more information about the option.
     FormTemplateKey:
       type: object
       required:
