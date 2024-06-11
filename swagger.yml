@@ -1261,7 +1261,7 @@ paths:
       operationId: List Users
       description: |
         LEGACY: This resource is only supported for existing customers, new integrations 
-        should use the `usermatch` resorce.
+        should use the `usermatch` resource.
         
         This resource is used to list all or search for users that are eligible
         for receiving Content from the specific Tenant. The response is a JSON
@@ -1336,7 +1336,7 @@ paths:
       operationId: List Users Diff
       description: |
         LEGACY: This resource is only supported for existing customers, new integrations 
-        should use the `usermatch` resorce.
+        should use the `usermatch` resource.
         
         This resource is used to list users that were added/removed since
         `diffId` was obtained, either from an initial request to the
