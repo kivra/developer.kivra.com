@@ -1260,6 +1260,9 @@ paths:
       summary: List available recipient users for a tenant (LEGACY)
       operationId: List Users
       description: |
+        LEGACY: This resource is only supported for existing customers, new integrations 
+        should use the `usermatch` resorce.
+        
         This resource is used to list all or search for users that are eligible
         for receiving Content from the specific Tenant. The response is a JSON
         list of Objects containing the User's key and SSN. The `diffId`
@@ -1332,6 +1335,9 @@ paths:
         List recipient users that were added/removed since a previous request (LEGACY)
       operationId: List Users Diff
       description: |
+        LEGACY: This resource is only supported for existing customers, new integrations 
+        should use the `usermatch` resorce.
+        
         This resource is used to list users that were added/removed since
         `diffId` was obtained, either from an initial request to the
         `/v1/tenant/{tenantKey}/user` endpoint, or from a subsequent request
