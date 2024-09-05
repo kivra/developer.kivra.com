@@ -1656,6 +1656,135 @@ paths:
         400:
           description: Bad Request — e.g., Luhn algorithm validation failed for the provided `vat_number`.
 
+  /v2/tenant/{tenantKey}/company:
+    get:
+      tags:
+        - "Tenant API - Content"
+      summary: List available recipient companies for a tenant (v2)
+      operationId: List Companies v2
+      description: |
+        NOTE: Access to this resource might be enabled via agreement.
+
+        This resource is used to list all companies that are eligible
+        for receiving Content from the specific Tenant.
+        The `diff-id` contained in the response header can be used to fetch added/removed
+        companies in subsequent requests to the "diff" endpoint described below.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}.company"
+      responses:
+        200:
+          description: |
+            List of eligible company recipients
+          headers:
+            diff-id:
+              description: |
+                An ID that can be used in a subsequent request to
+                `/v2/tenant/{tenantKey}/company/diff/{diffId}` to fetch companies
+                that were added/removed since the `diff-id` `diffId` was obtained
+              schema:
+                type: string
+                example: "3831CD15163421134211695294"
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of eligible company recipients, can be empty
+                items:
+                  type: object
+                  properties:
+                    vatnr:
+                      $ref: "#/components/schemas/VatNumber"
+
+  /v2/tenant/{tenantKey}/company/diff/{diffId}:
+    get:
+      tags:
+        - "Tenant API - Content"
+      summary: |
+        List recipient companies that were added/removed since a previous request (v2)
+      operationId: List Companies Diff
+      description: |
+        NOTE: Access to this resource might be enabled via agreement.
+
+        This resource is used to list companies that were added/removed since
+        `diffId` was obtained, either from an initial request to the
+        `/v2/tenant/{tenantKey}/company` endpoint, or from a subsequent request
+        to this endpoint. Note that all `diffId`s that are obtained in a
+        series of requests expire 31 days after the **initial** request.
+        Therefore, API users must fetch the complete company list at least once
+        every 31 days.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: diffId
+          in: path
+          description: |
+            ID that was returned in header in a previous request and is used
+            to calculate which companies have been added/removed between then
+            and now
+          required: true
+          schema:
+            type: string
+            example: "3831CD15163421134211695294"
+      security:
+        - oAuth2Client:
+            - "get:kivra.v1.tenant.{tenantKey}.user.diff.{diffId}"
+      responses:
+        200:
+          description: |
+            Lists of added/removed companies
+          headers:
+            diff-id:
+              description: |
+                An ID that can be used in a subsequent request to
+                `/v2/tenant/{tenantKey}/company/diff/{diffId}` to fetch companies
+                that were added/removed since `diffId` was obtained
+              schema:
+                type: string
+                example: "3831CD15163421134211695294"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  added:
+                    type: array
+                    description: List of added users
+                    items:
+                      type: object
+                      properties:
+                        vatnr:
+                          $ref: "#/components/schemas/VatNumber"
+                  removed:
+                    type: array
+                    description: List of removed users
+                    items:
+                      type: object
+                      properties:
+                        vatnr:
+                          $ref: "#/components/schemas/VatNumber"
+        400:
+          description: |
+            This error could indicate that the diffId is no longer valid
+            and therefore the URL points to a resource that is no longer
+            available
+        404:
+          description: |
+            The diffId does not exist
+
   # ##############################################
   # POST /v1/tenant/TKEY/content
   # ##############################################
