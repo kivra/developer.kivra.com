@@ -1689,7 +1689,7 @@ paths:
               description: |
                 An ID that can be used in a subsequent request to
                 `/v2/tenant/{tenantKey}/company/diff/{diffId}` to fetch companies
-                that were added/removed since the `diff-id` `diffId` was obtained
+                that were added/removed since `diffId` was obtained
               schema:
                 type: string
                 example: "3831CD15163421134211695294"
