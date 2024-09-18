@@ -110,6 +110,7 @@ info:
     | 2023-12-11 | Declared v1 of content & payment metadata as obsolete, added type and subject as mandatory |
     | 2023-12-12 | Removed Forms BETA tags since all Forms features are live | 
     | 2024-03-21 | Added Invite to content with BETA tags | 
+    | 2024-09-18 | Removed Invite BETA tags since invite features are live |
 
     # Terminology
     ### User
@@ -2561,7 +2562,7 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
-              invite research to user (BETA):
+              invite research to user:
                 value:
                   ssn: "191212121212"
                   subject: "Sample Research Invite to User"
@@ -2575,7 +2576,7 @@ paths:
                       name: "Folktestmyndigheten"
                       vat_number: "SE556840226601"
                     expires_at: "2024-12-12T12:00:00Z"
-              invite gift to user (BETA):
+              invite gift to user:
                 value:
                   ssn: "191212121212"
                   subject: "Gift for you"
@@ -2587,7 +2588,7 @@ paths:
                       name: "Givmild AB"
                       vat_number: "SE556840226601"
                     expires_at: "2024-12-12T12:00:00Z"
-              invite voucher to user (BETA):
+              invite voucher to user:
                 value:
                   ssn: "191212121212"
                   subject: "Voucher for you"
@@ -3711,9 +3712,9 @@ components:
             - `"letter.salary"`: indicating that the content is a salary specification.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"letter.form"`: indicating that the content contains a form.
-            - `"invite.research"` for invitations to participate in surveys and polls (BETA)
-            - `"invite.gift"` for invitations to collect a gift (BETA)
-            - `"invite.voucher"` for invitations to use a voucher (BETA)
+            - `"invite.research"` for invitations to participate in surveys and polls
+            - `"invite.gift"` for invitations to collect a gift
+            - `"invite.voucher"` for invitations to use a voucher
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
