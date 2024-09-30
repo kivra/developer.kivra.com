@@ -3404,11 +3404,6 @@ components:
           writeOnly: true
           items:
             $ref: "#/components/schemas/Parts_Responsive"
-        payment:
-          type: object
-          description: |
-            NOTE: 'payment' is obsolete and will be removed on May 31st 2024, please use 'payment_multiple_options' instead
-          $ref: "#/components/schemas/Payment"
         payment_multiple_options:
           type: object
           description: |
