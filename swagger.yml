@@ -3306,10 +3306,8 @@ components:
               type: object
               description: Optionally specify invoice information
               properties:
-                payment_or_payment_multiple_options:
-                  oneOf:
-                    - $ref: "#/components/schemas/Payment"
-                    - $ref: "#/components/schemas/PaymentMultipleOptions"
+                payment_multiple_options:
+                  $ref: "#/components/schemas/PaymentMultipleOptions"
                 invoice_reference:
                   type: string
                   description: Tenant’s own Invoice Reference
