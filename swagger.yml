@@ -3879,6 +3879,78 @@ components:
                   example: "Invoice Nr #123"
 
     # ##############################################
+    # SCHEMA Payment
+    # ##############################################
+    Payment:
+      type: object
+      description: |
+        NOTE: payment is deprecated and will be removed on 31st May 2024. Use `payment_multiple_options` instead.
+      required:
+        - payable
+        - currency
+        - due_date
+        - total_owed
+        - type
+        - method
+        - account
+        - reference
+      properties:
+        payable:
+          type: boolean
+          description: Toggles whether this content should be payable through Kivra’s payment platform
+        status:
+          type: string
+          description: "Toggles whether this content is paid or unpaid: if already paid the user can’t pay it again through Kivra"
+          default: "unpaid"
+          readOnly: true
+          enum: ["paid", "unpaid"]
+        currency:
+          type: string
+          enum:
+            - SEK
+          example: "SEK"
+          description: |
+            Currency used in specifying `total_owed`. In Sweden, only SEK is accepted.
+        due_date:
+          type: string
+          format: ISO8601
+          example: "2017-01-01"
+          description: Date when this Invoice is due
+        total_owed:
+          type: string
+          format: float
+          example: "123.50"
+          description: The total amount owed according to the invoice. **If `payable` equals `true` this must be a non negative number that’s greater than "0"**
+        type:
+          type: string
+          description: Type of format for the reference
+          example: "SE_OCR"
+          enum: ["SE_OCR", "TENANT_REF"]
+        method:
+          type: string
+          description: 1 = BG and 2 = PG
+          example: "1"
+          enum: ["1", "2"]
+        account:
+          type: string
+          example: "12345"
+          description: Tenant’s account number
+        reference:
+          type: string
+          example: "426523791"
+          description: The reference number used for paying. This can be maximum 25 characters long
+        variable_amount:
+          type: boolean
+          default: false
+          description: Toggles whether the user may choose to pay only a portion of the total_owed amount or whether the user must always pay the complete total_owed amount
+        min_amount:
+          type: string
+          format: float
+          example: "50.00"
+          description: The minimum amount that can be paid when `variable_amount` equals `true`. Note that this is a soft limit, so whenever `variable_amount` is `true` the user will be able to choose freely the amount to be paid, but it may be warned if the amount paid is inferior to `min_amount`. `min_amount` must be greater than "0" and less than "total_owed".
+
+
+    # ##############################################
     # SCHEMA PaymentMultipleOptions
     # ##############################################
     PaymentMultipleOptions:
