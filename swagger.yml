@@ -3922,7 +3922,7 @@ components:
           type: string
           format: float
           example: "123.50"
-          description: The total amount owed according to the invoice. **If `payable` equals `true` this must be a non negative number that’s greater than "0"**
+          description: The total amount owed according to the invoice. **If `payable` equals `true` this must be a non negative number that’s greater than or equal to "1"**
         type:
           type: string
           description: Type of format for the reference
@@ -4032,7 +4032,7 @@ components:
                 type: string
                 format: float
                 example: "123.50"
-                description: The payment amount for this option. A positive number.
+                description: The payment amount for this option. A number larger than or equal to 1.
               type:
                 type: string
                 description: Type of format for the reference
