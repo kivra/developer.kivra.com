@@ -830,8 +830,12 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
-  - name: "Partner API"
-    description: Endpoints for partner access to company mailboxes
+  - name: "Partner API v1"
+    description: |
+      Endpoints for partner access to company mailboxes.
+  - name: "Partner API v3"
+    description: |
+      Endpoints for partner access to company mailboxes.
 
 x-tagGroups:
   - name: Tenant API
@@ -4838,7 +4842,10 @@ components:
           example: false
           type: boolean
         interpreter:
-          description: Indicates if the interpreter service is active
+          deprecated: true
+          description: |
+            Used to indicate if the interpreter service is active. Now it is
+            always false.
           example: false
           type: boolean
         kivra:
@@ -4936,9 +4943,12 @@ components:
     # SCHEMA InterpretedLabel
     # ##############################################
     InterpretedLabel:
+      deprecated: true
       description: |
-        Indicates if the content has been interpreted.
+        Used to indicate if the content has been interpreted. Now it is always
+        set to `false`.
       type: boolean
+      example: false
 
     # ##############################################
     # SCHEMA ReminderLabel
@@ -4969,13 +4979,14 @@ components:
     # SCHEMA InterpretedFields
     # ##############################################
     InterpretedFields:
+      deprecated: true
       description: |
-        Key paths (dot-notation) identifying fields whose values came from the interpreter.
-        The paths are relative to the root of the object.
+        Used to indicate which fields, in dot notation, have been interpreted.
+        Now it is always set to the empty array.
       type: array
       items:
         type: string
-      example: ["labels.reminder", "sender_vat_numbers", "type"]
+      example: []
 
     # ##############################################
     # SCHEMA PartnerPaymentOption
@@ -5012,8 +5023,11 @@ components:
           format: date-time
           nullable: true
         interpreted:
-          description: True if and only if this payment option was interpreted
-          example: true
+          deprecated: true
+          description: |
+            Used to indicate if this payment option was interpreted. Now it is
+            always set to `false`.
+          example: false
           type: boolean
         reference:
           description: |
