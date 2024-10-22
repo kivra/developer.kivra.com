@@ -1,0 +1,35 @@
+get:
+  tags:
+    - "Partner API v1"
+  summary: Get metadata for a content.
+  operationId: Get content metadata
+  description:
+    This resource allows to get complete metadata information for a particular content.
+    <aside class="notice">
+    Depending on the `content_type` for each parts of the content, Kivra will return either a `key` to a binary file to be retrieved or (for text based contents) the `body` of the content itself.
+    </aside>
+  parameters:
+    - name: companyKey
+      in: path
+      description: The unique key for the company object being retrieved
+      required: true
+      schema:
+        description: Company's unique key
+        type: string
+    - name: contentKey
+      in: path
+      description: The unique key for a specific content
+      required: true
+      schema:
+        description: Content's unique key
+        type: string
+  security:
+    - oAuth2Client:
+        - "get:kivra.v1.partner.company.{companyKey}.**"
+  responses:
+    200:
+      description: Complete metadata for the specific content
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CompanyContent"

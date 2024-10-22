@@ -1,0 +1,35 @@
+get:
+  tags:
+    - "Partner API v3"
+  summary: List accessible companies
+  operationId: List companies
+  description: List the companies the client has access to
+  parameters:
+    - name: field
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/FieldQueryParameter"
+    - name: vat_number
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/VatNumber"
+  responses:
+    "200":
+      description: >
+        If `vat_number` is given, the repsonse will only include companies with VAT numbers in that list.
+        The `field` parameter controls which columns (CSV) or properties (JSON) to include in the response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BaseCompany"
+        text/csv:
+          schema:
+            type: string
+          example: |
+            key,type,name,vat_number
+            2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
+            Café AB,SE556000475501

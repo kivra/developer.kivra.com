@@ -1,0 +1,26 @@
+get:
+  tags:
+    - "Partner API v3"
+  summary: Company information
+  operationId: Get company information
+  description: |
+    Get detailed information for a single company.
+  parameters:
+    - name: companyKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/CompanyKey"
+    - name: field
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/FieldQueryParameter"
+  responses:
+    "200":
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/FullCompany"

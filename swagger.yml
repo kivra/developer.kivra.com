@@ -2803,409 +2803,55 @@ paths:
   # GET /v1/partner/company
   # ##############################################
   /v1/partner/company:
-    get:
-      tags:
-        - "Partner API v1"
-      summary: Lookup a specific company
-      operationId: Find Company
-      description: |
-        This resource allows a partner to look if a specific company has granted access to its mailbox.
-        <aside class="notice">
-        If a search is done and the Company doesn’t exist in Kivra or has not granted access to the partner, an empty list will be returned.
-        </aside>
-      parameters:
-        - name: vat_number
-          in: query
-          description: Perform a search to see if a specific Company is available for access
-          required: true
-          schema:
-            description: Company's unique VAT number
-            type: string
-            example: SE556840226601
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.partner.company"
-      responses:
-        200:
-          description: Company key for the company with the matching VAT number
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  key:
-                    description: Company's unique Key
-                    type: string
-                    example: "15236156848eefa1dc75364af2be38c98eb3aae223"
+    $ref: v1/partner/company.yaml
 
   # ##############################################
   # GET /v1/partner/company/COMPKEY/content
   # ##############################################
   /v1/partner/company/{companyKey}/content:
-    get:
-      tags:
-        - "Partner API v1"
-      summary: Get the company inbox
-      operationId: Get company inbox
-      description: This resource allows to access a high level description for each content in the company inbox, to allow for a first sorting and filtering of the content.
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.partner.company.{companyKey}"
-      responses:
-        200:
-          description: High level description of content items in the company inbox
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CompanyInbox"
+    $ref: v1/partner/company/{companyKey}/content.yaml
 
   # ##############################################
   # GET /v1/partner/company/COMPKEY/content/CONTKEY
   # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}:
-    get:
-      tags:
-        - "Partner API v1"
-      summary: Get metadata for a content.
-      operationId: Get content metadata
-      description:
-        This resource allows to get complete metadata information for a particular content.
-        <aside class="notice">
-        Depending on the `content_type` for each parts of the content, Kivra will return either a `key` to a binary file to be retrieved or (for text based contents) the `body` of the content itself.
-        </aside>
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-        - name: contentKey
-          in: path
-          description: The unique key for a specific content
-          required: true
-          schema:
-            description: Content's unique key
-            type: string
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.partner.company.{companyKey}.**"
-      responses:
-        200:
-          description: Complete metadata for the specific content
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CompanyContent"
+    $ref: v1/partner/company/{companyKey}/content/{contentKey}.yaml
 
   # ##############################################
   # GET /v1/partner/company/COMPKEY/content/CONTKEY/file/FKEY/raw
   # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw:
-    get:
-      tags:
-        - "Partner API v1"
-      summary: Get raw file in binary format
-      operationId: Get raw file
-      description: This resource allows to get the raw file in binary format.
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-        - name: contentKey
-          in: path
-          description: The unique key for a specific content
-          required: true
-          schema:
-            description: Content's unique key
-            type: string
-        - name: fileKey
-          in: path
-          description: The unique key for a specific file
-          required: true
-          schema:
-            description: File's unique key
-            type: string
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.partner.company.{companyKey}.**"
-      responses:
-        200:
-          description: The content type will be the same as the file, so for a typical pdf it will be `application/pdf`
-          content:
-            application/json:
-              schema:
-                type: string
-                format: binary
+    $ref: v1/partner/company/{companyKey}/content/{contentKey}/file/{fileKey}/raw.yaml
 
   # ##############################################
   # POST /v1/partner/company/COMPKEY/content/CONTKEY/STATUS
   # ##############################################
   /v1/partner/company/{companyKey}/content/{contentKey}/{status}:
-    post:
-      tags:
-        - "Partner API v1"
-      summary: Set status for content
-      operationId: Set status for content
-      description: This resource allows to set the status for a specific content. It is used by the partner to set whether the content should be marked as viewed or paid.
-      parameters:
-        - name: companyKey
-          in: path
-          description: The unique key for the company object being retrieved
-          required: true
-          schema:
-            description: Company's unique key
-            type: string
-        - name: contentKey
-          in: path
-          description: The unique key for a specific content
-          required: true
-          schema:
-            description: Content's unique key
-            type: string
-        - name: status
-          in: path
-          description: The specific state to be set for this content, can be `paid`, `unpaid`, `view` or `unview`
-          required: true
-          schema:
-            description: The new state to be set for the content
-            type: string
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.partner.company.{companyKey}.**"
-      responses:
-        204:
-          description: empty response confirming that the operation was successful
-      requestBody:
-        description: empty JSON body
-        content:
-          application/json:
-            schema: {}
+    $ref: v1/partner/company/{companyKey}/content/{contentKey}/{status}.yaml
 
   # ##############################################
   # GET /v3/partner/company
   # ##############################################
   /v3/partner/company:
-    get:
-      tags:
-        - "Partner API v3"
-      summary: List accessible companies
-      operationId: List companies
-      description: List the companies the client has access to
-      parameters:
-        - name: field
-          in: query
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/FieldQueryParameter"
-        - name: vat_number
-          in: query
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/VatNumber"
-      responses:
-        "200":
-          description: >
-            If `vat_number` is given, the repsonse will only include companies with VAT numbers in that list.
-            The `field` parameter controls which columns (CSV) or properties (JSON) to include in the response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseCompany"
-            text/csv:
-              schema:
-                example: |
-                  key,type,name,vat_number
-                  2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
-                  Café AB,SE556000475501
-                type: string
+    $ref: v3/partner/company.yaml
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY
   # ##############################################
   /v3/partner/company/{companyKey}:
-    get:
-      tags:
-        - "Partner API v3"
-      summary: Get a single company
-      operationId: Get company
-      description: Get a single company
-      parameters:
-        - name: companyKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/CompanyKey"
-        - name: field
-          in: query
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/FieldQueryParameter"
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FullCompany"
+    $ref: v3/partner/company/{companyKey}.yaml
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY/content
   # ##############################################
   /v3/partner/company/{companyKey}/content:
-    get:
-      tags:
-        - "Partner API v3"
-      summary: List company inbox content
-      operationId: GET_company-companyKey-content
-      description: |
-        List the content this company has received.
-        This may be filtered by certain `labels` and specific fields may be selected using `field`.
-
-        Note that more content metadata is available via the
-        [Get specific content](#tag/Partner-API-v3/operation/Get%20content) endpoint.
-      parameters:
-        - name: companyKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/CompanyKey"
-        - name: handled
-          in: query
-          schema:
-            $ref: "#/components/schemas/HandledLabel"
-        - name: viewed
-          in: query
-          schema:
-            $ref: "#/components/schemas/ViewedLabel"
-        - name: field
-          in: query
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/FieldQueryParameter"
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/BaseContentMetadata"
+    $ref: v3/partner/company/{companyKey}/content.yaml
 
   # ##############################################
   # GET,PATCH /v3/partner/company/COMPKEY/content/CONTKEY
   # ##############################################
   /v3/partner/company/{companyKey}/content/{contentKey}:
-    get:
-      tags:
-        - "Partner API v3"
-      summary: Get specific content
-      description: |
-        ### Content metadata
-
-        Get metadata about a specific content in JSON format.
-
-        If the interpreter service is enabled for a recipient, it can add structured metadata to content which has been received.
-        The `interpreted` label indicates if the interpreter has run for a given content.
-        Interpreted data is never used in place of metadata provided by the sender or Kivra, it can only be added.
-        Any property of the response that was added by the interpreter is clearly identified as such.
-        If an interpreted property is an object, it will have an `interpreted` property which is `true`.
-        If an interpreted property is a primitive value, its key path will be present in the `interpreted_fields` property.
-        See the response schema below for details.
-
-        ### Content file data
-
-        A given content can contain multiple files ("parts"). Fetching of such parts is done by passing the `part` query parameter.
-
-        A part can also be selected by setting the `Accept` header to the MIME type of the part you want
-        (see `parts` in the metadata JSON response). You will receive the first part that matches the given
-        MIME type.
-      operationId: Get content
-      parameters:
-        - name: companyKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/CompanyKey"
-        - name: contentKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ContentKey"
-        - name: part
-          in: query
-          schema:
-            $ref: "#/components/schemas/PartQueryParameter"
-      responses:
-        "200":
-          description: Content metadata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FullContentMetadata"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContentPart"
-    patch:
-      tags:
-        - "Partner API v3"
-      summary: Update content metadata
-      operationId: Update content metadata
-      parameters:
-        - name: companyKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/CompanyKey"
-        - name: contentKey
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ContentKey"
-      responses:
-        "200":
-          description: Content metadata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FullContentMetadata"
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/ContentPart"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              additionalProperties: false
-              properties:
-                handled:
-                  description: Mark the content as `handled`/`unhandled`
-                  $ref: "#/components/schemas/HandledLabel"
-                viewed:
-                  description: Mark the content as `viewed`/`unviewed`
-                  $ref: "#/components/schemas/ViewedLabel"
-              type: object
-        required: true
+    $ref: v3/partner/company/{companyKey}/content/{contentKey}.yaml
 
 components:
   schemas:

@@ -1,0 +1,34 @@
+get:
+  tags:
+    - "Partner API v1"
+  summary: Lookup a specific company
+  operationId: Find Company
+  description: |
+    This resource allows a partner to look if a specific company has granted access to its mailbox.
+    <aside class="notice">
+    If a search is done and the Company doesn’t exist in Kivra or has not granted access to the partner, an empty list will be returned.
+    </aside>
+  parameters:
+    - name: vat_number
+      in: query
+      description: Perform a search to see if a specific Company is available for access
+      required: true
+      schema:
+        description: Company's unique VAT number
+        type: string
+        example: SE556840226601
+  security:
+    - oAuth2Client:
+        - "get:kivra.v1.partner.company"
+  responses:
+    200:
+      description: Company key for the company with the matching VAT number
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              key:
+                description: Company's unique Key
+                type: string
+                example: "15236156848eefa1dc75364af2be38c98eb3aae223"

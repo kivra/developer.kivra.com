@@ -1,0 +1,40 @@
+get:
+  tags:
+    - "Partner API v3"
+  summary: List company inbox
+  operationId: List content in the company inbox
+  description: |
+    List the content the company has received.
+    This may be filtered by certain `labels` and specific fields may be selected using `field`.
+
+    Note that more content metadata is available via the
+    [Get specific content](#tag/Partner-API-v3/operation/Get%20content) endpoint.
+  parameters:
+    - name: companyKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/CompanyKey"
+    - name: handled
+      in: query
+      schema:
+        $ref: "#/components/schemas/HandledLabel"
+    - name: viewed
+      in: query
+      schema:
+        $ref: "#/components/schemas/ViewedLabel"
+    - name: field
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/FieldQueryParameter"
+  responses:
+    "200":
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/BaseContentMetadata"

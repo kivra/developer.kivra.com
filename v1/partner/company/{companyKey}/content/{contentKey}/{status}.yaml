@@ -1,0 +1,39 @@
+post:
+  tags:
+    - "Partner API v1"
+  summary: Set status for content
+  operationId: Set status for content
+  description: This resource allows to set the status for a specific content. It is used by the partner to set whether the content should be marked as viewed or paid.
+  parameters:
+    - name: companyKey
+      in: path
+      description: The unique key for the company object being retrieved
+      required: true
+      schema:
+        description: Company's unique key
+        type: string
+    - name: contentKey
+      in: path
+      description: The unique key for a specific content
+      required: true
+      schema:
+        description: Content's unique key
+        type: string
+    - name: status
+      in: path
+      description: The specific state to be set for this content, can be `paid`, `unpaid`, `view` or `unview`
+      required: true
+      schema:
+        description: The new state to be set for the content
+        type: string
+  security:
+    - oAuth2Client:
+        - "get:kivra.v1.partner.company.{companyKey}.**"
+  responses:
+    204:
+      description: empty response confirming that the operation was successful
+  requestBody:
+    description: empty JSON body
+    content:
+      application/json:
+        schema: {}

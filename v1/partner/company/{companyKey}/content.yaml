@@ -1,0 +1,26 @@
+get:
+  tags:
+    - "Partner API v1"
+  summary: Get the company inbox
+  operationId: Get company inbox
+  description: This resource allows to access a high level description for each content in the company inbox, to allow for a first sorting and filtering of the content.
+  parameters:
+    - name: companyKey
+      in: path
+      description: The unique key for the company object being retrieved
+      required: true
+      schema:
+        description: Company's unique key
+        type: string
+  security:
+    - oAuth2Client:
+        - "get:kivra.v1.partner.company.{companyKey}"
+  responses:
+    200:
+      description: High level description of content items in the company inbox
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CompanyInbox"
