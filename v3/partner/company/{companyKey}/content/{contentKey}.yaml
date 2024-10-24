@@ -1,0 +1,86 @@
+get:
+  tags:
+    - "Partner API v3"
+  summary: Get specific content
+  description: |
+    ### Content metadata
+
+    Get metadata about a specific content in JSON format.
+
+    ### Content file data
+
+    A given content can contain multiple files ("parts"). Fetching of such parts is done by passing the `part` query parameter.
+
+    A part can also be selected by setting the `Accept` header to the MIME type of the part you want
+    (see `parts` in the metadata JSON response). You will receive the first part that matches the given
+    MIME type.
+  operationId: Get a specific company content
+  parameters:
+    - name: companyKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/CompanyKey"
+    - name: contentKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/ContentKey"
+    - name: part
+      in: query
+      schema:
+        $ref: "#/components/schemas/PartQueryParameter"
+  responses:
+    "200":
+      description: Content metadata
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/FullContentMetadata"
+        "*/*":
+          schema:
+            $ref: "#/components/schemas/ContentPart"
+patch:
+  tags:
+    - "Partner API v3"
+  summary: Update content metadata
+  operationId: Update company content metadata
+  parameters:
+    - name: companyKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/CompanyKey"
+    - name: contentKey
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/ContentKey"
+  responses:
+    "200":
+      description: Content metadata
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/FullContentMetadata"
+        "*/*":
+          schema:
+            $ref: "#/components/schemas/ContentPart"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          additionalProperties: false
+          properties:
+            labels:
+              additionalProperties: false
+              properties:
+                handled:
+                  description: Mark the content as `handled`/`unhandled`
+                  $ref: "#/components/schemas/HandledLabel"
+                viewed:
+                  description: Mark the content as `viewed`/`unviewed`
+                  $ref: "#/components/schemas/ViewedLabel"
+              type: object
+          type: object
+    required: true
