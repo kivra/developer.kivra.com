@@ -3374,10 +3374,11 @@ components:
             - `"letter.salary"`: indicating that the content is a salary specification.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice.
             - `"letter.form"`: indicating that the content contains a form.
-            - `"invite.research"` for invitations to participate in surveys and polls
-            - `"invite.gift"` for invitations to collect a gift
-            - `"invite.sign"` for invitations to sign a document
-            - `"invite.voucher"` for invitations to use a voucher
+            - `"letter.signed"`: indicates that the content contains a signed document
+            - `"invite.research"`: for invitations to participate in surveys and polls
+            - `"invite.gift"`: for invitations to collect a gift
+            - `"invite.sign"`: for invitations to sign a document
+            - `"invite.voucher"`: for invitations to use a voucher
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
@@ -4830,7 +4831,7 @@ components:
           type: string
           example: "Brush your teeth before coming"
         info_url:
-          description: Link to page with additional information
+          description: Link to page with additional information. The url must use the secure HTTPS protocol
           type: string
           format: uri
 
@@ -4890,7 +4891,7 @@ components:
             The nuttiest sound around
         uri:
           type: string
-          description: The uri to open when the user clicks the invitation
+          description: The uri to open when the user clicks the invitation. The uri must use the secure HTTPS protocol
           example: https://example.com
         behalf_of:
           type: object
@@ -4926,7 +4927,7 @@ components:
       properties:
         uri:
           type: string
-          description: The uri to open when the user clicks the invitation
+          description: The uri to open when the user clicks the invitation. The uri must use the secure HTTPS protocol
           example: https://example.com
         behalf_of:
           type: object
@@ -4969,7 +4970,7 @@ components:
               type: string
         uri:
           type: string
-          description: The uri to open when the user clicks the invitation
+          description: The uri to open when the user clicks the invitation. The uri must use the secure HTTPS protocol
           example: https://example.com
         behalf_of:
           type: object
@@ -5005,7 +5006,7 @@ components:
       properties:
         service_provider:
           type: object
-          description: The service provider used for signing the document. 
+          description: The service provider used for signing the document.
           required:
             - name
           properties:
@@ -5013,7 +5014,7 @@ components:
               type: string
         uri:
           type: string
-          description: The uri to open when the user clicks the document
+          description: The uri to open when the user clicks the document. The uri must use the secure HTTPS protocol
           example: https://example.com
         behalf_of:
           type: object
