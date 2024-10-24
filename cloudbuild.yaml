@@ -2,30 +2,7 @@ steps:
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
     args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp index.html swagger.yml "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
-  - name: "gcr.io/cloud-builders/gsutil"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r receipt "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
-  - name: "gcr.io/cloud-builders/gsutil"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r assets "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
-  - name: "gcr.io/cloud-builders/gsutil"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp index.html swagger.yml "gs://developer.kivra.com/" || echo "skipping . . ."'
-  - name: "gcr.io/cloud-builders/gsutil"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp -r receipt "gs://developer.kivra.com/" || echo "skipping . . ."'
-  - name: "gcr.io/cloud-builders/gsutil"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp -r assets "gs://developer.kivra.com/" || echo "skipping . . ."'
+      - "script/cloudbuild.sh"
+      # BRANCH_NAME is not an environment variable, but a Cloud Build substitution variable.
+      # https://cloud.google.com/cloud-build/docs/configuring-builds/substitute-variable-values
+      - "$BRANCH_NAME"
