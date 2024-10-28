@@ -43,7 +43,7 @@ info:
 
 
     ## The service
-    Kivra is a secure digital mailbox tied to your personal or company identity 
+    Kivra is a secure digital mailbox tied to your personal or company identity
     in which you receive documents from companies, organizations
     and government agencies that are connected to Kivra. With Kivra you can
     receive, manage and archive your content wherever you are and on every
@@ -108,8 +108,8 @@ info:
     | 2023-11-22 | Added campaigns by tag to content |
     | 2023-11-23 | Grace period changed from 45 to 10 days |
     | 2023-12-11 | Declared v1 of content & payment metadata as obsolete, added type and subject as mandatory |
-    | 2023-12-12 | Removed Forms BETA tags since all Forms features are live | 
-    | 2024-03-21 | Added Invite to content with BETA tags | 
+    | 2023-12-12 | Removed Forms BETA tags since all Forms features are live |
+    | 2024-03-21 | Added Invite to content with BETA tags |
     | 2024-09-18 | Removed Invite BETA tags since invite features are live |
     | 2024-09-30 | Removed obsolete `v1` of `content` endpoint and `payment` structure |
 
@@ -464,8 +464,8 @@ info:
 
     Kivra's agreement service is not directly connected to Kivra's mailbox, and parties in an agreement do not need to be users of Kivra to use the service. However signers that are users of Kivra (or become Kivra users during the signing process) will have the benefit that the covenant file will be automatically transferred to their mailbox once the agreement is signed.
 
-    Note: the Signatures service works best when the original PDF content is an A4 document with all its pages in portrait mode. If size and orientation are different, 
-    the resulting covenant might look stretched, while the original document (included in the covenant) will be preserved in its original 
+    Note: the Signatures service works best when the original PDF content is an A4 document with all its pages in portrait mode. If size and orientation are different,
+    the resulting covenant might look stretched, while the original document (included in the covenant) will be preserved in its original
     size and orientation.
 
     ## Signers, Delegates and Parties
@@ -830,8 +830,12 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
-  - name: "Partner API"
-    description: Endpoints for partner access to company mailboxes
+  - name: "Partner API v1"
+    description: |
+      Endpoints for partner access to company mailboxes.
+  - name: "Partner API v3"
+    description: |
+      Endpoints for partner access to company mailboxes.
 
 x-tagGroups:
   - name: Tenant API
@@ -1262,7 +1266,7 @@ paths:
       summary: List available recipient users for a tenant (LEGACY)
       operationId: List Users
       description: |
-        LEGACY: This resource is only supported for existing customers, new integrations 
+        LEGACY: This resource is only supported for existing customers, new integrations
         should use the `usermatch` resource.
 
         This resource is used to list all or search for users that are eligible
@@ -1337,7 +1341,7 @@ paths:
         List recipient users that were added/removed since a previous request (LEGACY)
       operationId: List Users Diff
       description: |
-        LEGACY: This resource is only supported for existing customers, new integrations 
+        LEGACY: This resource is only supported for existing customers, new integrations
         should use the `usermatch` resource.
 
         This resource is used to list users that were added/removed since
@@ -1349,7 +1353,7 @@ paths:
         every 31 days.
         Also, due to the fact that grace period for users leaving Kivra is 10 days, after which
         all data about the user is erased from Kivra, it is crucial
-        that a new DIFF is requested at least once every 10 days to make sure that the list 
+        that a new DIFF is requested at least once every 10 days to make sure that the list
         of removed users is complete.
       parameters:
         - name: tenantKey
@@ -3045,11 +3049,11 @@ paths:
                 $ref: "#/components/schemas/BaseCompany"
             text/csv:
               schema:
-                example: |
-                  key,type,name,vat_number
-                  2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
-                  Café AB,SE556000475501
                 type: string
+              example: |
+                key,type,name,vat_number
+                2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
+                Café AB,SE556000475501
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY
@@ -3058,9 +3062,10 @@ paths:
     get:
       tags:
         - "Partner API v3"
-      summary: Get a single company
-      operationId: Get company
-      description: Get a single company
+      summary: Company information
+      operationId: Get company information
+      description: |
+        Get detailed information for a single company.
       parameters:
         - name: companyKey
           in: path
@@ -3088,10 +3093,10 @@ paths:
     get:
       tags:
         - "Partner API v3"
-      summary: List company inbox content
-      operationId: GET_company-companyKey-content
+      summary: List company inbox
+      operationId: List content in the company inbox
       description: |
-        List the content this company has received.
+        List the content the company has received.
         This may be filtered by certain `labels` and specific fields may be selected using `field`.
 
         Note that more content metadata is available via the
@@ -3139,14 +3144,6 @@ paths:
 
         Get metadata about a specific content in JSON format.
 
-        If the interpreter service is enabled for a recipient, it can add structured metadata to content which has been received.
-        The `interpreted` label indicates if the interpreter has run for a given content.
-        Interpreted data is never used in place of metadata provided by the sender or Kivra, it can only be added.
-        Any property of the response that was added by the interpreter is clearly identified as such.
-        If an interpreted property is an object, it will have an `interpreted` property which is `true`.
-        If an interpreted property is a primitive value, its key path will be present in the `interpreted_fields` property.
-        See the response schema below for details.
-
         ### Content file data
 
         A given content can contain multiple files ("parts"). Fetching of such parts is done by passing the `part` query parameter.
@@ -3154,7 +3151,7 @@ paths:
         A part can also be selected by setting the `Accept` header to the MIME type of the part you want
         (see `parts` in the metadata JSON response). You will receive the first part that matches the given
         MIME type.
-      operationId: Get content
+      operationId: Get a specific company content
       parameters:
         - name: companyKey
           in: path
@@ -3184,7 +3181,7 @@ paths:
       tags:
         - "Partner API v3"
       summary: Update content metadata
-      operationId: Update content metadata
+      operationId: Update company content metadata
       parameters:
         - name: companyKey
           in: path
@@ -3212,12 +3209,16 @@ paths:
             schema:
               additionalProperties: false
               properties:
-                handled:
-                  description: Mark the content as `handled`/`unhandled`
-                  $ref: "#/components/schemas/HandledLabel"
-                viewed:
-                  description: Mark the content as `viewed`/`unviewed`
-                  $ref: "#/components/schemas/ViewedLabel"
+                labels:
+                  additionalProperties: false
+                  properties:
+                    handled:
+                      description: Mark the content as `handled`/`unhandled`
+                      $ref: "#/components/schemas/HandledLabel"
+                    viewed:
+                      description: Mark the content as `viewed`/`unviewed`
+                      $ref: "#/components/schemas/ViewedLabel"
+                  type: object
               type: object
         required: true
 
@@ -3392,7 +3393,7 @@ components:
               This content types enables long due dates with a longer notification scheme
             - `"invoice.renewal"`: |
               indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
-              It can be used to send an offer to renew a subscription, insurance or similar. 
+              It can be used to send an offer to renew a subscription, insurance or similar.
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"invoice.debtcollection"`: |
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
@@ -4019,7 +4020,7 @@ components:
             user choses to pay this invoice with Swish. The alias given must be
             one that is listed as available for the sender, or Swish will not be
             offered as a payment alternative. The value can be the string
-            `disable`, in order to override a default payee alias and disable 
+            `disable`, in order to override a default payee alias and disable
             Swish payment for this invoice only.
         currency:
           type: string
@@ -5255,7 +5256,10 @@ components:
           example: false
           type: boolean
         interpreter:
-          description: Indicates if the interpreter service is active
+          deprecated: true
+          description: |
+            Used to indicate if the interpreter service is active. Now it is
+            always false.
           example: false
           type: boolean
         kivra:
@@ -5353,9 +5357,12 @@ components:
     # SCHEMA InterpretedLabel
     # ##############################################
     InterpretedLabel:
+      deprecated: true
       description: |
-        Indicates if the content has been interpreted.
+        Used to indicate if the content has been interpreted. Now it is always
+        set to `false`.
       type: boolean
+      example: false
 
     # ##############################################
     # SCHEMA ReminderLabel
@@ -5386,13 +5393,14 @@ components:
     # SCHEMA InterpretedFields
     # ##############################################
     InterpretedFields:
+      deprecated: true
       description: |
-        Key paths (dot-notation) identifying fields whose values came from the interpreter.
-        The paths are relative to the root of the object.
+        Used to indicate which fields, in dot notation, have been interpreted.
+        Now it is always set to the empty array.
       type: array
       items:
         type: string
-      example: ["labels.reminder", "sender_vat_numbers", "type"]
+      example: []
 
     # ##############################################
     # SCHEMA PartnerPaymentOption
@@ -5429,8 +5437,11 @@ components:
           format: date-time
           nullable: true
         interpreted:
-          description: True if and only if this payment option was interpreted
-          example: true
+          deprecated: true
+          description: |
+            Used to indicate if this payment option was interpreted. Now it is
+            always set to `false`.
+          example: false
           type: boolean
         reference:
           description: |
