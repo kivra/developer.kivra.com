@@ -830,8 +830,12 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
-  - name: "Partner API"
-    description: Endpoints for partner access to company mailboxes
+  - name: "Partner API v1"
+    description: |
+      Endpoints for partner access to company mailboxes.
+  - name: "Partner API v3"
+    description: |
+      Endpoints for partner access to company mailboxes.
 
 x-tagGroups:
   - name: Tenant API
@@ -3031,11 +3035,11 @@ paths:
                 $ref: "#/components/schemas/BaseCompany"
             text/csv:
               schema:
-                example: |
-                  key,type,name,vat_number
-                  2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
-                  Café AB,SE556000475501
                 type: string
+              example: |
+                key,type,name,vat_number
+                2156077433683911cdca5fd4563bded979572454cb9,company,Cornelias
+                Café AB,SE556000475501
 
   # ##############################################
   # GET /v3/partner/company/COMPKEY
@@ -3044,9 +3048,10 @@ paths:
     get:
       tags:
         - "Partner API v3"
-      summary: Get a single company
-      operationId: Get company
-      description: Get a single company
+      summary: Company information
+      operationId: Get company information
+      description: |
+        Get detailed information for a single company.
       parameters:
         - name: companyKey
           in: path
@@ -3074,10 +3079,10 @@ paths:
     get:
       tags:
         - "Partner API v3"
-      summary: List company inbox content
-      operationId: GET_company-companyKey-content
+      summary: List company inbox
+      operationId: List content in the company inbox
       description: |
-        List the content this company has received.
+        List the content the company has received.
         This may be filtered by certain `labels` and specific fields may be selected using `field`.
 
         Note that more content metadata is available via the
@@ -3140,7 +3145,7 @@ paths:
         A part can also be selected by setting the `Accept` header to the MIME type of the part you want
         (see `parts` in the metadata JSON response). You will receive the first part that matches the given
         MIME type.
-      operationId: Get content
+      operationId: Get a specific company content
       parameters:
         - name: companyKey
           in: path
@@ -3170,7 +3175,7 @@ paths:
       tags:
         - "Partner API v3"
       summary: Update content metadata
-      operationId: Update content metadata
+      operationId: Update company content metadata
       parameters:
         - name: companyKey
           in: path
