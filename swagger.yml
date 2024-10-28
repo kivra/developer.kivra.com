@@ -3203,12 +3203,16 @@ paths:
             schema:
               additionalProperties: false
               properties:
-                handled:
-                  description: Mark the content as `handled`/`unhandled`
-                  $ref: "#/components/schemas/HandledLabel"
-                viewed:
-                  description: Mark the content as `viewed`/`unviewed`
-                  $ref: "#/components/schemas/ViewedLabel"
+                labels:
+                  additionalProperties: false
+                  properties:
+                    handled:
+                      description: Mark the content as `handled`/`unhandled`
+                      $ref: "#/components/schemas/HandledLabel"
+                    viewed:
+                      description: Mark the content as `viewed`/`unviewed`
+                      $ref: "#/components/schemas/ViewedLabel"
+                  type: object
               type: object
         required: true
 
