@@ -1659,8 +1659,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CompanyList"
-        400:
-          description: Bad Request — e.g., Luhn algorithm validation failed for the provided `vat_number`.
 
   /v2/tenant/{tenantKey}/company:
     get:
