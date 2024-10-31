@@ -828,6 +828,11 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
+  - name: "Tenant API - Scanning Partner"
+    description: |
+      Endpoints used for sending and handling scanned physical mail. 
+
+      These endpoints are restricted only to specific Tenants.
   - name: "Partner API"
     description: Endpoints for partner access to company mailboxes
 
@@ -838,6 +843,7 @@ x-tagGroups:
       - "Tenant API - Forms"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
+      - "Tenant API - Scanning Partner"
   - name: Partner API
     tags:
       - "Partner API v1"
@@ -1647,8 +1653,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CompanyList"
-        400:
-          description: Bad Request — e.g., Luhn algorithm validation failed for the provided `vat_number`.
 
   # ##############################################
   # POST /v1/tenant/TKEY/content
@@ -3010,6 +3014,185 @@ paths:
                   sha256:
                     description: the signature to verify the file's authenticity
                     type: string
+
+
+  /v2/tenant/1487261078e76ef6ff5f94458b921dadea18c5312b/content:
+    post:
+      tags:
+        - "Tenant API - Scanning Partner"
+      summary: Send scanned content
+      operationId: Send scanned content
+      description: |
+        Used to send scanned mail to a Company Recipient.
+
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.1487261078e76ef6ff5f94458b921dadea18c5312b.content"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - vat_number
+                - subject
+                - type
+                - parts
+                - scanning
+              properties:
+                vat_number:
+                  pattern: ^SE[0-9]{10}01$
+                  description: The recipient's Swedish VAT number ("momsregistreringsnummer").
+                  example: SE556000475501
+                  type: string
+                subject:
+                  description: The content's subject. For scanned content, this can always be `"Skannad post via Kivra"`.
+                  type: string
+                  example: "Skannad post via Kivra"
+                type:
+                  type: string
+                  example: "letter.physical"
+                  description: |
+                    For scanned content, the type is always `letter.physical`.
+                parts:
+                  description: Array of file objects.
+                  type: array
+                  writeOnly: true
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - data
+                      - content_type
+                    properties:
+                      name:
+                        description: Name of the file.
+                        type: string
+                        example: document.pdf
+                      data:
+                        description: Base64-encoded data for the PDF content.
+                        type: string
+                        format: "Base64-encoded data"
+                        example: REVBREJFRUY=
+                      content_type:
+                        description: The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media type for PDF files: `"application/pdf"`.
+                        type: string
+                        example: "application/pdf"
+                scanning:
+                  description: Additional data required for scanned content.
+                  type: object
+                  required:
+                    - first_pagination_number
+                    - last_pagination_number
+                  properties:
+                      first_pagination_number:
+                        description: First pagination number.
+                        type: string
+                        example: "2401111KIVRA11114711"
+                      last_pagination_number:
+                        description: Last pagination number.
+                        type: string
+                        example: "2401111KIVRA11114712"
+      responses:
+        201:
+          description: Content sent succesfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject:
+                    type: string
+                    example: "Skannad post via Kivra"
+                  generated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-12T10:14:32Z"
+                  type:
+                    type: string
+                    example: "letter.physical"
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+        401:
+          description: (40105) The company is not eligible to receive scanned content.
+          headers:
+            x-error-code:
+              schema:
+                type: string
+                enum: ["40105"]
+        413:
+          description: Payload (file size) exceeded the maximum allowed size.
+                
+
+  # ##############################################
+  # GET /v2/tenant/TKEY/scanning_fallback_address/VATNR
+  # ##############################################
+  /v2/tenant/{tenantKey}/scanning_fallback_address/{vatNumber}:
+    get:
+      tags:
+        - "Tenant API - Scanning Partner"
+      summary: Get the scanning fallback address of a company
+      operationId: Get scanning fallback address
+      description: |
+          Used to get the address to which mail should be forwarded physically,
+          in cases where sending digitally via Kivra is not possible.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key of a Tenant.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: vatNumber
+          in: path
+          description: The VAT number of the concerned company.
+          required: true
+          schema:
+            type: string
+            example: SE556840226601
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}.scanning_fallback_address.{vatNumber}"
+      responses:
+        200:
+          description: The company's scanning fallback address.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    description: Name of addressee
+                    type: string
+                    example: "Kivra AB"
+                  street:
+                    description: Street address
+                    type: string
+                    example: "Klara Norra Kyrkogata 33"
+                  city:
+                    description: City
+                    type: string
+                    example: "Stockholm"
+                  postal_code:
+                    description: Postal code
+                    type: string
+                    example: "111 22"
+                  country:
+                    description: Country
+                    type: string
+                    example: "Sverige"
+                  care_of:
+                    description: Care of (c/o)
+                    type: string
+                    example: "IT-avdelningen"
+        404:
+          description: The company does not have an associated scanning fallback address.
+                  
 
   # ##############################################
   # GET /v1/partner/company
