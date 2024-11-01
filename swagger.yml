@@ -2429,7 +2429,7 @@ paths:
             format: hexadecimal
         - name: formTemplateKey
           in: path
-          description: The form template key associated with the form template.
+          description: The form template key associated with the form template
           required: true
           schema:
             type: string
