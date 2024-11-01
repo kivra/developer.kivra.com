@@ -5005,7 +5005,7 @@ components:
       properties:
         service_provider:
           type: object
-          description: The service provider used for signing the document.
+          description: The service provider used for signing the document
           required:
             - name
           properties:
