@@ -2422,14 +2422,14 @@ paths:
       parameters:
         - name: tenantKey
           in: path
-          description: The unique key for a tenant for whom the form template belongs to.
+          description: The unique key for a tenant for whom the form template belongs to
           required: true
           schema:
             type: string
             format: hexadecimal
         - name: formTemplateKey
           in: path
-          description: The form template key associated with the form template.
+          description: The form template key associated with the form template
           required: true
           schema:
             type: string
