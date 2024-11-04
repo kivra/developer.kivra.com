@@ -1838,9 +1838,9 @@ paths:
         </aside>
 
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
-        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the default amount of time (*30 days*). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
+        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the specified amount of time (*30 days* is the default value oif nothing else is specified). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
 
-        If an integrator want to retain a Content for a another time-period than Kivra’s default if can be done via the `retention_time` additional metadata.
+        Integrators that want to retain a Content for a different time-period than Kivra’s default can use the `retention_time` metadata.
 
         ## Duplicate control
         If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
