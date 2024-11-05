@@ -1838,7 +1838,7 @@ paths:
         </aside>
 
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
-        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the specified amount of time (*30 days* is the default value oif nothing else is specified). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
+        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the specified amount of time (*30 days* is the default value if nothing else is specified). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
 
         Integrators that want to retain a Content for a different time-period than Kivra’s default can use the `retention_time` metadata.
 
