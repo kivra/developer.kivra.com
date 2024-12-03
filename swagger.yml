@@ -5035,6 +5035,9 @@ components:
           type: string
           nullable: true
           example: "2024-05-09T13:42:26Z"
+        description:
+          type: string
+          description: Additional information. Note! Don't include any personal or sensitive information here.
 
     # ##############################################
     # SCHEMA Campaign
