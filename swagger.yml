@@ -2268,6 +2268,7 @@ paths:
                     service_provider:
                       name: "Signature AB"
                     expires_at: "2024-12-12T12:00:00Z"
+                    description: "Please sign the document"
               form to user:
                 value:
                   ssn: "191212121212"
