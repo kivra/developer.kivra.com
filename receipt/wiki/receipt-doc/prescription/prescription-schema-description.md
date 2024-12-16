@@ -82,7 +82,7 @@ _animal_ has one property
 ```
 
 #### Medication list
-The medication list is can be used on both animal and human prescriptions. This an animal example.
+The medication list can be used on both animal and human prescriptions. This an animal example.
 - _medications_:  a list of medications issued and cost.
 ```json
 {
