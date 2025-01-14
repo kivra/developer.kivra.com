@@ -273,34 +273,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
                 invalid_body:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                invalid_schema_format:
+                    code: "40000"
+                    short_message: "bad_request"
+                    long_message: "body is missing required fields or has invalid fields"
+                invalid_content_type:
                   value:
-                    error_code: "40003"
-                    error_message: "unsupported schema format"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                person_not_found:
-                  value:
-                    error_code: "40005"
-                    error_message: "person not found"
-                duplicate_receipt_id:
-                  value:
-                    error_code: "40006"
-                    error_message: "duplicate receipt id"
-                greenbin_not_activated:
-                  value:
-                    error_code: "40022"
-                    error_message: "greenbin has not been activated"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "unsupported content type header"
         "401":
           description: Unauthorized access
           content:
@@ -308,22 +290,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                unauthorized:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                store_blocked:
-                  value:
-                    error_code: "40104"
-                    error_message: "Store is blocked"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
+                    error_detail: "invalid service_id"
         "500":
           $ref: "#/components/responses/InternalError"
   "/dr/v1/receipts/{receiptID}":
@@ -356,10 +340,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                resource_not_found:
+                unauthorized:
                   value:
-                    error_code: "40004"
-                    error_message: "resource not found"
+                    code: "40010"
+                    short_message: "bad request"
+                    long_message: "unknown url paramter"
         "401":
           description: Unauthorized
           content:
@@ -367,22 +352,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/chains:
@@ -454,24 +440,14 @@ paths:
               examples:
                 missing_body:
                   value:
-                    error_code: "40000"
-                    error_message: "body is missing from the request"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                vat_exists:
-                  value:
-                    error_code: "40007"
-                    error_message: "company with the given vat exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "unsupported content type header"
         "401":
           description: Unauthorized
           content:
@@ -479,18 +455,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                vat_exists:
                   value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
+                    code: "40900"
+                    short_message: "conflict"
+                    long_message: "company with the given vat exists"
         "500":
           $ref: "#/components/responses/InternalError"
     get:
@@ -539,21 +532,6 @@ paths:
                     country: SWE
                   icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                id_not_provided:
-                  value:
-                    error_code: "40009"
-                    error_message: "required id not provided"
         "401":
           description: Unauthorized
           content:
@@ -561,22 +539,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"            
   /dr/v1/chains/{chainID}:
@@ -633,24 +612,14 @@ paths:
               examples:
                 missing_body:
                   value:
-                    error_code: "40000"
-                    error_message: "body is missing from the request"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                vat_exists:
-                  value:
-                    error_code: "40007"
-                    error_message: "company with the given vat exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "unsupported content type header"
         "401":
           description: Unauthorized
           content:
@@ -658,22 +627,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                vat_exists:
                   value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40900"
+                    short_message: "conflict"
+                    long_message: "company with the given vat exists"
         "500":
           $ref: "#/components/responses/InternalError"
     get:
@@ -709,21 +691,6 @@ paths:
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                 logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                id_not_provided:
-                  value:
-                    error_code: "40009"
-                    error_message: "required id not provided"
         "401":
           description: Unauthorized
           content:
@@ -731,22 +698,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"   
   /dr/v1/chains/{chainID}/stores:
@@ -801,21 +769,6 @@ paths:
                     country: SWE
                   icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                id_not_provided:
-                  value:
-                    error_code: "40009"
-                    error_message: "required id not provided"
         "401":
           description: Unauthorized
           content:
@@ -823,22 +776,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"            
   /dr/v1/chains/{chainID}/stores/{storeID}:
@@ -883,21 +837,6 @@ paths:
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                 logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                id_not_provided:
-                  value:
-                    error_code: "40009"
-                    error_message: "required id not provided"
         "401":
           description: Unauthorized
           content:
@@ -905,22 +844,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"                      
   /dr/v1/stores:
@@ -1006,28 +946,14 @@ paths:
               examples:
                 missing_body:
                   value:
-                    error_code: "40000"
-                    error_message: "body is missing from the request"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                vat_exists:
-                  value:
-                    error_code: "40007"
-                    error_message: "company with the given vat exists"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "unsupported content type header"
         "401":
           description: Unauthorized
           content:
@@ -1035,22 +961,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                vat_exists:
                   value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40900"
+                    short_message: "conflict"
+                    long_message: "company with the given vat exists"
         "500":
           $ref: "#/components/responses/InternalError"
     get:
@@ -1090,21 +1029,6 @@ paths:
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                 logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                id_not_provided:
-                  value:
-                    error_code: "40009"
-                    error_message: "required id not provided"
         "401":
           description: Unauthorized
           content:
@@ -1112,22 +1036,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/stores/{StoreID}:
@@ -1167,17 +1092,6 @@ paths:
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                 logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
         "401":
           description: Unauthorized
           content:
@@ -1185,22 +1099,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
     put:
@@ -1260,26 +1175,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                missing_body:
+                unauthorized:
                   value:
-                    error_code: "40000"
-                    error_message: "body is missing from the request"
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
         "401":
           description: Unauthorized
           content:
@@ -1287,29 +1187,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                vat_exists:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40900"
+                    short_message: "conflict"
+                    long_message: "company with the given vat exists"
         "500":
           $ref: "#/components/responses/InternalError"
 
   /dr/v1/auth/token:
     post:
+      summary: Fetch JWT authentication token using OAuth client credential grant
       description: >
-        Fetch JWT authentication token using OAuth client credential grant
         Requires client_id and client_secret
 
       requestBody:
@@ -1340,22 +1241,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
                 invalid_body:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
+                invalid_header:
                   value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "missing required header or invalid header"
         "401":
           description: Unauthorized
           content:
@@ -1363,22 +1258,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/auth/token/chain/{chainID}:
@@ -1402,22 +1286,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
                 invalid_body:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
+                invalid_header:
                   value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "missing required header or invalid header"
         "401":
           description: Unauthorized
           content:
@@ -1425,22 +1303,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/auth/token/store/{StoreID}:
@@ -1465,22 +1344,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_content_type:
-                  value:
-                    error_code: "40002"
-                    error_message: "unsupported content type header"
                 invalid_body:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
+                invalid_header:
                   value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40002"
+                    short_message: "bad request"
+                    long_message: "missing required header or invalid header"
         "401":
           description: Unauthorized
           content:
@@ -1488,22 +1361,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/users/{type}/{id}:
@@ -1540,12 +1414,19 @@ paths:
               examples:
                 person_not_found:
                   value:
-                    error_code: "40005"
-                    error_message: "person not found"
+                    code: "40005"
+                    short_message: "bad request"
+                    long_message: "person not found"
                 unknown_url_parameter:
                   value:
-                    error_code: "40010"
-                    error_message: "unknown url parameter"
+                    code: "40010"
+                    short_message: "bad request"
+                    long_message: "unknown url parameter"
+                invalid_identifier:
+                  value:
+                    code: "40012"
+                    short_message: "bad request"
+                    long_message: "invalid identifier"
         "401":
           description: Unauthorized
           content:
@@ -1553,22 +1434,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
-                  value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/register:
@@ -1578,6 +1448,7 @@ paths:
         ### Access scope
 
           - EMS
+
       requestBody:
         description: Takes in a expense management object with required information to create a new expense management system
         required: true
@@ -1593,10 +1464,6 @@ paths:
       responses:
         "201":
           description: Expense management sucessfully created
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request
           content:
@@ -1604,18 +1471,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_body:
+                unauthorized:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/authorise:
     get:
+      summary: Start the authorisation process for a registering a person for an EMS
       description: >
         Start the authorisation process for a registering a person for an EMS. Currently only BankID is supported
       parameters:
@@ -1625,10 +1490,6 @@ paths:
       responses:
         "200":
           description: HTML template to start the authorisation application
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request
           content:
@@ -1636,19 +1497,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_query_parameter:
+                unauthorized:
                   value:
-                    error_code: "40011"
-                    error_message: "invalid query parameter"
+                    code: "40011"
+                    short_message: "bad request"
+                    long_message: "invalid query parameter"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/person:
     post:
       summary: Register a person for an EMS
       description: >
+
         ### Access scope
 
           - EMS
+
       requestBody:
         description: Takes in a register person for ems object with required information to register a person for an EMS
         required: true
@@ -1663,10 +1527,6 @@ paths:
       responses:
         "201":
           description: Implicit person successfully registered for an EMS
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request
           content:
@@ -1674,18 +1534,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_body:
+                unauthorized:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
-                company_exists:
-                  value:
-                    error_code: "40008"
-                    error_message: "company exists"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
         "401":
           description: Unauthorized
           content:
@@ -1693,31 +1546,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/person/deregister:
     post:
-      summary: Deregisters a person from an EMS
+      summary: De-register a person from an EMS
       description: >
+
         ### Access scope
 
           - EMS
+
       requestBody:
         description: Takes in a de-register person for ems object with required information to de-register a person from an EMS
         required: true
@@ -1731,10 +1587,6 @@ paths:
       responses:
         "204":
           description: Implicit person successfully de-registered from an EMS
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request
           content:
@@ -1742,14 +1594,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                invalid_body:
+                unauthorized:
                   value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
+                    code: "40000"
+                    short_message: "bad request"
+                    long_message: "body s missing required fields or has invalid fields"
         "401":
           description: Unauthorized
           content:
@@ -1757,51 +1606,39 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/receipts/{receiptID}:
     delete:
-      summary: Deregisters a receipt that has been expensed
+      summary: De-register a person from an EMS
       description: >
+
         ### Access scope
 
           - EMS
+
       parameters:
         - $ref: "#/components/parameters/ReceiptID"
       responses:
         "204":
           description: Receipt successfully removed from expense system
-          content:
-            application/json:
-              schema:
-                type: object
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_body:
-                  value:
-                    error_code: "40001"
-                    error_message: "body is missing required fields or has invalid fields"
-                resource_not_found:
-                  value:
-                    error_code: "40004"
-                    error_message: "resource not found"
         "401":
           description: Unauthorized
           content:
@@ -1809,24 +1646,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                token_missing:
+                unauthorized:
                   value:
-                    error_code: "40100"
-                    error_message: "jwt token missing"
-                token_expired:
+                    code: "40100"
+                    short_message: "unauthorized"
+                    long_message: "permission denied"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                resource_not_found:
                   value:
-                    error_code: "40101"
-                    error_message: "jwt token expired"
-                token_invalid:
-                  value:
-                    error_code: "40102"
-                    error_message: "jwt token invalid"
-                credentials_invalid:
-                  value:
-                    error_code: "40103"
-                    error_message: "credentials invalid"
+                    code: "40400"
+                    short_message: "not found"
+                    long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"          
+          $ref: "#/components/responses/InternalError"
 
 components:
   schemas:
@@ -1843,16 +1681,6 @@ components:
         expires_in:
           description: expiration time in seconds
           type: integer
-    AllChainsResponse:
-      title: List of chains    
-      type: array
-      items:
-        $ref: '#/components/schemas/GetChainResponse'
-    AllStoresResponse:
-      title: List of stores
-      type: array
-      items:
-        $ref: '#/components/schemas/GetStoreResponse'        
     AddStoreResponse:
       title: AddStoreResponse
       type: object
@@ -1879,108 +1707,21 @@ components:
       title: ErrorResponse
       type: object
       properties:
-        error_code:
+        code:
           type: string
-        error_message:
+        short_message:
+          type: string
+        long_message:
           type: string
         error_detail:
           type: array
           items:
             type: string
-    GetChainResponse:
-      title: GetChainResponse
-      type: object
-      properties:
-        chain_id:
-          type: string
-          description: The chain id in Kivra
-        partner_id:
-          type: string
-          description: The partner id in Kivra
-        name:
-          type: string
-          description: The name of the chain
-        vat:
-          type: string
-          description: The VAT number of the chain
-        phone:
-          type: string
-          description: The phone number of the chain
-        address:
-          type: object
-          description: The address of the chain
-          properties:
-            street1:
-              type: string
-            street2:
-              type: string
-            street3:
-              type: string
-            postalcode:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            country:
-              type: string
-        icon_url:
-          type: string
-          description: Chain Icon URL
-        logo_url:
-          type: string
-          description: Chain Logo URL
-    GetStoreResponse:
-      title: GetStoreResponse
-      type: object
-      properties:
-        store_id:
-          type: string
-          description: The store id in Kivra
-        external_id:
-          type: string
-          description: ID provided by the POS that is unique per chain
-        owner_id:
-          type: string
-          description: ID of the owner company (chain)
-        name:
-          type: string
-          description: The name of the store
-        vat:
-          type: string
-          description: The VAT number of the store
-        phone:
-          type: string
-          description: The phone number of the store
-        address:
-          type: object
-          description: The address of the store
-          properties:
-            street1:
-              type: string
-            street2:
-              type: string
-            street3:
-              type: string
-            postalcode:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            country:
-              type: string
-        icon_url:
-          type: string
-          description: Store Icon URL
-        logo_url:
-          type: string
-          description: Store Logo URL          
     AddStore:
       title: AddStore
       type: object
       properties:
-        external_id:
+        externalid:
           type: string
           description: ID provided by the POS that is unique per chain
         name:
@@ -2187,7 +1928,7 @@ components:
           description: The extra fields from receipt items that should be displayed in the app
           items:
             type: string
-            enum: [article_number_pos, article_number_gtin]
+            enum: [article_number_pos,article_number_gtin]
       required:
         - name
         - vat
@@ -2257,7 +1998,7 @@ components:
           description: The extra fields from receipt items that should be displayed in the app
           items:
             type: string
-            enum: [article_number_pos, article_number_gtin]
+            enum: [article_number_pos,article_number_gtin]
 
     RegisterEMS:
       title: RegisterEMS
@@ -2301,6 +2042,11 @@ components:
           type: string
           description: The id of the person registering for expense management system
           minLength: 1
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   parameters:
     ReceiptID:
       name: receiptID
@@ -2376,7 +2122,7 @@ components:
       required: true
       schema:
         type: string
-        enum: [nationalidentitynumber, mobilephone, email, cardtoken]
+        enum: [nationalidentitynumber,mobilephone, email]
     IdentifierID:
       name: id
       in: path
@@ -2392,11 +2138,6 @@ components:
       schema:
         type: boolean
         default: true
-  examples:
-    perm_denied:
-      value: { "error_code": "10007", "error_message": "Permission denied" }
-    store_blocked:
-      value: { "error_code": "10008", "error_message": "Store is blocked" }
   responses:
     UserDoesntError:
       description: User does not exist
@@ -2405,7 +2146,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
           example:
-            { "error_code": "20102", "error_message": "Person not found" }
+            { "code": "40401", "short_message": "not found", "long_message": "The requested resource could not be found" }
     UnauthorizedError:
       description: Unauthorized access
       content:
@@ -2414,17 +2155,19 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             value:
-              error_code: "10007"
-              error_message: "Permission denied"
+              code: "40100"
+              short_message: "unauthorized"
+              long_message: "permission denied"
     InternalError:
-      description: Internal server error
+      description: 500 Internal server error
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
           example:
-            error_code: "50000"
-            error_message: "internal error"
+            code: "50000"
+            short_message: "internal server error"
+            long_message: "unknown error ocurred"
     Token:
       description: Token successfully created
       content:

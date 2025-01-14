@@ -1,5 +1,11 @@
 # Client API
 
+## Version 1.3.13 (2025-01-03)
+
+## Fix
+
+ - Updated error responses
+
 ## Version 1.3.12 (2020-05-05)
 
 ## New
