@@ -1209,8 +1209,8 @@ paths:
 
   /dr/v1/auth/token:
     post:
+      summary: Fetch JWT authentication token using OAuth client credential grant
       description: >
-        Fetch JWT authentication token using OAuth client credential grant
         Requires client_id and client_secret
 
       requestBody:
@@ -1443,9 +1443,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/register:
     post:
+      summary: Register a new Expense Management System(EMS)
       description: >
-        Register a new Expense Management System(EMS)
-
         ### Access scope
 
           - EMS
@@ -1481,6 +1480,7 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/authorise:
     get:
+      summary: Start the authorisation process for a registering a person for an EMS
       description: >
         Start the authorisation process for a registering a person for an EMS. Currently only BankID is supported
       parameters:
@@ -1506,8 +1506,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/person:
     post:
+      summary: Register a person for an EMS
       description: >
-        Register a person for an EMS
 
         ### Access scope
 
@@ -1567,8 +1567,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/person/deregister:
     post:
+      summary: De-register a person from an EMS
       description: >
-        De-register a person from an EMS
 
         ### Access scope
 
@@ -1627,8 +1627,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /dr/v1/expense/receipts/{receiptID}:
     delete:
+      summary: De-register a person from an EMS
       description: >
-        De-register a person from an EMS
 
         ### Access scope
 
@@ -1663,237 +1663,6 @@ paths:
                     code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token:
-    post:
-      description: >
-        Fetch JWT authentication token using OAuth client credential grant
-        Requires client_id and client_secret
-
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                grant_type:
-                  type: string
-                  enum:
-                    - client_credentials
-                client_id:
-                  type: string
-                client_secret:
-                  type: string
-              required:
-                - grant_type
-                - client_id
-                - client_secret
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_body:
-                  value:
-                    code: "40000"
-                    short_message: "bad request"
-                    long_message: "body s missing required fields or has invalid fields"
-                invalid_header:
-                  value:
-                    code: "40002"
-                    short_message: "bad request"
-                    long_message: "missing required header or invalid header"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                unauthorized:
-                  value:
-                    code: "40100"
-                    short_message: "unauthorized"
-                    long_message: "permission denied"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token/chain/{chainID}:
-    post:
-      description: >
-        Fetch JWT authentication token for a chain using partner token
-
-        ### Access scope
-
-          - PARTNER
-
-      parameters:
-        - $ref: "#/components/parameters/ChainID"
-
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_body:
-                  value:
-                    code: "40000"
-                    short_message: "bad request"
-                    long_message: "body s missing required fields or has invalid fields"
-                invalid_header:
-                  value:
-                    code: "40002"
-                    short_message: "bad request"
-                    long_message: "missing required header or invalid header"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                unauthorized:
-                  value:
-                    code: "40100"
-                    short_message: "unauthorized"
-                    long_message: "permission denied"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    code: "40400"
-                    short_message: "not found"
-                    long_message: "the requested resource could not be found"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/auth/token/store/{StoreID}:
-    post:
-      description: >
-        Fetch JWT authentication token for a store using partner or chain token
-
-        ### Access scope
-
-          - PARTNER
-          - CHAIN
-
-      parameters:
-        - $ref: "#/components/parameters/StoreID"
-
-      responses:
-        "200":
-          $ref: "#/components/responses/Token"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                invalid_body:
-                  value:
-                    code: "40000"
-                    short_message: "bad request"
-                    long_message: "body s missing required fields or has invalid fields"
-                invalid_header:
-                  value:
-                    code: "40002"
-                    short_message: "bad request"
-                    long_message: "missing required header or invalid header"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                unauthorized:
-                  value:
-                    code: "40100"
-                    short_message: "unauthorized"
-                    long_message: "permission denied"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                resource_not_found:
-                  value:
-                    code: "40400"
-                    short_message: "not found"
-                    long_message: "the requested resource could not be found"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /dr/v1/users/{type}/{id}:
-    get:
-      description: >
-        Check if a user with the given id exists
-
-        ### Access scope
-
-          - PARTNER
-          - CHAIN
-          - STORE
-
-      parameters:
-        - $ref: "#/components/parameters/IdentifierType"
-        - $ref: "#/components/parameters/IdentifierID"
-        - $ref: "#/components/parameters/PartnerChainID"
-        - $ref: "#/components/parameters/Hashed"
-
-      responses:
-        "204":
-          description: User exists
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                person_not_found:
-                  value:
-                    code: "40005"
-                    short_message: "bad request"
-                    long_message: "person not found"
-                unknown_url_parameter:
-                  value:
-                    code: "40010"
-                    short_message: "bad request"
-                    long_message: "unknown url parameter"
-                invalid_identifier:
-                  value:
-                    code: "40012"
-                    short_message: "bad request"
-                    long_message: "invalid identifier"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                unauthorized:
-                  value:
-                    code: "40100"
-                    short_message: "unauthorized"
-                    long_message: "permission denied"
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -2369,9 +2138,6 @@ components:
       schema:
         type: boolean
         default: true
-  examples:
-    perm_denied:
-      value: { "code": "40100", "short_message": "unauthorized" , "short_message": "permission denied" }
   responses:
     UserDoesntError:
       description: User does not exist
