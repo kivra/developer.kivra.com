@@ -1780,14 +1780,9 @@ paths:
                       properties:
                         vatnr:
                           $ref: "#/components/schemas/VatNumber"
-        400:
-          description: |
-            This error could indicate that the diffId is no longer valid
-            and therefore the URL points to a resource that is no longer
-            available
         404:
           description: |
-            The diffId does not exist
+            The diffId does not exist (potentially because it has expired).
 
   # ##############################################
   # POST /v2/tenant/TKEY/content
