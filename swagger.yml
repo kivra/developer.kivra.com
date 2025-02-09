@@ -112,6 +112,7 @@ info:
     | 2024-03-21 | Added Invite to content with BETA tags |
     | 2024-09-18 | Removed Invite BETA tags since invite features are live |
     | 2024-09-30 | Removed obsolete `v1` of `content` endpoint and `payment` structure |
+    | 2025-02-10 | Added registered letter content |
 
     # Terminology
     ### User
@@ -2313,6 +2314,21 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+              registered letter [BETA]:
+                value:
+                  ssn: "191212121212"
+                  subject: This is a registered letter
+                  type: "registered.letter"
+                  registered:
+                    expires_at: "2025-01-15T23:59:59Z"
+                    sender_reference:
+                      type: object
+                      nullable: true
+                    hidden:
+                      sender:
+                        type: boolean
+                      subject:
+                        type: boolean
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -3284,6 +3300,7 @@ components:
                 A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"booking"`: |
             indicating that the content is a booking/appointement.
+            - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -3393,6 +3410,7 @@ components:
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
+            - `"registered.letter"`: [BETA] Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -3439,6 +3457,9 @@ components:
         invite_voucher:
           description: Optional invite voucher
           $ref: "#/components/schemas/InviteVoucher"
+        registered_letter:
+          description: Optional registered letter
+          $ref: "#/components/schemas/RegisteredLetter"
 
     # ##############################################
     # SCHEMA Form Template
@@ -5034,6 +5055,34 @@ components:
         description:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
+
+    # ##############################################
+    # SCHEMA Registered letter
+    # ##############################################
+    RegisteredLetter:
+      type: object
+      required:
+        - expires_at
+        - hidden
+      properties:
+        expires_at:
+          type: string
+          description: When the registered letter expires, max 30 days from now. If a time was not specified (i.e. only date was given), time will be added and set to 23:59:59.
+          format: ISO8601
+        hidden:
+          type: object
+          description: Specifies which fields that should be hidden in the UI.
+          properties:
+            sender:
+              type: boolean
+              description: False if the sender name and icon should be shown in the UI.
+            subject:
+              type: boolean
+              description: False if the subject should be shown in the UI.
+        sender_reference:
+          type: object
+          nullable: true
+          description: Any reference that the sender might want to include.
 
     # ##############################################
     # SCHEMA Campaign
