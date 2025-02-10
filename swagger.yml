@@ -2668,6 +2668,9 @@ paths:
         401:
           description: |
             Not authorized to make the request
+        404:
+          description: |
+            No registered letter responses
   # ##############################################
   # GET, DELETE /v1/tenant/{tenantKey}/registered/{responseKey}
   # ##############################################
@@ -2722,7 +2725,8 @@ paths:
       summary: Delete response
       operationId: deleteRegisteredLetterResponse
       description: |
-        Delete a registered letter response.
+        Delete a registered letter response. 
+        Automatically deleted after 30 days.
       security:
         - oAuth2Client:
             - "delete:kivra.v1.tenant.{tenantKey}"
@@ -5239,18 +5243,18 @@ components:
       properties:
         expires_at:
           type: string
-          description: When the registered letter expires, max 30 days from now. If a time was not specified (i.e. only date was given), time will be added and set to 23:59:59.
           format: ISO8601
+          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will set to 23:59:59.<br>- If both date and time is given, the supplied time will be used.
         hidden:
           type: object
-          description: Specifies which fields that should be hidden in the UI.
+          description: Specifies which fields that should be hidden in the Kivra Inbox.
           properties:
             sender:
               type: boolean
-              description: False if the sender name and icon should be shown in the UI.
+              description: False if the sender name and icon should be shown in the Kivra Inbox.
             subject:
               type: boolean
-              description: False if the subject should be shown in the UI.
+              description: False if the subject should be shown in the Kivra Inbox.
         sender_reference:
           type: object
           nullable: true
