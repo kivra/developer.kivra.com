@@ -827,7 +827,7 @@ tags:
   - name: "Tenant API - Forms"
     description: |
       Endpoints for working with form templates and responses
-  - name: "Tenant API - Registered letters"
+  - name: "Tenant API - Registered letters [BETA]"
     description: |
       Endpoints for fetching and removing registered letter responses.
 
@@ -850,7 +850,7 @@ x-tagGroups:
     tags:
       - "Tenant API - Content"
       - "Tenant API - Forms"
-      - "Tenant API - Registered letters"
+      - "Tenant API - Registered letters [BETA]"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2638,7 +2638,7 @@ paths:
   /v1/tenant/{tenantKey}/registered:
     get:
       tags:
-        - "Tenant API - Registered letters"
+        - "Tenant API - Registered letters [BETA]"
       summary: Get all responses
       operationId: getAllRegisteredLetterResponses
       description: |
@@ -2674,7 +2674,7 @@ paths:
   /v1/tenant/{tenantKey}/registered/{responseKey}:
     get:
       tags:
-        - "Tenant API - Registered letters"
+        - "Tenant API - Registered letters [BETA]"
       summary: Get response details
       operationId: getRegisteredLetterResponse
       description: |
@@ -2718,7 +2718,7 @@ paths:
             Not authorized to make the request
     delete:
       tags:
-        - "Tenant API - Registered letters"
+        - "Tenant API - Registered letters [BETA]"
       summary: Delete response
       operationId: deleteRegisteredLetterResponse
       description: |
