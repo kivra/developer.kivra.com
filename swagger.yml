@@ -827,6 +827,13 @@ tags:
   - name: "Tenant API - Forms"
     description: |
       Endpoints for working with form templates and responses
+  - name: "Tenant API - Registered letters"
+    description: |
+      Endpoints for fetching and removing registered letter responses.
+
+      A registered letter ensures secure delivery by requiring the recipient to sign before viewing the letter's content, providing proof of receipt.
+
+      The responses can later be collected and removed by the sender.
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -843,6 +850,7 @@ x-tagGroups:
     tags:
       - "Tenant API - Content"
       - "Tenant API - Forms"
+      - "Tenant API - Registered letters"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2625,6 +2633,132 @@ paths:
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
 
   # ##############################################
+  # GET /v1/tenant/{tenantKey}/registered
+  # ##############################################
+  /v1/tenant/{tenantKey}/registered:
+    get:
+      tags:
+        - "Tenant API - Registered letters"
+      summary: Get all responses
+      operationId: getAllRegisteredLetterResponses
+      description: |
+        Get the responses of all registered letters that have been signed or expired.
+        The response key can then be used to fetch the response details of each registered letter and also to delete the response.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the registered letters belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            List of response statuses associated with registered letters that have been either signed or expired.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RegisteredLetterResponseStatusDetail"
+        401:
+          description: |
+            Not authorized to make the request
+  # ##############################################
+  # GET, DELETE /v1/tenant/{tenantKey}/registered/{responseKey}
+  # ##############################################
+  /v1/tenant/{tenantKey}/registered/{responseKey}:
+    get:
+      tags:
+        - "Tenant API - Registered letters"
+      summary: Get response details
+      operationId: getRegisteredLetterResponse
+      description: |
+        Get the response status of a registered letter sent by a tenant.
+        A user can sign a registered letter or let it expire. 
+
+        When a user signs a registered letter, it is removed from their account, and the response is stored. 
+        If the letter is not signed before its expiration date, it is automatically removed as well. In both cases the response is stored.
+
+        When sending a registered letter a `sender_reference` can be included. 
+        This is an optional field that can be used to store an internal reference with the registered letter.
+        This field is included when fetching the response of a registered letter.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique tenant key that the registered letters belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: responseKey
+          in: path
+          description: The unique key of a registered letter response.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            The registered letter response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisteredLetterResponse"
+        401:
+          description: |
+            Not authorized to make the request
+    delete:
+      tags:
+        - "Tenant API - Registered letters"
+      summary: Delete response
+      operationId: deleteRegisteredLetterResponse
+      description: |
+        Delete a registered letter response.
+      security:
+        - oAuth2Client:
+            - "delete:kivra.v1.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key for the tenant who sent the registered letter.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: responseKey
+          in: path
+          description: The unique key of a registered letter response.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        responses:
+        204:
+          description: |
+            Registered letter response deleted.
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request.
+        403:
+          description: |
+            Forbidden from accessing the registered letter response.
+        404:
+          description: |
+            The registered letter response does not exist.
+  # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
   # ##############################################
   /v1/tenant/{tenantKey}/agreement:
@@ -3681,6 +3815,44 @@ components:
             form template details
           items:
             $ref: "#/components/schemas/FormTemplateKey"
+    RegisteredLetterResponseStatus:
+      type: enum
+      description: Status of the registered letter response.
+      enum: [signed, expired]
+    RegisteredLetterResponseStatusDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Response key
+        status:
+          $ref: "#/components/schemas/RegisteredLetterResponseStatus"
+    RegisteredLetterResponse:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/RegisteredLetterResponseStatus"
+        signed_at:
+          type: string
+          nullable: true
+          format: ISO8601
+          description: When the registered letter was signed
+          example: "2025-06-15T12:00:10Z"
+        sender_reference:
+          type: object
+          nullable: true
+          description: The same object that was passed by the sender when creating the registered letter. Null if nothing was passed.
+          example:
+            internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
+        content_key:
+          type: string
+        bank_id_order:
+          type: object
+          nullable: true
+          description: BankID signing details
+          externalDocs:
+            description: "More details about this object can be found here."
+            url: "https://developers.bankid.com/api-references/auth--sign/collect"
 
     # ##############################################
     # SCHEMA Form Response
