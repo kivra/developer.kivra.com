@@ -2633,9 +2633,9 @@ paths:
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
 
   # ##############################################
-  # GET /v1/tenant/{tenantKey}/registered
+  # GET /v2/tenant/{tenantKey}/registered
   # ##############################################
-  /v1/tenant/{tenantKey}/registered:
+  /v2/tenant/{tenantKey}/registered:
     get:
       tags:
         - "Tenant API - Registered letters [BETA]"
@@ -2672,9 +2672,9 @@ paths:
           description: |
             No registered letter responses
   # ##############################################
-  # GET, DELETE /v1/tenant/{tenantKey}/registered/{responseKey}
+  # GET, DELETE /v2/tenant/{tenantKey}/registered/{responseKey}
   # ##############################################
-  /v1/tenant/{tenantKey}/registered/{responseKey}:
+  /v2/tenant/{tenantKey}/registered/{responseKey}:
     get:
       tags:
         - "Tenant API - Registered letters [BETA]"
