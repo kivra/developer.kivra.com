@@ -112,6 +112,7 @@ info:
     | 2024-03-21 | Added Invite to content with BETA tags |
     | 2024-09-18 | Removed Invite BETA tags since invite features are live |
     | 2024-09-30 | Removed obsolete `v1` of `content` endpoint and `payment` structure |
+    | 2025-02-10 | Added registered letter content |
 
     # Terminology
     ### User
@@ -826,6 +827,13 @@ tags:
   - name: "Tenant API - Forms"
     description: |
       Endpoints for working with form templates and responses
+  - name: "Tenant API - Registered letters [BETA]"
+    description: |
+      Endpoints for fetching and removing registered letter responses.
+
+      A registered letter ensures secure delivery by requiring the recipient to sign before viewing the letter's content, providing proof of receipt.
+
+      The responses can later be collected and removed by the sender.
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -842,6 +850,7 @@ x-tagGroups:
     tags:
       - "Tenant API - Content"
       - "Tenant API - Forms"
+      - "Tenant API - Registered letters [BETA]"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
   - name: Partner API
@@ -2313,6 +2322,21 @@ paths:
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
+              registered letter [BETA]:
+                value:
+                  ssn: "191212121212"
+                  subject: This is a registered letter
+                  type: "registered.letter"
+                  registered:
+                    expires_at: "2025-01-15T23:59:59Z"
+                    sender_reference:
+                      type: object
+                      nullable: true
+                    hidden:
+                      sender:
+                        type: boolean
+                      subject:
+                        type: boolean
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -2608,6 +2632,136 @@ paths:
           description: |
             Either the form template associated with the given formTemplateKey does not exist or the form response associated with the given responseKey does not exist.
 
+  # ##############################################
+  # GET /v2/tenant/{tenantKey}/registered
+  # ##############################################
+  /v2/tenant/{tenantKey}/registered:
+    get:
+      tags:
+        - "Tenant API - Registered letters [BETA]"
+      summary: Get all responses
+      operationId: getAllRegisteredLetterResponses
+      description: |
+        Get the responses of all registered letters that have been signed or expired.
+        The response key can then be used to fetch the response details of each registered letter and also to delete the response.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique key for a tenant for whom the registered letters belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            List of response statuses associated with registered letters that have been either signed or expired.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RegisteredLetterResponseStatusDetail"
+        401:
+          description: |
+            Not authorized to make the request
+        404:
+          description: |
+            No registered letter responses
+  # ##############################################
+  # GET, DELETE /v2/tenant/{tenantKey}/registered/{responseKey}
+  # ##############################################
+  /v2/tenant/{tenantKey}/registered/{responseKey}:
+    get:
+      tags:
+        - "Tenant API - Registered letters [BETA]"
+      summary: Get response details
+      operationId: getRegisteredLetterResponse
+      description: |
+        Get the response status of a registered letter sent by a tenant.
+        A user can sign a registered letter or let it expire. 
+
+        When a user signs a registered letter, it is removed from their account, and the response is stored. 
+        If the letter is not signed before its expiration date, it is automatically removed as well. In both cases the response is stored.
+
+        When sending a registered letter a `sender_reference` can be included. 
+        This is an optional field that can be used to store an internal reference with the registered letter.
+        This field is included when fetching the response of a registered letter.
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique tenant key that the registered letters belong to.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: responseKey
+          in: path
+          description: The unique key of a registered letter response.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        200:
+          description: |
+            The registered letter response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisteredLetterResponse"
+        401:
+          description: |
+            Not authorized to make the request
+    delete:
+      tags:
+        - "Tenant API - Registered letters [BETA]"
+      summary: Delete response
+      operationId: deleteRegisteredLetterResponse
+      description: |
+        Delete a registered letter response. 
+        Automatically deleted after 30 days.
+      security:
+        - oAuth2Client:
+            - "delete:kivra.v1.tenant.{tenantKey}"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The tenant key for the tenant who sent the registered letter.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: responseKey
+          in: path
+          description: The unique key of a registered letter response.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        responses:
+        204:
+          description: |
+            Registered letter response deleted.
+        400:
+          description: |
+            Can't process the request. Likely due to a client error.
+        401:
+          description: |
+            Not authorized to make the request.
+        403:
+          description: |
+            Forbidden from accessing the registered letter response.
+        404:
+          description: |
+            The registered letter response does not exist.
   # ##############################################
   # GET,POST /v1/tenant/TKEY/agreement
   # ##############################################
@@ -3284,6 +3438,7 @@ components:
                 A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
             - `"booking"`: |
             indicating that the content is a booking/appointement.
+            - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -3393,6 +3548,7 @@ components:
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
+            - `"registered.letter"`: [BETA] Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
@@ -3439,6 +3595,9 @@ components:
         invite_voucher:
           description: Optional invite voucher
           $ref: "#/components/schemas/InviteVoucher"
+        registered_letter:
+          description: Optional registered letter
+          $ref: "#/components/schemas/RegisteredLetter"
 
     # ##############################################
     # SCHEMA Form Template
@@ -3660,6 +3819,44 @@ components:
             form template details
           items:
             $ref: "#/components/schemas/FormTemplateKey"
+    RegisteredLetterResponseStatus:
+      type: enum
+      description: Status of the registered letter response.
+      enum: [signed, expired]
+    RegisteredLetterResponseStatusDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Response key
+        status:
+          $ref: "#/components/schemas/RegisteredLetterResponseStatus"
+    RegisteredLetterResponse:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/RegisteredLetterResponseStatus"
+        signed_at:
+          type: string
+          nullable: true
+          format: ISO8601
+          description: When the registered letter was signed
+          example: "2025-06-15T12:00:10Z"
+        sender_reference:
+          type: object
+          nullable: true
+          description: The same object that was passed by the sender when creating the registered letter. Null if nothing was passed.
+          example:
+            internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
+        content_key:
+          type: string
+        bank_id_order:
+          type: object
+          nullable: true
+          description: BankID signing details
+          externalDocs:
+            description: "More details about this object can be found here."
+            url: "https://developers.bankid.com/api-references/auth--sign/collect"
 
     # ##############################################
     # SCHEMA Form Response
@@ -5034,6 +5231,34 @@ components:
         description:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
+
+    # ##############################################
+    # SCHEMA Registered letter
+    # ##############################################
+    RegisteredLetter:
+      type: object
+      required:
+        - expires_at
+        - hidden
+      properties:
+        expires_at:
+          type: string
+          format: ISO8601
+          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will set to 23:59:59.<br>- If both date and time is given, the supplied time will be used.
+        hidden:
+          type: object
+          description: Specifies which fields that should be hidden in the Kivra Inbox.
+          properties:
+            sender:
+              type: boolean
+              description: False if the sender name and icon should be shown in the Kivra Inbox.
+            subject:
+              type: boolean
+              description: False if the subject should be shown in the Kivra Inbox.
+        sender_reference:
+          type: object
+          nullable: true
+          description: Any reference that the sender might want to include.
 
     # ##############################################
     # SCHEMA Campaign
