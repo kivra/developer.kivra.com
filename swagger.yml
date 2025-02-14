@@ -3403,7 +3403,7 @@ components:
           example: "2022-12-31"
           description: |
             Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site.
-            The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+            The attribute might be taken into account to sort the content in the Kivra user interface.
         type:
           type: string
           example: "letter"
