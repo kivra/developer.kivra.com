@@ -5247,6 +5247,9 @@ components:
           description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will set to 23:59:59.<br>- If both date and time is given, the supplied time will be used.
         hidden:
           type: object
+          required:
+            - sender
+            - subject
           description: Specifies which fields that should be hidden in the Kivra Inbox.
           properties:
             sender:
