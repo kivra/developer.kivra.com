@@ -2330,13 +2330,10 @@ paths:
                   registered:
                     expires_at: "2025-01-15T23:59:59Z"
                     sender_reference:
-                      type: object
-                      nullable: true
+                      internal_id: "d69ee3de-1431-4ff5-89a4-eced6ecb0070"
                     hidden:
-                      sender:
-                        type: boolean
-                      subject:
-                        type: boolean
+                      sender: false
+                      subject: true
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -5244,7 +5241,7 @@ components:
         expires_at:
           type: string
           format: ISO8601
-          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will set to 23:59:59.<br>- If both date and time is given, the supplied time will be used.
+          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will be set to 23:59:59.<br>- If both date and time is given, time will also be set to 23:59:59.<br>Expiry time will always be end of day.
         hidden:
           type: object
           required:
