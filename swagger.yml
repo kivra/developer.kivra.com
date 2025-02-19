@@ -3548,7 +3548,7 @@ components:
               indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
-            - `"registered.letter"`: [BETA] Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
+            - `"registered.letter"`: [BETA] Indicating that the content is a registered letter. A valid `registered` object needs to be provided. Note that email matching is not yet supported for this content type.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
