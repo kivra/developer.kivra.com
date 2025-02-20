@@ -5241,7 +5241,7 @@ components:
         expires_at:
           type: string
           format: ISO8601
-          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will be set to 23:59:59.<br>- If both date and time is given, time will also be set to 23:59:59.<br>Expiry time will always be end of day.
+          description: When the registered letter expires, max 30 days from now.<br>- Time will always be set to end-of-day, regardless of whether time is specified or not.
         hidden:
           type: object
           required:
