@@ -3853,7 +3853,7 @@ components:
         bank_id_order:
           type: object
           nullable: true
-          description: BankID signing details
+          description: Returns the same as the BankID collect endpoint, however *bankIdIssueDate*, *uhi* and *risk* are excluded.
           externalDocs:
             description: "More details about this object can be found here."
             url: "https://developers.bankid.com/api-references/auth--sign/collect"
