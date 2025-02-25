@@ -2330,13 +2330,10 @@ paths:
                   registered:
                     expires_at: "2025-01-15T23:59:59Z"
                     sender_reference:
-                      type: object
-                      nullable: true
+                      sender_internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
                     hidden:
-                      sender:
-                        type: boolean
-                      subject:
-                        type: boolean
+                      sender: true
+                      subject: true
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -3595,7 +3592,7 @@ components:
         invite_voucher:
           description: Optional invite voucher
           $ref: "#/components/schemas/InviteVoucher"
-        registered_letter:
+        registered:
           description: Optional registered letter
           $ref: "#/components/schemas/RegisteredLetter"
 
@@ -3850,6 +3847,7 @@ components:
             internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
         content_key:
           type: string
+          example: "2877d684-a340-4e4c-867f-d93283787b01"
         bank_id_order:
           type: object
           nullable: true
@@ -5244,7 +5242,7 @@ components:
         expires_at:
           type: string
           format: ISO8601
-          description: When the registered letter expires, max 30 days from now.<br>- If only date is given time will set to 23:59:59.<br>- If both date and time is given, the supplied time will be used.
+          description: When the registered letter expires, max 30 days from now.<br>- Time will always be set to end-of-day, regardless of whether time is specified or not.
         hidden:
           type: object
           required:
