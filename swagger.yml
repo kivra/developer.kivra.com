@@ -5242,7 +5242,7 @@ components:
         expires_at:
           type: string
           format: ISO8601
-          description: When the registered letter expires, max 30 days from now. The letter expires at 23:59:59 Zulu time of the date specified. Any time and timezone passed through will be ignored.
+          description: When the registered letter expires, max 30 days from now.<br>- Time will always be set to end-of-day, regardless of whether time is specified or not.
         hidden:
           type: object
           required:
