@@ -1902,7 +1902,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice"
                   parts:
                     - name: document.pdf
@@ -1926,7 +1926,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice"
                   parts:
                     - name: document.pdf
@@ -1973,7 +1973,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Flexible Invoice to User
-                  generated_at: "2022-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice"
                   parts:
                     - name: filename.pdf
@@ -2013,7 +2013,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Content to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "letter"
                   parts:
                     - name: document.pdf
@@ -2034,7 +2034,7 @@ paths:
                 value:
                   email: "someone@example.com"
                   subject: Sample Letter to User (identified by email)
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "letter"
                   parts:
                     - name: document.pdf
@@ -2055,7 +2055,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Payslip to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "letter.salary"
                   retain: true
                   retention_time: "390"
@@ -2078,7 +2078,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Creditnotice to User
-                  generated_at: "2020-12-12"
+                  generated_at: "2024-12-12"
                   type: "letter.creditnotice"
                   retain: true
                   retention_time: "30"
@@ -2101,7 +2101,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Booking to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "booking"
                   parts:
                     - name: document.pdf
@@ -2129,7 +2129,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Debtcampaign Invoice to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice.debtcampaign"
                   parts:
                     - name: document.pdf
@@ -2153,7 +2153,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice Reminder to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice.reminder"
                   parts:
                     - name: document.pdf
@@ -2177,7 +2177,7 @@ paths:
                 value:
                   ssn: "191212121212"
                   subject: Sample Invoice Renewal to User
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "invoice.renewal"
                   parts:
                     - name: document.pdf
@@ -2201,7 +2201,7 @@ paths:
                 value:
                   vat_number: SE556840226601
                   subject: Sample Content to Company
-                  generated_at: "2016-12-12"
+                  generated_at: "2024-12-12"
                   type: "letter"
                   parts:
                     - name: document.pdf
@@ -2273,6 +2273,27 @@ paths:
                       name: "Signature AB"
                     expires_at: "2024-12-12T12:00:00Z"
                     description: "Please sign the document"
+              letter signed:
+                value:
+                  ssn: "191212121212"
+                  subject: Your signed document
+                  generated_at: "2024-12-12"
+                  type: "letter.signed"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
               form to user:
                 value:
                   ssn: "191212121212"
