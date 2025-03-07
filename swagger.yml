@@ -2197,6 +2197,54 @@ paths:
                         amount: "123.50"
                         type: SE_OCR
                         reference: "426523791"
+              invoice donation to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Donation to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.donation"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice payment notice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Payment Notice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.paymentnotice"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
               content to company:
                 value:
                   vat_number: SE556840226601
@@ -3567,6 +3615,8 @@ components:
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
             - `"registered.letter"`: [BETA] Indicating that the content is a registered letter. A valid `registered` object needs to be provided. Note that email matching is not yet supported for this content type.
+            - `"invoice.donation"`: indicating that the content is a donation where the payment by the user is optional.`"Note: This is not live yet"`.
+            - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations. `"Note: This is not live yet"`.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
