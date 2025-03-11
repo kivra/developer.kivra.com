@@ -89,6 +89,13 @@ info:
       will give you more information on how to create digital receipts based on the Kivra digital receipt JSON schema.
     </details>
 
+    <details><summary>Prescription specification schema explained</summary>
+
+      ### Resources
+      [Prescription specification JSON schema explained and example specifications](/receipt/wiki/mdwiki.html)
+      will give you (pharmacies) more information on how to create prescription specifications based on the Kivra prescription specification JSON schema.
+    </details>    
+
 servers:
   - url: https://receipt.sandbox-api.kivra.com
     description: Test environment (uses test data)

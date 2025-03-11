@@ -1,5 +1,10 @@
 # POS API
 
+## Version 1.3.16 (2025-03-11)
+
+## New
+ - Prescription specification api
+    
 ## Version 1.3.15 (2025-01-03)
 
 ## Fix

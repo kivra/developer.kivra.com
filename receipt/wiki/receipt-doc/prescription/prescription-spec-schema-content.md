@@ -54,7 +54,7 @@ Information about the specification producer (pharmacy).
   - internal shop id
   - service id
 
-### [Customer definitions](../../../schemas/json/retail/v1.0/customer-definitions.json)
+### [Customer definitions](../../../schemas/json/prescription/v1.0/customer-definitions.json)
 
 Information about the customer, contact information and/or customer identifier.
 
