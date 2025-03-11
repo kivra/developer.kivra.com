@@ -1,4 +1,4 @@
-# **_Prescription Specification Schema Content_**
+# **_Prescription specification schema content_**
 
 The Prescription specification JSON schema is based on the [JSON schema specification](https://json-schema.org/). It contains one schema file and a number of JSON schema definition files. This document gives an overview of the content of each schema/definition file. For more details see each schema/definition file and [prescription schema explained](./prescription-schema-description.md)
 

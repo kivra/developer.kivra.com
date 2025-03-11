@@ -2,12 +2,12 @@
 
 ## Version 1.3.16 (2025-03-11)
 
-## New
- - Prescription specification api
+### New
+ - Added prescription specification api
     
 ## Version 1.3.15 (2025-01-03)
 
-## Fix
+### Fix
  - Updated error responses
 
 ## Version 1.3.14 (2022-09-21)
