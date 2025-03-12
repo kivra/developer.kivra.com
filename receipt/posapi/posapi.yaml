@@ -1680,7 +1680,7 @@ paths:
 
         Following credentials are needed in order to create prescription specifications.
 
-        - **storeID** : this is used for the "service_id" element in the receipt body
+        - **storeID** : add to the "service_id" element in the prescription specification body
 
         - **token** : the JWT bearer token used for authorization. Partner, chain or store token can be used.
 
@@ -1690,7 +1690,6 @@ paths:
 
             - PARTNER
             - CHAIN
-            - STORE
 
           ###  Headers
 
@@ -1699,7 +1698,7 @@ paths:
           * Content-Type: application/json;profile=https://se.kivra.com/schemas/json/retail/ps/v1.0
 
 
-          The profile tells what version of the JSON schema that the presciption specification is based on.
+          The profile tells what version of the JSON schema that the prescription specification is based on.
           
 
           ###  Body
@@ -1777,10 +1776,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/CreatePresciptionSpecificationResponse'
+                $ref: '#/components/schemas/PresciptionSpecificationResponse'
               example:
-                receipt_id: 1
-                prescription_specification_id: 1
+                receipt_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
+                prescription_specification_id: 17594097555904f97adeb148d6b9a6ef76f76ebdba
         "400":
           description: Bad request
           content:
@@ -1877,6 +1876,14 @@ components:
           type: array
           items:
             type: string
+    PresciptionSpecificationResponse:
+      title: PresciptionSpecificationResponse
+      type: object
+      properties:
+        receipt_id:
+          type: string
+        prescription_specification_id:
+          type: string
     AddStore:
       title: AddStore
       type: object
@@ -2366,41 +2373,13 @@ components:
           minimum: 0
         customer:
           description: The person or animal owner to whom the prescription is issued.
-          anyOf:
+          allOf:
             - type: object
               description: Defines valid customer identifiers
               properties:
                 id:
                   type: object
                   oneOf:
-                    - type: object
-                      description: The digital receipt service customer identifier
-                      properties:
-                        service_id:
-                          type: string
-                      required:
-                        - service_id
-                      additionalProperties: false
-                    - type: object
-                      description: The customer email address
-                      properties:
-                        email:
-                          type: string
-                          format: email
-                      required:
-                        - email
-                      additionalProperties: false
-                    - type: object
-                      description: The customer phone number
-                      properties:
-                        phone:
-                          title: phone number identifer
-                          description: more restrictive international phone number format used as identifier, based on ITU-T E.123
-                          type: string
-                          pattern: ^\+(?:[0-9]\x20?){6,14}[0-9]$
-                      required:
-                        - phone
-                      additionalProperties: false
                     - type: object
                       description: The customer ssn
                       properties:
@@ -2412,41 +2391,24 @@ components:
                         - civic_registration_number
                       additionalProperties: false
                     - type: object
-                      description: Use loyalty program name and customer loyalty number as identifier
+                      description: The customer birth date
                       properties:
-                        loyalty:
-                          type: object
-                          description: Customer loyalty information
-                          properties:
-                            program:
-                              type: string
-                              description: 'Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity'
-                            level:
-                              type: string
-                              description: 'Some programs has different levels based on point etc '
-                            customer_number:
-                              type: string
-                              description: The actual loyalty number
-                            incremental_count:
-                              type: integer
-                              description: Loyalty points gained/lost in transaction
-                            current_count:
-                              type: integer
-                              description: Total loyalty points after increment
-                            target_count:
-                              type: integer
-                              description: Loyalty points needed to achieve next goal/level
-                            effective_date:
-                              type: string
-                              format: date
-                            expiration_date:
-                              type: string
-                              format: date
-                          required:
-                            - program
-                            - customer_number
+                        birth_date:
+                          type: string
+                          pattern: ^[12]{1}[90]{1}[0-9]{6}$
+                          description: birth date 10 digits for customers without Swedish ssn
                       required:
-                        - loyalty
+                        - birth_date
+                      additionalProperties: false                      
+                    - type: object
+                      description: The customer company registration number
+                      properties:
+                        company_registration_number:
+                          type: string
+                          description: swedish organisationsnummer or VAT when the customer is a company
+                      required:
+                        - company_registration_number
+                      additionalProperties: false                      
             - type: object
               description: Defines customer information, like name, address, loyalty program.
               properties:
@@ -2682,7 +2644,16 @@ components:
             - amount_to_pay
         - required:
             - expedition
-      additionalProperties: false          
+      additionalProperties: false
+    PrescriptionSpecificationResponse:
+      title: PrescriptionSpecificationResponse
+      type: object
+      properties:
+        receipt_id:
+          type: string
+        prescription_specification_id:
+          type: string
+  
   securitySchemes:
     bearerAuth:
       type: http
@@ -2811,18 +2782,6 @@ components:
             long_message: "unknown error ocurred"
     Token:
       description: Token successfully created
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/TokenResponse"
-          example:
-            {
-              "access_token": "<JWT token>",
-              "token_type": "Bearer",
-              "expires_in": 86000,
-            }
-    CreatePresciptionSpecificationResponse:
-      description: Prescription specification successfully created
       content:
         application/json:
           schema:
