@@ -36,4 +36,4 @@ Latest version: v1.0.
 
 ## Example prescription specifications
 
-[Overview of the example receipts](receipt-doc/prescription/example-prescription-specs.md)
+[Overview of the example specifications](receipt-doc/prescription/example-prescription-specs.md)
