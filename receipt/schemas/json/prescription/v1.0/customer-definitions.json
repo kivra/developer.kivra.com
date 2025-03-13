@@ -1,0 +1,89 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "customer defintions connected to prescription specification schema",
+    "definitions": {
+        "customer_identifier": {
+            "type": "object",
+            "description": "Defines valid customer identifiers",
+            "properties": {
+                "id": {
+                    "type": "object",
+                    "oneOf": [{
+                        "$ref": "#/definitions/customer_identifier_civic_registration_number"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_birth_date"
+                    }, {
+                        "$ref": "#/definitions/customer_identifier_company_registration_number"
+                    }]
+                }
+            }
+        },
+        "customer_information": {
+            "type": "object",
+            "description": "Defines customer information, like name, address, loyalty program.",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "$ref": "../../common/definitions/service-common-definitions.json#/definitions/address"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "phone": {
+                            "$ref": "../../common/definitions/service-common-definitions.json#/definitions/phone_number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "geo_location": {
+                    "$ref": "../../common/definitions/service-common-definitions.json#/definitions/geo_location"
+                }
+            },
+            "additionalProperties": false
+        },
+        "customer_identifier_civic_registration_number": {
+            "type": "object",
+            "description": "The customer ssn",
+            "properties": {
+                "civic_registration_number": {
+                    "type": "string",
+                    "pattern": "^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$",
+                    "description": "swedish personnummer 12 digits"
+                }
+            },
+            "required": ["civic_registration_number"],
+            "additionalProperties": false
+        },
+        "customer_identifier_birth_date": {
+            "type": "object",
+            "description": "The customer birth date",
+            "properties": {
+                "birth_date": {
+                    "type": "string",
+                    "pattern": "^[12]{1}[90]{1}[0-9]{6}$",
+                    "description": "birth date 10 digits, e.g 19920101"
+                }
+            },
+            "required": ["birth_date"],
+            "additionalProperties": false
+        },
+        "customer_identifier_company_registration_number": {
+            "type": "object",
+            "description": "The company registration number, when a company is the customer",
+            "properties": {
+                "company_registration_number": {
+                    "type": "string",
+                    "description": "company registration number used as id when the customer is a company"
+                }
+            },
+            "required": ["company_registration_number"],
+            "additionalProperties": false
+        }
+    }
+}

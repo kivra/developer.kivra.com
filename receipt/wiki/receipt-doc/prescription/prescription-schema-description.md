@@ -36,7 +36,6 @@ This part of the prescription specification contains the same information as the
 - _cashier_
 - _receipt_identifier_
 - _time_of_purchase_
-- _customer_
 
 These properties are described in more detail [here](../retail/retail-schema-description.md)
 
