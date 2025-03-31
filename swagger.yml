@@ -19,7 +19,7 @@ info:
     # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail. 
     Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/intresseanmalan).
-    
+
     ## National versions of Kivra APIs
     As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate.
 
@@ -3064,7 +3064,7 @@ paths:
                   $ref: "#/components/schemas/PaymentCallbackDefinition"
     post:
       tags:
-        - "TEnant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks"
       summary: Add a new webhook definition
       description: |
         This endpoint is used to add a new webhook definition.
@@ -3118,9 +3118,103 @@ paths:
             The definition of the just-created webhook.
           content:
             application/json:
-                schema:
-                  $ref: "#/components/schemas/PaymentCallbackDefinition"
+              schema:
+                $ref: "#/components/schemas/PaymentCallbackDefinition"
 
+  # ##############################################
+  # DELETE,POST /v1/tenant/TKEY/payment_cb/ID
+  # ##############################################
+  /v1/tenant/{tenantKey}/payment_cb/{id}:
+    delete:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Remove a webhook definition.
+      description: |
+        This endpoint removes a webhook definition.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: id
+          in: path
+          description: The ID of the webhook definition to be changed.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "The webhook definition was successfully removed."
+    post:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Modify a webhook definition
+      description: |
+        This endpoint is used to modify a webhook definition.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: id
+          in: path
+          required: true
+          description: |
+            The ID of the webhook to be modified.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  description: |
+                    The URL to which Kivra will try to deliver the webhook
+                    payloads. Must not be in a reserved domain, must have at
+                    least one IPv4 address and must not have any IPv4 addresses
+                    in a reserved range. The URL scheme must be HTTPS.
+                  type: string
+                  format: url
+                types:
+                  description: |
+                    A list of the types of payments that the tenant wants to
+                    receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - instant
+                      - bank
+                      - autogiro
+                events:
+                  description: |
+                    A list of the payment lifecycle events that the tenant wants
+                    to receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - scheduled
+                      - settled
+                      - failed
+      responses:
+        "200":
+          description: |
+            The new definition of the just-modified webhook.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCallbackDefinition"
 
   # ##############################################
   # GET /v1/partner/company
