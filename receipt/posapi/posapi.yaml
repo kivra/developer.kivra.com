@@ -12,7 +12,7 @@ info:
 
     # Digital Receipts Platform API
 
-    Kivra's digital receipt platform API, is a REST based API intented for Kivra partners and customers.
+    Kivra's digital receipt platform API, is a REST based API intended for Kivra partners and customers.
     The API is designed to receive receipts in specific XML and JSON formats. The API grants accessibility and management
     of digital receipts.
 
@@ -28,7 +28,7 @@ info:
       Every store needs to be a part of a chain.
 
       1. Use your company credential to fetch a partner token
-      2. Use you partner token to create a chain using the createChain method.
+      2. Use your partner token to create a chain using the createChain method.
 
       After your chain has been created you receive a chain_id. Now a store can be created and connected to this chain.
 
@@ -1693,7 +1693,7 @@ paths:
 
           ###  Headers
 
-          The Content-Type must be set according to the prescription spec. format:
+          The Content-Type must be set according to the prescription specification format:
 
           * Content-Type: application/json;profile=https://se.kivra.com/schemas/json/retail/ps/v1.0
 
@@ -1714,7 +1714,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PrescriptionSpecification'
+              oneOf: 
+                - $ref: '#/components/schemas/HumanPS'
+                - $ref: '#/components/schemas/AnimalPS'
             example:
               business_unit:
                 service_id: 15594097555922f97bfeb148d6b9a6ef76f76ebdce
@@ -2209,8 +2211,38 @@ components:
           type: string
           description: The id of the person registering for expense management system
           minLength: 1
-    PrescriptionSpecification:
-      description: prescription specification schema
+    
+    customer_ssn:
+      type: object
+      description: The customer ssn
+      properties:
+        civic_registration_number:
+          type: string
+          pattern: ^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$
+          description: swedish personnummer 12 digits
+      additionalProperties: false                                          
+    
+    customer_birth_date:
+      type: object
+      description: The customer birth date
+      properties:
+        birth_date:
+          type: string
+          pattern: ^[12]{1}[90]{1}[0-9]{6}$
+          description: birth date 10 digits for customers without Swedish ssn
+      additionalProperties: false     
+
+    customer_company_registration_number:
+      type: object
+      description: The customer company registration number
+      properties:
+        company_registration_number:
+          type: string
+          description: swedish organisationsnummer or VAT when the customer is a company
+      additionalProperties: false                                                       
+
+    HumanPS:
+      description: Prescription specification schema
       type: object
       properties:
         business_unit:
@@ -2322,7 +2354,7 @@ components:
               properties:
                 value:
                   type: string
-                  description: data that will be presented as a barcode on the receipt
+                  description: Data which, together with context, will connect the PS to a receipt
                 type:
                   type: string
                   enum:
@@ -2350,12 +2382,13 @@ components:
                 - context
           required:
             - sequence_number
+            - extended_number
         time_of_purchase:
           description: 'ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
           type: string
           format: date-time
         currency:
-          description: The receipt default currency. This gives the currency for all amounts in the receipt. If applicable overriding currencies can be added to the tender parts
+          description: This gives the currency for all amounts in the specifications. SEK is the default if not given.
           title: ISO-4217 currency codes
           type: string
           pattern: ^[a-zA-Z]{3}$
@@ -2372,43 +2405,16 @@ components:
           type: number
           minimum: 0
         customer:
-          description: The person or animal owner to whom the prescription is issued.
+          description: The person to whom the prescription is issued.
           allOf:
             - type: object
               description: Defines valid customer identifiers
               properties:
                 id:
-                  type: object
                   oneOf:
-                    - type: object
-                      description: The customer ssn
-                      properties:
-                        civic_registration_number:
-                          type: string
-                          pattern: ^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$
-                          description: swedish personnummer 12 digits
-                      required:
-                        - civic_registration_number
-                      additionalProperties: false
-                    - type: object
-                      description: The customer birth date
-                      properties:
-                        birth_date:
-                          type: string
-                          pattern: ^[12]{1}[90]{1}[0-9]{6}$
-                          description: birth date 10 digits for customers without Swedish ssn
-                      required:
-                        - birth_date
-                      additionalProperties: false                      
-                    - type: object
-                      description: The customer company registration number
-                      properties:
-                        company_registration_number:
-                          type: string
-                          description: swedish organisationsnummer or VAT when the customer is a company
-                      required:
-                        - company_registration_number
-                      additionalProperties: false                      
+                    - $ref: "#/components/schemas/customer_ssn"
+                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_company_registration_number"
             - type: object
               description: Defines customer information, like name, address, loyalty program.
               properties:
@@ -2474,47 +2480,10 @@ components:
                   required:
                     - latitude
                     - longitude
-                loyalty:
-                  type: object
-                  description: Customer loyalty information
-                  properties:
-                    program:
-                      type: string
-                      description: 'Loyalty program name, example: SJ Prio, ICA, SAS Eurobonus, etc. NOTE! Named used must be approved by Findity'
-                    level:
-                      type: string
-                      description: 'Some programs has different levels based on point etc '
-                    customer_number:
-                      type: string
-                      description: The actual loyalty number
-                    incremental_count:
-                      type: integer
-                      description: Loyalty points gained/lost in transaction
-                    current_count:
-                      type: integer
-                      description: Total loyalty points after increment
-                    target_count:
-                      type: integer
-                      description: Loyalty points needed to achieve next goal/level
-                    effective_date:
-                      type: string
-                      format: date
-                    expiration_date:
-                      type: string
-                      format: date
-                  required:
-                    - program
-                    - customer_number
+              required: 
+                - id
+                - name
               additionalProperties: false
-        animal:
-          type: object
-          description: Specific properties related to animal prescriptions
-          properties:
-            id:
-              type: string
-          required:
-            - id
-          additionalProperties: false
         human:
           properties:
             high_cost:
@@ -2594,9 +2563,294 @@ components:
           required:
             - high_cost
           additionalProperties: false
+        expedition:
+          type: object
+          properties:
+            id:
+              description: Expedition id, prescription id, etc
+              type: string
+            details:
+              description: The content of details is displayed to the user
+              type: array
+              minItems: 1
+              items:
+                type: string
+          required:
+            - id
+            - details
+          additionalProperties: false
+      required:
+        - human
+        - amount_with_benefit
+      allOf:
+        - required:
+            - business_unit
+        - required:
+            - cashier
+        - required:
+            - receipt_identifier
+        - required:
+            - time_of_purchase
+        - required:
+            - customer            
+        - required:
+            - amount_without_benefit
+        - required:
+            - amount_to_pay
+        - required:
+            - expedition
+      additionalProperties: false
+    
+    AnimalPS:
+      description: Prescription specification schema
+      type: object
+      properties:
+        business_unit:
+          description: Merchant information
+          type: object
+          properties:
+            name:
+              type: string
+            service_id:
+              description: Id created when then business is registered within findity
+              type: string
+              minLength: 42
+              maxLength: 42
+              pattern: ^[0-9]{10}[0-9a-fA-F]{32}$
+            unit_id:
+              type: string
+              description: Internal shop/business unit id
+            organization_number:
+              type: string
+              description: Swedish organisationsnummer or vat reg number
+            contact:
+              type: object
+              description: Merchant contact information name, address, phone etc
+              properties:
+                address:
+                  title: address
+                  description: An address following the convention of http://microformats.org/wiki/hcard
+                  type: object
+                  properties:
+                    street_address:
+                      type: string
+                    extended_address:
+                      type: string
+                    post_box:
+                      type: string
+                    locality:
+                      type: string
+                    postal_code:
+                      type: string
+                    region:
+                      type: string
+                    country_name:
+                      type: string
+                    type:
+                      type: object
+                      title: address type
+                      description: is address (physical/email) related to business, home, etc
+                      properties:
+                        type:
+                          enum:
+                            - home
+                            - business
+                  anyOf:
+                    - required:
+                        - street_address
+                    - required:
+                        - post_box
+                  required:
+                    - locality
+                    - postal_code
+                email:
+                  type: string
+                  format: email
+                phone:
+                  title: generic phone number
+                  description: generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed
+                  type: string
+                  pattern: ^(\(?((\+|(00))[0-9]{1,3})\)?)?( ?-?\(?[0-9]+\)?)+$
+                website:
+                  type: string
+                  format: uri
+            geo_location:
+              type: object
+              title: Geographic location (long/lat)
+              description: A geographical coordinate
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+              required:
+                - latitude
+                - longitude
+          required:
+            - name
+            - service_id
+            - organization_number
+            - contact
+        cashier:
+          description: Identifies the person handling the purchase if applicable
+          title: cashier name and id
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+        receipt_identifier:
+          description: 'Receipt identifiers: sequence number and/or extended number'
+          title: receipt identifier
+          type: object
+          properties:
+            sequence_number:
+              type: integer
+              description: a sequence number as stipulated by the swedish tax authorities
+            extended_number:
+              type: object
+              description: a more complex receipt number if applicable, must be unique in given context
+              properties:
+                value:
+                  type: string
+                  description: Data which, together with context, will connect the PS to a receipt
+                type:
+                  type: string
+                  enum:
+                    - Interleaved2Of5
+                    - EAN13
+                    - EAN8
+                    - Codabar
+                    - Code39
+                    - Code93
+                    - Code128
+                    - AztecCode
+                    - Datamatrix
+                    - PDF417
+                    - QRCode
+                  description: barcode representation of any data
+                context:
+                  type: string
+                  enum:
+                    - store
+                    - chain
+                    - global
+                  description: in what context is the value (receipt number) unique, note GLOBAL can only be used if a digital receipt provider receipt id is used
+              required:
+                - value
+                - context
+          required:
+            - sequence_number
+            - extended_number
+        time_of_purchase:
+          description: 'ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
+          type: string
+          format: date-time
+        currency:
+          description: This gives the currency for all amounts in the specifications. SEK is the default if not given.
+          title: ISO-4217 currency codes
+          type: string
+          pattern: ^[a-zA-Z]{3}$
+        amount_without_benefit:
+          type: number
+          minimum: 0
+        amount_to_pay:
+          type: number
+          minimum: 0
+        customer:
+          description: The animal owner to whom the prescription is issued.
+          allOf:
+            - type: object
+              description: Defines valid customer identifiers
+              properties:
+                id:
+                  oneOf:
+                    - $ref: "#/components/schemas/customer_ssn"
+                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_company_registration_number"
+            - type: object
+              description: Defines customer information, like name, address, loyalty program.
+              properties:
+                name:
+                  type: string
+                contact:
+                  type: object
+                  properties:
+                    address:
+                      title: address
+                      description: An address following the convention of http://microformats.org/wiki/hcard
+                      type: object
+                      properties:
+                        street_address:
+                          type: string
+                        extended_address:
+                          type: string
+                        post_box:
+                          type: string
+                        locality:
+                          type: string
+                        postal_code:
+                          type: string
+                        region:
+                          type: string
+                        country_name:
+                          type: string
+                        type:
+                          type: object
+                          title: address type
+                          description: is address (physical/email) related to business, home, etc
+                          properties:
+                            type:
+                              enum:
+                                - home
+                                - business
+                      anyOf:
+                        - required:
+                            - street_address
+                        - required:
+                            - post_box
+                      required:
+                        - locality
+                        - postal_code
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      title: generic phone number
+                      description: generic format for phone numbers where strict format can not be enforced, use only for phone number to be displayed
+                      type: string
+                      pattern: ^(\(?((\+|(00))[0-9]{1,3})\)?)?( ?-?\(?[0-9]+\)?)+$
+                  additionalProperties: false
+                geo_location:
+                  type: object
+                  title: Geographic location (long/lat)
+                  description: A geographical coordinate
+                  properties:
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+                  required:
+                    - latitude
+                    - longitude
+              required: 
+                - id
+                - name
+              additionalProperties: false
+        animal:
+          type: object
+          description: Specific properties related to animal prescriptions
+          properties:
+            id:
+              description: Usually animal name
+              type: string
+          required:
+            - id
+          additionalProperties: false
         medications:
           type: array
-          description: medicals etc, connected to this spec
+          description: medications etc, connected to this spec
           items:
             type: object
             properties:
@@ -2611,10 +2865,10 @@ components:
           type: object
           properties:
             id:
-              description: expedition id, prescription id, etc
+              description: Expedition id, prescription id, etc
               type: string
             details:
-              description: this is what the user will see
+              description: The content of details is displayed to the user
               type: array
               minItems: 1
               items:
@@ -2623,12 +2877,8 @@ components:
             - id
             - details
           additionalProperties: false
-      oneOf:
-        - required:
-            - animal
-        - required:
-            - human
-            - amount_with_benefit
+      required:
+        - animal
       allOf:
         - required:
             - business_unit
@@ -2639,12 +2889,15 @@ components:
         - required:
             - time_of_purchase
         - required:
+            - customer            
+        - required:
             - amount_without_benefit
         - required:
             - amount_to_pay
         - required:
             - expedition
       additionalProperties: false
+
     PrescriptionSpecificationResponse:
       title: PrescriptionSpecificationResponse
       type: object
@@ -2771,7 +3024,7 @@ components:
               short_message: "unauthorized"
               long_message: "permission denied"
     InternalError:
-      description: 500 Internal server error
+      description: Internal server error
       content:
         application/json:
           schema:
