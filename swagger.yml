@@ -859,6 +859,7 @@ x-tagGroups:
       - "Tenant API - Registered letters"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
+      - "Tenant API - Payment Webhooks"
   - name: Partner API
     tags:
       - "Partner API v1"
