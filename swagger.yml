@@ -3190,7 +3190,7 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Modify a webhook definition
       description: |
-        **always**This feature is under active development and API details are subject to
+        *This feature is under active development and API details are subject to
         change without notice.*
 
         This endpoint is used to modify a webhook definition.
