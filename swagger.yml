@@ -6262,21 +6262,25 @@ components:
         types:
           description: |
             A list of the types of payments that should trigger webhooks.
-          type: string
-          enum:
-            - instant
-            - bank
-            - autogiro
+          type: array
+          items:
+            type: string
+            enum:
+              - instant
+              - bank
+              - autogiro
         events:
           description: |
             A list of the payment events that should trigger
             webhooks. Not all events are meaningful for all payment
             types.
-          type: string
-          enum:
-            - scheduled
-            - settled
-            - failed
+          type: array
+          items:
+            type: string
+            enum:
+              - scheduled
+              - settled
+              - failed
         secret:
           description: |
             The newly created secret after a webhook definition was added or
