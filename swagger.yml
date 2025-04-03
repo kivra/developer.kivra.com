@@ -838,15 +838,18 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
+  - name: "Tenant API - Payment Webhooks"
+    description: |
+      *This feature is still under development and API details are subject to
+      change without notification.*
+
+      Endpoints used to set up, list and remove webhook definitions.
   - name: "Partner API v1"
     description: |
       Endpoints for partner access to company mailboxes.
   - name: "Partner API v3"
     description: |
       Endpoints for partner access to company mailboxes.
-  - name: "Tenant API - Payment Webhooks"
-    description: |
-      Endpoints used to set up, list and remove webhook definitions.
 
 x-tagGroups:
   - name: Tenant API
