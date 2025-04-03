@@ -3043,6 +3043,9 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Lists all the tenant's defined payment webhooks.
       description: |
+        This feature is under active development and API details are subject to
+        change without notice.
+
         This endpoint returns a list of all the payment webhooks that are
         defined for the tenant in question.
       parameters:
@@ -3067,7 +3070,33 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Add a new webhook definition
       description: |
+        This feature is under active development and API details are subject to
+        change without notice.
+
         This endpoint is used to add a new webhook definition.
+
+        A tenant is allowed to define more than one webhook, but each one must
+        have a unique URL.
+
+        As long as a tenant has at least one webhook defined, Kivra's system
+        will start accumulating data on payments made by Kivra users based on
+        invoices sent by the tenant. When those payments reach certain points in
+        their lifecycles, Kivra's system will make HTTPS POST requests to the
+        URLs specified in the tenant's webhook definition, as long as those
+        payments and events also match the rest of the fields in the defintion.
+        That way a sender can choose to, for example, send events based on
+        instant payments (for example Swish) to one URL and scheduled bank
+        transfer payments to another URL.
+
+        The receiving system must respond to Kivra's POST request with a
+        2xx HTTP response code, and the response must come within one second of
+        the connection being established.
+
+        If the POST request is not successfully delivered, Kivra will retry up
+        to ten times at increasing intervals following the recommended timetable
+        from Standard Webhooks. If the delivery still has not succeeded when
+        those attempts are down, the delivery attempt will be discarded.
+
       parameters:
         - name: tenantKey
           in: path
@@ -3130,6 +3159,9 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Remove a webhook definition.
       description: |
+        This feature is under active development and API details are subject to
+        change without notice.
+
         This endpoint removes a webhook definition.
       parameters:
         - name: tenantKey
@@ -3154,6 +3186,9 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Modify a webhook definition
       description: |
+        This feature is under active development and API details are subject to
+        change without notice.
+
         This endpoint is used to modify a webhook definition.
       parameters:
         - name: tenantKey
