@@ -3043,8 +3043,8 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Lists all the tenant's defined payment webhooks.
       description: |
-        This feature is under active development and API details are subject to
-        change without notice.
+        **always**This feature is under active development and API details are subject to
+        change without notice.*
 
         This endpoint returns a list of all the payment webhooks that are
         defined for the tenant in question.
@@ -3070,8 +3070,8 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Add a new webhook definition
       description: |
-        This feature is under active development and API details are subject to
-        change without notice.
+        *This feature is under active development and API details are subject to
+        change without notice.*
 
         This endpoint is used to add a new webhook definition.
 
@@ -3159,8 +3159,8 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Remove a webhook definition.
       description: |
-        This feature is under active development and API details are subject to
-        change without notice.
+        *This feature is under active development and API details are subject to
+        change without notice.*
 
         This endpoint removes a webhook definition.
       parameters:
@@ -3186,8 +3186,8 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Modify a webhook definition
       description: |
-        This feature is under active development and API details are subject to
-        change without notice.
+        **always**This feature is under active development and API details are subject to
+        change without notice.*
 
         This endpoint is used to modify a webhook definition.
       parameters:
