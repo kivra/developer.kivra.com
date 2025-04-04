@@ -1645,7 +1645,7 @@ paths:
       summary: List available recipient companies for a tenant
       operationId: List Companies
       description: |
-        This resource is used to list all, or search for specific, Companies that are eligible for receiving Content from the specific Tenant. The response is a JSON list of Objects containing the eligible Companies' key and VAT number.
+        This resource is used to list all, or search for specific, Companies that are eligible for receiving Content from the specific Tenant. The response is a JSON list of Objects containing the eligible Companies' key (deprecated) and VAT number.
 
         A search is done by providing the `vat_number` query parameter. If a search is done and the Company does not exist or have opted out of receiving Content from the Tenant an empty list will be returned.
       parameters:
@@ -4621,9 +4621,10 @@ components:
       type: object
       properties:
         key:
-          description: Company's unique Key
+          description: "This value is deprecated and will always be set to the empty string."
           type: string
-          example: "15236156848eefa1dc75364af2be38c98eb3aae223"
+          enum: [""]
+          example: ""
         vatnr:
           $ref: "#/components/schemas/VatNumber"
 
