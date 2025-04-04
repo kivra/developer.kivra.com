@@ -19,7 +19,7 @@ info:
     # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail. 
     Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/intresseanmalan).
-    
+
     ## National versions of Kivra APIs
     As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate.
 
@@ -838,6 +838,12 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
+  - name: "Tenant API - Payment Webhooks"
+    description: |
+      *This feature is still under development and API details are subject to
+      change without notification.*
+
+      Endpoints used to set up, list and remove webhook definitions.
   - name: "Partner API v1"
     description: |
       Endpoints for partner access to company mailboxes.
@@ -853,6 +859,7 @@ x-tagGroups:
       - "Tenant API - Registered letters"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
+      - "Tenant API - Payment Webhooks"
   - name: Partner API
     tags:
       - "Partner API v1"
@@ -3030,6 +3037,223 @@ paths:
                   sha256:
                     description: the signature to verify the file's authenticity
                     type: string
+
+  # ##############################################
+  # GET,POST /v1/tenant/TKEY/payment_cb
+  # ##############################################
+  /v1/tenant/{tenantKey}/payment_cb:
+    get:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Lists all the tenant's defined payment webhooks.
+      description: |
+        *This feature is under active development and API details are subject to
+        change without notice.*
+
+        This endpoint returns a list of all the payment webhooks that are
+        defined for the tenant in question.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        "200":
+          description: "List of defined webhooks."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentCallbackDefinition"
+    post:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Add a new webhook definition
+      description: |
+        *This feature is under active development and API details are subject to
+        change without notice.*
+
+        This endpoint is used to add a new webhook definition.
+
+        A tenant is allowed to define more than one webhook, but each one must
+        have a unique URL.
+
+        As long as a tenant has at least one webhook defined, Kivra's system
+        will start accumulating data on payments made by Kivra users based on
+        invoices sent by the tenant. When those payments reach certain points in
+        their lifecycles, Kivra's system will make HTTPS POST requests to the
+        URLs specified in the tenant's webhook definition, as long as those
+        payments and events also match the rest of the fields in the defintion.
+        That way a sender can choose to, for example, send events based on
+        instant payments (for example Swish) to one URL and scheduled bank
+        transfer payments to another URL.
+
+        The receiving system must respond to Kivra's POST request with a
+        2xx HTTP response code, and the response must come within one second of
+        the connection being established.
+
+        If the POST request is not successfully delivered, Kivra will retry up
+        to ten times at increasing intervals following the recommended timetable
+        from Standard Webhooks. If the delivery still has not succeeded when
+        those attempts are down, the delivery attempt will be discarded.
+
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  description: |
+                    The URL to which Kivra will try to deliver the webhook
+                    payloads. Must not be in a reserved domain, must have at
+                    least one IPv4 address and must not have any IPv4 addresses
+                    in a reserved range. The URL scheme must be HTTPS.
+                  type: string
+                  format: url
+                types:
+                  description: |
+                    A list of the types of payments that the tenant wants to
+                    receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - instant
+                      - bank
+                      - autogiro
+                events:
+                  description: |
+                    A list of the payment lifecycle events that the tenant wants
+                    to receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - scheduled
+                      - settled
+                      - failed
+      responses:
+        "201":
+          description: |
+            The definition of the just-created webhook.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCallbackDefinition"
+
+  # ##############################################
+  # DELETE,POST /v1/tenant/TKEY/payment_cb/ID
+  # ##############################################
+  /v1/tenant/{tenantKey}/payment_cb/{id}:
+    delete:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Remove a webhook definition.
+      description: |
+        *This feature is under active development and API details are subject to
+        change without notice.*
+
+        This endpoint removes a webhook definition.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: id
+          in: path
+          description: The ID of the webhook definition to be changed.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: "The webhook definition was successfully removed."
+    post:
+      tags:
+        - "Tenant API - Payment Webhooks"
+      summary: Modify a webhook definition
+      description: |
+        *This feature is under active development and API details are subject to
+        change without notice.*
+
+        This endpoint is used to modify a webhook definition.
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The key for the tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+        - name: id
+          in: path
+          required: true
+          description: |
+            The ID of the webhook to be modified.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  description: |
+                    The URL to which Kivra will try to deliver the webhook
+                    payloads. Must not be in a reserved domain, must have at
+                    least one IPv4 address and must not have any IPv4 addresses
+                    in a reserved range. The URL scheme must be HTTPS.
+                  type: string
+                  format: url
+                types:
+                  description: |
+                    A list of the types of payments that the tenant wants to
+                    receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - instant
+                      - bank
+                      - autogiro
+                events:
+                  description: |
+                    A list of the payment lifecycle events that the tenant wants
+                    to receive webhooks for.
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - scheduled
+                      - settled
+                      - failed
+      responses:
+        "200":
+          description: |
+            The new definition of the just-modified webhook.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCallbackDefinition"
 
   # ##############################################
   # GET /v1/partner/company
@@ -6012,6 +6236,75 @@ components:
             - transaction_at
             - type
         - $ref: "#/components/schemas/BaseContentMetadata"
+
+    # ##############################################
+    # SCHEMA PaymentCallbackDefinition
+    # ##############################################
+    PaymentCallbackDefinition:
+      description: |
+        A definition used to send webhooks from Kivra to a sender.
+      type: object
+      properties:
+        id:
+          description: The ID of the current webhook definition.
+          type: string
+          format: uuid
+        url:
+          description: |
+            The target URL that Kivra will try to deliver to. The
+            hostname in the URL must not be in a restricted domain
+            (like for example `example.org` or `local`). The
+            hostname also must resolve to at least one IPv4 address,
+            and must not resolve to any addresses in an IPv4 range
+            reserved by IANA.
+          type: string
+          format: url
+        types:
+          description: |
+            A list of the types of payments that should trigger webhooks.
+          type: array
+          items:
+            type: string
+            enum:
+              - instant
+              - bank
+              - autogiro
+        events:
+          description: |
+            A list of the payment events that should trigger
+            webhooks. Not all events are meaningful for all payment
+            types.
+          type: array
+          items:
+            type: string
+            enum:
+              - scheduled
+              - settled
+              - failed
+        secret:
+          description: |
+            The newly created secret after a webhook definition was added or
+            modified. The secret is a 256-bit random number that will be used to
+            sign webhook payloads from Kivra. If a secret already exists when
+            a new one is added (that is, when a webhook definition is modified
+            rather han created), payloads will be signed with both the existing
+            and the new secrets for the next 72 hours.
+            For security reasons, the actual secret will be replaced with a
+            dummy value in reponses to API calls that do not result in the
+            creation of a new secret.
+          type: string
+          format: base64
+        created_at:
+          description: |
+            The time when this definition was created.
+          type: string
+          format: date-time
+        active:
+          description: |
+            A flag specifying if this definition is currently being
+            used. Resonses for it not being used include the sender
+            setting it to inactive, or a too large number of
+            unsuccessful delivery attempts over a too long timeframe.
 
   # ##############################################
   # SECURITY oAuth2Client
