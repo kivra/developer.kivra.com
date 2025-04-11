@@ -3839,8 +3839,10 @@ components:
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"booking"`: indicating that the content is a booking/appointement.
             - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided. Note that email matching is not yet supported for this content type.
-            - `"invoice.donation"`: indicating that the content is a donation where the payment by the user is optional.`"Note: This is not live yet"`.
-            - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations. `"Note: This is not live yet"`.
+            - `"invoice.donation"`: indicating that the content is a donation where the payment by the user is optional.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+            - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
