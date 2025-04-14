@@ -1673,7 +1673,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
-  /dr/v1/prescriptionspecification:
+  /dr/v1/prescription-specifications:
     post:
       description:  >
         Adds a new prescription specification to the Kivra DRP.
