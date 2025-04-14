@@ -849,7 +849,86 @@ tags:
       Endpoints for partner access to company mailboxes.
   - name: "Partner API v3"
     description: |
-      Endpoints for partner access to company mailboxes.
+      # Webhook - Authentication
+      When Kivra sends webhook requests to your endpoint, you need to verify that
+      these requests are genuine and come from Kivra. The webhook authentication
+      scheme is based on HMAC signatures with a shared secret.
+
+      For each webhook request, Kivra includes the following HTTP headers:
+
+      ```
+      X-KIVRA-TIMESTAMP: <timestamp>
+      X-KIVRA-SIGNATURE: v1=<signature>
+      ```
+
+      Where `<timestamp>` is the Unix timestamp in seconds when the webhook
+      delivery attempt was made (UTC), and `<signature>` is our HMAC (see
+      below).
+
+      Kivra will send one signature header per secret in rotation. This is to
+      allow zero downtime key rotation.
+
+      ```
+      X-KIVRA-TIMESTAMP: <timestamp>
+      X-KIVRA-SIGNATURE: v1=<signature1>
+      X-KIVRA-SIGNATURE: v1=<signature2>
+      ```
+
+      To verify a webhook request:
+
+      1. Extract the timestamp `t` from the `X-KIVRA-TIMESTAMP` header
+      2. Verify the timestamp is within your acceptable time drift tolerance to
+         prevent replay attacks
+      3. Prepare the message string: `message = t + ":" + request_body` (the raw
+         request body)
+      4. Compute a SHA-256 HMAC using your shared secret: `signature =
+         HMAC-SHA256(message, shared_secret)`
+      5. Compare the generated signature with each signature in the
+         `X-KIVRA-SIGNATURE` headers
+      6. If ANY signature matches, the request is authentic
+
+      The receiver determines what time drift is acceptable. Requests with
+      timestamps outside this tolerance should be rejected to prevent replay
+      attacks.
+
+      # Webhook - Event payload
+      The webhook payload is a JSON object with the following fields:
+
+      - `id`: Unique identifier for the event. Guaranteed to stay the same
+        between retries, and therefore can be used to deduplicate events.
+      - `event_created_at`: unix timestamp in seconds when the event happened
+        (UTC). This will stay the same even when retried. See the
+        `X-KIVRA-TIMESTAMP` header for the time the event was sent.
+      - `event_type`: a tag describing what happened, e.g. "content.created".
+      - `data_version`: the version of `data` being sent.
+      - `data`: the `event_type` specific data.
+
+      The `event_type` and `data_version` together determine the shape of the
+      `data` field. Backwards compatible changes, such as addtions of new
+      fields, will not increment the `data_version`. However, for breaking
+      changes `data_version` will be incremented. In practice this means you
+      must be able to handle extra fields.
+
+      ```jsonc
+      {
+        "id": "event_3f62fc97907a4212af028c30f1ea1927",
+        "event_created_at": 1686089970,
+        "event_type": "content.created",
+        "data_version": 1,
+        "data": {
+          // Event-specific payload
+        }
+      }
+      ```
+
+      # Webhook - Responding
+      The response must be a 200 OK or Kivra will retry a little while later.
+      This means Kivra can only gurantee a "at-least-once" delivery and it is up
+      to you do handle duplicated events. To make this a bit easier Kivra will
+      use the same `event_id` for every retry.
+
+      Note that `event_created_at` and `X-KIVRA-TIMESTAMP` are unrelated. The
+      former is set when the event happened, the latter for each attempt.
 
 x-tagGroups:
   - name: Tenant API
@@ -3710,6 +3789,7 @@ components:
             - `"invoice"`: |
               indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
               This is the default type for all payable content.
+
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice.
               The invoice might include late fees and other differences compared to the original invoice.
@@ -6309,6 +6389,20 @@ components:
             setting it to inactive, or a too large number of
             unsuccessful delivery attempts over a too long timeframe.
 
+    # ##############################################
+    # SCHEMA Webhooks
+    # ##############################################
+    WebhookEventId:
+      type: string
+      description: Event ID prefixed with "event_". Can be used for deduplication.
+      example: "event_3f62fc97907a4212af028c30f1ea1927"
+
+    WebhookEventCreatedAt:
+      type: integer
+      format: int64
+      description: Unix timestamp when the event happened, in seconds (UTC).
+      example: 1686089970
+
   # ##############################################
   # SECURITY oAuth2Client
   # ##############################################
@@ -6319,3 +6413,51 @@ components:
       flows:
         clientCredentials:
           tokenUrl: "https://sender.api.kivra.com/v1/auth"
+
+x-webhooks:
+  content.created:
+    post:
+      summary: Notification for new content
+      operationId: webhook-content-created
+      tags:
+        - "Partner API v3"
+      description: |
+        This webhook notifies you when a company inbox receives new content.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - event_created_at
+                - event_type
+                - data_version
+                - data
+              properties:
+                id:
+                  $ref: "#/components/schemas/WebhookEventId"
+                event_created_at:
+                  $ref: "#/components/schemas/WebhookEventCreatedAt"
+                event_type:
+                  type: string
+                  enum: ["content.created"]
+                data_version:
+                  type: integer
+                  enum: [1]
+                data:
+                  type: object
+                  required:
+                    - company_key
+                    - content_key
+                  properties:
+                    company_key:
+                      $ref: "#/components/schemas/CompanyKey"
+                    content_key:
+                      $ref: "#/components/schemas/ContentKey"
+      responses:
+        200:
+          description: >
+            Return a 200 status to acknowledge receipt of the webhook.
+            Any other response will cause Kivra to retry the delivery.
