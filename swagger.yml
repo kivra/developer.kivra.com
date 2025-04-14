@@ -17,7 +17,7 @@ info:
     The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html).
 
     # Introduction
-    This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail. 
+    This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail.
     Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/intresseanmalan).
 
     ## National versions of Kivra APIs
@@ -2755,12 +2755,12 @@ paths:
       operationId: getRegisteredLetterResponse
       description: |
         Get the response status of a registered letter sent by a tenant.
-        A user can sign a registered letter or let it expire. 
+        A user can sign a registered letter or let it expire.
 
-        When a user signs a registered letter, it is removed from their account, and the response is stored. 
+        When a user signs a registered letter, it is removed from their account, and the response is stored.
         If the letter is not signed before its expiration date, it is automatically removed as well. In both cases the response is stored.
 
-        When sending a registered letter a `sender_reference` can be included. 
+        When sending a registered letter a `sender_reference` can be included.
         This is an optional field that can be used to store an internal reference with the registered letter.
         This field is included when fetching the response of a registered letter.
       security:
@@ -2798,7 +2798,7 @@ paths:
       summary: Delete response
       operationId: deleteRegisteredLetterResponse
       description: |
-        Delete a registered letter response. 
+        Delete a registered letter response.
         Automatically deleted after 30 days.
       security:
         - oAuth2Client:
