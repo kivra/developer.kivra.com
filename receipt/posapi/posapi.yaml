@@ -97,7 +97,7 @@ info:
     </details>    
 
 servers:
-  - url: https://receipt.sandbox-api.kivra.com
+  - url: https://sender.sandbox-api.kivra.com
     description: Test environment (uses test data)
 paths:
   /dr/v1/receipts:
@@ -1731,9 +1731,6 @@ paths:
               cashier:
                 id: "5"
                 name: Anna Andersson
-              sales_recording_system:
-                serial_number: EA38329
-                name: kassa 3
               receipt_identifier:
                 sequence_number: 123456
                 extended_number:
@@ -1752,7 +1749,7 @@ paths:
               human: 
                 high_cost:
                   previous_period: 
-                    gross": 8982.64
+                    gross: 8982.64
                     net: 2350.0
                     start_date: "2021-07-12T08:00:00+02:00"
                   current_period:

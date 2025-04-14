@@ -18,7 +18,6 @@ This is where it all starts. The schema contains all the properties needed to cr
 {
   "business_unit": {},
   "cashier": {},
-  "sales_recording_system": {},
   "receipt_identifier": {},
   "time_of_purchase": "",
   "currency": "",
@@ -64,9 +63,8 @@ Information about the customer, contact information and/or customer identifier.
 
 ### [Sales recording system definitions](../../../schemas/json/retail/v1.0/sales-recording-system-definitions.json)
 
-Information related to the cash register:
+Information related to the cash register. Properties used in the prescription specification:
 
-- POS id, serial number, etc.
 - cashier
 - receipt identifier
   - sequence number
