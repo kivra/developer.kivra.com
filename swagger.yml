@@ -6290,7 +6290,7 @@ components:
             modified. The secret is a 256-bit random number that will be used to
             sign webhook payloads from Kivra. If a secret already exists when
             a new one is added (that is, when a webhook definition is modified
-            rather han created), payloads will be signed with both the existing
+            rather than created), payloads will be signed with both the existing
             and the new secrets for the next 72 hours.
             For security reasons, the actual secret will be replaced with a
             dummy value in reponses to API calls that do not result in the
