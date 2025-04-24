@@ -163,7 +163,7 @@ info:
     registers with Kivra within this period of time.
 
     <aside class="notice">
-    Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary` and `invite.sign`.
+    Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`.
     </aside>
 
     ### Tenant key
@@ -1924,7 +1924,7 @@ paths:
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary` and `invite.sign`.
+        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`.
         </aside>
     letter.creditnotice
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
@@ -3894,7 +3894,7 @@ components:
             - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
             - `"letter.form"`: indicating that the content contains a form.
-            - `"letter.signed"`: indicates that the content contains a signed document
+            - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
             - `"invite.research"`: for invitations to participate in surveys and polls
             - `"invite.gift"`: for invitations to collect a gift
             - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
