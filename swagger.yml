@@ -163,7 +163,7 @@ info:
     registers with Kivra within this period of time.
 
     <aside class="notice">
-    Note: Usage of retained functionality is only allowed for documents of type credit notice and salary slip.
+    Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary` and `invite.sign`.
     </aside>
 
     ### Tenant key
@@ -1924,9 +1924,9 @@ paths:
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of retained content is only allowed for documents of type credit notice and salary slip.
+        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary` and `invite.sign`.
         </aside>
-
+    letter.creditnotice
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
         By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the specified amount of time (*30 days* is the default value if nothing else is specified). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
 
@@ -3891,13 +3891,13 @@ components:
             The type of a content may influence how the user interacts with the content and how the user is notified about the content.
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
-            - `"letter.salary"`: indicating that the content is a salary specification.
-            - `"letter.creditnotice"`: indicating that the content is a creditnotice.
+            - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
+            - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
             - `"letter.form"`: indicating that the content contains a form.
             - `"letter.signed"`: indicates that the content contains a signed document
             - `"invite.research"`: for invitations to participate in surveys and polls
             - `"invite.gift"`: for invitations to collect a gift
-            - `"invite.sign"`: for invitations to sign a document
+            - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
             - `"invite.voucher"`: for invitations to use a voucher
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
