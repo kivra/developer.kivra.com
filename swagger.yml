@@ -6488,7 +6488,7 @@ webhooks:
 
         For instance:
         ```
-        3f62fc97-907a-4212-af02-8c30f1ea1927.{
+        3f62fc97-907a-4212-af02-8c30f1ea1927.1674087231.{
           "type": "contact.created",
           "timestamp": "2022-11-03T20:26:10.344522Z",
           "data": {
