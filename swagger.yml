@@ -3118,9 +3118,9 @@ paths:
                     type: string
 
   # ##############################################
-  # GET,POST /v1/tenant/TKEY/payment_cb
+  # GET,POST /v2/tenant/TKEY/payment_cb
   # ##############################################
-  /v1/tenant/{tenantKey}/payment_cb:
+  /v2/tenant/{tenantKey}/payment_cb:
     get:
       tags:
         - "Tenant API - Payment Webhooks"
@@ -3234,9 +3234,9 @@ paths:
                 $ref: "#/components/schemas/PaymentCallbackDefinition"
 
   # ##############################################
-  # DELETE,POST /v1/tenant/TKEY/payment_cb/ID
+  # DELETE,POST /v2/tenant/TKEY/payment_cb/ID
   # ##############################################
-  /v1/tenant/{tenantKey}/payment_cb/{id}:
+  /v2/tenant/{tenantKey}/payment_cb/{id}:
     delete:
       tags:
         - "Tenant API - Payment Webhooks"
