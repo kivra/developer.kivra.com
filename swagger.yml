@@ -113,6 +113,7 @@ info:
     | 2024-09-18 | Removed Invite BETA tags since invite features are live |
     | 2024-09-30 | Removed obsolete `v1` of `content` endpoint and `payment` structure |
     | 2025-02-10 | Added registered letter content |
+    | 2025-04-30 | Removed v1 of usermatch endpoint |
 
     # Terminology
     ### User
@@ -1508,54 +1509,6 @@ paths:
             This error could indicate that the diffId is no longer valid
             and therefore the URL points to a resource that is no longer
             available
-
-  # ##############################################
-  # POST /v1/tenant/TKEY/usermatch
-  # ##############################################
-  /v1/tenant/{tenantKey}/usermatch:
-    post:
-      tags:
-        - "Tenant API - Content"
-      summary: Match a list of recipient users for a specific tenant
-      operationId: Match Users
-      description: |
-        This resource is used to match a list of users to check that they are eligible for receiving Content from
-          the specific Tenant.
-        The request contains a list of SSNs to be matched, and the response is a filtered list containing only the SSNs that are eligible to receive content from the tenant.
-        <aside class="notice">
-          If none of the provided SSNs are eligible to receive content from this tenant, an empty list will be returned.
-        </aside>
-      parameters:
-        - name: tenantKey
-          in: path
-          description: The unique Key for a Tenant
-          required: true
-          schema:
-            type: string
-            format: hexadecimal
-      requestBody:
-        description: |
-          List of SSNs to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 SSNs.
-          If the payload exceeds 10MB, Kivra will respond with a 413 error.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserMatch"
-            example:
-              ssns: ["191212121212", "197701032380", "198112172385"]
-        required: true
-      security:
-        - oAuth2Client:
-            - "get:kivra.v1.tenant.{tenantKey}.usermatch"
-      responses:
-        200:
-          description: Filtered list of SSNs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserMatch"
-              example:
-                ssns: ["191212121212", "198112172385"]
 
   # ##############################################
   # POST v2 usermatching
@@ -4741,29 +4694,6 @@ components:
           description: List of removed users
           items:
             $ref: "#/components/schemas/UserList"
-
-    # ##############################################
-    # SCHEMA UserMatch
-    # ##############################################
-    UserMatch:
-      required:
-        - ssns
-      type: object
-      properties:
-        ssns:
-          type: array
-          items:
-            type: string
-            example:
-              - "191212121212"
-              - "197701032380"
-              - "198112172385"
-          description: list of SSNs to be matched
-      example:
-        ssns:
-          - "191212121212"
-          - "197701032380"
-          - "198112172385"
 
     # ##############################################
     # SCHEMA V2 UserMatch
