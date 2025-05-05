@@ -2378,7 +2378,6 @@ components:
                 - value
                 - context
           required:
-            - sequence_number
             - extended_number
         time_of_purchase:
           description: 'ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
@@ -2738,7 +2737,6 @@ components:
                 - value
                 - context
           required:
-            - sequence_number
             - extended_number
         time_of_purchase:
           description: 'ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
