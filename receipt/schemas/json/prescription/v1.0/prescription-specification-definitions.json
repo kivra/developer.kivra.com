@@ -114,6 +114,22 @@
         "gross", "net"
       ],
       "additionalProperties": false
+    },
+    "receipt_identifier": {
+      "title": "receipt identifier",
+      "description": "the receipt id of the receipt connected to the prescription specification.",
+      "type": "object",
+      "properties": {
+        "sequence_number": {
+          "type": "integer",
+          "description": "a sequence number as stipulated by the swedish tax authorities, not mandatory for PS."
+        },
+        "extended_number": {
+          "$ref": "../../common/definitions/sales-recording-system-definitions.json#/definitions/extended_receipt_number_type"
+        }
+      },
+      "required": ["extended_number"],
+      "additionalProperties": false
     }
   }
 }

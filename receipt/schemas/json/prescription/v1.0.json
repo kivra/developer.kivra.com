@@ -149,7 +149,7 @@
             "properties": {
                 "sequence_number": {
                     "type": "integer",
-                    "description": "a sequence number as stipulated by the swedish tax authorities"
+                    "description": "a sequence number as stipulated by the swedish tax authorities, not mandatory for PS."
                 },
                 "extended_number": {
                     "type": "object",
@@ -193,7 +193,7 @@
                 }
             },
             "required": [
-                "sequence_number"
+                "extended_number"
             ],
             "additionalProperties": false
         },
