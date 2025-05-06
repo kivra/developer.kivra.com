@@ -6381,11 +6381,17 @@ webhooks:
                   required:
                     - company_key
                     - content_key
+                    - vat_number
                   properties:
                     company_key:
                       $ref: "#/components/schemas/CompanyKey"
                     content_key:
                       $ref: "#/components/schemas/ContentKey"
+                    vat_number:
+                      pattern: ^SE[0-9]{10}01$
+                      description: The VAT number of the company that received the content.
+                      example: SE556000475501
+                      type: string
       responses:
         200:
           description: >
