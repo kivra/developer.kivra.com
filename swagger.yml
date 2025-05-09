@@ -6408,6 +6408,9 @@ webhooks:
         scheduled, or failed. Each webhook includes information about the payment including
         account details, amount, and event timing.
 
+        ## Standard
+        Kivra Payments follows [Standard Webhooks](https://standardwebhooks.com) for delivering webhooks.
+
         ## Authentication
         Kivra Payments signs webhooks with HMAC signatures that you can verify to ensure the request came from Kivra.
         When Kivra sends a webhook, the following headers will be included:
@@ -6432,6 +6435,28 @@ webhooks:
           }
         }
         ```
+
+        ## Retries
+
+        Kivra Payments will retry delivery of the webhook in the case of a non-200 response. The schedule
+        is as follows:
+
+        Attempt | Delay | Time since start |
+        | --- | --- | --- |
+        | 1 | Immediately | 00:00:00 |
+        | 2 | 5 seconds | 00:00:05 |
+        | 3 | 5 minutes | 00:05:05 |
+        | 4 | 30 minutes | 00:35:05 |
+        | 5 | 2 hours | 02:35:05 |
+        | 6 | 5 hours |	07:35:05 |
+        | 7 | 10 hours | 17:35:05 |
+        | 8 | 14 hours | 31:35:05 |
+        | 9 | 20 hours | 51:35:05 |
+        | 10 | 24 hours | 75:35:05 |
+
+        If the delivery is unsuccessful on the 10th attempt, the delivery will be cancelled and no more attemps
+        will be done.
+
       parameters:
         - name: webhook-id
           in: header
