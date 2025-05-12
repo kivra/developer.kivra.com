@@ -3768,7 +3768,7 @@ components:
           description: |
             Boolean denoting if Kivra should try and retain this content if it can’t be delivered. Default `false`.
             Please note that retain can only be used together with content type `letter.creditnotice`, `letter.salary`, `letter.signed` 
-            and `invite.sign`, otherwise a 422 error will be returned.
+            and `invite.sign`, otherwise an error with status code `422` will be returned.
           type: boolean
           writeOnly: true
           example: false
@@ -3883,7 +3883,7 @@ components:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
             Please note that retain can only be used with content types `letter.creditnotice`, `letter.salary`, `letter.signed` 
-            and `invite.sign`, otherwise a 422 error will be returned.
+            and `invite.sign`, otherwise an error with status code `422` will be returned.
           type: boolean
           writeOnly: true
           example: false
