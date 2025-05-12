@@ -114,6 +114,7 @@ info:
     | 2024-09-30 | Removed obsolete `v1` of `content` endpoint and `payment` structure |
     | 2025-02-10 | Added registered letter content |
     | 2025-04-30 | Removed v1 of usermatch endpoint |
+    | 2025-05-12 | Added error 422 / 42221 |
 
     # Terminology
     ### User
@@ -671,6 +672,7 @@ info:
     |40601 |Invalid Accept Header |The Accept Header contains a non valid or unknown Content-Type |
     |40915 |Conflict |An attempt was made to create an object that already exists |
     |41300 |Request Entity Too Large, the sent payload exceeded the maximum size limit |
+    |42221 |Request to retain content with unsupported content type  |
     |42900 |Too Many Requests |Too many requests within this timespan have been made. Please try again later |
 
     ## Troubleshooting
@@ -1877,7 +1879,7 @@ paths:
         A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
 
         <aside class="notice">
-        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`.
+        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`, otherwise an error with status code `422` will be returned
         </aside>
 
         Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
@@ -3764,8 +3766,9 @@ components:
             - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
         retain:
           description: |
-            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
-            Please note that retain must never be set to `true` for payable content.
+            Boolean denoting if Kivra should try and retain this content if it can’t be delivered. Default `false`.
+            Please note that retain can only be used together with content type `letter.creditnotice`, `letter.salary`, `letter.signed` 
+            and `invite.sign`, otherwise a 422 error will be returned.
           type: boolean
           writeOnly: true
           example: false
@@ -3879,7 +3882,8 @@ components:
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
-            Please note that retain must never be set to `true` for payable content.
+            Please note that retain can only be used with content types `letter.creditnotice`, `letter.salary`, `letter.signed` 
+            and `invite.sign`, otherwise a 422 error will be returned.
           type: boolean
           writeOnly: true
           example: false
