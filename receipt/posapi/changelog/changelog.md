@@ -1,25 +1,35 @@
 # POS API
 
+## Version 1.3.17 (2025-05-15)
+
+### Fix
+
+- Added cardtoken as a identifier type
+
 ## Version 1.3.16 (2025-03-11)
 
 ### New
- - Added prescription specification api
-    
+
+- Added prescription specification api
+
 ## Version 1.3.15 (2025-01-03)
 
 ### Fix
- - Updated error responses
+
+- Updated error responses
 
 ## Version 1.3.14 (2022-09-21)
 
 ### New
-- New endpoints: 
-    - list chains connected to a partner
-    - list stores connected to a chain.
+
+- New endpoints:
+  - list chains connected to a partner
+  - list stores connected to a chain.
 
 ## Version 1.3.13 (2022-06-30)
 
 ### Fix
+
 - Fixed some small bugs and partly rewritten ingres.
 
 ## Version 1.3.12 (2020-05-05)
@@ -125,7 +135,7 @@
 ### New
 
 - When creating a JSON receipt the schema version has to be sent in the content-type
-  - application/json; profile=https://se.digitalreceipts.net/schemas/json/retail/{Schema-Version}
+  - application/json; profile=<https://se.digitalreceipts.net/schemas/json/retail/{Schema-Version}>
   - See documentation for available versions
 
 ## Version 0.6 (2019-09-18)
