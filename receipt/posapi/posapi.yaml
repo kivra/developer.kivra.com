@@ -2982,7 +2982,7 @@ components:
       required: true
       schema:
         type: string
-        enum: [nationalidentitynumber,mobilephone, email]
+        enum: [nationalidentitynumber,mobilephone, email, cardtoken]
     IdentifierID:
       name: id
       in: path
