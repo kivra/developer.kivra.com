@@ -5628,6 +5628,48 @@ components:
       type: string
 
     # ##############################################
+    # SCHEMA SenderContactInfo
+    # ##############################################
+    SenderContactInfo:
+      type: object
+      description: Contact information for the sender. Null if not provided or all fields are null.
+      nullable: true
+      properties:
+        email_address:
+          type: string
+          nullable: true
+          description: Email address for support.
+          example: "support@example.com"
+        logo_url:
+          type: string
+          format: url
+          nullable: true
+          description: URL to a logo.
+          example: "https://example.com/logo.png"
+        phone_number:
+          type: string
+          nullable: true
+          description: Phone number for support.
+          example: "+46700000000"
+        text:
+          type: string
+          nullable: true
+          description: Free-form text, e.g., contact person or department.
+          example: "Customer Support"
+        url:
+          type: string
+          format: url
+          nullable: true
+          description: URL to a support page.
+          example: "https://example.com/support"
+      example:
+        email_address: "support@example.com"
+        logo_url: "https://example.com/logo.png"
+        phone_number: "+46700000000"
+        text: "Customer Support"
+        url: "https://example.com/support"
+
+    # ##############################################
     # SCHEMA CompanyKey
     # ##############################################
     CompanyKey:
@@ -6236,6 +6278,8 @@ components:
                 $ref: "#/components/schemas/PartnerPaymentOption"
             references:
               $ref: "#/components/schemas/InvoiceReferences"
+            sender_contact_info:
+              $ref: "#/components/schemas/SenderContactInfo"
           required:
             - interpreted_fields
             - key
@@ -6246,6 +6290,7 @@ components:
             - received_at
             - receiver_name
             - receiver_vat_number
+            - sender_contact_info
             - sender_icon_url
             - sender_name
             - sender_vat_numbers
