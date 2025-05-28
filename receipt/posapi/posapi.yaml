@@ -282,12 +282,12 @@ paths:
               examples:
                 invalid_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad_request"
                     long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "unsupported content type header"
         "401":
@@ -299,7 +299,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -311,7 +311,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
                     error_detail: "invalid service_id"
@@ -349,7 +349,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40010"
+                    error_code: "40010"
                     short_message: "bad request"
                     long_message: "unknown url paramter"
         "401":
@@ -361,7 +361,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -373,7 +373,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -447,12 +447,12 @@ paths:
               examples:
                 missing_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "unsupported content type header"
         "401":
@@ -464,7 +464,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -476,7 +476,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "409":
@@ -488,7 +488,7 @@ paths:
               examples:
                 vat_exists:
                   value:
-                    code: "40900"
+                    error_code: "40900"
                     short_message: "conflict"
                     long_message: "company with the given vat exists"
         "500":
@@ -548,7 +548,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -560,7 +560,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -619,12 +619,12 @@ paths:
               examples:
                 missing_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "unsupported content type header"
         "401":
@@ -636,7 +636,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -648,7 +648,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "409":
@@ -660,7 +660,7 @@ paths:
               examples:
                 vat_exists:
                   value:
-                    code: "40900"
+                    error_code: "40900"
                     short_message: "conflict"
                     long_message: "company with the given vat exists"
         "500":
@@ -707,7 +707,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -719,7 +719,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -785,7 +785,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -797,7 +797,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -853,7 +853,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -865,7 +865,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -953,12 +953,12 @@ paths:
               examples:
                 missing_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body is missing required fields or has invalid fields"
                 invalid_content_type:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "unsupported content type header"
         "401":
@@ -970,7 +970,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -982,7 +982,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "409":
@@ -994,7 +994,7 @@ paths:
               examples:
                 vat_exists:
                   value:
-                    code: "40900"
+                    error_code: "40900"
                     short_message: "conflict"
                     long_message: "company with the given vat exists"
         "500":
@@ -1045,7 +1045,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1057,7 +1057,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1108,7 +1108,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1120,7 +1120,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1184,7 +1184,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
         "401":
@@ -1196,7 +1196,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "409":
@@ -1208,7 +1208,7 @@ paths:
               examples:
                 vat_exists:
                   value:
-                    code: "40900"
+                    error_code: "40900"
                     short_message: "conflict"
                     long_message: "company with the given vat exists"
         "500":
@@ -1250,12 +1250,12 @@ paths:
               examples:
                 invalid_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
                 invalid_header:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "missing required header or invalid header"
         "401":
@@ -1267,7 +1267,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "500":
@@ -1295,12 +1295,12 @@ paths:
               examples:
                 invalid_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
                 invalid_header:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "missing required header or invalid header"
         "401":
@@ -1312,7 +1312,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1324,7 +1324,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1353,12 +1353,12 @@ paths:
               examples:
                 invalid_body:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
                 invalid_header:
                   value:
-                    code: "40002"
+                    error_code: "40002"
                     short_message: "bad request"
                     long_message: "missing required header or invalid header"
         "401":
@@ -1370,7 +1370,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1382,7 +1382,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1421,17 +1421,17 @@ paths:
               examples:
                 person_not_found:
                   value:
-                    code: "40005"
+                    error_code: "40005"
                     short_message: "bad request"
                     long_message: "person not found"
                 unknown_url_parameter:
                   value:
-                    code: "40010"
+                    error_code: "40010"
                     short_message: "bad request"
                     long_message: "unknown url parameter"
                 invalid_identifier:
                   value:
-                    code: "40012"
+                    error_code: "40012"
                     short_message: "bad request"
                     long_message: "invalid identifier"
         "401":
@@ -1443,7 +1443,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "500":
@@ -1480,7 +1480,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
         "500":
@@ -1506,7 +1506,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40011"
+                    error_code: "40011"
                     short_message: "bad request"
                     long_message: "invalid query parameter"
         "500":
@@ -1543,7 +1543,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
         "401":
@@ -1555,7 +1555,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1567,7 +1567,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1603,7 +1603,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40000"
+                    error_code: "40000"
                     short_message: "bad request"
                     long_message: "body s missing required fields or has invalid fields"
         "401":
@@ -1615,7 +1615,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1627,7 +1627,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1655,7 +1655,7 @@ paths:
               examples:
                 unauthorized:
                   value:
-                    code: "40100"
+                    error_code: "40100"
                     short_message: "unauthorized"
                     long_message: "permission denied"
         "404":
@@ -1667,7 +1667,7 @@ paths:
               examples:
                 resource_not_found:
                   value:
-                    code: "40400"
+                    error_code: "40400"
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
@@ -1865,7 +1865,7 @@ components:
       title: ErrorResponse
       type: object
       properties:
-        code:
+        error_code:
           type: string
         short_message:
           type: string
@@ -2236,7 +2236,67 @@ components:
         company_registration_number:
           type: string
           description: swedish organisationsnummer or VAT when the customer is a company
-      additionalProperties: false                                                       
+      additionalProperties: false    
+
+    total_vat:
+      type: object
+      description: vat total in any
+      properties:
+        type: 
+          type: string
+          enum:
+            - vat
+        amount: 
+          type: number
+          minimum: 0
+          description: the total vat amount, the sum of all sub_total amounts
+        sub_totals:
+          type: array
+          description: list of vats based on tax percentage
+          items:
+            type: object
+            properties:
+              amount:
+                type: number
+                description: the vat amount
+              taxable_amount:
+                type: number
+                description: amount including tax amount 
+              net_amount:
+                type: number                
+                description: amount excluding tax amount
+              tax_percentage:
+                type: number                
+            required:
+              - amount
+              - tax_percentage
+            additionalProperties: false
+
+    total_gross:
+      type: object
+      description: total gross, the amount the customer would pay without discounts
+      properties:
+        type: 
+          type: string
+          enum:
+            - gross
+        amount: 
+          type: number
+          minimum: 0
+          description: the total gross amount
+
+    total_paid:
+      type: object
+      description: total paid by the customer
+      properties:
+        type: 
+          type: string
+          enum:
+            - paid
+        amount: 
+          type: number
+          description: the total paid amount
+
 
     HumanPS:
       description: Prescription specification schema
@@ -2575,6 +2635,15 @@ components:
             - id
             - details
           additionalProperties: false
+        totals:
+          type: array
+          description: list of totals, can be one of vat, gross, paid
+          items:
+            oneOf:
+                - $ref: "#/components/schemas/total_vat"
+                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_paid"
+            additionalProperties: false                              
       required:
         - human
         - amount_with_benefit
@@ -2872,6 +2941,15 @@ components:
             - id
             - details
           additionalProperties: false
+        totals:
+          type: array
+          description: list of totals, can be one of vat, gross, paid
+          items:
+            oneOf:
+                - $ref: "#/components/schemas/total_vat"
+                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_paid"
+            additionalProperties: false                    
       required:
         - animal
       allOf:
@@ -3015,7 +3093,7 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             value:
-              code: "40100"
+              error_code: "40100"
               short_message: "unauthorized"
               long_message: "permission denied"
     InternalError:
@@ -3025,7 +3103,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
           example:
-            code: "50000"
+            error_code: "50000"
             short_message: "internal server error"
             long_message: "unknown error ocurred"
     Token:
