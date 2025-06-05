@@ -41,6 +41,23 @@
       "type": "number",
       "minimum":0
     },
+    "totals": {
+      "description": "Total amounts and types, example net, gross, vat, discount",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_paid_element"
+          },
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_gross_element"
+          },
+          {
+            "$ref": "monetary-definitions.json#/definitions/total_tax_element"
+          }
+        ]
+      }
+    },    
     "customer": {
       "description": "The person or animal owner to whom the prescription is issued.",
       "anyOf": [

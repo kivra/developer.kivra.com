@@ -90,6 +90,11 @@
           "description": "high cost period start date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
           "type": "string",
           "format": "date-time"
+        },
+        "end_date": {
+          "description": "high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+          "type": "string",
+          "format": "date-time"
         }
       },
       "required": [

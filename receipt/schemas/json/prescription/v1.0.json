@@ -224,6 +224,385 @@
             "type": "number",
             "minimum": 0
         },
+        "totals": {
+            "description": "Total amounts and types, for example vat, gross, paid",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "title": "Paid total amount",
+                        "description": "paid: gross amount including discount and rounding.",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "paid"
+                                        ]
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Amount received from customer",
+                                                    "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is given by  customer",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "received"
+                                                            ]
+                                                        },
+                                                        "amount": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "text": {
+                                                            "description": "optional explaining text",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "array"
+                                                                    ]
+                                                                },
+                                                                "collection": {
+                                                                    "type": "array",
+                                                                    "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "type",
+                                                                "collection"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "amount"
+                                                    ],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "title": "Returned sub total",
+                                                    "description": "Use with total/paid if paid gives the total amount paid and the subtotal gives what is returned to customer",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "returned"
+                                                            ]
+                                                        },
+                                                        "amount": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "text": {
+                                                            "description": "optional explaining text",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "array"
+                                                                    ]
+                                                                },
+                                                                "collection": {
+                                                                    "type": "array",
+                                                                    "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "type",
+                                                                "collection"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "amount"
+                                                    ],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "title": "Total gross amount presented on the receipt",
+                        "description": "gross: total including vat, excluding discounts",
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "title": "Total amounts presented on the receipt",
+                                "description": "One or more totals like net amount, vat, paid, discount",
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "refund": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "true if amount to customer, example: on return of goods"
+                                    }
+                                },
+                                "required": [
+                                    "amount"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "gross"
+                                        ],
+                                        "description": "gross: total including vat."
+                                    },
+                                    "sub_totals": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals eligible for bonus",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "eligible_for_frequent_shopper_points"
+                                                                    ]
+                                                                },
+                                                                "points": {
+                                                                    "type": "integer",
+                                                                    "minimum": 0,
+                                                                    "description": "loyalty points gained/lost in transaction"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "title": "Sub totals can be used on all totals if needed",
+                                                    "description": "One or more sub totals for example one for each tax percentage",
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Common sub total properties",
+                                                            "description": "Common properties for all sub totals",
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                },
+                                                                "refund": {
+                                                                    "type": "boolean",
+                                                                    "default": false,
+                                                                    "description": "true if amount to customer, example: on return of goods"
+                                                                },
+                                                                "text": {
+                                                                    "description": "optional explaining text",
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                                "array"
+                                                                            ]
+                                                                        },
+                                                                        "collection": {
+                                                                            "type": "array",
+                                                                            "description": "Arbitray array of strings used where additional info needed at some part",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "collection"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "amount"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "description": "Can be one of the total amount types or any other description what the subtotal is about"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "title": "Total tax amount presented on the receipt",
+                        "description": "Tax releated total",
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "vat"
+                                ]
+                            },
+                            "amount": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "refund": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "true if amount to customer, example: on return of goods"
+                            },
+                            "sub_totals": {
+                                "type": "array",
+                                "description": "add sub total for each tax percentage used",
+                                "items": {
+                                    "title": "Sub totals can be used on all totals but is mostly used on VAT",
+                                    "description": "One or more sub totals, one for each tax percentage",
+                                    "type": "object",
+                                    "properties": {
+                                        "amount": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "refund": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "true if amount to customer, example: on return of goods"
+                                        },
+                                        "taxable_amount": {
+                                            "description": "Amount including tax amount",
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "net_amount": {
+                                            "description": "Amount excluding tax amount",
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "tax_percentage": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "amount",
+                                        "taxable_amount",
+                                        "net_amount",
+                                        "tax_percentage"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "amount"
+                        ],
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
         "customer": {
             "description": "The person or animal owner to whom the prescription is issued.",
             "anyOf": [
@@ -416,6 +795,11 @@
                                     "description": "high cost period start date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
                                     "type": "string",
                                     "format": "date-time"
+                                },
+                                "end_date": {
+                                    "description": "high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+                                    "type": "string",
+                                    "format": "date-time"
                                 }
                             },
                             "required": [
@@ -438,6 +822,11 @@
                                     "description": "high cost period start date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
                                     "type": "string",
                                     "format": "date-time"
+                                },
+                                "end_date": {
+                                    "description": "high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+                                    "type": "string",
+                                    "format": "date-time"
                                 }
                             },
                             "required": [
@@ -458,6 +847,11 @@
                                 },
                                 "start_date": {
                                     "description": "high cost period start date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "end_date": {
+                                    "description": "high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD",
                                     "type": "string",
                                     "format": "date-time"
                                 }
