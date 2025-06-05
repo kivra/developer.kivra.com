@@ -44,17 +44,20 @@
       "previous_period": {
         "gross": 8982.64,
         "net": 2350.0,
-        "start_date": "2021-07-12T08:00:00+02:00"
+        "start_date": "2021-07-12T08:00:00+02:00",
+        "end_date": "2022-07-11T08:00:00+02:00"
       },
       "current_period": {
         "gross": 28198.71,
         "net": 2400.0,
-        "start_date": "2022-08-12T08:00:00+02:00"
+        "start_date": "2022-07-12T08:00:00+02:00",
+        "end_date": "2023-07-11T08:00:00+02:00"
       },
       "next_period": {
         "gross": 0.0,
         "net": 0.0,
-        "start_date": "2023-08-13T08:00:00+02:00"
+        "start_date": "2023-07-13T08:00:00+02:00",
+        "end_date": "2024-07-11T08:00:00+02:00"
       },
       "amount_left_to_reimbursement": {
         "gross": 100.00,

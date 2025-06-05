@@ -110,17 +110,20 @@ which is not mandatory.
       "previous_period": {
         "gross": 0.0,
         "net": 0.0,
-        "start_date": "2014-02-14T08:00:00+02:00"
+        "start_date": "2014-02-14T08:00:00+02:00",
+        "end_date": "2015-02-13T08:00:00+02:00"
       },
       "current_period": {
         "gross": 2116.80,
         "net": 2116.80,
-        "start_date": "2015-02-14T08:00:00+02:00"
+        "start_date": "2015-02-14T08:00:00+02:00",
+        "end_date": "2016-02-13T08:00:00+02:00"
       },
       "next_period": {
         "gross": 0.0,
         "net": 0.0,
-        "start_date": "2016-02-14T08:00:00+02:00"
+        "start_date": "2016-02-14T08:00:00+02:00",
+        "end_date": "2017-02-13T08:00:00+02:00"
       },
       "amount_left_to_reimbursement": {
         "gross": 100.00,
@@ -158,5 +161,39 @@ _human_
   "amount_without_benefit": 5.38,
   "amount_paid_by_benefit": 58.27,  
   "amount_to_pay": 5.38
+}  
+```
+
+### VAT - Totals
+Some prescriptions will contain goods/services for which the customer pays tax. 
+If so, the vat is added to the totals section, example:
+```json
+{
+  "totals": [
+    {
+      "type": "vat",
+      "amount": 107.96,
+      "sub_totals": [
+        {
+          "amount": 0.00,
+          "taxable_amount": 129.48,
+          "net_amount": 129.48,
+          "tax_percentage": 0
+        },
+        {
+          "amount": 26.68,
+          "taxable_amount": 119.53,
+          "net_amount": 106.72,
+          "tax_percentage": 12
+        },
+        {
+          "amount": 81.28,
+          "taxable_amount": 406.40,
+          "net_amount": 325.12,
+          "tax_percentage": 25
+        }
+      ]
+    }
+  ]
 }  
 ```
