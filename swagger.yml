@@ -263,7 +263,7 @@ info:
 
     ## Multithreading
 
-    Senders might want to use different parallel threads when interacting woth the Kivra API to send a larger amount of content within a given period of time.
+    Senders might want to use several parallel threads when interacting with the Kivra API to send a larger amount of content within a given period of time.
     This is encouraged and we recommend to experiment to find the proper balance between multithreading and performances.
 
     ## API Endpoints
