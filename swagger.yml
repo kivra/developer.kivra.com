@@ -11,54 +11,39 @@ info:
   x-logo:
     url: "assets/Kivra_logo_1920X1080_green.png"
     altText: Kivra logo # don't rename this without fixing assets/redoc-styles.css
-  version: v1 and v2
   description: |
-    # Receipt API
-    The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html).
-
     # Introduction
     This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail.
     Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/intresseanmalan).
+
+    ## Receipt API
+    The Receipt API, used to send digital receipts to users in Kivra, is available [here](http://developer.kivra.com/receipt/posapi/index.html).
 
     ## National versions of Kivra APIs
     As local requirements and regulations might affect the way one interacts with the API, it's important to look for the version of the Kivra API specific for the Country where you intend to operate.
 
     This version of the API is about **Kivra Sweden**.
 
-    ## Api version: v1 and v2
-    We currently have some endpoints in v1 and some endpoints in v2. Each endpoint documented here specifies in the URL whether the endpoint requires v1 or v2.
+    ## Api versions
+    Different endpoints might have different version numbers, please make sure you are using the correct version for each endpoint.
 
-    Authentication is the same for both v1 and v2.
+    Authentication endpoint is independent of the version number of the endpoint, meaning that ´v1´ of the authentication endpoint will work also for ´v2´ or ´v3´ of a different endpoint.
 
     ## Introduction to API integration
     The Kivra API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable,
     resource-oriented URLs, and uses HTTP response codes to indicate API errors.
 
-    Integration in its simplest form consists of two steps:
-
-      1. The first step is to match the Recipient-databases either as a whole or one by one and see which Recipients the tenant can send contents to
-      2. The second step is to send the contents itself.
-
-    A prerequisite for these two steps is to have client credentials, to be authorized to use the Kivra API, and a tenant ID to specify who is the sender of the content.
-
+    A prerequisite for using the API is to have client credentials. Please contact [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) to obtain client credentials.
 
     ## The service
-    Kivra is a secure digital mailbox tied to your personal or company identity
-    in which you receive documents from companies, organizations
-    and government agencies that are connected to Kivra. With Kivra you can
-    receive, manage and archive your content wherever you are and on every
-    platform as long as you have an internet connection.
 
-    Over one billion window envelopes are sent every year in Sweden alone, so
-    by choosing to use Kivra you contribute to a reduced carbon footprint!
+    Kivra acts as a digital communication channel between Senders and Recipients.
 
-    Kivra acts as a digital postman between Sender and Recipients which is
-    also reflected in the allocation of responsibilities. Concretely, this
-    means that the Sender is responsible for the design and content whereas
-    Recipients are responsible for reading and processing the received content.
+    Sender is responsible for the design and content whereas Recipients are responsible for reading and processing the received content.
+
+    Sender is any company wanting to communicate with their customers, a recipient is an individual or a legal entity wanting to get communication from senders in a digital channel.
 
     ## Policy for personal or sensitive Information in the metadata
-    It is not allowed to include personal or sensitive data in any of the free-text metadata fields.
 
     Sensitive personal data includes the data referred to in article 9.1. GDPR (data concerning racial or ethnic origin,
     political opinions, religious or philosophical beliefs, membership of a trade union, health, a person's sex life or
@@ -69,6 +54,7 @@ info:
     The sender is responsible for ensuring no personal or sensitive personal data is included in any of the free-text metadata fields.
 
     # Change Mangement
+
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
     via the [KivraStatus](https://www.kivrastatus.se) service.
 
@@ -115,70 +101,87 @@ info:
     | 2025-02-10 | Added registered letter content |
     | 2025-04-30 | Removed v1 of usermatch endpoint |
     | 2025-05-12 | Added error 422 / 42221 |
+    | 2025-06-17 | Reviewed introductory text |
 
     # Terminology
+
     ### User
-    An end user who is a user of Kivra and receives Content from tenants. A user is a physical person.
-    Users are required to login at least once every 12 month to be considered active. A user that has not logged in since longer than 12 months will no longer be listed for matching to inform the tenant that they should not send content to this user.
-    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active Users are available for receiving Content.
+
+    An end user who receives Content from senders. A user is a physical person.
+    Users are required to login at least once every 12 month to be considered active. A user that has not logged in since longer than 12 months will no longer be listed 
+    for matching to inform the tenant that they should not send content to this user.
+    A user can also become `dormant` or deactivate themselves and be put under a `grace period`. Both these states are to aid the Tenant in making sure that only active 
+    Users are available for receiving Content from Senders.
     See below for more information on Dormant and Grace period.
 
     ### Company
-    A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for more information on Dormant and Grace period.
+
+    A Company is a judicial person that can receive content from tenants. Users that are signatories of the company have access to the company’s mailbox and archive. 
+    Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are 
+    signatories of the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for 
+    more information on Dormant and Grace period.
 
     ### Non-user
-    A non-user is an individual who is not a customer of Kivra but could be addressed by tenants in specific flows like the *retain functionality* or *signatures*.
+
+    A non-user is an individual who is not a customer of Kivra but could be addressed by senders in specific flows like the *retain functionality* or *signatures*.
 
     ### Recipient
-    A Company, a User or a non-user in the context of being a receiver. Throughout this document Recipient is used to interchangeably mean a User or Company being a receiver.
+
+    A Company, a User or a Non-user in the context of being a receiver of Content from a Sender.
 
     ### Tenant / Integrator
-    Tenant is a sender that is integrated with Kivra. They need not be integrated directly, but can go through an integrator. The integrator acts as intermediary for the tenant at integration and can handle multiple tenants.
+
+    Tenant is a sender that is integrated with Kivra and represents a Sender. Tenant might integrate with Kivra directly through an Integrator. 
+    An Integrator (sometimes called a Partner) acts as intermediary for the tenants taking care of the technical aspects of the integration.
 
     ### Partner
-    Partner is a third-party company (typically an ERP company) that may be granted access to access and process a company's mailbox, on behalf of the company.
+
+    In the context of the Partner API, a Partner is a third-party company (typically an ERP company) that may be granted access to access and 
+    process a company's mailbox, on behalf of the company.
+    
+    More generally, Partner is also sometimes used to indicate an Integrator.
 
     ### Content
-    The information sent by Tenants to Recipients, i.e. Documents, Invoices, etc.
+
+    The information sent by Senders to Recipients, i.e. Documents, Invoices, etc.
 
     ### Dormant Recipient
-    Recipient who can’t be reached by email and sms-notifications are put in a "dormant"-state. During this dormant state the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again they are awaken from dormant state and will start appearing in the matching functionalities again.
+
+    Recipient who can’t be reached by email and sms-notifications for a period of time are put in a "dormant"-state. During this dormant state the Recipient won’t 
+    show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive. When a Recipient log-in again 
+    they are awaken from dormant state and will start appearing in the matching functionalities again.
 
     ### Grace period
-    Kivra employs a `10` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company matching functionalities but the Tenant can still send Content which the Recipient will receive.
 
-    ### User object
-    is a data object that contains all the available information about a user
-
-    ### Company object
-    is a data object that contains all the available information about a company
-
-    ### Tenant object
-    is a data object that contains all the available information about a sender.
-
-    ### Content object
-    is a data object that contains information about the document and the document itself
+    Kivra employs a `10` day grace period when a Recipient deactivates. During this grace period the Recipient won’t show up in any of user or company matching 
+    functionalities but the Tenant can still send Content which the Recipient will receive.
 
     ### Retained functionality
-    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database.
-    Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient
-    registers with Kivra within this period of time.
+
+    For tenants wishing to send content to Recipients who are at the time not existing in Kivra’s database or have paused the Sender.
+    Kivra will then store the content for the agreed period of time and deliver it once/if the target Recipient registers with Kivra 
+    or reactivate the Sender within this period of time.
 
     <aside class="notice">
-    Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`.
+    Note: Usage of retained functionality is only allowed for some content types, see documentation on the ´Send Content´ endpoint in the API description.
     </aside>
 
     ### Tenant key
     Is a unique key that identifies a Tenant.
 
     ### Metadata
-    is data about data or information about data. Originally, the concept of meta-information, ie information about information. Normally metadata describes the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a content is to be sent to and other information that may be relevant for a shipment, as for instance payment information.
+    is data about data or information about data. Originally, the concept of meta-information, ie information about information. Normally metadata describes 
+    the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a content is to be sent to and other 
+    information that may be relevant for interacting with a content, as for instance payment information.
 
-    ### Json
-    Json or JavaScript Object Notation is a structured approach to data management. Similar to XML but much simpler and easier to read. JSON is the default serialization format  within the Kivra system. JSON have a limited set of types and close attention needs to be paid to the correct JSON-type for metadata when sending Content to Kivra.
+    ### JSON
+    JSON or JavaScript Object Notation is a structured approach to data management. JSON is the default serialization format  within the Kivra system. 
+    JSON have a limited set of types and close attention needs to be paid to the correct JSON-type for metadata when sending Content to Kivra.
 
     # Conventions
+
     ## Date & Time
+
     KIVRA encodes and decodes all dates and times as [ISO 8601](http://www.w3.org/TR/NOTE-datetime) values. The format looks like `YYYY-MM-DDThh:mm:ss.sTZD`, example `1970-01-01T23:25:10.0330000+01:00` where:
 
     * `YYYY`, The year including century
@@ -192,6 +195,7 @@ info:
     * `TZD`, Time zone designator (`Z` or `+hh:mm` or `-hh:mm`)
 
     ## UTC
+
     If the time is in UTC, add a `Z` directly after the time without a space. `Z` is the zone designator for the zero UTC offset. `09:30 UTC` is therefore represented as `09:30Z` or `0930Z`. `14:45:15 UTC` would be `14:45:15Z` or `144515Z`. UTC time is also known as 'Zulu' time, since 'Zulu' is the NATO phonetic alphabet word for `Z`.
 
     The offset from UTC is given in the format `±[hh]:[mm]`, `±[hh][mm]`, or `±[hh]`. So if the time being described is one hour ahead of UTC (such as the time in Stockholm during the winter), the zone designator would be `+01:00`, `+0100`, or simply `+01`. This is appended to the time in the same way that `Z` was above. The offset from UTC changes with daylight saving time, e.g. a time offset in Chicago, would be `-06:00` for the winter (Central Standard Time) and `-05:00` for the summer (Central Daylight Time).
@@ -199,59 +203,72 @@ info:
     Please note that we always expect date & time to be specified as UTC or having an explicit timezone. Time & date fields without any time zone designator will be interpreted as UTC.
 
     ## Media types
+
     The [IANA](http://www.iana.org/assignments/media-types/media-types.xhtml) media types, e.g. "application/pdf"
 
     ## UTF-8 encoding
+
     All data sent to Kivra needs to be [UTF-8](http://en.wikipedia.org/wiki/UTF-8) encoded.
 
     ## Currency
+
     All places where currency is specified, [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) should be used.
 
     ## Country code
+
     Where applicable KIVRA uses a country code to determine certain formats. The country code should always be supplied using the [ISO 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) alpha-2 two-letter code.
 
     ## Email address
+
     Email addresses needs to be specified using [E.123](https://en.wikipedia.org/wiki/E.123)
 
     ## Phone numbers (mobile, land line)
+
     All phone numbers needs to be specified using [E.123](https://en.wikipedia.org/wiki/E.123)
 
-    ## Identifying users
-    Kivra uses the social security number/personal-number as key when accepting content. The format must adhere to the format `YYYYMMDDnnnn` that is including century-digits, i.e. `191212121212`.
+    ## Identifying recipients
 
-    ## VAT number
-    In many countries, companies (or even individuals) are registered with authorities responsible for collecting taxes derived from the business transactions performed by the companies. That registration commonly yields a registration number, which uniquely identifies that company within the domain of the authority. Some legislation has a concept of VAT grouping, in which case the structure of the VAT number may reflect the grouping by e.g. suffixing the number.
-
-    The full identifier starts with an ISO 3166-1 alpha-2 country code (except for Greece which uses the non-standard country code EL) and then has between `2` and `12` characters. The identifiers are composed of numeric digits in most countries, but in some countries they may contain letters.
-
-    Kivra only handles and recognizes Swedish VAT numbers ("momsregistreringsnummer")  which is composed of the prefix `SE` followed by 10 digits (an organisation number) followed by `01`. As an example, Kivra AB's VAT number is: `SE556840226601`.
+    Kivra uses different methods for identifying a recipient as social security numbers (SSN), email or VAT numbers.
+    - SSNs need to be specified in the format `YYYYMMDDnnnn` including century-digits, i.e. `191212121212`
+    - Emails are matched only to verified emails, meaning that the owner of the email has proved to own the email addresses
+    - VAT numbers ("momsregistreringsnummer") needs to be in the Swedish format which is composed of the prefix `SE` followed 
+      by 10 digits (an organisation number) followed by `01`. As an example, Kivra AB's VAT number is: `SE556840226601`.
 
     # Limits
-    Kivra handles millions of documents. We put limits to protect the system from receiving more data than it can handle, and to ensure an equitable distribution of system resources. There’s also various practical reasons for this, such as reducing Head-of-line blocking and providing a optimal experience for the enduser.
+
+    Kivra handles millions of documents. We put limits to protect the system from receiving more data than it can handle, and to ensure an equitable distribution of system resources. 
+    There’s also various practical reasons for this, such as reducing Head-of-line blocking and providing a optimal experience for the enduser.
 
     Our policies are as follows and are subject to change.
 
     ### Content File-size
+
     `1 MB` per **Content** per **Recipient**. This is the total JSON-object. For example, if you send two PDF’s embedded in a JSON-Content to a User the total for the JSON have to have a size less than `1 MB`.
 
     ### Rate limit
     `50` **contents** to the same **recipient** per minute. You can send many more contents per minute as long as they are to different receivers, but only up to `50` to the same recipient.
 
     ### Payload size
+
     Unless specified otherwise the payload for all requests have a max limit of `10MB`. Requests with payload larger than the max size will be rejected with error 413.
 
     # Interacting with the API
-    All API access is performed over HTTPS through sender.[api, sandbox-api].kivra.com and data is sent and received as [JSON](http://www.json.org/). For trying out the API without touching live data we’ve set up a sandbox environment.
+
+    All API access is performed over HTTPS through sender.[api, sandbox-api].kivra.com and data is sent and received as [JSON](http://www.json.org/). 
+    For trying out the API without touching live data we’ve set up a sandbox environment.
     In order to ensure data privacy the following choices have been made, to name some that directly impact API workflows:
     Unencrypted HTTP is not supported, you will be redirected to the resource you tried to reach, with http replaced by https, if you attempt to use plain HTTP.
-    Resources you have no right to see will either give you a describing status code or a `404`. `404` statuses are returned if the case is such that you don’t even have the right to know, according to the system's current state, if an object exists.
+    Resources you have no right to see will either give you a describing status code or a `404`. `404` statuses are returned if the case is such that you don’t 
+    even have the right to know, according to the system's current state, if an object exists.
+
+    ## Multithreading
+
+    Senders might want to use different parallel threads when interacting woth the Kivra API to send a larger amount of content within a given period of time.
+    This is encouraged and we recommend to experiment to find the proper balance between multithreading and performances.
 
     ## API Endpoints
-    Kivra uses different endpoints for production and testing as described below. We also provide the current IP addresses that *could* serve API requests, the current DNS-record will provide an up-to-date list with active endpoints. This is not meant to be a complete list of Kivra-maintained IP addresses. Please make sure to **always** access the Kivra API using the correct domain-name and environment instead of relying on IP addresses.
 
-    Kivra maintains a infrastructure, which grows dynamically to accommodate increasing demand. As a result, Kivra API servers use a range of IP addresses, and the addresses often change.
-
-    *Please note that we do not recommend managing firewall restrictions by IP address, as the IPs associated with these domains are not static.*
+    Kivra uses different endpoints for production and testing as described below. 
 
     <aside class="notice">
     All interaction with Kivra's APIs must be done over HTTPS.
@@ -345,7 +362,7 @@ info:
     Update the object with the specified attributes.
 
     **DELETE**
-    Irreversably delete the designated resource from the entire system. This operation will in most cases be illegal for regular API consumers.
+    Irreversably delete the designated resource from the entire system.
 
     ## Collection Resources
     Collections are conceptually lists of objects, that can be queried. Queries without any parameters will cause a listing of the keys that are used to identify the objects within the collection; adding parameters will either filter which keys show up or decorate the keys with the object they identify (in part or entirely).
@@ -391,13 +408,15 @@ info:
 
     When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
 
-    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `10`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
+    A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `10`-day grace period will 
+    start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     #### Recipients
 
     Recipients will automatically start receiving Content from new Tenants.
 
-    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `10`-day grace period will start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
+    Recipients can choose to disable (opt-out) a Tenant. In that case, that Recipient will no longer show up as available in Kivra for that tenant. A `10`-day grace period will start 
+    to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
 
     Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
 
@@ -409,7 +428,8 @@ info:
 
     ## Step 1: Matching Recipients
 
-    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `10` days’ grace period with that Tenant.
+    An integration starts by matching which Recipients can receive Content from the Tenant. Trying to send Content to Recipients not available to that tenant (either because they are not 
+    Kivra users or because they opt-out from that tenant) will be denied unless that Recipient is in a `10` days’ grace period with that Tenant.
 
     This means that for each Tenant the Recipient-request is unique and therefore integrators managing several Tenants need to keep track of the different Recipients for each of the Tenants.
 
@@ -5628,48 +5648,6 @@ components:
       type: string
 
     # ##############################################
-    # SCHEMA SenderContactInfo
-    # ##############################################
-    SenderContactInfo:
-      type: object
-      description: Contact information for the sender. Null if not provided or all fields are null.
-      nullable: true
-      properties:
-        email_address:
-          type: string
-          nullable: true
-          description: Email address for support.
-          example: "support@example.com"
-        logo_url:
-          type: string
-          format: url
-          nullable: true
-          description: URL to a logo.
-          example: "https://example.com/logo.png"
-        phone_number:
-          type: string
-          nullable: true
-          description: Phone number for support.
-          example: "+46700000000"
-        text:
-          type: string
-          nullable: true
-          description: Free-form text, e.g., contact person or department.
-          example: "Customer Support"
-        url:
-          type: string
-          format: url
-          nullable: true
-          description: URL to a support page.
-          example: "https://example.com/support"
-      example:
-        email_address: "support@example.com"
-        logo_url: "https://example.com/logo.png"
-        phone_number: "+46700000000"
-        text: "Customer Support"
-        url: "https://example.com/support"
-
-    # ##############################################
     # SCHEMA CompanyKey
     # ##############################################
     CompanyKey:
@@ -6278,8 +6256,6 @@ components:
                 $ref: "#/components/schemas/PartnerPaymentOption"
             references:
               $ref: "#/components/schemas/InvoiceReferences"
-            sender_contact_info:
-              $ref: "#/components/schemas/SenderContactInfo"
           required:
             - interpreted_fields
             - key
@@ -6290,7 +6266,6 @@ components:
             - received_at
             - receiver_name
             - receiver_vat_number
-            - sender_contact_info
             - sender_icon_url
             - sender_name
             - sender_vat_numbers
@@ -6439,110 +6414,6 @@ webhooks:
                     vat_number:
                       pattern: ^SE[0-9]{10}01$
                       description: The VAT number of the company that received the content.
-                      example: SE556000475501
-                      type: string
-      responses:
-        200:
-          description: >
-            Return a 200 status to acknowledge receipt of the webhook.
-            Any other response will cause Kivra to retry the delivery.
-  integration.created:
-    post:
-      summary: Notification for partner integration activation
-      operationId: webhook-integration-created
-      tags:
-        - "Partner API v3"
-      description: |
-        This webhook notifies you when a company has activated you as an integration partner, meaning you are allowed to use the Partner API on said company.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-                - event_created_at
-                - event_type
-                - data_version
-                - data
-              properties:
-                id:
-                  $ref: "#/components/schemas/WebhookEventId"
-                event_created_at:
-                  $ref: "#/components/schemas/WebhookEventCreatedAt"
-                event_type:
-                  type: string
-                  enum: ["integration.created"]
-                data_version:
-                  type: integer
-                  enum: [1]
-                data:
-                  type: object
-                  required:
-                    - company_key
-                    - vat_number
-                  properties:
-                    company_key:
-                      description: The key of the company that activated the integration.
-                      pattern: ^[0-9]{10}[a-f0-9]{32}$
-                      example: 156077433683911cdca5fd4563bded979572454cb9
-                      type: string
-                    vat_number:
-                      pattern: ^SE[0-9]{10}01$
-                      description: The VAT number of the company that activated the integration.
-                      example: SE556000475501
-                      type: string
-      responses:
-        200:
-          description: >
-            Return a 200 status to acknowledge receipt of the webhook.
-            Any other response will cause Kivra to retry the delivery.
-  integration.deleted:
-    post:
-      summary: Notification for partner integration deactivation
-      operationId: webhook-integration-deleted
-      tags:
-        - "Partner API v3"
-      description: |
-        This webhook notifies you when a company has deactivated you as an integration partner, meaning you are no longer allowed to use the Partner API on said company.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-                - event_created_at
-                - event_type
-                - data_version
-                - data
-              properties:
-                id:
-                  $ref: "#/components/schemas/WebhookEventId"
-                event_created_at:
-                  $ref: "#/components/schemas/WebhookEventCreatedAt"
-                event_type:
-                  type: string
-                  enum: ["integration.deleted"]
-                data_version:
-                  type: integer
-                  enum: [1]
-                data:
-                  type: object
-                  required:
-                    - company_key
-                    - vat_number
-                  properties:
-                    company_key:
-                      description: The key of the company that deactivated the integration.
-                      pattern: ^[0-9]{10}[a-f0-9]{32}$
-                      example: 156077433683911cdca5fd4563bded979572454cb9
-                      type: string
-                    vat_number:
-                      pattern: ^SE[0-9]{10}01$
-                      description: The VAT number of the company that deactivated the integration.
                       example: SE556000475501
                       type: string
       responses:
