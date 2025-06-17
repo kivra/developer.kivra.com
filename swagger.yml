@@ -116,9 +116,9 @@ info:
 
     ### Company
 
-    A Company is a judicial person that can receive content from tenants. Users that are signatories to the company have access to the company’s mailbox and archive. 
+    A Company is a judicial person that can receive content from tenants. Users that are signatories of the company have access to the company’s mailbox and archive. 
     Other Users that are not signatories may also be given access to a company’s mailbox and archive. A Company can become `dormant` or deactivated by users that are 
-    signatories to the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for 
+    signatories of the company. Both these states is to aid the Tenant in making sure that only active Companies are available for receiving Content. See below for 
     more information on Dormant and Grace period.
 
     ### Non-user
@@ -174,8 +174,8 @@ info:
     the content and / or structure for a given data collection from any perspective. Kivra uses metadata to determine whom a content is to be sent to and other 
     information that may be relevant for interacting with a content, as for instance payment information.
 
-    ### Json
-    Json or JavaScript Object Notation is a structured approach to data management. JSON is the default serialization format  within the Kivra system. 
+    ### JSON
+    JSON or JavaScript Object Notation is a structured approach to data management. JSON is the default serialization format  within the Kivra system. 
     JSON have a limited set of types and close attention needs to be paid to the correct JSON-type for metadata when sending Content to Kivra.
 
     # Conventions
@@ -230,7 +230,7 @@ info:
 
     Kivra uses different methods for identifying a recipient as social security numbers (SSN), email or VAT numbers.
     - SSNs need to be specified in the format `YYYYMMDDnnnn` including century-digits, i.e. `191212121212`
-    - Emails are matched only to verified emails, meaning that the owner of the email has proofed to own the email addresses
+    - Emails are matched only to verified emails, meaning that the owner of the email has proved to own the email addresses
     - VAT numbers ("momsregistreringsnummer") needs to be in the Swedish format which is composed of the prefix `SE` followed 
       by 10 digits (an organisation number) followed by `01`. As an example, Kivra AB's VAT number is: `SE556840226601`.
 
