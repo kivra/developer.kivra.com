@@ -859,7 +859,7 @@ tags:
       The responses can later be collected and removed by the sender.
   - name: "Tenant API - Tickets"
     description: |
-      Endpoint for creating events.
+      **Note that this feature is not yet available. It will become available in June 2026.**
   - name: "Tenant API - Tenant Management"
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
@@ -4104,7 +4104,7 @@ components:
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations.
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
-            - `"ticket.event"`: indicating that the content is a ticket for an event. A valid `ticket` object needs to be provided.
+            - `"ticket.event"`: indicating that the content is a ticket for an event. A valid `ticket` object needs to be provided. **Note that this feature is not yet available. It will become available in June 2026**
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
