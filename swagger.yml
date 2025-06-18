@@ -5648,6 +5648,50 @@ components:
       type: string
 
     # ##############################################
+    # SCHEMA SenderContactInfo
+    # ##############################################
+    SenderContactInfo:
+      type: object
+      description: Contact information for the sender. Null if not provided or all fields are null.
+      nullable: true
+      properties:
+        email_address:
+          type: string
+          nullable: true
+          description: Email address for support.
+          example: "support@example.com"
+        logo_url:
+          type: string
+          format: url
+          nullable: true
+          description: URL to a logo.
+          example: "https://example.com/logo.png"
+        phone_number:
+          type: string
+          nullable: true
+          description: Phone number for support.
+          example: "+46700000000"
+        text:
+          type: string
+          nullable: true
+          description: Free-form text, e.g., contact person or department.
+          example: "Customer Support"
+        url:
+          type: string
+          format: url
+          nullable: true
+          description: URL to a support page.
+          example: "https://example.com/support"
+      example:
+        email_address: "support@example.com"
+        logo_url: "https://example.com/logo.png"
+        phone_number: "+46700000000"
+        text: "Customer Support"
+        url: "https://example.com/support"
+
+
+
+    # ##############################################
     # SCHEMA CompanyKey
     # ##############################################
     CompanyKey:
@@ -6256,6 +6300,8 @@ components:
                 $ref: "#/components/schemas/PartnerPaymentOption"
             references:
               $ref: "#/components/schemas/InvoiceReferences"
+            sender_contact_info:
+              $ref: "#/components/schemas/SenderContactInfo"
           required:
             - interpreted_fields
             - key
@@ -6266,6 +6312,7 @@ components:
             - received_at
             - receiver_name
             - receiver_vat_number
+            - sender_contact_info
             - sender_icon_url
             - sender_name
             - sender_vat_numbers
@@ -6414,6 +6461,110 @@ webhooks:
                     vat_number:
                       pattern: ^SE[0-9]{10}01$
                       description: The VAT number of the company that received the content.
+                      example: SE556000475501
+                      type: string
+      responses:
+        200:
+          description: >
+            Return a 200 status to acknowledge receipt of the webhook.
+            Any other response will cause Kivra to retry the delivery.
+  integration.created:
+    post:
+      summary: Notification for partner integration activation
+      operationId: webhook-integration-created
+      tags:
+        - "Partner API v3"
+      description: |
+        This webhook notifies you when a company has activated you as an integration partner, meaning you are allowed to use the Partner API on said company.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - event_created_at
+                - event_type
+                - data_version
+                - data
+              properties:
+                id:
+                  $ref: "#/components/schemas/WebhookEventId"
+                event_created_at:
+                  $ref: "#/components/schemas/WebhookEventCreatedAt"
+                event_type:
+                  type: string
+                  enum: ["integration.created"]
+                data_version:
+                  type: integer
+                  enum: [1]
+                data:
+                  type: object
+                  required:
+                    - company_key
+                    - vat_number
+                  properties:
+                    company_key:
+                      description: The key of the company that activated the integration.
+                      pattern: ^[0-9]{10}[a-f0-9]{32}$
+                      example: 156077433683911cdca5fd4563bded979572454cb9
+                      type: string
+                    vat_number:
+                      pattern: ^SE[0-9]{10}01$
+                      description: The VAT number of the company that activated the integration.
+                      example: SE556000475501
+                      type: string
+      responses:
+        200:
+          description: >
+            Return a 200 status to acknowledge receipt of the webhook.
+            Any other response will cause Kivra to retry the delivery.
+  integration.deleted:
+    post:
+      summary: Notification for partner integration deactivation
+      operationId: webhook-integration-deleted
+      tags:
+        - "Partner API v3"
+      description: |
+        This webhook notifies you when a company has deactivated you as an integration partner, meaning you are no longer allowed to use the Partner API on said company.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - event_created_at
+                - event_type
+                - data_version
+                - data
+              properties:
+                id:
+                  $ref: "#/components/schemas/WebhookEventId"
+                event_created_at:
+                  $ref: "#/components/schemas/WebhookEventCreatedAt"
+                event_type:
+                  type: string
+                  enum: ["integration.deleted"]
+                data_version:
+                  type: integer
+                  enum: [1]
+                data:
+                  type: object
+                  required:
+                    - company_key
+                    - vat_number
+                  properties:
+                    company_key:
+                      description: The key of the company that deactivated the integration.
+                      pattern: ^[0-9]{10}[a-f0-9]{32}$
+                      example: 156077433683911cdca5fd4563bded979572454cb9
+                      type: string
+                    vat_number:
+                      pattern: ^SE[0-9]{10}01$
+                      description: The VAT number of the company that deactivated the integration.
                       example: SE556000475501
                       type: string
       responses:
