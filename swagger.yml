@@ -2481,7 +2481,7 @@ paths:
                     group_ticket:
                       qr_data: "base64-qr-data-group"
                     tickets:
-                      - qr_data: "base64-qr-data-1"
+                      - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
                         type: "adult"
                         seating:
                           seat: "A12"
