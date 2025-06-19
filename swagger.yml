@@ -2469,6 +2469,32 @@ paths:
                     hidden:
                       sender: true
                       subject: true
+              ticket:
+                summary: ticket
+                value:
+                  ssn: "191212121212"
+                  subject: "Your concert ticket"
+                  type: "ticket.event"
+                  ticket:
+                    event_key: "event-123"
+                    order_id: "order-456"
+                    group_ticket:
+                      qr_data: "X1RBR0UtMR2yMDI2XDYyMFQxOTA1DDBa"
+                    tickets:
+                      - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
+                        type: "Standard"
+                        seating:
+                          seat: "A12"
+                          row: "1"
+                          section: "Orchestra"
+                          gate: "North"
+                      - qr_data: "U1RBR0XtMS0yMDI1MZZyMFCxOTL1MDBv"
+                        type: "Standard"
+                        seating:
+                          seat: "A13"
+                          row: "1"
+                          section: "Orchestra"
+                          gate: "North"
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
