@@ -2482,7 +2482,7 @@ paths:
                       qr_data: "X1RBR0UtMR2yMDI2XDYyMFQxOTA1DDBa"
                     tickets:
                       - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
-                        type: "VIP"
+                        type: "Standard"
                         seating:
                           seat: "A12"
                           row: "1"
@@ -2490,7 +2490,11 @@ paths:
                           gate: "North"
                       - qr_data: "U1RBR0XtMS0yMDI1MZZyMFCxOTL1MDBv"
                         type: "Standard"
-                        seating: null
+                        seating:
+                          seat: "A13"
+                          row: "1"
+                          section: "Orchestra"
+                          gate: "North"
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
