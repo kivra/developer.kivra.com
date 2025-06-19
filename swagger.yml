@@ -2479,7 +2479,7 @@ paths:
                     event_key: "event-123"
                     order_id: "order-456"
                     group_ticket:
-                      qr_data: "base64-qr-data-group"
+                      qr_data: "X1RBR0UtMR2yMDI2XDYyMFQxOTA1DDBa"
                     tickets:
                       - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
                         type: "adult"
