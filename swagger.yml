@@ -2482,14 +2482,14 @@ paths:
                       qr_data: "X1RBR0UtMR2yMDI2XDYyMFQxOTA1DDBa"
                     tickets:
                       - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
-                        type: "adult"
+                        type: "VIP"
                         seating:
                           seat: "A12"
                           row: "1"
                           section: "Orchestra"
                           gate: "North"
-                      - qr_data: "base64-qr-data-2"
-                        type: "child"
+                      - qr_data: "U1RBR0XtMS0yMDI1MZZyMFCxOTL1MDBv"
+                        type: "Standard"
                         seating: null
 
   # ##############################################
