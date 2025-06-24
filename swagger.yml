@@ -140,7 +140,7 @@ info:
 
     In the context of the Partner API, a Partner is a third-party company (typically an ERP company) that may be granted access to access and 
     process a company's mailbox, on behalf of the company.
-
+    
     More generally, Partner is also sometimes used to indicate an Integrator.
 
     ### Content
