@@ -102,6 +102,8 @@ info:
     | 2025-04-30 | Removed v1 of usermatch endpoint |
     | 2025-05-12 | Added error 422 / 42221 |
     | 2025-06-17 | Reviewed introductory text |
+    | 2025-06-19 | Added Ticket to content |
+    | 2025-06-24 | Marked Ticket as BETA |
 
     # Terminology
 
@@ -857,7 +859,7 @@ tags:
       A registered letter ensures secure delivery by requiring the recipient to sign before viewing the letter's content, providing proof of receipt.
 
       The responses can later be collected and removed by the sender.
-  - name: "Tenant API - Tickets"
+  - name: "Tenant API - Tickets (BETA)"
     description: |
       **Note that this feature is not yet available. It will become available in June 2026.**
   - name: "Tenant API - Tenant Management"
@@ -962,7 +964,7 @@ x-tagGroups:
       - "Tenant API - Content"
       - "Tenant API - Forms"
       - "Tenant API - Registered letters"
-      - "Tenant API - Tickets"
+      - "Tenant API - Tickets (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
       - "Tenant API - Payment Webhooks"
@@ -2469,7 +2471,7 @@ paths:
                     hidden:
                       sender: true
                       subject: true
-              ticket:
+              ticket (BETA):
                 summary: ticket
                 value:
                   ssn: "191212121212"
@@ -2922,12 +2924,12 @@ paths:
             The registered letter response does not exist.
 
   # ##############################################
-  # GET,POST /v1/tenant/TKEY/agreement
+  # POST /v1/tenant/{tenantKey}/tickets/event
   # ##############################################
   /v1/tenant/{tenantKey}/tickets/event:
     post:
       tags:
-        - "Tenant API - Tickets"
+        - "Tenant API - Tickets (BETA)"
       summary: Create a new event
       operationId: createTenantEvent
       description: |
@@ -4130,7 +4132,7 @@ components:
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
             - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations.
               A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
-            - `"ticket.event"`: indicating that the content is a ticket for an event. A valid `ticket` object needs to be provided. **Note that this feature is not yet available. It will become available in June 2026**
+            - `"ticket.event"` (BETA): indicating that the content is a ticket for an event. A valid `ticket` object needs to be provided. **Note that this feature is not yet available. It will become available in June 2026**
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
