@@ -419,7 +419,7 @@ paths:
               item_display_fields: ["article_number_pos"]
       responses:
         "200":
-          description: Chain already existed
+          description: Chain already exists
           content:
             application/json:
               schema:
@@ -924,7 +924,7 @@ paths:
                 content_type: "image/png"
       responses:
         "200":
-          description: Store already existed, only of no external_id is provided
+          description: Store already exists
           content:
             application/json:
               schema:
@@ -1890,7 +1890,7 @@ components:
       title: AddStore
       type: object
       properties:
-        externalid:
+        external_id:
           type: string
           description: ID provided by the POS that is unique per chain
         name:
