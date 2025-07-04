@@ -6404,6 +6404,26 @@ components:
         describes its file type.
 
     # ##############################################
+    # SCHEMA ContentOrigin
+    # ##############################################
+    ContentOrigin:
+      description: |
+        The origin of the content. Indicates how the content was delivered to Kivra.
+        - `kivra`: Sent directly through Kivra.
+        - `minameddelanden`: Sent via Mina Meddelanden. Used by governmental organisations.
+        - `user`: Uploaded by an user.
+        Companies with Kivra företag+ can also receive:
+        - `physical`: Physical post scanned by Kivra.
+        - `email`: Sent via the company's kivramail.com email address.
+      type: string
+      enum:
+        - kivra
+        - minameddelanden
+        - user
+        - physical
+        - email
+
+    # ##############################################
     # SCHEMA BaseContentMetadata
     # ##############################################
     BaseContentMetadata:
@@ -6475,6 +6495,8 @@ components:
           items:
             $ref: "#/components/schemas/VatNumber"
           nullable: true
+        origin:
+          $ref: "#/components/schemas/ContentOrigin"
         subject:
           description: Subject of the content
           example: "Invoice: a thousand Swiss rolls"
