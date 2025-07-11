@@ -393,7 +393,7 @@ info:
 
     # Tenants integration: Content management
 
-    Tenants integration allows *tenants* and *integrators* to send *content* to *recipents* via Kivra.
+    Tenants integration allows senders (*tenants*) to send *content* to *recipients* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
 
@@ -408,7 +408,7 @@ info:
 
     Tenants can start sending Content to all Recipients in Kivra.
 
-    When Tenant signs up new customers they can check (match) if that `SSN` or `VAT`-number is available as recipient in Kivra. If so, they can start sending content to them directly.
+    When Tenant signs up new customers they can check (match) if the customer is available as recipient in Kivra. If so, they can start sending content to them directly.
 
     A Recipient can choose to disable (opt-out) a Tenant. In that case, that user or company will no longer show up as available in Kivra for that tenant. A `10`-day grace period will 
     start to take effect to allow tenants to match their register. During this grace period the Tenant can still post content to the recipient.
@@ -422,7 +422,7 @@ info:
 
     Recipients needs to login at least once every 12 months to be considered active, and show up as available for the tenants.
 
-    ## Typical flow for content management
+    ## Tenant integration: Recipient matching and sending content
 
     The typical flow for sending content to recipients is illustrated here:
 
@@ -442,36 +442,6 @@ info:
     ## Step 2: Send Content
 
     Sending of Content is done via the `content` resource. The metadata in the `content` resource identifies the user and also determines how the recipient can interact with the content.
-
-    ## Typical integration flows
-
-    The Kivra API is typically integrated in different data flows, resulting in many different scenarios. In this paragraph we will describe few of these typical scenarios and provide some tips on how to use the API in that context.
-
-    ### Daily document sending
-
-    In this scenario the sender needs to send a large amount of documents each day, some of which is sent via Kivra, the rest via ordinary post. There is therefore need for knowing very early in the process whether a document can be sent via Kivra or needs to be printed and sent by ordinary post.
-
-    The sender uses the API to match the recipient database, typically during the night, and use the recipient database to select which documents to be sent via Kivra and which need to be printed and sent via ordinary post.
-
-    Even if the recipient database have been matched, it is still important to check the result of the API operation when sending content, as some recipient might have become unavailable in the time between the matching of the recipient database and the sending of the document. In this case the API will answer with an error code (typically `40105`). The documents that could not be sent via API will need to be sent via ordinary post, typically as part of tomorrow's batch.
-
-    ### Payslips and retain functionality
-
-    Payslips are typically small batches of documents sent once a month that can be handled using a simpler flow, not including the matching step but using the retain functionality instead.
-
-    In this approach the sender sends all documents without checking if the user is a Kivra user or not, relying on the retain functionality instead. Content sent to non-Kivra users will be retained for a period of time (typically `390` days for payslips), meaning that it is kept by Kivra but not delivered. If the user creates a Kivra account before the retention period expires, the user will get all retained content. If the user does not create a Kivra account before the retention period expires, the content will be removed from Kivra.
-
-    ### Payments and invoices
-
-    Kivra allows to send both payable invoices (that might be paid via Kivra applications) or payment notifications that cannot be paid via Kivra, as for instance notification of autogiro payments.
-
-    `payable` is the field in the metadata controlling whether the document should be payable via Kivra applications or not. As Kivra uses the information provided in the metadata to actually perform the payment, it is very important that metadata in the `payment` section is correct.
-
-    Invoices can have multiple payment options. That means that while the recipient of the payment is the same for the entire invoice, some specifics of the payment can vary. The details are described further down in this document, but in general each option can have its own amount, reference information and due date. If there are more than one option, each of them must have a short title, and may have a longer description as well as its own icon.
-
-    If an invoice has more than one payment option, the first option is treated specially. All notifications are based on the due date in the first option, and if a user accesses an invoice in an older client that is not aware of the multiple-option functionality, it will only display the information from the first option. Because of this, it is important that the first option always is to pay the entire debt, or, more generally, that paying the first option will release the user from any further obligation related to that particular invoice.
-
-    If there are between one and seven payment options, there may also be a _flexible option_. This is meant to present the payer with the opportunity to choose how much they want to pay, within given limits. It is given specially under the key `flexible_option` rather than included in the normal options list. The object under the key shares some options with normal options, but does not specify a specific amount. Instead it has four optional keys giving mandatory and suggested limits for the lowest and highest amounts to be paid. Suggested limits will be used by the clients for prompting, hard limits will be enforced by both clients and backend.
 
     # Tenant integration: Tenant management
 
@@ -564,31 +534,13 @@ info:
 
     Kivra uses conventional HTTP response codes to indicate the success or failure of an API request.
 
+    ## Status code in response to an API request
+
     In general:
 
     * Codes in the `2xx` range indicate success.
     * Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, invalid data, etc.).
     * Codes in the `5xx` range indicate an error with Kivra's servers or a timeout. In this case it is safe to retry the request.
-
-    ## Error handling
-
-    The integrator needs proper handling of common errors. Errors can happen at any stage and Kivra will report back to let the integrator take appropriate action.
-
-    ### Recipient-file matching:
-
-    Common errors that can occur and need to be handled gracefully.
-
-    * Network problem that hinders the integrator from communicating with Kivra
-    * Problem on Kivra’s end that hinders the integrator from querying the state of **Recipients**
-
-    These errors should be handled gracefully such that the last working download of a **Recipient**-file is used until the problem has been solved and a new **Recipient**-file can be downloaded and used.
-
-    ### Content Delivery:
-
-    Common errors that can occur and need to be handled gracefully.
-
-    * Network problem that hinders the integrator from communicating with Kivra resulting in either not being able to reach Kivra or a non-successful response-code
-    * Problem with the **input**-file either due to above(network problem) or other such as corrupt data or invalid metadata.
 
     ## Error Messages
 
@@ -1876,14 +1828,8 @@ paths:
         ## Minimum Metadata
         As a minimum one valid recipient identifier (`vat_number`, `ssn` or `email`), a `subject` and `type` are required.
 
-        In case several identifiers are specified, Kivra will only try to match the first one and not fall through to try to match the remaining identifiers.
-        More specifically Kivra will look first for a `vat_number`, if this is not provided it will look for a `ssn`, if this is not provided either it will look for `email`.
-
-        E.g. if a content has both an `ssn` and `email`, only the `ssn` will be used as identifier, even if there is no positive `ssn` match.
-        </aside>
-
         ## Responsive content
-        As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easyly readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
+        As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easily readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
 
          Responsive content solve this problem by allowing senders to provide 2 versions of the content:
           - a PDF which contains all the information and details that needs to be presented to the recipient
@@ -5171,7 +5117,7 @@ components:
           readOnly: true
           example: "client_15063298495eafd2749bb78e2f991af3ab023d13df"
         status:
-          description: internal field describing whether the user can opt-out the tenant
+          description: status of the request, for instance `pending`, `accepted` or `rejected`
           type: string
           readOnly: true
           example: "pending"
