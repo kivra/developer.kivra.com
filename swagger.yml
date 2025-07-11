@@ -393,7 +393,7 @@ info:
 
     # Tenants integration: Content management
 
-    Tenants integration allows senders (*tenants*) to send *content* to *recipents* via Kivra.
+    Tenants integration allows senders (*tenants*) to send *content* to *recipients* via Kivra.
 
     Tenants and integrator will use the `tenant` endpoint to integrate with Kivra.
 
