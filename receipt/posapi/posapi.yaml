@@ -94,6 +94,12 @@ info:
       ### Resources
       [Prescription specification JSON schema explained and example specifications](/receipt/wiki/mdwiki.html)
       will give you (pharmacies) more information on how to create prescription specifications based on the Kivra prescription specification JSON schema.
+    </details>
+
+    <details><summary>Troubleshooting</summary>
+
+      Try the receipt preview tool at [merchant-toolbox.kivra.com](https://merchant-toolbox.kivra.com/) to see exactly how your JSON payload will render in the Kivra web interface. 
+      This tool helps you validate your receipt structure and troubleshoot formatting issues.
     </details>    
 
 servers:

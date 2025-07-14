@@ -18,6 +18,10 @@ This document focuses on details in the digital receipt JSON structure. To simpl
 
 This document focuses on the construction and content of the digital receipt. It does not describe how the receipt is transferred from the issuer to the customer and how it is presented.
 
+## Troubleshooting
+Try the receipt preview tool at [merchant-toolbox.kivra.com](https://merchant-toolbox.kivra.com/) to see exactly how your JSON payload will render in the Kivra web interface. 
+This tool helps you validate your receipt structure and troubleshoot formatting issues.
+
 ## Terminology
 
 ### POS
