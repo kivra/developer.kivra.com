@@ -1873,7 +1873,7 @@ paths:
 
       security:
         - oAuth2Client:
-            - "post:kivra.v1.tenant.{tenantKey}.content"
+            - "post:kivra.v2.tenant.{tenantKey}.content"
       parameters:
         - name: tenantKey
           in: path
@@ -1910,7 +1910,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Content_user_v2"
+              oneOf:
+                - $ref: "#/components/schemas/Content_user_v2"
+                - $ref: "#/components/schemas/Content_company"
             examples:
               invoice to user:
                 value:
