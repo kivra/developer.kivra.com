@@ -4434,6 +4434,21 @@ components:
           externalDocs:
             description: "More details about this object can be found here."
             url: "https://developers.bankid.com/api-references/auth--sign/collect"
+          example:
+            orderRef: "0197b142-2c15-74a7-9850-3b68087ad4ec"
+            status: "completed"
+            completionData:
+              user:
+                personalNumber: "197701032380"
+                name: "Jan-Erik Karlsson"
+                givenName: "Jan-Erik"
+                surname: "Karlsson"
+              device:
+                ipAddress: "142.250.74.206"
+            stepUp:
+              mrtd: false
+            signature: "PD94bWwgdmVyc2lvb..."
+            ocspResponse: "MIIHdgoBAKCCB28wggdrBg..."
 
     # ##############################################
     # SCHEMA Form Response
