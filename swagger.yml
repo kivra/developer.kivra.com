@@ -1933,6 +1933,7 @@ paths:
                     currency: SEK
                     method: "1"
                     account: "12345"
+                    swish_alias: "1231231234"
                     options:
                       - due_date: "2017-01-01"
                         amount: "123.50"
@@ -1964,6 +1965,7 @@ paths:
                     currency: SEK
                     account: "123456"
                     method: "1"
+                    swish_alias: "disable"
                     options:
                       - due_date: "2024-02-29"
                         amount: "4711.23"
