@@ -820,9 +820,6 @@ tags:
     description: Endpoints for managing signatures and agreements
   - name: "Tenant API - Payment Webhooks"
     description: |
-      *This feature is still under development and API details are subject to
-      change without notification.*
-
       Endpoints used to set up, list and remove webhook definitions, and webhook payloads.
   - name: "Partner API v1"
     description: |
@@ -3158,9 +3155,6 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Lists all the tenant's defined payment webhooks.
       description: |
-        *This feature is under active development and API details are subject to
-        change without notice.*
-
         This endpoint returns a list of all the payment webhooks that are
         defined for the tenant in question.
       parameters:
@@ -3185,9 +3179,6 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Add a new webhook definition
       description: |
-        *This feature is under active development and API details are subject to
-        change without notice.*
-
         This endpoint is used to add a new webhook definition.
 
         A tenant is allowed to define more than one webhook, but each one must
@@ -3274,9 +3265,6 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Remove a webhook definition.
       description: |
-        *This feature is under active development and API details are subject to
-        change without notice.*
-
         This endpoint removes a webhook definition.
       parameters:
         - name: tenantKey
@@ -3301,9 +3289,6 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Modify a webhook definition
       description: |
-        *This feature is under active development and API details are subject to
-        change without notice.*
-
         This endpoint is used to modify a webhook definition.
       parameters:
         - name: tenantKey
@@ -3374,9 +3359,6 @@ paths:
         - "Tenant API - Payment Webhooks"
       summary: Request a test delivery for a webhook definition
       description: |
-        *This feature is under active development and API details are subject to
-        change without notice.*
-
         When this endpoint is called, delivery of a webhook with static test
         data in it will be schedued. The point of this is to allow development
         of a receiving endpoint without having to go through payment flows to
@@ -6873,6 +6855,32 @@ webhooks:
             "id": "3f62fc97-907a-4212-af02-8c30f1ea1927"
           }
         }
+        ```
+
+        To verify the signature, use the raw body without any modification. Here are some examples on verification using the Standard Webhooks libraries:
+
+        ```go
+        // go
+        import standardwebhooks "github.com/standard-webhooks/standard-webhooks/libraries/go"
+
+        wh, err := standardwebhooks.NewWebhook(secret)
+        wh.Verify(webhook.Body, webhook.Headers)
+        ```
+
+        ```java
+        // java
+        import com.standardwebhooks.Webhook;
+
+        Webhook webhook = new Webhook(secret);
+        webhook.verify(webhookBody, webhookHeaders);
+        ```
+
+        ```csharp
+        // C#
+        using StandardWebhooks;
+
+        var wh = new Webhook(secret);
+        wh.Verify(webhookBody, webhookHeaders);
         ```
 
         ## Retries
