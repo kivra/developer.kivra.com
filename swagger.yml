@@ -6495,7 +6495,6 @@ components:
             + For a normal `invoice` it is the invoice date.
             + For a reminder `invoice` it the original invoice date and not
               the reminders invoice date.
-            + For a `receipt` it is its transaction date.
             + For all `other` types of content it is `null`.
             + If no date could be found, it is `null`.
           type: string
@@ -6505,7 +6504,6 @@ components:
           description: The type of the content
           enum:
             - invoice
-            - receipt
             - other
           type: string
       required:
