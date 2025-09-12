@@ -104,6 +104,7 @@ info:
     | 2025-06-17 | Reviewed introductory text |
     | 2025-06-19 | Added Ticket to content |
     | 2025-06-24 | Marked Ticket as BETA |
+    | 2025-09-12 | Added Invite KYC BETA |
 
     # Terminology
 
@@ -2336,6 +2337,22 @@ paths:
                       name: "Signature AB"
                     expires_at: "2024-12-12T12:00:00Z"
                     description: "Please sign the document"
+              invite kyc to user (BETA):
+                value:
+                  ssn: "191212121212"
+                  subject: "Sample KYC Invite to User"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.kyc"
+                  invite:
+                    title: "We want to know"
+                    description: "Your answers will help us."
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Finansiellt Institut"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+                    service_provider:
+                      name: "KYC AB"
               letter signed to user:
                 value:
                   ssn: "191212121212"
@@ -4080,6 +4097,7 @@ components:
             - `"invite.gift"`: for invitations to collect a gift
             - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
             - `"invite.voucher"`: for invitations to use a voucher
+            - `"invite.kyc"` (BETA): for invitations to complete KYC (Know Your Customer) process.
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
@@ -4152,6 +4170,9 @@ components:
         invite_voucher:
           description: Optional invite voucher
           $ref: "#/components/schemas/InviteVoucher"
+        invite_kyc (BETA):
+          description: Optional invite kyc
+          $ref: "#/components/schemas/InviteKyc"
         registered:
           description: Optional registered letter
           $ref: "#/components/schemas/RegisteredLetter"
@@ -5785,6 +5806,64 @@ components:
         description:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
+
+    # ##############################################
+    # SCHEMA InviteKyc
+    # ##############################################
+    InviteKyc:
+      type: object
+      required:
+        - description
+        - uri
+        - expires_at
+        - behalf_of
+        - service_provider
+      properties:
+        title:
+          type: string
+          nullable: true
+          description: Title to present
+          example: Hey you, dont watch that, watch this
+        description:
+          type: string
+          description: longer description
+          example: |
+            This is the heavy heavy monster sound
+            The nuttiest sound around
+        uri:
+          type: string
+          description: The uri to open when the user clicks the invitation. The uri must use the secure HTTPS protocol
+          example: https://example.com
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this KYC invite is conducted on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Something
+              example: Test Inc
+            vat_number:
+              type: string
+              description: A Swedish VAT number ("momsregistreringsnummer").
+              example: "SE556840226601"
+        expires_at:
+          description: |
+            The expiration time for the survey, after this date, it will no longer be available.
+          type: string
+          nullable: true
+          example: "2024-05-09T13:42:26Z"
+        service_provider:
+          type: object
+          description: The service provider
+          required:
+            - name
+          properties:
+            name:
+              type: string
 
     # ##############################################
     # SCHEMA Registered letter
