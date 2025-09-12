@@ -3643,12 +3643,6 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/CompanyKey"
-        - name: field
-          in: query
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/FieldQueryParameter"
       responses:
         "200":
           description: ""
