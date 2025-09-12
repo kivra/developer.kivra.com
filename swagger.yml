@@ -4152,6 +4152,9 @@ components:
         invite_voucher:
           description: Optional invite voucher
           $ref: "#/components/schemas/InviteVoucher"
+        signed:
+          description: Optional signed metadata
+          $ref: "#/components/schemas/Signed"
         registered:
           description: Optional registered letter
           $ref: "#/components/schemas/RegisteredLetter"
@@ -5739,6 +5742,8 @@ components:
           nullable: true
           example: "2024-05-09T13:42:26Z"
 
+
+
     # ##############################################
     # SCHEMA InviteSign
     # ##############################################
@@ -5785,6 +5790,29 @@ components:
         description:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
+
+    # ##############################################
+    # SCHEMA Signed
+    # ##############################################
+    Signed:
+      type: object
+      required:
+        - behalf_of
+      properties:
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this document is delivered on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Test AB
+            vat_number:
+              type: string
+              description: A Swedish VAT number ("SE556840226601").
 
     # ##############################################
     # SCHEMA Registered letter
