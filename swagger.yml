@@ -5753,7 +5753,28 @@ components:
           nullable: true
           example: "2024-05-09T13:42:26Z"
 
-
+    # ##############################################
+    # SCHEMA Signed
+    # ##############################################
+    Signed:
+      type: object
+      required:
+        - behalf_of
+      properties:
+        behalf_of:
+          type: object
+          nullable: true
+          description: Who this document is delivered on behalf of
+          required:
+            - name
+            - vat_number
+          properties:
+            name:
+              type: string
+              description: Test AB
+            vat_number:
+              type: string
+              description: A Swedish VAT number ("momsregistreringsnummer").
 
     # ##############################################
     # SCHEMA InviteSign
@@ -5802,28 +5823,6 @@ components:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
 
-    # ##############################################
-    # SCHEMA Signed
-    # ##############################################
-    Signed:
-      type: object
-      required:
-        - behalf_of
-      properties:
-        behalf_of:
-          type: object
-          nullable: true
-          description: Who this document is delivered on behalf of
-          required:
-            - name
-            - vat_number
-          properties:
-            name:
-              type: string
-              description: Test AB
-            vat_number:
-              type: string
-              description: A Swedish VAT number ("momsregistreringsnummer").
 
     # ##############################################
     # SCHEMA Registered letter
