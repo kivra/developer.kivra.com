@@ -2445,6 +2445,16 @@ paths:
                           row: "1"
                           section: "Orchestra"
                           gate: "North"
+              letter signed:
+                summary: letter signed
+                value:
+                  ssn: "191212121212"
+                  subject: "Your signed document"
+                  type: "letter.signed"
+                  signed:
+                    behalf_of:
+                      - name: "Test AB"
+                        vat_number: "SE556840226601"
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -5813,7 +5823,7 @@ components:
               description: Test AB
             vat_number:
               type: string
-              description: A Swedish VAT number ("SE556840226601").
+              description: A Swedish VAT number ("momsregistreringsnummer").
 
     # ##############################################
     # SCHEMA Registered letter
