@@ -2894,7 +2894,7 @@ paths:
   # ##############################################
   # POST /v1/tenant/{tenantKey}/tickets/event
   # ##############################################
-  /v1/tenant/{tenantKey}/tickets/event:
+  /v1/tenant/{tenantKey}/ticket/event:
     post:
       tags:
         - "Tenant API - Tickets (BETA)"
