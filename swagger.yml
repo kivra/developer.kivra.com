@@ -5650,49 +5650,89 @@ components:
         - payment_reference
         - total_amount_tax_inclusive
         - currency
+      anyOf:
+        - required: ["bankgiro"]
+        - required: ["plusgiro"]
       properties:
         invoice_number:
           type: string
+          example: "INV-2024-001"
         invoice_date:
           type: string
+          description: "YYYY-MM-DD format"
+          example: "2026-10-31"
         currency:
           type: string
+          description: "ISO 4217 currency code (3 uppercase letters)"
+          example: "SEK"
         due_date:
           type: string
+          description: "YYYY-MM-DD format"
+          example: "2026-11-30"
         buyer_reference:
           type: string
+          example: "REF-12345"
         order_number:
           type: string
+          example: "ORD-2024-789"
         supplier_name:
           type: string
+          example: "Supplier AB"
         supplier_organisation_number:
           type: string
+          example: "556123-4567"
         supplier_vat_number:
           type: string
+          example: "SE556123456701"
         supplier_address_street:
           type: string
+          example: "Stora gatan 123"
         supplier_address_postal_code:
           type: string
+          example: "11122"
         supplier_address_city:
           type: string
+          example: "Stockholm"
         payment_reference:
-          type: string
+          type: object
+          required:
+            - value
+            - reference_type
+          properties:
+            value:
+              type: string
+            reference_type:
+              type: string
+              enum:
+                - "ocr"
+                - "unstructured"
+              example:
+                ocr: "123456789012345"
+                tenant_ref: "REF-12345"
         bankgiro:
           type: string
+          example: "123-4567"
         plusgiro:
           type: string
+          example: "456-9999"
         iban:
           type: string
+          example: "SE3550000000054910000003"
         bic:
           type: string
+          example: "ESSESESS"
         total_amount_tax_exclusive:
           type: string
+          example: "1000.00"
         total_vat_amount:
           type: string
+          example: "250.00"
         total_amount_tax_inclusive:
           type: string
+          example: "1250.00"
         rounding_amount:
           type: string
+          example: "0.00"
 
     # ##############################################
     # SCHEMA InviteResearch
