@@ -4099,6 +4099,8 @@ components:
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
+            - `"invoice.b2b"` (BETA): |
+              indicating that the content is an invoice that will be uploaded to the accounting system used by the receiver.
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice.
               The invoice might include late fees and other differences compared to the original invoice.
@@ -4156,6 +4158,9 @@ components:
         form:
           description: Optionally attach a form
           $ref: "#/components/schemas/Form"
+        invoice:
+          description: Optional invoice
+          $ref: "#/components/schemas/Invoice"
         invite_research:
           description: Optional invite research
           $ref: "#/components/schemas/InviteResearch"
@@ -5636,6 +5641,60 @@ components:
           example: 30
 
     # ##############################################
+    # SCHEMA Invoice
+    # ##############################################
+    Invoice:
+      type: object
+      required:
+        - due_date
+        - payment_reference
+        - total_amount_tax_inclusive
+        - currency
+      properties:
+        invoice_number:
+          type: string
+        invoice_date:
+          type: string
+        currency:
+          type: string
+        due_date:
+          type: string
+        buyer_reference:
+          type: string
+        order_number:
+          type: string
+        supplier_name:
+          type: string
+        supplier_organisation_number:
+          type: string
+        supplier_vat_number:
+          type: string
+        supplier_address_street:
+          type: string
+        supplier_address_postal_code:
+          type: string
+        supplier_address_city:
+          type: string
+        payment_reference:
+          type: string
+        bankgiro:
+          type: string
+        plusgiro:
+          type: string
+        iban:
+          type: string
+        bic:
+          type: string
+        total_amount_tax_exclusive:
+          type: string
+        total_vat_amount:
+          type: string
+        total_amount_tax_inclusive:
+          type: string
+        rounding_amount:
+          type: string
+
+    # ##############################################
     # SCHEMA InviteResearch
     # ##############################################
     InviteResearch:
@@ -5648,9 +5707,6 @@ components:
       properties:
         title:
           type: string
-          nullable: true
-          description: Title to present
-          example: Hey you, dont watch that, watch this
         description:
           type: string
           description: longer description
