@@ -1968,6 +1968,9 @@ paths:
                       value: "123456789012345"
                       reference_type: "ocr"
                     bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
                     total_amount_tax_exclusive: "1000.00"
                     total_vat_amount: "250.00"
                     total_amount_tax_inclusive: "1250.00"
@@ -4134,8 +4137,7 @@ components:
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
-            - `"invoice.b2b"` (BETA): |
-              indicating that the content is an invoice that will be uploaded to the accounting system used by the receiver.
+            - `"invoice.b2b"` (BETA): indicating that the content is an invoice that will be uploaded to the accounting system used by the receiver. Currently only Fortnox is supported.
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice.
               The invoice might include late fees and other differences compared to the original invoice.
@@ -5698,6 +5700,7 @@ components:
           example: "2026-10-31"
         currency:
           type: string
+          format: "ISO4217"
           description: "ISO 4217 currency code (3 uppercase letters)"
           example: "SEK"
         due_date:
@@ -5746,9 +5749,11 @@ components:
                 tenant_ref: "REF-12345"
         bankgiro:
           type: string
+          description: "bankgiro and / or plusgiro must be provided"
           example: "123-4567"
         plusgiro:
           type: string
+          description: "bankgiro and / or plusgiro must be provided"
           example: "456-9999"
         iban:
           type: string
@@ -5758,15 +5763,19 @@ components:
           example: "ESSESESS"
         total_amount_tax_exclusive:
           type: string
+          format: float
           example: "1000.00"
         total_vat_amount:
           type: string
+          format: float
           example: "250.00"
         total_amount_tax_inclusive:
           type: string
+          format: float
           example: "1250.00"
         rounding_amount:
           type: string
+          format: float
           example: "0.00"
 
     # ##############################################
