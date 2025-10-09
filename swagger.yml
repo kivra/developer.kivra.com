@@ -1937,6 +1937,45 @@ paths:
                         amount: "123.50"
                         type: SE_OCR
                         reference: "426523791"
+              invoice to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "invoice.b2b"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    invoice_number: "INV-2024-001"
+                    invoice_date: "2026-10-31"
+                    currency: "SEK"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
               invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
@@ -4663,6 +4702,7 @@ components:
               Allowed values are:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
+              - `"invoice.b2b"` (BETA): indicating that the content is a structured invoice that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
         files:
@@ -4686,6 +4726,9 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
+        invoice:
+          description: Optional invoice
+          $ref: "#/components/schemas/Invoice"
 
     # ##############################################
     # SCHEMA Payment
@@ -5636,6 +5679,115 @@ components:
           example: 30
 
     # ##############################################
+    # SCHEMA Invoice
+    # ##############################################
+    Invoice:
+      type: object
+      required:
+        - due_date
+        - payment_reference
+        - total_amount_due
+        - currency
+      anyOf:
+        - title: Invoice with Bankgiro
+          required: [bankgiro]
+        - title: Invoice with Plusgiro
+          required: [plusgiro]
+      properties:
+        invoice_number:
+          type: string
+          example: "INV-2024-001"
+        invoice_date:
+          type: string
+          description: "YYYY-MM-DD format"
+          example: "2026-10-31"
+        currency:
+          type: string
+          format: "ISO4217"
+          description: "ISO 4217 currency code (3 uppercase letters)"
+          example: "SEK"
+        due_date:
+          type: string
+          description: "YYYY-MM-DD format"
+          example: "2026-11-30"
+        buyer_reference:
+          type: string
+          example: "REF-12345"
+        order_number:
+          type: string
+          example: "ORD-2024-789"
+        supplier_name:
+          type: string
+          example: "Supplier AB"
+        supplier_organisation_number:
+          type: string
+          example: "556123-4567"
+        supplier_vat_number:
+          type: string
+          example: "SE556123456701"
+        supplier_address_street:
+          type: string
+          example: "Stora gatan 123"
+        supplier_address_postal_code:
+          type: string
+          example: "11122"
+        supplier_address_city:
+          type: string
+          example: "Stockholm"
+        payment_reference:
+          type: object
+          required:
+            - value
+            - reference_type
+          properties:
+            value:
+              type: string
+            reference_type:
+              type: string
+              enum:
+                - "ocr"
+                - "unstructured"
+          example:
+            payment_reference:
+              value: "426523791"
+              reference_type: "ocr"
+        bankgiro:
+          type: string
+          description: "bankgiro and / or plusgiro must be provided"
+          example: "123-4567"
+        plusgiro:
+          type: string
+          description: "plusgiro and / or bankgiro must be provided"
+          example: "456-9999"
+        iban:
+          type: string
+          example: "SE3550000000054910000003"
+        bic:
+          type: string
+          example: "ESSESESS"
+        total_amount_tax_exclusive:
+          type: string
+          format: float
+          example: "1000.00"
+        total_vat_amount:
+          type: string
+          format: float
+          example: "250.00"
+        total_amount_tax_inclusive:
+          type: string
+          format: float
+          example: "1250.00"
+        rounding_amount:
+          type: string
+          format: float
+          example: "0.00"
+        total_amount_due:
+          type: string
+          format: float
+          example: "1250.00"
+
+
+    # ##############################################
     # SCHEMA InviteResearch
     # ##############################################
     InviteResearch:
@@ -5648,9 +5800,6 @@ components:
       properties:
         title:
           type: string
-          nullable: true
-          description: Title to present
-          example: Hey you, dont watch that, watch this
         description:
           type: string
           description: longer description
