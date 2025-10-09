@@ -1975,6 +1975,7 @@ paths:
                     total_vat_amount: "250.00"
                     total_amount_tax_inclusive: "1250.00"
                     rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
               invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
@@ -4137,7 +4138,6 @@ components:
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
-            - `"invoice.b2b"` (BETA): indicating that the content is an invoice that will be uploaded to the accounting system used by the receiver. Currently only Fortnox is supported.
             - `"invoice.reminder"`: |
               indicating that the content is an invoice, a reminder for a previously unpaid invoice.
               The invoice might include late fees and other differences compared to the original invoice.
@@ -4195,9 +4195,6 @@ components:
         form:
           description: Optionally attach a form
           $ref: "#/components/schemas/Form"
-        invoice:
-          description: Optional invoice
-          $ref: "#/components/schemas/Invoice"
         invite_research:
           description: Optional invite research
           $ref: "#/components/schemas/InviteResearch"
@@ -4705,6 +4702,7 @@ components:
               Allowed values are:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
+              - `"invoice.b2b"` (BETA): indicating that the content is a structured invoice that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
         files:
@@ -4728,6 +4726,9 @@ components:
                   type: string
                   description: Tenant’s own Invoice Reference
                   example: "Invoice Nr #123"
+        invoice:
+          description: Optional invoice
+          $ref: "#/components/schemas/Invoice"
 
     # ##############################################
     # SCHEMA Payment
@@ -5685,11 +5686,13 @@ components:
       required:
         - due_date
         - payment_reference
-        - total_amount_tax_inclusive
+        - total_amount_due
         - currency
       anyOf:
-        - required: ["bankgiro"]
-        - required: ["plusgiro"]
+        - title: Invoice with Bankgiro
+          required: [bankgiro]
+        - title: Invoice with Plusgiro
+          required: [plusgiro]
       properties:
         invoice_number:
           type: string
@@ -5744,16 +5747,17 @@ components:
               enum:
                 - "ocr"
                 - "unstructured"
-              example:
-                ocr: "123456789012345"
-                tenant_ref: "REF-12345"
+          example:
+            payment_reference:
+              value: "426523791"
+              reference_type: "ocr"
         bankgiro:
           type: string
           description: "bankgiro and / or plusgiro must be provided"
           example: "123-4567"
         plusgiro:
           type: string
-          description: "bankgiro and / or plusgiro must be provided"
+          description: "plusgiro and / or bankgiro must be provided"
           example: "456-9999"
         iban:
           type: string
@@ -5777,6 +5781,11 @@ components:
           type: string
           format: float
           example: "0.00"
+        total_amount_due:
+          type: string
+          format: float
+          example: "1250.00"
+
 
     # ##############################################
     # SCHEMA InviteResearch
