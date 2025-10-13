@@ -1,7 +1,7 @@
 # API documentation
 
 This repository contains an OpenAPI 3 specification of the Kivra API.
-An interactive version of the documentation is hosted on https://developer.kivra.com
+An interactive version of the documentation is hosted on https://developer.kivra.com.
 
 Note: The interactivity and presentation is all done in JS in the browser. This means
 the YAML is served as is from the source. There is no transformation of the file, so
