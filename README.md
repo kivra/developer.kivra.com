@@ -10,7 +10,7 @@ e.g. any comments are included.
 ## Deployment
 
 This project is deployed automatically when a commit is pushed to `master`.
-The deploy is done by Cloud Build: https://console.cloud.google.com/cloud-build/dashboard
+The deploy is done by Cloud Build: https://console.cloud.google.com/cloud-build/dashboard.
 
 ## Developing
 
