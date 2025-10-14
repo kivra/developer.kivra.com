@@ -1667,7 +1667,7 @@ paths:
         required: true
       security:
         - oAuth2Client:
-            - "post:kivra.v2.tenant.{tenantKey}.companymatch.vatnr_with_papi"
+            - "post:kivra.v2.tenant.{tenantKey}.companymatch.vatnr_with_active_partner_integration"
       responses:
         200:
           description: Filtered list of VAT numbers that matched.
