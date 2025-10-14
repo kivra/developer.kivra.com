@@ -9,8 +9,9 @@ e.g. any comments are included.
 
 ## Deployment
 
-This project is deployed automatically when a commit is pushed to `master`.
-The deploy is done by Cloud Build: https://console.cloud.google.com/cloud-build/dashboard.
+This project is deployed automatically by Clould Build when a commit is pushed to `master`.
+
+The Trigger can be found [here](https://console.cloud.google.com/cloud-build/triggers;region=global/edit/98e58035-8ed7-4b24-bb60-08ae3b269ffc?project=apt-aleph-767) and triggered builds can be found [here](https://console.cloud.google.com/cloud-build/builds;region=global?query=trigger_id%3D%2298e58035-8ed7-4b24-bb60-08ae3b269ffc%22&project=apt-aleph-767).
 
 ## Developing
 
