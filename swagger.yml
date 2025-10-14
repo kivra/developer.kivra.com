@@ -1632,7 +1632,7 @@ paths:
     post:
       tags:
         - "Tenant API - Content"
-      summary: Match a list of VAT numbers to recipients, with an active partner integration, for a specific tenant.
+      summary: Match a list of VAT numbers to recipients that have an active partner integration for a specific tenant.
       operationId: Match Companies With PAPI VatNr
       description: |
         This resource is used to match a list of Companies to check that they
