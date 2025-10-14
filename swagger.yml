@@ -1628,7 +1628,7 @@ paths:
         413:
           description: Payload exceeded 10MB — try splitting into multiple calls instead.
 
-  /v2/tenant/{tenantKey}/companymatch/vatnr_with_papi:
+  /v2/tenant/{tenantKey}/companymatch/vatnr_with_active_partner_integration:
     post:
       tags:
         - "Tenant API - Content"
