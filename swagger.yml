@@ -1639,6 +1639,10 @@ paths:
         have an active integration with a partner fetching from their company inbox
         and are eligible for receiving Content from a specific Tenant.
 
+        **Note:**
+        This is only for specific use cases, and will not give you all eligible recipients.
+        You most likely want to use [the regular company match](#tag/Tenant-API-Content/operation/Match%20Companies%20VatNr%20v2).
+
         The request contains a list of VAT numbers to be matched, and
         the response is a filtered subset of said list containing only
         those VAT numbers matching a Company Recipient for which the Tenant
