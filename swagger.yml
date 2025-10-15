@@ -4490,10 +4490,10 @@ components:
                 surname: "Karlsson"
               device:
                 ipAddress: "142.250.74.206"
-            stepUp:
-              mrtd: false
-            signature: "PD94bWwgdmVyc2lvb..."
-            ocspResponse: "MIIHdgoBAKCCB28wggdrBg..."
+              stepUp:
+                mrtd: false
+              signature: "PD94bWwgdmVyc2lvb..."
+              ocspResponse: "MIIHdgoBAKCCB28wggdrBg..."
 
     # ##############################################
     # SCHEMA Form Response
