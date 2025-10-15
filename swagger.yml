@@ -4705,27 +4705,16 @@ components:
               - `"invoice.b2b"` (BETA): indicating that the content is a structured invoice that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
-        files:
-          description: Array of file Objects
+        parts:
+          description: files composing the content
           type: array
-          writeOnly: true
           items:
-            $ref: "#/components/schemas/File"
-        context:
+            $ref: "#/components/schemas/Parts"
+        payment_multiple_options:
           type: object
-          writeOnly: true
-          description: Optionally specify additional information
-          properties:
-            invoice:
-              type: object
-              description: Optionally specify invoice information
-              properties:
-                payment:
-                  $ref: "#/components/schemas/Payment"
-                invoice_reference:
-                  type: string
-                  description: Tenant’s own Invoice Reference
-                  example: "Invoice Nr #123"
+          description: |
+            Specify payment information for both single and multiple payment options
+          $ref: "#/components/schemas/PaymentMultipleOptions"
         invoice:
           description: Optional invoice
           $ref: "#/components/schemas/Invoice"
