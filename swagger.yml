@@ -1953,6 +1953,8 @@ paths:
                         content_type: "text/html"
                   invoice:
                     invoice_number: "INV-2024-001"
+                    original_invoice_number: "INV-2023-999"
+                    invoice_type: "invoice"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -5677,6 +5679,7 @@ components:
         - payment_reference
         - total_amount_due
         - currency
+        - invoice_type
       anyOf:
         - title: Invoice with Bankgiro
           required: [bankgiro]
@@ -5686,6 +5689,15 @@ components:
         invoice_number:
           type: string
           example: "INV-2024-001"
+        original_invoice_number:
+          type: string
+          example: "INV-2023-999"
+        invoice_type:
+          enum:
+            - "invoice"
+            - "credit_note"
+            - "invoice_reminder"
+          type: string
         invoice_date:
           type: string
           description: "YYYY-MM-DD format"
