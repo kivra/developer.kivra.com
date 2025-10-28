@@ -5692,6 +5692,7 @@ components:
         original_invoice_number:
           type: string
           example: "INV-2023-999"
+          description: "Reference to a previous invoice, for example for a credit note or a reminder."
         invoice_type:
           enum:
             - "invoice"
