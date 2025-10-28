@@ -141,7 +141,7 @@ info:
 
     In the context of the Partner API, a Partner is a third-party company (typically an ERP company) that may be granted access to access and 
     process a company's mailbox, on behalf of the company.
-    
+
     More generally, Partner is also sometimes used to indicate an Integrator.
 
     ### Content
@@ -922,7 +922,6 @@ x-tagGroups:
     tags:
       - "Partner API v1"
       - "Partner API v3"
-
 
 paths:
   /vX/hamburger:
@@ -1953,6 +1952,8 @@ paths:
                         content_type: "text/html"
                   invoice:
                     invoice_number: "INV-2024-001"
+                    original_invoice_number: "INV-2023-999"
+                    invoice_type: "invoice"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -2988,7 +2989,7 @@ paths:
                         longitude: "18.0686"
                         latitude: "59.3293"
       responses:
-        '201':
+        "201":
           description: Event created successfully
           content:
             application/json:
@@ -3000,7 +3001,7 @@ paths:
                     format: uuid
                     description: Unique identifier for the created event
                     example: "019782da-3b4a-7f6c-b8bd-e486dcf6e542"
-        '400':
+        "400":
           description: Invalid request
 
   # ##############################################
@@ -5677,6 +5678,7 @@ components:
         - payment_reference
         - total_amount_due
         - currency
+        - invoice_type
       anyOf:
         - title: Invoice with Bankgiro
           required: [bankgiro]
@@ -5686,6 +5688,15 @@ components:
         invoice_number:
           type: string
           example: "INV-2024-001"
+        original_invoice_number:
+          type: string
+          example: "INV-2023-999"
+        invoice_type:
+          enum:
+            - "invoice"
+            - "credit_note"
+            - "invoice_reminder"
+          example: "invoice"
         invoice_date:
           type: string
           description: "YYYY-MM-DD format"
@@ -5774,7 +5785,6 @@ components:
           type: string
           format: float
           example: "1250.00"
-
 
     # ##############################################
     # SCHEMA InviteResearch
@@ -5945,7 +5955,6 @@ components:
         description:
           type: string
           description: Additional information. Note! Don't include any personal or sensitive information here.
-
 
     # ##############################################
     # SCHEMA Signed
@@ -6154,8 +6163,6 @@ components:
         phone_number: "+46700000000"
         text: "Customer Support"
         url: "https://example.com/support"
-
-
 
     # ##############################################
     # SCHEMA CompanyKey
