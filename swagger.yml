@@ -2915,7 +2915,6 @@ paths:
             type: string
             format: hexadecimal
       responses:
-        responses:
         204:
           description: |
             Registered letter response deleted.
