@@ -53,7 +53,7 @@ info:
 
     The sender is responsible for ensuring no personal or sensitive personal data is included in any of the free-text metadata fields.
 
-    # Change Mangement
+    # Change Management
 
     The Kivra API is continuously improved and new features may be added at any time. Major changes are announced
     via the [KivraStatus](https://www.kivrastatus.se) service.
@@ -105,6 +105,7 @@ info:
     | 2025-06-19 | Added Ticket to content |
     | 2025-06-24 | Marked Ticket as BETA |
     | 2025-09-12 | Added Invite KYC BETA |
+    | 2025-11-05 | Removed BETA from Invite KYC |
 
     # Terminology
 
@@ -2378,7 +2379,7 @@ paths:
                       name: "Signature AB"
                     expires_at: "2024-12-12T12:00:00Z"
                     description: "Please sign the document"
-              invite kyc to user (BETA):
+              invite kyc to user:
                 value:
                   ssn: "191212121212"
                   subject: "Sample KYC Invite to User"
@@ -4135,7 +4136,7 @@ components:
             - `"invite.gift"`: for invitations to collect a gift
             - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
             - `"invite.voucher"`: for invitations to use a voucher
-            - `"invite.kyc"` (BETA): for invitations to complete KYC (Know Your Customer) process.
+            - `"invite.kyc"`: for invitations to complete KYC (Know Your Customer) process.
             - `"invoice"`: |
               indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
               This is the default type for all payable content.
@@ -4211,7 +4212,7 @@ components:
         signed:
           description: Optional signed metadata
           $ref: "#/components/schemas/Signed"
-        invite_kyc (BETA):
+        invite_kyc:
           description: Optional invite kyc
           $ref: "#/components/schemas/InviteKyc"
         registered:
