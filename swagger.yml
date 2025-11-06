@@ -4801,7 +4801,7 @@ components:
             Specify payment information for both single and multiple payment options
           $ref: "#/components/schemas/PaymentMultipleOptions"
         invoice:
-          description: Optional invoice
+          description: Optional invoice (BETA)
           $ref: "#/components/schemas/Invoice"
 
     # ##############################################
