@@ -7272,6 +7272,10 @@ webhooks:
                       type: string
                       description: Swish alias used for the payment, if applicable
                       example: "1234567890"
+                    swish_payment_reference:
+                      type: string
+                      description: Swish payment reference, if applicable
+                      example: "652ED6A2BCDE4BA8AD11D7334E9567B7"
                     amount:
                       type: string
                       description: Payment amount as a string
