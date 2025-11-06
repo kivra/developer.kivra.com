@@ -5758,16 +5758,15 @@ components:
     Invoice:
       type: object
       required:
-        - due_date
-        - payment_reference
         - total_amount_due
         - currency
         - invoice_type
       anyOf:
-        - title: Invoice with Bankgiro
-          required: [bankgiro]
-        - title: Invoice with Plusgiro
-          required: [plusgiro]
+        - title: Invoice
+          required: [bankgiro, plusgiro, due_date]
+        - title: Invoice Reminder
+          required: [bankgiro, plusgiro, due_date]
+        - title: Invoice Credit note
       properties:
         invoice_number:
           type: string
@@ -5838,11 +5837,11 @@ components:
               reference_type: "ocr"
         bankgiro:
           type: string
-          description: "bankgiro and / or plusgiro must be provided"
+          description: "bankgiro and / or plusgiro must be provided for invoice and invoice.reminder"
           example: "123-4567"
         plusgiro:
           type: string
-          description: "plusgiro and / or bankgiro must be provided"
+          description: "plusgiro and / or bankgiro must be provided for invoice and invoice.reminder"
           example: "456-9999"
         iban:
           type: string
