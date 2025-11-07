@@ -106,6 +106,7 @@ info:
     | 2025-06-24 | Marked Ticket as BETA |
     | 2025-09-12 | Added Invite KYC BETA |
     | 2025-11-05 | Removed BETA from Invite KYC |
+    | 2025-11-07 | Company invoices (accounting.*) added with BETA tag |
 
     # Terminology
 
@@ -2032,10 +2033,11 @@ paths:
                         data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
                         content_type: "text/html"
                   invoice:
+                    currency: "SEK"
+                    total_amount_due: "1250.00"
                     invoice_number: "INV-2024-002"
                     original_invoice_number: "INV-2024-001"
                     invoice_date: "2026-10-31"
-                    currency: "SEK"
                     due_date: "2026-11-30"
                     buyer_reference: "REF-12345"
                     order_number: "ORD-2024-789"
@@ -2056,7 +2058,6 @@ paths:
                     total_vat_amount: "250.00"
                     total_amount_tax_inclusive: "1250.00"
                     rounding_amount: "0.00"
-                    total_amount_due: "1250.00"
               invoice with multiple payment options to user:
                 value:
                   ssn: "191212121212"
@@ -5759,22 +5760,25 @@ components:
         - currency
       anyOf:
         - title: Invoice
-          required: [bankgiro, plusgiro, due_date]
+          required: [due_date]
+          anyOf:
+            - title: bankgiro
+              required: [bankgiro]
+            - title: plusgiro
+              required: [plusgiro]
         - title: Invoice Reminder
-          required: [bankgiro, plusgiro, due_date]
+          required: [due_date]
+          anyOf:
+            - title: bankgiro
+              required: [bankgiro]
+            - title: plusgiro
+              required: [plusgiro]
         - title: Invoice Credit note
       properties:
-        invoice_number:
+        total_amount_due:
           type: string
-          example: "INV-2024-001"
-        original_invoice_number:
-          type: string
-          example: "INV-2023-999"
-          description: "Reference to a previous invoice, for example for a credit note or a reminder."
-        invoice_date:
-          type: string
-          description: "YYYY-MM-DD format"
-          example: "2026-10-31"
+          format: float
+          example: "1250.00"
         currency:
           type: string
           format: "ISO4217"
@@ -5782,8 +5786,26 @@ components:
           example: "SEK"
         due_date:
           type: string
-          description: "YYYY-MM-DD format"
+          description: "YYYY-MM-DD"
           example: "2026-11-30"
+        bankgiro:
+          type: string
+          example: "123-4567"
+        plusgiro:
+          type: string
+          example: "456-9999"
+        invoice_number:
+          type: string
+          example: "INV-2024-001"
+          description: "Alphanumeric invoice identifier assigned by the supplier"
+        original_invoice_number:
+          type: string
+          example: "INV-2023-999"
+          description: "Reference to another invoice"
+        invoice_date:
+          type: string
+          description: "YYYY-MM-DD"
+          example: "2026-10-31"
         buyer_reference:
           type: string
           example: "REF-12345"
@@ -5825,14 +5847,6 @@ components:
             payment_reference:
               value: "426523791"
               reference_type: "ocr"
-        bankgiro:
-          type: string
-          description: "bankgiro and / or plusgiro must be provided for invoice and invoice.reminder"
-          example: "123-4567"
-        plusgiro:
-          type: string
-          description: "plusgiro and / or bankgiro must be provided for invoice and invoice.reminder"
-          example: "456-9999"
         iban:
           type: string
           example: "SE3550000000054910000003"
@@ -5843,23 +5857,18 @@ components:
           type: string
           format: float
           example: "1000.00"
-        total_vat_amount:
-          type: string
-          format: float
-          example: "250.00"
         total_amount_tax_inclusive:
           type: string
           format: float
           example: "1250.00"
+        total_vat_amount:
+          type: string
+          format: float
+          example: "250.00"
         rounding_amount:
           type: string
           format: float
           example: "0.00"
-        total_amount_due:
-          type: string
-          format: float
-          example: "1250.00"
-
 
     # ##############################################
     # SCHEMA InviteResearch
