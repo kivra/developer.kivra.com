@@ -1943,7 +1943,7 @@ paths:
                   vat_number: SE556840226601
                   subject: "Invoice to Company"
                   generated_at: "2026-10-31"
-                  type: "invoice.b2b"
+                  type: "accounting.invoice"
                   parts:
                     - name: "invoice.pdf"
                       data: "REVBREJFRUY="
@@ -1954,8 +1954,86 @@ paths:
                         content_type: "text/html"
                   invoice:
                     invoice_number: "INV-2024-001"
-                    original_invoice_number: "INV-2023-999"
-                    invoice_type: "invoice"
+                    invoice_date: "2026-10-31"
+                    currency: "SEK"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
+              invoice reminder to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "accounting.invoicereminder"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    invoice_number: "INV-2024-002"
+                    original_invoice_number: "INV-2024-001"
+                    invoice_date: "2026-10-31"
+                    currency: "SEK"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
+              invoice credit note to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Credit invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "accounting.invoicecreditnote"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    invoice_number: "INV-2024-002"
+                    original_invoice_number: "INV-2024-001"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -4702,9 +4780,11 @@ components:
           description: |
             Optional attribute providing information about the type of content being sent. The type of a content may influence how the user interacts with the content and how the user is notified about the content.
               Allowed values are:
+              - `"accounting.invoice"` (BETA): indicating that the content is a structured invoice that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
+              - `"accounting.invoicereminder"` (BETA): indicating that the content is a structured invoice (reminder) that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
+              - `"accounting.invoicecreditnote"` (BETA): indicating that the content is a structured invoice (credit invoice) that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
-              - `"invoice.b2b"` (BETA): indicating that the content is a structured invoice that can be shared to the accounting system used by the receiver. A valid `invoice` object needs to be provided.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
         parts:
@@ -4718,7 +4798,7 @@ components:
             Specify payment information for both single and multiple payment options
           $ref: "#/components/schemas/PaymentMultipleOptions"
         invoice:
-          description: Optional invoice
+          description: Optional invoice (BETA)
           $ref: "#/components/schemas/Invoice"
 
     # ##############################################
@@ -5675,16 +5755,14 @@ components:
     Invoice:
       type: object
       required:
-        - due_date
-        - payment_reference
         - total_amount_due
         - currency
-        - invoice_type
       anyOf:
-        - title: Invoice with Bankgiro
-          required: [bankgiro]
-        - title: Invoice with Plusgiro
-          required: [plusgiro]
+        - title: Invoice
+          required: [bankgiro, plusgiro, due_date]
+        - title: Invoice Reminder
+          required: [bankgiro, plusgiro, due_date]
+        - title: Invoice Credit note
       properties:
         invoice_number:
           type: string
@@ -5693,12 +5771,6 @@ components:
           type: string
           example: "INV-2023-999"
           description: "Reference to a previous invoice, for example for a credit note or a reminder."
-        invoice_type:
-          enum:
-            - "invoice"
-            - "credit_note"
-            - "invoice_reminder"
-          type: string
         invoice_date:
           type: string
           description: "YYYY-MM-DD format"
@@ -5755,11 +5827,11 @@ components:
               reference_type: "ocr"
         bankgiro:
           type: string
-          description: "bankgiro and / or plusgiro must be provided"
+          description: "bankgiro and / or plusgiro must be provided for invoice and invoice.reminder"
           example: "123-4567"
         plusgiro:
           type: string
-          description: "plusgiro and / or bankgiro must be provided"
+          description: "plusgiro and / or bankgiro must be provided for invoice and invoice.reminder"
           example: "456-9999"
         iban:
           type: string
