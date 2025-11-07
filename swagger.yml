@@ -1954,7 +1954,6 @@ paths:
                         content_type: "text/html"
                   invoice:
                     invoice_number: "INV-2024-001"
-                    invoice_type: "invoice"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -1995,7 +1994,6 @@ paths:
                   invoice:
                     invoice_number: "INV-2024-002"
                     original_invoice_number: "INV-2024-001"
-                    invoice_type: "invoice_reminder"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -2036,7 +2034,6 @@ paths:
                   invoice:
                     invoice_number: "INV-2024-002"
                     original_invoice_number: "INV-2024-001"
-                    invoice_type: "credit_note"
                     invoice_date: "2026-10-31"
                     currency: "SEK"
                     due_date: "2026-11-30"
@@ -5760,7 +5757,6 @@ components:
       required:
         - total_amount_due
         - currency
-        - invoice_type
       anyOf:
         - title: Invoice
           required: [bankgiro, plusgiro, due_date]
@@ -5775,12 +5771,6 @@ components:
           type: string
           example: "INV-2023-999"
           description: "Reference to a previous invoice, for example for a credit note or a reminder."
-        invoice_type:
-          enum:
-            - "invoice"
-            - "credit_note"
-            - "invoice_reminder"
-          type: string
         invoice_date:
           type: string
           description: "YYYY-MM-DD format"
