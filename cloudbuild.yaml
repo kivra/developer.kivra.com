@@ -1,4 +1,17 @@
 steps:
+  # Configure CORS for the GCS bucket to allow ReDoc to load YAML files
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo '[{
+          "origin": ["*"],
+          "method": ["GET", "HEAD", "OPTIONS"],
+          "responseHeader": ["Content-Type", "Access-Control-Allow-Origin", "Cache-Control"],
+          "maxAgeSeconds": 3600
+        }]' > /tmp/cors.json
+        gsutil cors set /tmp/cors.json gs://developer.kivra.com/
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
     args:
@@ -29,3 +42,16 @@ steps:
     args:
       - "-c"
       - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp -r assets "gs://developer.kivra.com/" || echo "skipping . . ."'
+  # Set proper MIME types for YAML files to prevent CORS issues
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]; then
+          # Set MIME type for all YAML files in the bucket
+          gsutil -m setmeta -h "Content-Type:application/x-yaml" -h "Cache-Control:public, max-age=300" gs://developer.kivra.com/**/*.yaml gs://developer.kivra.com/**/*.yml || echo "No YAML files found or error setting metadata"
+        else
+          # Set MIME type for YAML files in branch-specific directory
+          gsutil -m setmeta -h "Content-Type:application/x-yaml" -h "Cache-Control:public, max-age=300" gs://developer.kivra.com/$BRANCH_NAME/**/*.yaml gs://developer.kivra.com/$BRANCH_NAME/**/*.yml || echo "No YAML files found or error setting metadata"
+        fi
