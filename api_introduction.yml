@@ -1,6 +1,6 @@
 introText: |
     # Introduction
-    This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital mail.
+    This document is intended for developers and others who are interested in integrating with [Kivra Sweden](https://www.kivra.se) to send digital communication to private users or companies.
     Questions can be sent to [avsandare.support@kivra.com](mailto:avsandare.support@kivra.com) or via [our contact form](https://kivra.se/sv/foretag/skicka/intresseanmalan).
 
     ## Receipt API
