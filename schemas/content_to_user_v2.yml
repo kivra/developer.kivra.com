@@ -1,0 +1,121 @@
+      type: object
+      required:
+        - subject
+        - type
+      properties:
+        ssn:
+          description: |
+            User's unique SSN, according to the `YYYYMMDDnnnn` format.
+          type: string
+          writeOnly: true
+          example: "191212121212"
+        email:
+          description: |
+            A kivra user's verified email address.
+          type: string
+          writeOnly: true
+          example: "Kivra.Sweden@example.com"
+        subject:
+          description: |
+            The subject/title will be visibile in the Recipients Inbox.
+            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
+            Avoid using personal or sensitive information in the subject.
+          type: string
+          example: "Invoice for March 2022"
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2022-12-31"
+          description: |
+            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site.
+            The attribute will be used for sorting in the Kivra user interface, which makes it possible for a tenant or integrator to control the sorting.
+        type:
+          type: string
+          example: "letter"
+          description: |
+            Optional attribute providing information about the type of content being sent.
+            The type of a content may influence how the user interacts with the content and how the user is notified about the content.
+            Allowed values are:
+            - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
+            - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
+            - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
+            - `"letter.form"`: indicating that the content contains a form.
+            - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
+            - `"invite.research"`: for invitations to participate in surveys and polls
+            - `"invite.gift"`: for invitations to collect a gift
+            - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
+            - `"invite.voucher"`: for invitations to use a voucher
+            - `"invoice"`: |
+              indicating that the content is an invoice. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+              This is the default type for all payable content.
+            - `"invoice.reminder"`: |
+              indicating that the content is an invoice, a reminder for a previously unpaid invoice.
+              The invoice might include late fees and other differences compared to the original invoice.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+            - `"invoice.debtcampaign"`: |
+              indicating that the content is an invoice or payment plan from a debt collection company.
+              The invoice might include fees such as interest and reminder fees. A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+              This content types enables long due dates with a longer notification scheme
+            - `"invoice.renewal"`: |
+              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
+              It can be used to send an offer to renew a subscription, insurance or similar.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+            - `"invoice.debtcollection"`: |
+              indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+            - `"booking"`: indicating that the content is a booking/appointement.
+            - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided. Note that email matching is not yet supported for this content type.
+            - `"invoice.donation"`: indicating that the content is a donation where the payment by the user is optional.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+            - `"invoice.paymentnotice"`: indicating that the content is a payment notice targeting the needs of membership organizations.
+              A valid `payment_multiple_options` object needs to be provided and the `payable` attribute must be set to `true`.
+        retain:
+          description: |
+            Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
+            Please note that retain can only be used with content types `letter.creditnotice`, `letter.salary`, `letter.signed` 
+            and `invite.sign`, otherwise an error with status code `422` will be returned.
+          type: boolean
+          writeOnly: true
+          example: false
+        retention_time:
+          description: |
+            How long to retain a Content. Supported values: `"30"` and `"390"`
+          type: string
+          writeOnly: true
+          example: "30"
+          enum: ["30", "390"]
+        parts:
+          description: Array of file Objects
+          type: array
+          writeOnly: true
+          items:
+            $ref: "#/components/schemas/Parts_Responsive"
+        payment_multiple_options:
+          type: object
+          description: |
+            Specify payment information for both single and multiple payment options
+          $ref: "#/components/schemas/PaymentMultipleOptions"
+        booking:
+          description: Optionally specify booking information
+          $ref: "#/components/schemas/Booking"
+        campaign:
+          description: Optionally attach a campaign
+          $ref: "#/components/schemas/Campaign"
+        form:
+          description: Optionally attach a form
+          $ref: "#/components/schemas/Form"
+        invite_research:
+          description: Optional invite research
+          $ref: "#/components/schemas/InviteResearch"
+        invite_gift:
+          description: Optional invite gift
+          $ref: "#/components/schemas/InviteGift"
+        invite_sign:
+          description: Optional invite sign
+          $ref: "#/components/schemas/InviteSign"
+        invite_voucher:
+          description: Optional invite voucher
+          $ref: "#/components/schemas/InviteVoucher"
+        registered:
+          description: Optional registered letter
+          $ref: "#/components/schemas/RegisteredLetter"
