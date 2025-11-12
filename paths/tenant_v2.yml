@@ -1,0 +1,100 @@
+    post:
+      tags:
+        - "Tenant API - Tenant Management"
+      summary: Create Tenant
+      operationId: Create Tenant (v2)
+      description: |
+        Creation of tenants via API allows clients to create new tenants in an efficient manner. The created tenant is automatically added to the client scope. The client needs to re-authenticate to have the new scope in effect.
+        <aside class="notice">
+        Note: Creation of tenants via API is only allowed in certain specific cases and its usage needs to be regulated in the business relationship between the sender party and Kivra.
+        </aside>
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant"
+      responses:
+        200:
+          description: |
+            Tenant already existing and added to the client scope
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant_v2"
+          headers:
+            kivra-objkey:
+              description: Tenant Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+        201:
+          description: |
+            Tenant Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant_v2"
+          headers:
+            kivra-objkey:
+              description: Tenant Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+        409:
+          description: |
+            The tenant could not be created because of a conflict, meaning that a tenant with the same `orgnr` already exists and cannot be automatically added to the client scope. The client may use the `request_access` endpoint to request access to this tenant.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error40915"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tenant_v2"
+    get:
+      tags:
+        - "Tenant API - Tenant Management"
+      summary: List tenants
+      operationId: List all tenants accessible to the client
+      description: Lists all tenants that are manageable by the current client
+      security:
+        - oAuth2Client:
+            - "get:kivra.v2.tenant"
+      parameters:
+        - name: orgnr
+          in: query
+          description: Perform a search to see if a specific Company is available
+          required: false
+          schema:
+            description: Companies unique Vat Number
+            type: string
+            example: SE556840226601
+      responses:
+        200:
+          description: |
+            List of available users
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of tenants, can be empty
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: Tenant ID
+                  example:
+                    [
+                      { "key": "155748793356fa20e402ae472e51019cf723d7fe35" },
+                      { "key": "150231793356fa88a88eae472e51019cf723d7d13a" },
+                    ]
