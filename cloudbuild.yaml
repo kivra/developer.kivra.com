@@ -8,6 +8,11 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
+      - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r _partials "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
+    args:
+      - "-c"
       - '[[ "$BRANCH_NAME" != "master" ]] && gsutil cp -r receipt "gs://developer.kivra.com/$BRANCH_NAME/" || echo "skipping . . ."'
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
@@ -19,6 +24,11 @@ steps:
     args:
       - "-c"
       - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp index.html swagger.yml "gs://developer.kivra.com/" || echo "skipping . . ."'
+  - name: "gcr.io/cloud-builders/gsutil"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - '[[ "$BRANCH_NAME" == "master" ]] && gsutil cp -r _partials "gs://developer.kivra.com/" || echo "skipping . . ."'
   - name: "gcr.io/cloud-builders/gsutil"
     entrypoint: "bash"
     args:
