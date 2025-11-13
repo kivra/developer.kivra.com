@@ -1028,7 +1028,7 @@ paths:
   # /v2/tenant/TKEY/content
   # ##############################################
   /v2/tenant/{tenantKey}/content:
-    $ref: "./_partials/v2_tenantkey_content.yml"
+    $ref: "./_partials/path_v2_tenantkey_content.yml"
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -2503,109 +2503,7 @@ components:
     # SCHEMA Content_user
     # ##############################################
     Content_user:
-      type: object
-      properties:
-        ssn:
-          description: |
-            User's unique SSN, according to the `YYYYMMDDnnnn` format
-          type: string
-          writeOnly: true
-          example: "191212121212"
-        email:
-          description: |
-            A kivra user's verified email address.
-          type: string
-          writeOnly: true
-          example: "Kivra.Sweden@example.com"
-        subject:
-          description: |
-            The subject/title will be visibile in the Recipients Inbox.
-            Keep the subject short and concise (i.e. up to 30-35 characters) to make sure that is fully visible on most screen sizes.
-            Avoid using personal or sensitive information in the subject.
-          type: string
-          example: "Invoice for March 2022"
-        generated_at:
-          type: string
-          format: ISO8601
-          example: "2022-12-31"
-          description: |
-            Optional attribute which denotes when a specific Content was generated at the tenant/integrator’s site.
-            The attribute might be taken into account to sort the content in the Kivra user interface.
-        type:
-          type: string
-          example: "letter"
-          description: |
-            Optional attribute providing information about the type of content being sent.
-            The type of a content may influence how the user interacts with the content and how the user is notified about the content.
-            Allowed values are:
-            - `"letter"`: |
-              indicating that the content is an information letter. This is the default type for all non-payable content.
-            - `"letter.salary"`: |
-              indicating that the content is a salary specification.
-            - `"letter.creditnotice"`: |
-              indicating that the content is a creditnotice.
-            - `"invoice"`: |
-              indicating that the content is an invoice. A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-              This is the default type for all payable content.
-
-            - `"invoice.reminder"`: |
-              indicating that the content is an invoice, a reminder for a previously unpaid invoice.
-              The invoice might include late fees and other differences compared to the original invoice.
-              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-            - `"invoice.debtcampaign"`: |
-              indicating that the content is an invoice or payment plan from a debt collection company.
-              The invoice might include fees such as interest and reminder fees.
-              A valid "payment" object needs to be provided and the "payable" attribute must be set to "true".
-              This content type enables long due dates with a longer notification scheme
-            - `"invoice.renewal"`: |
-              indicating that the content is not a real invoice, but an offer that is voluntary to pay for the receiver.
-              It can be used to send an offer to renew a subscription, insurance or similar.
-              A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-            - `"invoice.debtcollection"`: |
-                indicating that the content is a debt collection claim (in Swedish: "inkassokrav").
-                A valid "payment" object needs to be provided and the "payable" attribute must be set to true.
-            - `"booking"`: |
-            indicating that the content is a booking/appointement.
-            - `"registered.letter"`: Indicating that the content is a registered letter. A valid `registered` object needs to be provided.
-        retain:
-          description: |
-            Boolean denoting if Kivra should try and retain this content if it can’t be delivered. Default `false`.
-            Please note that retain can only be used together with content type `letter.creditnotice`, `letter.salary`, `letter.signed`
-            and `invite.sign`, otherwise an error with status code `422` will be returned.
-          type: boolean
-          writeOnly: true
-          example: false
-        retention_time:
-          description: |
-            How long to retain a Content. Supported values: `"30"` and `"390"`
-          type: string
-          writeOnly: true
-          example: "30"
-          enum: ["30", "390"]
-        files:
-          description: Array of file Objects
-          type: array
-          writeOnly: true
-          items:
-            $ref: "#/components/schemas/File"
-        context:
-          type: object
-          writeOnly: true
-          description: Optionally specify additional information
-          properties:
-            invoice:
-              type: object
-              description: Optionally specify invoice information
-              properties:
-                payment_multiple_options:
-                  $ref: "#/components/schemas/PaymentMultipleOptions"
-                invoice_reference:
-                  type: string
-                  description: Tenant’s own Invoice Reference
-                  example: "Invoice Nr #123"
-            booking:
-              description: Optionally specify booking information
-              $ref: "#/components/schemas/Booking"
+      $ref: "./_partials/schema_v2_tenantkey_content_response.yml"
 
     # ##############################################
     # SCHEMA Content_user_v2
