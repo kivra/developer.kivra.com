@@ -1,0 +1,15 @@
+      type: object
+      properties:
+        subject:
+          type: string
+          example: "Invoice for November 2025"
+          description: Same data as provided by the sender in the input
+        generated_at:
+          type: string
+          format: ISO8601
+          example: "2025-10-31"
+          description: Same data as provided by the sender in the input
+        type:
+          type: string
+          example: "invoice"
+          description: Same data as provided by the sender in the input
