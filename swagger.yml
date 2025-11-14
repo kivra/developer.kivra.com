@@ -1028,7 +1028,7 @@ paths:
   # /v2/tenant/TKEY/content
   # ##############################################
   /v2/tenant/{tenantKey}/content:
-    $ref: "./_partials/path_v2_tenantkey_content.yml"
+    $ref: "./_partials/path-v2-tenantkey-content.yml"
 
   # ##############################################
   # POST, GET /v1/tenant/tenantKey/form
@@ -2503,7 +2503,7 @@ components:
     # SCHEMA Content_user
     # ##############################################
     Content_user:
-      $ref: "./_partials/schema_v2_tenantkey_content_response.yml"
+      $ref: "./_partials/schema-v2-tenantkey-content-response.yml"
 
     # ##############################################
     # SCHEMA Content_user_v2
