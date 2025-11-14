@@ -1,0 +1,769 @@
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Send content
+      operationId: Send content
+      description: |
+        Metadata is the data that Kivra needs to be able to deliver the Content to the right User. It may also determine how the User can interact with the Content.
+
+        ## Minimum Metadata
+        As a minimum one valid recipient identifier (`vat_number`, `ssn` or `email`), a `subject` and `type` are required.
+
+        ## Responsive content
+        As more than 90% of the content sent in Kivra is consumed on mobile devices, it is important to be able to show to the recipient the most important information in an easily readable way, without relying on the recipient to zoom in on the area of the PDF where the information is presented.
+
+         Responsive content solve this problem by allowing senders to provide 2 versions of the content:
+          - a PDF which contains all the information and details that needs to be presented to the recipient
+          - an HTML version of the same content that includes an overview of the information and highlights what the sender wants to present to the user.
+
+        Here are a couple of examples on how to use HTML resp. PDF in your communication:
+        - Let's consider an invoice where the PDF contains all the information that the invoice must include, while the responsive part (HTML) contains only the due amount, the due date, some information about the product or service that was delivered, the benefits for the customer for using the supplier and some brand information.
+        -  Let's consider a salary specification where the PDF contains all the details and how the salary was calculated while the HTML presentes only some key information like the salary total, when the money will be paid and the number of vacation days left.
+
+        ### Restrictions for the HTML part
+        Kivra is an archive and it is very important that content sent in Kivra is immutable and does not update itself over time. The recipient should be able to return to a received content at any point in time and see it exactly as it was when it was received.
+
+        As HTML is a format that offers many possibilities there are restrictions on how the HTML is formed:
+        - No javascript: **no javascript allowed**, neither inline or fetched from external resources
+        - External documents such as images, icons, css, etc. **must be embedded inline in the HTML** file to avoid external links to become bad over time and break the rendering of the HTML
+
+        Privacy is also an important concern for Kivra. For this reason common links are allowed in the HTML but **no user-specific tracking links are allowed**, for instance links containing UTMs or other technology to track the behavior of each particular user.
+
+        ## Retained Content
+        A retained Content is a Content that is sent to a Recipient who is not yet a user of Kivra. Once that Recipient register with Kivra, the Content will be delivered to that Recipient’s Kivra account. Retained Content has a time limit for how long they can be retained before being deleted, ie removed unless the Recipient registers within a given period of time.
+
+        <aside class="notice">
+        Note: Usage of retained functionality is only allowed for documents of type `letter.creditnotice`, `letter.salary`, `letter.signed` and `invite.sign`, otherwise an error with status code `422` will be returned
+        </aside>
+
+        Sending retained Content uses all the same attributes as a normal Content with the difference for some additional metadata-attributes.
+        By enabling the `retain` metadata attribute and setting it to `true` will enable possible retention of a Content. Kivra’s logic is to first look if the Recipient exist. If it does Kivra will deliver the Content as usual, if the Recipient doesn’t exist Kivra will retain the Content for the specified amount of time (*30 days* is the default value if nothing else is specified). This makes it easy for an Integrator to issue a "retain or deliver"-logic for all it’s Contents.
+
+        Integrators that want to retain a Content for a different time-period than Kivra’s default can use the `retention_time` metadata.
+
+        ## Duplicate control
+        If exactly the same payload (content plus metadata, with only exception being the `generated_at` field) is received more than once, only the first occurrence will result in a delivery. In the other occurrences an OK message will be returned, but no corresponding content will be delivered to the receiver. This is a security mechanism to allow senders to safely re-send the same payload in case there is uncertainty on whether the previous sending resulted in a delivery or not. A typical example is in case of timeout error, where the sender cannot establish whether the sending resulted in a content delivery or not.
+
+        <aside class="notice">
+        Note: Duplicate control is only available in production, not in sandbox. This allows senders to reuse the same payload several times in the test environment.
+        </aside>
+
+        It's important to underline that the duplicate control is made by checking the complete payload (beside `generated_at`), not only the attached content. This means that any change in the payload will cause the duplicate check to fail and the corresponding content to be delivered.
+
+        Another important consequence is that in case a sender wants to safely re-send a PDF content, it is important that the PDF is not generated again between the API calls as this almost certainly results in a slightly different PDF and therefore in a different payload, meaning that the duplication check will not be able to recognise it as a duplicate.
+
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}.content"
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The unique Key for a Tenant
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      responses:
+        201:
+          description: |
+            Content Created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content_user"
+          headers:
+            kivra-objkey:
+              description: Object Key
+              schema:
+                type: string
+                format: "hexadecimal value"
+            kivra-retained:
+              description: |
+                Boolean denoting if a Content was Retained, Note: this header is **only** returned when a Content is retained
+              schema:
+                type: boolean
+            location:
+              description: URL to created Object
+              schema:
+                type: string
+                format: url
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/Content_user_v2"
+                - $ref: "#/components/schemas/Content_company"
+            examples:
+              invoice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    swish_alias: "1231231234"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "accounting.invoice"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    invoice_number: "INV-2024-001"
+                    invoice_date: "2026-10-31"
+                    currency: "SEK"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
+              invoice reminder to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "accounting.invoicereminder"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    invoice_number: "INV-2024-002"
+                    original_invoice_number: "INV-2024-001"
+                    invoice_date: "2026-10-31"
+                    currency: "SEK"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+                    total_amount_due: "1250.00"
+              invoice credit note to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: "Credit invoice to Company"
+                  generated_at: "2026-10-31"
+                  type: "accounting.invoicecreditnote"
+                  parts:
+                    - name: "invoice.pdf"
+                      data: "REVBREJFRUY="
+                      content_type: "application/pdf"
+                      responsive_part:
+                        name: "invoice.html"
+                        data: "PGgxPkNvbXBhbnkgSW52b2ljZTwvaDE+CjxwPkRldGFpbHMgaGVyZTwvcD4="
+                        content_type: "text/html"
+                  invoice:
+                    currency: "SEK"
+                    total_amount_due: "1250.00"
+                    invoice_number: "INV-2024-002"
+                    original_invoice_number: "INV-2024-001"
+                    invoice_date: "2026-10-31"
+                    due_date: "2026-11-30"
+                    buyer_reference: "REF-12345"
+                    order_number: "ORD-2024-789"
+                    supplier_name: "Supplier AB"
+                    supplier_organisation_number: "556123-4567"
+                    supplier_vat_number: "SE556123456701"
+                    supplier_address_street: "Stora gatan 123"
+                    supplier_address_postal_code: "11122"
+                    supplier_address_city: "Stockholm"
+                    payment_reference:
+                      value: "123456789012345"
+                      reference_type: "ocr"
+                    bankgiro: "123-4567"
+                    plusgiro: "456-9999"
+                    iban: "SE3550000000054910000003"
+                    bic: "ESSESESS"
+                    total_amount_tax_exclusive: "1000.00"
+                    total_vat_amount: "250.00"
+                    total_amount_tax_inclusive: "1250.00"
+                    rounding_amount: "0.00"
+              invoice with multiple payment options to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    account: "123456"
+                    method: "1"
+                    swish_alias: "disable"
+                    options:
+                      - due_date: "2024-02-29"
+                        amount: "4711.23"
+                        type: "SE_OCR"
+                        reference: "771554193"
+                        title: "Option 1"
+                        description: "The first options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "Base64-encoded string with PNG data"
+                      - due_date: "2024-03-31"
+                        amount: "11147.42"
+                        type: "SE_OCR"
+                        reference: "771554194"
+                        title: "Option 2"
+                        description: "The second options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "A different base64-encoded string with PNG data"
+              invoice with flexible option:
+                value:
+                  ssn: "191212121212"
+                  subject: Flexible Invoice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice"
+                  parts:
+                    - name: filename.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    account: "123456"
+                    method: "1"
+                    options:
+                      - due_date: "2024-02-29"
+                        amount: "4711.23"
+                        type: "SE_OCR"
+                        reference: "771554193"
+                        title: "Option 1"
+                        description: "The first options in this invoice."
+                        icon:
+                          name: "this_will_be_ignored.png"
+                          content_type: "image/png"
+                          data: "Base64-encoded string with PNG data"
+                    flexible_option:
+                      due_date: "2024-02-29"
+                      type: "SE_OCR"
+                      reference: "771554195"
+                      title: "Flexible Option"
+                      description: "A flexible option."
+                      icon:
+                        name: "this_will_be_ignored.png"
+                        content_type: "image/png"
+                        data: "Base64-encoded string with PNG data"
+                      min_limit: "17.00"
+                      min_suggested: "23.50"
+                      max_suggested: "235.00"
+                      max_limit: "500"
+              letter to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2024-12-12"
+                  type: "letter"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              letter to user (identified by email):
+                value:
+                  email: "someone@example.com"
+                  subject: Sample Letter to User (identified by email)
+                  generated_at: "2024-12-12"
+                  type: "letter"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              payslip to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Payslip to User
+                  generated_at: "2024-12-12"
+                  type: "letter.salary"
+                  retain: true
+                  retention_time: "390"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              creditnotice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Creditnotice to User
+                  generated_at: "2024-12-12"
+                  type: "letter.creditnotice"
+                  retain: true
+                  retention_time: "30"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              booking to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Booking to User
+                  generated_at: "2024-12-12"
+                  type: "booking"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  booking:
+                    title: "Appointment"
+                    start_time: "2026-12-12T10:00:00Z"
+                    end_time: "2026-12-12T11:00:00Z"
+                    location: "Somewhere"
+                    description: "More details"
+                    info_url: url
+              invoice.debtcampaign to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Debtcampaign Invoice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.debtcampaign"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice reminder to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Reminder to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.reminder"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice renewal to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Renewal to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.renewal"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice donation to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Donation to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.donation"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              invoice payment notice to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Invoice Payment Notice to User
+                  generated_at: "2024-12-12"
+                  type: "invoice.paymentnotice"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                  payment_multiple_options:
+                    payable: true
+                    currency: SEK
+                    method: "1"
+                    account: "12345"
+                    options:
+                      - due_date: "2017-01-01"
+                        amount: "123.50"
+                        type: SE_OCR
+                        reference: "426523791"
+              content to company:
+                value:
+                  vat_number: SE556840226601
+                  subject: Sample Content to Company
+                  generated_at: "2024-12-12"
+                  type: "letter"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              invite research to user:
+                value:
+                  ssn: "191212121212"
+                  subject: "Sample Research Invite to User"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.research"
+                  invite:
+                    title: "We want to know"
+                    description: "Your answers will help us."
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Folktestmyndigheten"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+              invite gift to user:
+                value:
+                  ssn: "191212121212"
+                  subject: "Gift for you"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.gift"
+                  invite:
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Givmild AB"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+              invite voucher to user:
+                value:
+                  ssn: "191212121212"
+                  subject: "Voucher for you"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.voucher"
+                  invite:
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Compensation Inc"
+                      vat_number: "SE556840226601"
+                    store:
+                      name: "Redeem Store AB"
+                    expires_at: "2024-12-12T12:00:00Z"
+              invite sign to user:
+                value:
+                  ssn: "191212121212"
+                  subject: "Document for you to sign"
+                  generated_at: "2024-10-12T00:00:00Z"
+                  type: "invite.sign"
+                  invite:
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Employer"
+                      vat_number: "SE556840226601"
+                    service_provider:
+                      name: "Signature AB"
+                    expires_at: "2024-12-12T12:00:00Z"
+                    description: "Please sign the document"
+              invite kyc to user:
+                value:
+                  ssn: "191212121212"
+                  subject: "Sample KYC Invite to User"
+                  generated_at: "2024-03-12T00:00:00Z"
+                  type: "invite.kyc"
+                  invite:
+                    title: "We want to know"
+                    description: "Your answers will help us."
+                    uri: "https://example.com"
+                    behalf_of:
+                      name: "Finansiellt Institut"
+                      vat_number: "SE556840226601"
+                    expires_at: "2024-12-12T12:00:00Z"
+                    service_provider:
+                      name: "KYC AB"
+              letter signed to user:
+                value:
+                  ssn: "198101296928"
+                  subject: Your signed document
+                  generated_at: "2024-12-12"
+                  type: "letter.signed"
+                  signed:
+                    behalf_of:
+                      name: "Some Company"
+                      vat_number: "SE556840226601"
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              form to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter.form"
+                  form:
+                    id: 2877d684-a340-4e4c-867f-d93283787b01
+                    sender_reference:
+                      internal_id: 6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf
+                    days_to_expiry: 30
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              campaign to user:
+                value:
+                  ssn: "191212121212"
+                  subject: Sample Content to User
+                  generated_at: "2016-12-12"
+                  type: "letter"
+                  campaign:
+                    tag: summer_2023
+                  parts:
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+                    - name: document.pdf
+                      data: REVBREJFRUY=
+                      content_type: application/pdf
+                      responsive_part:
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
+                        content_type: text/html
+              registered letter:
+                value:
+                  ssn: "191212121212"
+                  subject: This is a registered letter
+                  type: "registered.letter"
+                  registered:
+                    expires_at: "2025-01-15T23:59:59Z"
+                    sender_reference:
+                      sender_internal_id: "6eb7d1b9-ccd6-408f-ade7-9a1837be3ecf"
+                    hidden:
+                      sender: true
+                      subject: true
+              ticket (BETA):
+                summary: ticket
+                value:
+                  ssn: "191212121212"
+                  subject: "Your concert ticket"
+                  type: "ticket.event"
+                  ticket:
+                    event_key: "event-123"
+                    order_id: "order-456"
+                    group_ticket:
+                      qr_data: "X1RBR0UtMR2yMDI2XDYyMFQxOTA1DDBa"
+                    tickets:
+                      - qr_data: "U1RBR0UtMS0yMDI1MDYyMFQxOTA1MDBa"
+                        type: "Standard"
+                        seating:
+                          seat: "A12"
+                          row: "1"
+                          section: "Orchestra"
+                          gate: "North"
+                      - qr_data: "U1RBR0XtMS0yMDI1MZZyMFCxOTL1MDBv"
+                        type: "Standard"
+                        seating:
+                          seat: "A13"
+                          row: "1"
+                          section: "Orchestra"
+                          gate: "North"
