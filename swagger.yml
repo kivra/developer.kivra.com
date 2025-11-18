@@ -5032,9 +5032,10 @@ components:
           type: string
           example: faktura.pdf
         sha256:
-          description: The SHA256 digest of this content part
+          description: The SHA256 digest of this content part. For older content, received before early 2018, this may be `null`.
           type: string
           example: 060bed374498fe2f36a5f2e1abf217a90beb46e8fe4ec1d9d5ce7746
+          nullable: true
         size:
           minimum: 0
           description: The size in bytes of this content part
