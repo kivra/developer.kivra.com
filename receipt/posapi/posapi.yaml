@@ -46,16 +46,17 @@ info:
 
       #### Receipt content
 
-      The receipt content sent to Kivra is based on a json schema. There are 4 different kinds of receipt types supported:
+      The receipt content sent to Kivra is based on a json schema. There are 5 different kinds of receipt types supported:
 
       - Sales (a receipt with only sales items)
       - Return (a receipt with only return items)
       - Combined sales/return (a receipt with both sales and return items)
+      - Retained (a receipt without any matched recipient at the given moment)
       - Greenbin (a receipt without recipient, the receipt will end up in a digital waste bin)
 
       All types are built the same way, using the same json schema as base. There are a few properties within the receipt that differs depending on type.
 
-      When a digital receipt is created it is important that a verified user identifier is present (unless greenbin receipt) in the receipt data.
+      When a digital receipt is created it is important that a verified user identifier is present (unless retained or greenbin receipt) in the receipt data.
       The verified identifiers are
 
       - Social security number
@@ -272,13 +273,41 @@ paths:
                 example:
                   message: Received receipt
         "202":
-          description: Greenbin receipt received
+          description: Retained or Greenbin receipt received
+          headers:
+            x-dr-transactionid:
+              schema:
+                type: string
+                pattern: "^([a-z0-9]{42})$"
+              example: "15662258993a2dcd45aba54f9086544f5f97c60ec4"
+              description: The id of the retained receipt. Not applicable for greenbin receipts
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: Received receipt                  
+                oneOf:
+                  - type: object
+                    title: Retained receipt
+                    properties:
+                      data:
+                        type: string
+                        description: Base64 encoded QR code
+                      token:
+                        type: string
+                        description: Token
+                      url:
+                        type: string
+                        description: URL to the receipt
+                    example:
+                      data: "base64-encoded-qr-code"
+                      token: "token"
+                      url: "https://url-to-receipt"
+                  - type: object
+                    title: Greenbin receipt
+                    properties:
+                      message:
+                        type: string
+                    example:
+                      message: Received receipt
         "400":
           description: Bad request
           content:
