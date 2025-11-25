@@ -614,7 +614,7 @@ Example, customer uses a 100 SEK note to pay a 55.50 SEK bill with _rounding_ an
 Payment is done using a credit/debit card.
 Additional properties:
 
-- _card_token_: If a card token is used to identify the customer.
+- _card_token_: If a card token is used to identify the customer. Use `"scheme": "par"` for PAR token.
 - _payment_slip_: Information from the card terminal represented as an array of strings.
 
 If possible, the follwowing [ISO 8583](https://en.wikipedia.org/wiki/ISO_8583) fields should be added to the tender:
@@ -660,6 +660,7 @@ Example, card payment.
             ""
           ]
         },
+        "approval_code": "123456",
         "bank_identification_number": "527500**********",
         "retrieval_reference_number": "996933866525",
         "card_acceptor_terminal_id": "13848718",
