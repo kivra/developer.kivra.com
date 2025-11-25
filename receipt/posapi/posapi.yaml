@@ -165,6 +165,9 @@ paths:
 
         * Approval Code
 
+
+        See [Digital receipt JSON schema explained](/receipt/wiki/mdwiki.html#!receipt-doc/retail/retail-schema-description.md#tender-creditdebit) for more details regarding card payments 
+
       operationId: CreateReceipt
       summary: Create receipt
       requestBody:
