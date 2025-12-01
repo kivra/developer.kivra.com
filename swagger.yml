@@ -2552,8 +2552,8 @@ components:
             - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
             - `"letter.form"`: indicating that the content contains a form.
             - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
-            - `"invite.research"`: for invitations to participate in surveys and polls
-            - `"invite.gift"`: for invitations to collect a gift
+            - `"invite.research"`: for invitations to participate in surveys and polls.
+            - `"invite.gift"`: for invitations to collect a gift.
             - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
             - `"invite.voucher"`: for invitations to use a voucher
             - `"invite.kyc"`: for invitations to complete KYC (Know Your Customer) process.
@@ -2710,6 +2710,10 @@ components:
             - label: What is the source of the deposit?
               id: source
               type: free_text
+              next_question: account
+            - label: Select your salary account
+              id: account
+              type: verified_account
               next_question: comments
             - label: Do you have any further comments?
               id: comments
@@ -3129,6 +3133,9 @@ components:
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
+              - `"invite.research"`: indicating that the content is an invitation to participate in a survey or poll.
+              - `"invite.kyc"`: indicating that the content is an invitation to complete a KYC (Know Your Customer) process.
+
         parts:
           description: files composing the content
           type: array
@@ -3142,6 +3149,12 @@ components:
         invoice:
           description: Optional invoice (BETA)
           $ref: "#/components/schemas/Invoice"
+        invite_research:
+          description: Optional invite research
+          $ref: "#/components/schemas/InviteResearch"
+        invite_kyc:
+          description: Optional invite kyc
+          $ref: "#/components/schemas/InviteKyc"
 
     # ##############################################
     # SCHEMA Payment
