@@ -2617,27 +2617,25 @@ components:
         form:
           description: Optionally attach a form
           $ref: "#/components/schemas/Form"
-        invite_research:
-          description: Optional invite research
-          $ref: "#/components/schemas/InviteResearch"
-        invite_gift:
-          description: Optional invite gift
-          $ref: "#/components/schemas/InviteGift"
-        invite_sign:
-          description: Optional invite sign
-          $ref: "#/components/schemas/InviteSign"
-        invite_voucher:
-          description: Optional invite voucher
-          $ref: "#/components/schemas/InviteVoucher"
-        signed:
-          description: Optional signed metadata
-          $ref: "#/components/schemas/Signed"
-        invite_kyc:
-          description: Optional invite kyc
-          $ref: "#/components/schemas/InviteKyc"
+        invite:
+          description: Optional invite metadata
+          oneOf:
+            - title: Research
+              $ref: "#/components/schemas/InviteResearch"
+            - title: Gift
+              $ref: "#/components/schemas/InviteGift"
+            - title: Sign
+              $ref: "#/components/schemas/InviteSign"
+            - title: Voucher
+              $ref: "#/components/schemas/InviteVoucher"
+            - title: KYC
+              $ref: "#/components/schemas/InviteKyc"
         registered:
           description: Optional registered letter
           $ref: "#/components/schemas/RegisteredLetter"
+        signed:
+          description: Optional signed metadata
+          $ref: "#/components/schemas/Signed"
         ticket:
           description: Optional ticket metadata
           $ref: "#/components/schemas/TicketEventMetadata"
