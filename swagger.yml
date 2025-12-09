@@ -5237,6 +5237,13 @@ components:
                 [Send content](#tag/Tenant-API-Content/operation/Send%20content)
               type: object
               properties:
+                invoice_type:
+                  type: string
+                  description: |
+                    The type of invoice that the content was sent as. For details
+                    about expected values, see the `accounting.*` variants allowed
+                    for the content `type` property in
+                    [Send content](#tag/Tenant-API-Content/operation/Send%20content)
                 total_amount_due:
                   type: string
                 currency:
