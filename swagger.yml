@@ -5230,6 +5230,67 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/PartnerPaymentOption"
+            accounting:
+              description: |
+                Accounting data for structured invoices. For details about the
+                properties see the description of the `invoice` property for
+                [Send content](#tag/Tenant-API-Content/operation/Send%20content)
+              type: object
+              properties:
+                invoice_type:
+                  type: string
+                  description: |
+                    The type of invoice that the content was sent as. For details
+                    about expected values, see the `accounting.*` variants allowed
+                    for the content `type` property in
+                    [Send content](#tag/Tenant-API-Content/operation/Send%20content)
+                total_amount_due:
+                  type: string
+                currency:
+                  type: string
+                due_date:
+                  type: string
+                bankgiro:
+                  type: string
+                plusgiro:
+                  type: string
+                invoice_number:
+                  type: string
+                original_invoice_number:
+                  type: string
+                invoice_date:
+                  type: string
+                buyer_reference:
+                  type: string
+                order_number:
+                  type: string
+                supplier_name:
+                  type: string
+                supplier_organisation_number:
+                  type: string
+                supplier_vat_number:
+                  type: string
+                supplier_address_street:
+                  type: string
+                supplier_address_postal_code:
+                  type: string
+                supplier_address_city:
+                  type: string
+                payment_reference:
+                  type: object
+                iban:
+                  type: string
+                bic:
+                  type: string
+                total_amount_tax_exclusive:
+                  type: string
+                total_amount_tax_inclusive:
+                  type: string
+                total_vat_amount:
+                  type: string
+                rounding_amount:
+                  type: string
+
             references:
               $ref: "#/components/schemas/InvoiceReferences"
             sender_contact_info:
