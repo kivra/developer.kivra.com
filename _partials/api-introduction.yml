@@ -94,6 +94,7 @@ introText: |
     | 2025-09-12 | Added Invite KYC BETA |
     | 2025-11-05 | Removed BETA from Invite KYC |
     | 2025-11-07 | Company invoices (accounting.*) added with BETA tag |
+    | 2025-12-10 | Removed LEGACY endpoints to list users |
 
     # Terminology
 
