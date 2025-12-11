@@ -665,15 +665,7 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - list
-              type: object
-              properties:
-                list:
-                  description: List of VAT numbers to match.
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/VatNumber"
+              $ref: "#/components/schemas/CompanyMatchSet"
             example:
               list: ["SE559408724801", "SE556917354401", "SE556840226601"]
         required: true
@@ -686,17 +678,63 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - list
-                type: object
-                properties:
-                  list:
-                    description: List of VAT numbers which are eligible Recipients of the Tenant.
-                    type: array
-                    minItems: 0
-                    maxItems: length(input-list)
-                    items:
-                      $ref: "#/components/schemas/VatNumber"
+                $ref: "#/components/schemas/CompanyMatchSet"
+              example:
+                list: ["SE556840226601", "SE559408724801"]
+        413:
+          description: Payload exceeded 10MB — try splitting into multiple calls instead.
+
+  /v2/tenant/{tenantKey}/companymatch/vatnr_with_active_partner_integration:
+    post:
+      tags:
+        - "Tenant API - Content"
+      summary: Match a list of VAT numbers to recipients that have an active partner integration for a specific tenant.
+      operationId: Match Companies With PAPI VatNr
+      description: |
+        This resource is used to match a list of Companies to check that they
+        have an active integration with a partner fetching from their company inbox
+        and are eligible for receiving Content from a specific Tenant.
+
+        **Note:**
+        This is only for specific use cases, and will not give you all eligible recipients.
+        You most likely want to use [the regular company match](#tag/Tenant-API-Content/operation/Match%20Companies%20VatNr%20v2).
+
+        The request contains a list of VAT numbers to be matched, and
+        the response is a filtered subset of said list containing only
+        those VAT numbers matching a Company Recipient for which the Tenant
+        is eligible to send Content to, and have an active partner integration.
+
+        <aside class="notice">
+          If none of the provided VAT numbers match a Recipient eligible to receive content from the given Tenant, an empty list will be returned.
+        </aside>
+      parameters:
+        - name: tenantKey
+          in: path
+          description: The Tenant key that the matching should be done on behalf of.
+          required: true
+          schema:
+            type: string
+            format: hexadecimal
+      requestBody:
+        description: |
+          List of VAT numbers to be matched. The payload can be up to 10MB in size, corresponding to about 500.000 VAT numbers.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyMatchSet"
+            example:
+              list: ["SE559408724801", "SE556917354401", "SE556840226601"]
+        required: true
+      security:
+        - oAuth2Client:
+            - "post:kivra.v2.tenant.{tenantKey}.companymatch.vatnr_with_active_partner_integration"
+      responses:
+        200:
+          description: Filtered list of VAT numbers that matched.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyMatchSet"
               example:
                 list: ["SE556840226601", "SE559408724801"]
         413:
@@ -3287,14 +3325,14 @@ components:
           - "bAr@EXAMPLE.COM"
 
     # ##############################################
-    # SCHEMA CompanyMatch
+    # SCHEMA CompanyMatchSet
     # ##############################################
-    CompanyMatch:
+    CompanyMatchSet:
       required:
-        - vat_numbers
+        - list
       type: object
       properties:
-        vat_numbers:
+        list:
           type: array
           items:
             type: string
@@ -3304,7 +3342,7 @@ components:
               - "SE25555555552"
           description: list of VAT Numbers
       example:
-        vat_numbers:
+        list:
           - "SE25555555550"
           - "SE25555555551"
           - "SE25555555552"
