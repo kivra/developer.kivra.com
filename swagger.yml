@@ -1854,9 +1854,9 @@ paths:
             A test delivery was successfully scheduled.
 
   # ##############################################
-  # GET,POST /v2/webhooks
+  # GET,POST /v2/webhooks/payments
   # ##############################################
-  /v2/webhooks:
+  /v2/webhooks/payments:
     get:
       tags:
         - "Tenant API - Payment Webhooks"
@@ -1982,9 +1982,9 @@ paths:
                 $ref: "#/components/schemas/PaymentWebhookDefinition"
 
   # ##############################################
-  # DELETE,PATCH /v2/webhooks/ID
+  # DELETE,PATCH /v2/webhooks/payments/ID
   # ##############################################
-  /v2/webhooks/{id}:
+  /v2/webhooks/payments/{id}:
     delete:
       tags:
         - "Tenant API - Payment Webhooks"
@@ -2073,9 +2073,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaymentWebhookDefinition"
   # ##############################################
-  # POST /v2/webhooks/ID/test
+  # POST /v2/webhooks/payments/ID/test
   # ##############################################
-  /v2/webhooks/{id}/test:
+  /v2/webhooks/payments/{id}/test:
     post:
       tags:
         - "Tenant API - Payment Webhooks"
