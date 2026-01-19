@@ -2637,6 +2637,17 @@ components:
       $ref: "./_partials/schema-v2-tenantkey-content-response.yml"
 
     # ##############################################
+    # ⚡⚡⚡ SCHEMA SalarySlip - NEW! ⚡⚡⚡
+    # ##############################################
+    SalarySlip:
+      description: |
+        ⚡⚡⚡ NEW SALARY SLIP SCHEMA ⚡⚡⚡
+
+        Comprehensive salary slip metadata schema for the "salaryslip" content type.
+        Contains structured information about employee salary, benefits, taxes, and employment details.
+      $ref: "./_partials/schema-salary-slip.yml"
+
+    # ##############################################
     # SCHEMA Content_user_v2
     # ##############################################
     Content_user_v2:
@@ -2680,6 +2691,7 @@ components:
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
             - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
+            - `"salaryslip"`: ⚡⚡⚡ NEW SALARY SLIP TYPE ⚡⚡⚡ indicating that the content is a salary slip with structured metadata. A valid `salary_slip` object needs to be provided. This type includes detailed payment information, employer details, benefits, holidays, and tax information.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
             - `"letter.form"`: indicating that the content contains a form.
             - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
@@ -2766,6 +2778,24 @@ components:
         invite_kyc:
           description: Optional invite kyc
           $ref: "#/components/schemas/InviteKyc"
+        salary_slip:
+          description: |
+            ⚡⚡⚡ NEW SALARY SLIP OBJECT ⚡⚡⚡
+
+            Optional salary slip with structured metadata for "salaryslip" content type.
+
+            This object contains comprehensive salary information including:
+            - Document metadata (creation timestamp, source system)
+            - Employment details (start date, type, weekly hours)
+            - Pay period information (dates, hours worked, salary breakdown)
+            - Employer information (legal name, contact details)
+            - Employee benefits (healthcare, pension, meals)
+            - Holiday/vacation information
+            - Tax information and deductions
+
+            All monetary amounts must use period (.) as decimal separator with up to 2 decimal places.
+            All dates must be in ISO 8601 format.
+          $ref: "#/components/schemas/SalarySlip"
         registered:
           description: Optional registered letter
           $ref: "#/components/schemas/RegisteredLetter"

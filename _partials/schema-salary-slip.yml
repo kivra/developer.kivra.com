@@ -1,0 +1,521 @@
+# ⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
+# ⚡⚡⚡ NEW SALARY SLIP SCHEMA - LOOK HERE! ⚡⚡⚡
+# ⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
+description: |
+  ⚡⚡⚡ NEW SALARY SLIP METADATA SCHEMA ⚡⚡⚡
+
+  This schema defines the structure for salary slip metadata when using content type "salaryslip".
+
+  IMPORTANT FORMATTING RULES:
+  - Monetary amounts: String with up to 2 decimal places, period (.) as separator, NO commas
+  - Dates: ISO 8601 format (YYYY-MM-DD)
+  - Timestamps: ISO 8601 with UTC (YYYY-MM-DDTHH:MM:SSZ)
+  - Currency: ISO 4217 code (3 uppercase letters, e.g., SEK, EUR, USD)
+
+type: object
+additionalProperties: false
+required:
+  - document_metadata
+  - employment
+  - pay_period
+properties:
+  document_metadata:
+    type: object
+    additionalProperties: false
+    required:
+      - creation_timestamp
+      - source_system
+    properties:
+      creation_timestamp:
+        type: string
+        format: date-time
+        description: "ISO 8601, UTC, no TZ offset (e.g., 2025-01-05T10:00:00Z)"
+        example: "2025-01-05T10:00:00Z"
+      source_system:
+        type: string
+        description: "Name or identifier of the source payroll system"
+        example: "Payroll System XYZ"
+
+  employment:
+    type: object
+    additionalProperties: false
+    required:
+      - start_date
+    properties:
+      start_date:
+        type: string
+        format: date
+        description: "ISO 8601 date format (YYYY-MM-DD)"
+        example: "2025-01-01"
+      type:
+        type: string
+        description: "Type of employment (e.g., full-time, part-time, contract)"
+        example: "full-time"
+      weekly_hours:
+        type: string
+        pattern: '^\d+(\.\d+)?$'
+        description: "Non-negative decimal number representing weekly working hours"
+        example: "35.5"
+      organizational_unit_identifier:
+        type: string
+        description: "Identifier for the organizational unit or department"
+        example: "123456"
+
+  yearly_accumulated_gross_pay:
+    type: object
+    additionalProperties: false
+    properties:
+      monetary_amount:
+        type: string
+        pattern: '^\d+(\.\d{1,2})?$'
+        description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+        example: "140000.00"
+      currency:
+        type: string
+        pattern: '^[A-Z]{3}$'
+        description: "ISO 4217 currency code (3 uppercase letters)"
+        example: "SEK"
+
+  yearly_accumulated_taxes:
+    type: object
+    additionalProperties: false
+    properties:
+      monetary_amount:
+        type: string
+        pattern: '^\d+(\.\d{1,2})?$'
+        description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+        example: "30000.00"
+      currency:
+        type: string
+        pattern: '^[A-Z]{3}$'
+        description: "ISO 4217 currency code (3 uppercase letters)"
+        example: "SEK"
+
+  pay_period:
+    type: object
+    additionalProperties: false
+    required:
+      - start_date
+      - end_date
+      - payout_date
+      - basic_contractual_salary
+      - gross_pay
+      - tax_deducted
+      - net_pay
+      - employer
+    properties:
+      start_date:
+        type: string
+        format: date
+        description: "ISO 8601 date format (YYYY-MM-DD)"
+        example: "2025-01-01"
+      end_date:
+        type: string
+        format: date
+        description: "ISO 8601 date format (YYYY-MM-DD)"
+        example: "2025-01-31"
+      payout_date:
+        type: string
+        format: date
+        description: "ISO 8601 date format (YYYY-MM-DD)"
+        example: "2025-02-25"
+      total_hours_worked:
+        type: string
+        pattern: '^\d+(\.\d+)?$'
+        description: "Non-negative decimal number"
+        example: "150.5"
+      overtime_hours:
+        type: string
+        pattern: '^\d+(\.\d+)?$'
+        description: "Non-negative decimal number"
+        example: "2.5"
+      effective_tax_rate_percentage:
+        type: string
+        pattern: '^\d+(\.\d{1,2})?$'
+        description: "Percentage value between 0 and 100 with up to 2 decimal places"
+        example: "21.43"
+
+      absences:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            type:
+              type: string
+              description: "Type of absence (e.g., sick leave, vacation, personal leave)"
+              example: "sick leave"
+            duration_in_hours:
+              type: string
+              pattern: '^\d+(\.\d+)?$'
+              description: "Non-negative decimal number"
+              example: "7.5"
+
+      vacation_pay:
+        type: object
+        additionalProperties: false
+        properties:
+          monetary_amount:
+            type: string
+            pattern: '^\d+(\.\d{1,2})?$'
+            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            example: "1500.12"
+          currency:
+            type: string
+            pattern: '^[A-Z]{3}$'
+            description: "ISO 4217 currency code (3 uppercase letters)"
+            example: "SEK"
+
+      basic_contractual_salary:
+        type: object
+        additionalProperties: false
+        required:
+          - monetaryAmount
+          - currency
+        properties:
+          monetaryAmount:
+            type: string
+            pattern: '^\d+(\.\d{1,2})?$'
+            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            example: "30500.00"
+          currency:
+            type: string
+            pattern: '^[A-Z]{3}$'
+            description: "ISO 4217 currency code (3 uppercase letters)"
+            example: "SEK"
+
+      gross_pay:
+        type: object
+        additionalProperties: false
+        required:
+          - monetary_amount
+          - currency
+        properties:
+          monetary_amount:
+            type: string
+            pattern: '^\d+(\.\d{1,2})?$'
+            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            example: "32500.00"
+          currency:
+            type: string
+            pattern: '^[A-Z]{3}$'
+            description: "ISO 4217 currency code (3 uppercase letters)"
+            example: "SEK"
+
+      tax_deducted:
+        type: object
+        additionalProperties: false
+        required:
+          - monetary_amount
+          - currency
+        properties:
+          monetary_amount:
+            type: string
+            pattern: '^\d+(\.\d{1,2})?$'
+            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            example: "6962.50"
+          currency:
+            type: string
+            pattern: '^[A-Z]{3}$'
+            description: "ISO 4217 currency code (3 uppercase letters)"
+            example: "SEK"
+
+      additional_payments:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            type:
+              type: string
+              description: "Type of additional payment (e.g., overtime, bonus, commission)"
+              example: "overtime"
+            monetary_amount:
+              type: string
+              pattern: '^\d+(\.\d{1,2})?$'
+              description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+              example: "1500.00"
+            currency:
+              type: string
+              pattern: '^[A-Z]{3}$'
+              description: "ISO 4217 currency code (3 uppercase letters)"
+              example: "SEK"
+
+      net_pay:
+        type: object
+        additionalProperties: false
+        required:
+          - monetary_amount
+          - currency
+        properties:
+          monetary_amount:
+            type: string
+            pattern: '^\d+(\.\d{1,2})?$'
+            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            example: "25537.50"
+          currency:
+            type: string
+            pattern: '^[A-Z]{3}$'
+            description: "ISO 4217 currency code (3 uppercase letters)"
+            example: "SEK"
+
+      tax_information:
+        type: object
+        additionalProperties: false
+        properties:
+          tax_code:
+            type: object
+            additionalProperties: false
+            properties:
+              identifier:
+                type: string
+                description: "Tax code identifier"
+                example: "Tabell 30"
+              scheme:
+                type: string
+                description: "Tax code scheme or system"
+                example: "Skatteverket Tax Table"
+          tax_deduction_details:
+            type: object
+            additionalProperties: false
+            properties:
+              is_main_income:
+                type: boolean
+                description: "Whether this is the employee's main source of income"
+                example: true
+              details_provided_by:
+                type: string
+                description: "Authority or organization providing the tax deduction details"
+                example: "Skatteverket"
+
+      employee_benefits:
+        type: object
+        additionalProperties: false
+        properties:
+          healthcare:
+            type: object
+            additionalProperties: false
+            properties:
+              type:
+                type: string
+                description: "Type of healthcare coverage (e.g., private, public)"
+                example: "private"
+              coverage:
+                type: string
+                description: "Coverage level (e.g., individual, family)"
+                example: "family"
+              employerContribution:
+                type: object
+                additionalProperties: false
+                properties:
+                  monetary_amount:
+                    type: string
+                    pattern: '^\d+(\.\d{1,2})?$'
+                    description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                    example: "500.00"
+                  currency:
+                    type: string
+                    pattern: '^[A-Z]{3}$'
+                    description: "ISO 4217 currency code (3 uppercase letters)"
+                    example: "SEK"
+
+          meals:
+            type: object
+            additionalProperties: false
+            properties:
+              type:
+                type: string
+                description: "Type of meal benefit (e.g., lunch vouchers, cafeteria)"
+                example: "lunch vouchers"
+              value_per_day:
+                type: object
+                additionalProperties: false
+                properties:
+                  monetary_amount:
+                    type: string
+                    pattern: '^\d+(\.\d{1,2})?$'
+                    description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                    example: "100.00"
+                  currency:
+                    type: string
+                    pattern: '^[A-Z]{3}$'
+                    description: "ISO 4217 currency code (3 uppercase letters)"
+                    example: "SEK"
+
+          pension_contribution:
+            type: object
+            additionalProperties: false
+            properties:
+              percentage_of_gross_salary:
+                type: string
+                pattern: '^\d+(\.\d{1,2})?$'
+                description: "Percentage value between 0 and 100 with up to 2 decimal places"
+                example: "4.5"
+              employer_paid_to:
+                type: string
+                description: "Name of the pension provider"
+                example: "Insurance Co X"
+
+          other_benefits:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              properties:
+                type:
+                  type: string
+                  description: "Type of benefit (e.g., gym membership, car allowance)"
+                  example: "gym membership"
+                value:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    monetary_amount:
+                      type: string
+                      pattern: '^\d+(\.\d{1,2})?$'
+                      description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                      example: "300.00"
+                    currency:
+                      type: string
+                      pattern: '^[A-Z]{3}$'
+                      description: "ISO 4217 currency code (3 uppercase letters)"
+                      example: "SEK"
+                description:
+                  type: string
+                  description: "Additional description of the benefit"
+                  example: "Monthly gym allowance"
+
+      recipient_account:
+        type: object
+        additionalProperties: false
+        properties:
+          account_identifiers:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              properties:
+                identifier:
+                  type: string
+                  description: "Account identifier (e.g., IBAN, account number)"
+                  example: "SE4550000000050012345678"
+                schema:
+                  type: string
+                  description: "Schema or format of the account identifier"
+                  example: "IBAN"
+                bankName:
+                  type: string
+                  description: "Name of the bank"
+                  example: "Bank of Sweden"
+
+      holidays:
+        type: object
+        additionalProperties: false
+        properties:
+          period:
+            type: object
+            additionalProperties: false
+            properties:
+              start_date:
+                type: string
+                format: date
+                description: "ISO 8601 date format (YYYY-MM-DD)"
+                example: "2025-01-04"
+              end_date:
+                type: string
+                format: date
+                description: "ISO 8601 date format (YYYY-MM-DD)"
+                example: "2025-01-08"
+          total_days_entitled:
+            type: string
+            pattern: '^\d+(\.\d+)?$'
+            description: "Non-negative decimal number"
+            example: "25.5"
+          days_saved_from_previous_years:
+            type: string
+            pattern: '^\d+(\.\d+)?$'
+            description: "Non-negative decimal number"
+            example: "3.5"
+          days_used_in_period:
+            type: string
+            pattern: '^\d+(\.\d+)?$'
+            description: "Non-negative decimal number"
+            example: "5.5"
+          days_remaining_in_period:
+            type: string
+            pattern: '^\d+(\.\d+)?$'
+            description: "Non-negative decimal number"
+            example: "3.5"
+
+      employer:
+        type: object
+        additionalProperties: false
+        required:
+          - legal_name
+          - legal_identifiers
+          - contact_information
+        properties:
+          legal_name:
+            type: string
+            description: "Legal name of the employer"
+            example: "Tech Solutions AB"
+          legal_identifiers:
+            type: array
+            minItems: 1
+            items:
+              type: object
+              additionalProperties: false
+              required:
+                - identifier
+                - schema
+              properties:
+                identifier:
+                  type: string
+                  description: "Organization identifier"
+                  example: "556789-0123"
+                schema:
+                  type: string
+                  description: "Identifier scheme (e.g., OrgNr for Swedish organization number)"
+                  example: "OrgNr"
+          contact_information:
+            type: object
+            additionalProperties: false
+            required:
+              - address
+              - email_address
+              - telephone_number
+            properties:
+              address:
+                type: object
+                additionalProperties: false
+                required:
+                  - street_address
+                  - postal_code
+                  - city
+                  - country
+                properties:
+                  street_address:
+                    type: string
+                    description: "Street address"
+                    example: "Storvägen 5"
+                  postal_code:
+                    type: string
+                    description: "Postal code"
+                    example: "164 40"
+                  city:
+                    type: string
+                    description: "City name"
+                    example: "Kista"
+                  country:
+                    type: string
+                    description: "Country name"
+                    example: "Sweden"
+              email_address:
+                type: string
+                format: email
+                description: "Email address in valid format"
+                example: "hr@techsolutions.se"
+              telephone_number:
+                type: string
+                description: "Telephone number (international format supported)"
+                example: "+46707070707"
