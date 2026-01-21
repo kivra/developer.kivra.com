@@ -1,19 +1,4 @@
-# ⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
-# ⚡⚡⚡ NEW SALARY SLIP SCHEMA - LOOK HERE! ⚡⚡⚡
-# ⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
-description: |
-  ⚡⚡⚡ NEW SALARY SLIP METADATA SCHEMA ⚡⚡⚡
-
-  This schema defines the structure for salary slip metadata when using content type "salaryslip".
-
-  IMPORTANT FORMATTING RULES:
-  - Monetary amounts: String with up to 2 decimal places, period (.) as separator, NO commas
-  - Dates: ISO 8601 format (YYYY-MM-DD)
-  - Timestamps: ISO 8601 with UTC (YYYY-MM-DDTHH:MM:SSZ)
-  - Currency: ISO 4217 code (3 uppercase letters, e.g., SEK, EUR, USD)
-
 type: object
-additionalProperties: false
 required:
   - document_metadata
   - employment
@@ -21,79 +6,79 @@ required:
 properties:
   document_metadata:
     type: object
-    additionalProperties: false
+    description: Metadata about the salary slip document creation and source.
     required:
       - creation_timestamp
       - source_system
     properties:
       creation_timestamp:
         type: string
-        format: date-time
-        description: "ISO 8601, UTC, no TZ offset (e.g., 2025-01-05T10:00:00Z)"
+        format: ISO8601
+        description: Timestamp when this salary slip document was created in the source system.
         example: "2025-01-05T10:00:00Z"
       source_system:
         type: string
-        description: "Name or identifier of the source payroll system"
+        description: Name or identifier of the payroll system that generated this salary slip.
         example: "Payroll System XYZ"
 
   employment:
     type: object
-    additionalProperties: false
+    description: Employment details for the employee.
     required:
       - start_date
     properties:
       start_date:
         type: string
-        format: date
-        description: "ISO 8601 date format (YYYY-MM-DD)"
+        format: ISO8601
+        description: Date when the employment started.
         example: "2025-01-01"
       type:
         type: string
-        description: "Type of employment (e.g., full-time, part-time, contract)"
+        description: Type of employment.
         example: "full-time"
       weekly_hours:
         type: string
-        pattern: '^\d+(\.\d+)?$'
-        description: "Non-negative decimal number representing weekly working hours"
-        example: "35.5"
+        format: float
+        description: Number of weekly working hours. A number larger than or equal to 0.
+        example: "40.0"
       organizational_unit_identifier:
         type: string
-        description: "Identifier for the organizational unit or department"
-        example: "123456"
+        description: Identifier for the organizational unit or department.
+        example: "DEPT-001"
 
   yearly_accumulated_gross_pay:
     type: object
-    additionalProperties: false
+    description: Total accumulated gross salary for the year to date.
     properties:
       monetary_amount:
         type: string
-        pattern: '^\d+(\.\d{1,2})?$'
-        description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+        format: float
+        description: Total accumulated gross salary for the year to date. A number larger than or equal to 0.
         example: "140000.00"
       currency:
         type: string
-        pattern: '^[A-Z]{3}$'
+        format: "ISO4217"
         description: "ISO 4217 currency code (3 uppercase letters)"
         example: "SEK"
 
   yearly_accumulated_taxes:
     type: object
-    additionalProperties: false
+    description: Total accumulated taxes deducted for the year to date.
     properties:
       monetary_amount:
         type: string
-        pattern: '^\d+(\.\d{1,2})?$'
-        description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+        format: float
+        description: Total accumulated taxes deducted for the year to date. A number larger than or equal to 0.
         example: "30000.00"
       currency:
         type: string
-        pattern: '^[A-Z]{3}$'
+        format: "ISO4217"
         description: "ISO 4217 currency code (3 uppercase letters)"
         example: "SEK"
 
   pay_period:
     type: object
-    additionalProperties: false
+    description: Information about the current pay period including dates, salary, taxes, and employer details.
     required:
       - start_date
       - end_date
@@ -106,350 +91,350 @@ properties:
     properties:
       start_date:
         type: string
-        format: date
-        description: "ISO 8601 date format (YYYY-MM-DD)"
+        format: ISO8601
+        description: Start date of the pay period.
         example: "2025-01-01"
       end_date:
         type: string
-        format: date
-        description: "ISO 8601 date format (YYYY-MM-DD)"
+        format: ISO8601
+        description: End date of the pay period.
         example: "2025-01-31"
       payout_date:
         type: string
-        format: date
-        description: "ISO 8601 date format (YYYY-MM-DD)"
+        format: ISO8601
+        description: Date when the salary will be paid out to the employee.
         example: "2025-02-25"
       total_hours_worked:
         type: string
-        pattern: '^\d+(\.\d+)?$'
-        description: "Non-negative decimal number"
-        example: "150.5"
+        format: float
+        description: Total number of hours worked during the pay period. A number larger than or equal to 0.
+        example: "160.0"
       overtime_hours:
         type: string
-        pattern: '^\d+(\.\d+)?$'
-        description: "Non-negative decimal number"
-        example: "2.5"
+        format: float
+        description: Number of overtime hours worked during the pay period. A number larger than or equal to 0.
+        example: "8.0"
       effective_tax_rate_percentage:
         type: string
-        pattern: '^\d+(\.\d{1,2})?$'
-        description: "Percentage value between 0 and 100 with up to 2 decimal places"
+        format: float
+        description: Effective tax rate as a percentage. A number larger than or equal to 0.
         example: "21.43"
 
       absences:
         type: array
+        description: List of absences during this pay period.
         items:
           type: object
-          additionalProperties: false
           properties:
             type:
               type: string
-              description: "Type of absence (e.g., sick leave, vacation, personal leave)"
+              description: Type of absence.
               example: "sick leave"
             duration_in_hours:
               type: string
-              pattern: '^\d+(\.\d+)?$'
-              description: "Non-negative decimal number"
-              example: "7.5"
+              format: float
+              description: Duration of the absence in hours. A number larger than or equal to 0.
+              example: "8.0"
 
       vacation_pay:
         type: object
-        additionalProperties: false
+        description: Vacation pay amount for this pay period.
         properties:
           monetary_amount:
             type: string
-            pattern: '^\d+(\.\d{1,2})?$'
-            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
-            example: "1500.12"
+            format: float
+            description: Vacation pay amount for this period. A number larger than or equal to 0.
+            example: "1500.00"
           currency:
             type: string
-            pattern: '^[A-Z]{3}$'
+            format: "ISO4217"
             description: "ISO 4217 currency code (3 uppercase letters)"
             example: "SEK"
 
       basic_contractual_salary:
         type: object
-        additionalProperties: false
+        description: Basic contractual salary for this pay period.
         required:
           - monetaryAmount
           - currency
         properties:
           monetaryAmount:
             type: string
-            pattern: '^\d+(\.\d{1,2})?$'
-            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
-            example: "30500.00"
+            format: float
+            description: Basic contractual salary for this pay period. A number larger than or equal to 0.
+            example: "30000.00"
           currency:
             type: string
-            pattern: '^[A-Z]{3}$'
+            format: "ISO4217"
             description: "ISO 4217 currency code (3 uppercase letters)"
             example: "SEK"
 
       gross_pay:
         type: object
-        additionalProperties: false
+        description: Total gross salary for this pay period before tax deductions.
         required:
           - monetary_amount
           - currency
         properties:
           monetary_amount:
             type: string
-            pattern: '^\d+(\.\d{1,2})?$'
-            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            format: float
+            description: Total gross salary for this pay period before tax deductions. A number larger than or equal to 0.
             example: "32500.00"
           currency:
             type: string
-            pattern: '^[A-Z]{3}$'
+            format: "ISO4217"
             description: "ISO 4217 currency code (3 uppercase letters)"
             example: "SEK"
 
       tax_deducted:
         type: object
-        additionalProperties: false
+        description: Total tax deducted from the gross pay for this pay period.
         required:
           - monetary_amount
           - currency
         properties:
           monetary_amount:
             type: string
-            pattern: '^\d+(\.\d{1,2})?$'
-            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            format: float
+            description: Total tax deducted from the gross pay for this period. A number larger than or equal to 0.
             example: "6962.50"
           currency:
             type: string
-            pattern: '^[A-Z]{3}$'
+            format: "ISO4217"
             description: "ISO 4217 currency code (3 uppercase letters)"
             example: "SEK"
 
       additional_payments:
         type: array
+        description: List of additional payments for this pay period.
         items:
           type: object
-          additionalProperties: false
           properties:
             type:
               type: string
-              description: "Type of additional payment (e.g., overtime, bonus, commission)"
+              description: Type of additional payment.
               example: "overtime"
             monetary_amount:
               type: string
-              pattern: '^\d+(\.\d{1,2})?$'
-              description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
-              example: "1500.00"
+              format: float
+              description: Amount of the additional payment. A number larger than or equal to 0.
+              example: "2000.00"
             currency:
               type: string
-              pattern: '^[A-Z]{3}$'
+              format: "ISO4217"
               description: "ISO 4217 currency code (3 uppercase letters)"
               example: "SEK"
 
       net_pay:
         type: object
-        additionalProperties: false
+        description: Net salary to be paid out to the employee after all deductions.
         required:
           - monetary_amount
           - currency
         properties:
           monetary_amount:
             type: string
-            pattern: '^\d+(\.\d{1,2})?$'
-            description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+            format: float
+            description: Net salary to be paid out to the employee after all deductions. A number larger than or equal to 0.
             example: "25537.50"
           currency:
             type: string
-            pattern: '^[A-Z]{3}$'
+            format: "ISO4217"
             description: "ISO 4217 currency code (3 uppercase letters)"
             example: "SEK"
 
       tax_information:
         type: object
-        additionalProperties: false
+        description: Tax-related information for this pay period.
         properties:
           tax_code:
             type: object
-            additionalProperties: false
+            description: Tax code information used for this employee.
             properties:
               identifier:
                 type: string
-                description: "Tax code identifier"
+                description: Tax code identifier.
                 example: "Tabell 30"
               scheme:
                 type: string
-                description: "Tax code scheme or system"
+                description: Tax code scheme or system.
                 example: "Skatteverket Tax Table"
           tax_deduction_details:
             type: object
-            additionalProperties: false
+            description: Details about tax deductions for this employee.
             properties:
               is_main_income:
                 type: boolean
-                description: "Whether this is the employee's main source of income"
+                description: Whether this is the employee's main source of income.
                 example: true
               details_provided_by:
                 type: string
-                description: "Authority or organization providing the tax deduction details"
+                description: Authority or organization providing the tax deduction details.
                 example: "Skatteverket"
 
       employee_benefits:
         type: object
-        additionalProperties: false
+        description: Employee benefits provided by the employer.
         properties:
           healthcare:
             type: object
-            additionalProperties: false
+            description: Healthcare coverage benefit.
             properties:
               type:
                 type: string
-                description: "Type of healthcare coverage (e.g., private, public)"
+                description: Type of healthcare coverage.
                 example: "private"
               coverage:
                 type: string
-                description: "Coverage level (e.g., individual, family)"
+                description: Coverage level.
                 example: "family"
               employerContribution:
                 type: object
-                additionalProperties: false
+                description: Employer's contribution to healthcare.
                 properties:
                   monetary_amount:
                     type: string
-                    pattern: '^\d+(\.\d{1,2})?$'
-                    description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                    format: float
+                    description: Employer's contribution to healthcare. A number larger than or equal to 0.
                     example: "500.00"
                   currency:
                     type: string
-                    pattern: '^[A-Z]{3}$'
+                    format: "ISO4217"
                     description: "ISO 4217 currency code (3 uppercase letters)"
                     example: "SEK"
 
           meals:
             type: object
-            additionalProperties: false
+            description: Meal benefit provided by the employer.
             properties:
               type:
                 type: string
-                description: "Type of meal benefit (e.g., lunch vouchers, cafeteria)"
+                description: Type of meal benefit.
                 example: "lunch vouchers"
               value_per_day:
                 type: object
-                additionalProperties: false
+                description: Daily value of the meal benefit.
                 properties:
                   monetary_amount:
                     type: string
-                    pattern: '^\d+(\.\d{1,2})?$'
-                    description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                    format: float
+                    description: Daily value of the meal benefit. A number larger than or equal to 0.
                     example: "100.00"
                   currency:
                     type: string
-                    pattern: '^[A-Z]{3}$'
+                    format: "ISO4217"
                     description: "ISO 4217 currency code (3 uppercase letters)"
                     example: "SEK"
 
           pension_contribution:
             type: object
-            additionalProperties: false
+            description: Pension contribution information.
             properties:
               percentage_of_gross_salary:
                 type: string
-                pattern: '^\d+(\.\d{1,2})?$'
-                description: "Percentage value between 0 and 100 with up to 2 decimal places"
+                format: float
+                description: Pension contribution as a percentage of gross salary. A number larger than or equal to 0.
                 example: "4.5"
               employer_paid_to:
                 type: string
-                description: "Name of the pension provider"
+                description: Name of the pension provider.
                 example: "Insurance Co X"
 
           other_benefits:
             type: array
+            description: List of other employee benefits.
             items:
               type: object
-              additionalProperties: false
               properties:
                 type:
                   type: string
-                  description: "Type of benefit (e.g., gym membership, car allowance)"
+                  description: Type of benefit.
                   example: "gym membership"
                 value:
                   type: object
-                  additionalProperties: false
+                  description: Monetary value of the benefit.
                   properties:
                     monetary_amount:
                       type: string
-                      pattern: '^\d+(\.\d{1,2})?$'
-                      description: "Monetary amount with up to 2 decimal places, using . as decimal separator"
+                      format: float
+                      description: Value of the benefit. A number larger than or equal to 0.
                       example: "300.00"
                     currency:
                       type: string
-                      pattern: '^[A-Z]{3}$'
+                      format: "ISO4217"
                       description: "ISO 4217 currency code (3 uppercase letters)"
                       example: "SEK"
                 description:
                   type: string
-                  description: "Additional description of the benefit"
+                  description: Additional description of the benefit.
                   example: "Monthly gym allowance"
 
       recipient_account:
         type: object
-        additionalProperties: false
+        description: Bank account information where the salary will be paid.
         properties:
           account_identifiers:
             type: array
+            description: List of account identifiers for the recipient.
             items:
               type: object
-              additionalProperties: false
               properties:
                 identifier:
                   type: string
-                  description: "Account identifier (e.g., IBAN, account number)"
+                  description: Account identifier.
                   example: "SE4550000000050012345678"
                 schema:
                   type: string
-                  description: "Schema or format of the account identifier"
+                  description: Schema or format of the account identifier.
                   example: "IBAN"
                 bankName:
                   type: string
-                  description: "Name of the bank"
+                  description: Name of the bank.
                   example: "Bank of Sweden"
 
       holidays:
         type: object
-        additionalProperties: false
+        description: Holiday and vacation information for the employee.
         properties:
           period:
             type: object
-            additionalProperties: false
+            description: The period covered by this holiday information.
             properties:
               start_date:
                 type: string
-                format: date
-                description: "ISO 8601 date format (YYYY-MM-DD)"
-                example: "2025-01-04"
+                format: ISO8601
+                description: Start date of the holiday period.
+                example: "2025-01-01"
               end_date:
                 type: string
-                format: date
-                description: "ISO 8601 date format (YYYY-MM-DD)"
-                example: "2025-01-08"
+                format: ISO8601
+                description: End date of the holiday period.
+                example: "2025-01-31"
           total_days_entitled:
             type: string
-            pattern: '^\d+(\.\d+)?$'
-            description: "Non-negative decimal number"
-            example: "25.5"
+            format: float
+            description: Total number of vacation days the employee is entitled to. A number larger than or equal to 0.
+            example: "25.0"
           days_saved_from_previous_years:
             type: string
-            pattern: '^\d+(\.\d+)?$'
-            description: "Non-negative decimal number"
-            example: "3.5"
+            format: float
+            description: Number of vacation days saved from previous years. A number larger than or equal to 0.
+            example: "3.0"
           days_used_in_period:
             type: string
-            pattern: '^\d+(\.\d+)?$'
-            description: "Non-negative decimal number"
-            example: "5.5"
+            format: float
+            description: Number of vacation days used during this period. A number larger than or equal to 0.
+            example: "0.0"
           days_remaining_in_period:
             type: string
-            pattern: '^\d+(\.\d+)?$'
-            description: "Non-negative decimal number"
-            example: "3.5"
+            format: float
+            description: Number of vacation days remaining after this period. A number larger than or equal to 0.
+            example: "28.0"
 
       employer:
         type: object
-        additionalProperties: false
+        description: Information about the employer paying the salary.
         required:
           - legal_name
           - legal_identifiers
@@ -457,29 +442,29 @@ properties:
         properties:
           legal_name:
             type: string
-            description: "Legal name of the employer"
+            description: Legal name of the employer.
             example: "Tech Solutions AB"
           legal_identifiers:
             type: array
+            description: Legal identifiers for the employer organization.
             minItems: 1
             items:
               type: object
-              additionalProperties: false
               required:
                 - identifier
                 - schema
               properties:
                 identifier:
                   type: string
-                  description: "Organization identifier"
+                  description: Organization identifier.
                   example: "556789-0123"
                 schema:
                   type: string
-                  description: "Identifier scheme (e.g., OrgNr for Swedish organization number)"
+                  description: Identifier scheme.
                   example: "OrgNr"
           contact_information:
             type: object
-            additionalProperties: false
+            description: Contact details for the employer.
             required:
               - address
               - email_address
@@ -487,7 +472,7 @@ properties:
             properties:
               address:
                 type: object
-                additionalProperties: false
+                description: Physical address of the employer.
                 required:
                   - street_address
                   - postal_code
@@ -496,26 +481,26 @@ properties:
                 properties:
                   street_address:
                     type: string
-                    description: "Street address"
+                    description: Street address of the employer.
                     example: "Storvägen 5"
                   postal_code:
                     type: string
-                    description: "Postal code"
+                    description: Postal code.
                     example: "164 40"
                   city:
                     type: string
-                    description: "City name"
+                    description: City name.
                     example: "Kista"
                   country:
                     type: string
-                    description: "Country name"
+                    description: Country name.
                     example: "Sweden"
               email_address:
                 type: string
                 format: email
-                description: "Email address in valid format"
+                description: Email address of the employer.
                 example: "hr@techsolutions.se"
               telephone_number:
                 type: string
-                description: "Telephone number (international format supported)"
+                description: Telephone number of the employer.
                 example: "+46707070707"

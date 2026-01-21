@@ -392,8 +392,8 @@
                         name: document.html
                         data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
-              ⚡⚡⚡ salary slip to user (NEW):
-                summary: "⚡⚡⚡ NEW - Salary slip with structured metadata"
+              salary slip to user:
+                summary: "Salary slip with structured metadata"
                 value:
                   ssn: "191212121212"
                   subject: "Salary Specification - January 2025"
