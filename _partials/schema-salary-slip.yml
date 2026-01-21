@@ -14,7 +14,7 @@ properties:
       creation_timestamp:
         type: string
         format: ISO8601
-        description: Timestamp when this salary slip document was created in the source system.
+        description: Timestamp when this salary slip document was created in the source system. ISO 8601 format in UTC with no timezone offset (e.g., YYYY-MM-DDTHH:MM:SSZ).
         example: "2025-01-05T10:00:00Z"
       source_system:
         type: string
@@ -30,7 +30,7 @@ properties:
       start_date:
         type: string
         format: ISO8601
-        description: Date when the employment started.
+        description: Date when the employment started. YYYY-MM-DD
         example: "2025-01-01"
       type:
         type: string
@@ -92,17 +92,17 @@ properties:
       start_date:
         type: string
         format: ISO8601
-        description: Start date of the pay period.
+        description: Start date of the pay period. YYYY-MM-DD
         example: "2025-01-01"
       end_date:
         type: string
         format: ISO8601
-        description: End date of the pay period.
+        description: End date of the pay period. YYYY-MM-DD
         example: "2025-01-31"
       payout_date:
         type: string
         format: ISO8601
-        description: Date when the salary will be paid out to the employee.
+        description: Date when the salary will be paid out to the employee. YYYY-MM-DD
         example: "2025-02-25"
       total_hours_worked:
         type: string
@@ -133,7 +133,7 @@ properties:
             duration_in_hours:
               type: string
               format: float
-              description: Duration of the absence in hours. A number larger than or equal to 0.
+              description: Duration of the absence in hours. A number larger than 0.
               example: "8.0"
 
       vacation_pay:
@@ -382,11 +382,11 @@ properties:
               properties:
                 identifier:
                   type: string
-                  description: Account identifier.
+                  description: Account identifier (e.g., IBAN or local account number).
                   example: "SE4550000000050012345678"
                 schema:
                   type: string
-                  description: Schema or format of the account identifier.
+                  description: Schema or format of the account identifier (e.g., "IBAN", "Account Number", "Bankgiro", "Plusgiro").
                   example: "IBAN"
                 bankName:
                   type: string
@@ -404,13 +404,13 @@ properties:
               start_date:
                 type: string
                 format: ISO8601
-                description: Start date of the holiday period.
-                example: "2025-01-01"
+                description: Start date of the holiday period. YYYY-MM-DD
+                example: "2024-04-01"
               end_date:
                 type: string
                 format: ISO8601
-                description: End date of the holiday period.
-                example: "2025-01-31"
+                description: End date of the holiday period. YYYY-MM-DD
+                example: "2025-03-31"
           total_days_entitled:
             type: string
             format: float
@@ -460,8 +460,8 @@ properties:
                   example: "556789-0123"
                 schema:
                   type: string
-                  description: Identifier scheme.
-                  example: "OrgNr"
+                  description: Identifier scheme (e.g., "SE-ORGNR" for Swedish organization number, "SE-VAT" for VAT number).
+                  example: "SE-ORGNR"
           contact_information:
             type: object
             description: Contact details for the employer.
@@ -502,5 +502,5 @@ properties:
                 example: "hr@techsolutions.se"
               telephone_number:
                 type: string
-                description: Telephone number of the employer.
+                description: Telephone number of the employer in E.164 format (including country code).
                 example: "+46707070707"

@@ -478,17 +478,17 @@
                             bankName: "Bank of Sweden"
                       holidays:
                         period:
-                          start_date: "2025-01-01"
-                          end_date: "2025-01-31"
+                          start_date: "2024-04-01"
+                          end_date: "2025-03-31"
                         total_days_entitled: "25.0"
                         days_saved_from_previous_years: "3.0"
-                        days_used_in_period: "0.0"
-                        days_remaining_in_period: "28.0"
+                        days_used_in_period: "5.0"
+                        days_remaining_in_period: "23.0"
                       employer:
                         legal_name: "Tech Solutions AB"
                         legal_identifiers:
                           - identifier: "556789-0123"
-                            schema: "OrgNr"
+                            schema: "SE-ORGNR"
                         contact_information:
                           address:
                             street_address: "Storvägen 5"
