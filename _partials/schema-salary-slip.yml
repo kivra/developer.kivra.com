@@ -117,7 +117,7 @@ properties:
       effective_tax_rate_percentage:
         type: string
         format: float
-        description: Effective tax rate as a percentage. A number larger than or equal to 0.
+        description: Effective tax rate as a percentage. A number between 0 and 100.
         example: "21.43"
 
       absences:
@@ -334,7 +334,7 @@ properties:
               percentage_of_gross_salary:
                 type: string
                 format: float
-                description: Pension contribution as a percentage of gross salary. A number larger than or equal to 0.
+                description: Pension contribution as a percentage of gross salary. A number between 0 and 100.
                 example: "4.5"
               employer_paid_to:
                 type: string
