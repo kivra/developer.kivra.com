@@ -34,9 +34,12 @@ tags:
     description: Endpoints for creation and administration of tenants (v2)
   - name: "Tenant API - Agreements"
     description: Endpoints for managing signatures and agreements
-  - name: "Tenant API - Payment Webhooks"
+  - name: "Tenant API - Payment Webhooks (Current)"
     description: |
-      Endpoints used to set up, list and remove webhook definitions, and webhook payloads.
+      Endpoints used to set up, list, and remove the current payment webhook definitions, and webhook payloads..
+  - name: "Tenant API - Payment Webhooks (Legacy)"
+    description: |
+      Endpoints used to set up, list, and remove legacy payment webhook definitions, and webhook payloads.
   - name: "Partner API v1"
     description: |
       Endpoints for partner access to company mailboxes.
@@ -132,7 +135,8 @@ x-tagGroups:
       - "Tenant API - Tickets (BETA)"
       - "Tenant API - Tenant Management"
       - "Tenant API - Agreements"
-      - "Tenant API - Payment Webhooks"
+      - "Tenant API - Payment Webhooks (Legacy)"
+      - "Tenant API - Payment Webhooks (Current)"
   - name: Partner API
     tags:
       - "Partner API v1"
@@ -1617,7 +1621,7 @@ paths:
   /v2/tenant/{tenantKey}/payment_cb:
     get:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Legacy)"
       summary: Lists all the tenant's defined payment webhooks.
       description: |
         This endpoint returns a list of all the payment webhooks that are
@@ -1641,7 +1645,7 @@ paths:
                   $ref: "#/components/schemas/PaymentCallbackDefinition"
     post:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Legacy)"
       summary: Add a new webhook definition
       description: |
         This endpoint is used to add a new webhook definition.
@@ -1727,7 +1731,7 @@ paths:
   /v2/tenant/{tenantKey}/payment_cb/{id}:
     delete:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Legacy)"
       summary: Remove a webhook definition.
       description: |
         This endpoint removes a webhook definition.
@@ -1751,7 +1755,7 @@ paths:
           description: "The webhook definition was successfully removed."
     post:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Legacy)"
       summary: Modify a webhook definition
       description: |
         This endpoint is used to modify a webhook definition.
@@ -1821,7 +1825,7 @@ paths:
   /v2/tenant/{tenantKey}/payment_cb/{id}/test:
     post:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Legacy)"
       summary: Request a test delivery for a webhook definition
       description: |
         When this endpoint is called, delivery of a webhook with static test
@@ -1859,7 +1863,7 @@ paths:
   /v2/webhooks/payments:
     get:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       summary: Lists all the partner's defined payment webhooks.
       description: |
         This endpoint returns a list of all the payment webhooks that are
@@ -1875,7 +1879,7 @@ paths:
                   $ref: "#/components/schemas/PaymentWebhookDefinition"
     post:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       summary: Add a new webhook definition
       description: |
         This endpoint is used to add a new webhook definition.
@@ -1987,7 +1991,7 @@ paths:
   /v2/webhooks/payments/{id}:
     delete:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       summary: Remove a webhook definition.
       description: |
         This endpoint removes a webhook definition.
@@ -2004,7 +2008,7 @@ paths:
           description: "The webhook definition was successfully removed."
     patch:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       summary: Modify a webhook definition
       description: |
         This endpoint is used to modify a webhook definition.
@@ -2078,7 +2082,7 @@ paths:
   /v2/webhooks/payments/{id}/test:
     post:
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       summary: Request a test delivery for a webhook definition
       description: |
         When this endpoint is called, delivery of a webhook with static test
@@ -5742,7 +5746,7 @@ webhooks:
       summary: Payment webhook
       operationId: webhook-payment
       tags:
-        - "Tenant API - Payment Webhooks"
+        - "Tenant API - Payment Webhooks (Current)"
       description: |
         This webhook notifies you when payment events occur such as when payments are settled,
         scheduled, or failed. Each webhook includes information about the payment including
