@@ -400,14 +400,14 @@
                   generated_at: "2025-01-31"
                   type: "salaryslip"
                   parts:
-                    - name: salary_slip.pdf
+                    - name: salaryslip.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
                       responsive_part:
-                        name: salary_slip.html
+                        name: salaryslip.html
                         data: PGgxPlNhbGFyeSBTcGVjaWZpY2F0aW9uIC0gSmFudWFyeSAyMDI1PC9oMT4=
                         content_type: text/html
-                  salary_slip:
+                  salaryslip:
                     document_metadata:
                       creation_timestamp: "2025-01-31T10:00:00Z"
                       source_system: "Payroll System XYZ"

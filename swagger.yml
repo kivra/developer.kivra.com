@@ -2684,7 +2684,7 @@ components:
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
             - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
-            - `"salaryslip"`: indicating that the content is a salary slip with structured metadata. A valid `salary_slip` object needs to be provided. This type includes detailed payment information, employer details, benefits, holidays, and tax information.
+            - `"salaryslip"`: indicating that the content is a salary slip with structured metadata. A valid `salaryslip` object needs to be provided. This type includes detailed payment information, employer details, benefits, holidays, and tax information.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
             - `"letter.form"`: indicating that the content contains a form.
             - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
@@ -2771,7 +2771,7 @@ components:
         invite_kyc:
           description: Optional invite kyc
           $ref: "#/components/schemas/InviteKyc"
-        salary_slip:
+        salaryslip:
           description: Optional salary slip
           $ref: "#/components/schemas/SalarySlip"
         registered:
