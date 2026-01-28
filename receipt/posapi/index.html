@@ -9,22 +9,6 @@
       rel="stylesheet"
     />
     <link href="../../assets/redoc-styles.css" rel="stylesheet" />
-    <style>
-      /*
-       * Add spacing before the first endpoint to visually separate
-       * the API overview/getting started sections from the endpoint specs.
-       * The Redoc theme options don't provide a way to add spacing after
-       * the description section, so we target the first operation instead.
-       */
-      [data-section-id="operation/CreateReceipt"] {
-        margin-top: 30px !important;
-      }
-
-      /* Add spacing above the API title */
-      .api-info {
-        padding-top: 40px !important;
-      }
-    </style>
 
     <link
       rel="shortcut icon"
@@ -34,30 +18,7 @@
     />
   </head>
   <body>
-    <div id="redoc-container"></div>
-    <script src="https://cdn.redoc.ly/redoc/v2.5.1/bundles/redoc.standalone.js"></script>
-    <!--
-      Initialize Redoc with custom theme options to reduce excessive vertical spacing.
-      We use Redoc.init() instead of <redoc> tag to pass theme configuration.
-
-      - sectionVertical: reduces spacing between sections (default is ~40px)
-      - lineHeight: makes headings more compact
-
-      See: https://github.com/Redocly/redoc/issues/1108
-    -->
-    <script>
-      Redoc.init('posapi.yaml', {
-        theme: {
-          spacing: {
-            sectionVertical: 8
-          },
-          typography: {
-            headings: {
-              lineHeight: '1.2em'
-            }
-          }
-        }
-      }, document.getElementById('redoc-container'));
-    </script>
+    <redoc spec-url="posapi.yaml"></redoc>
+    <script src="https://cdn.redoc.ly/redoc/v2.5.1/bundles/redoc.standalone.js"> </script>
   </body>
 </html>
