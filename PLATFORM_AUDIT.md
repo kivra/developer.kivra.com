@@ -23,7 +23,7 @@ The documentation uses a combination of:
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Redoc | :large_green_circle: Active | Actively maintained by Redocly. v3.0.0 in preview. Easy CDN upgrade. |
+| Redoc | :green_circle: Active | Actively maintained by Redocly. v3.0.0 in preview. Easy CDN upgrade. |
 | LogLive | :orange_circle: Abandoned | Last release Feb 2019. No updates in ~7 years. |
 | MDwiki | :red_circle: Effectively EOL | Last feature release 2014. v0.7.0 (2024) was just security fixes. Built on Bootstrap 3.0.0 and jQuery 1.8.3. |
 
