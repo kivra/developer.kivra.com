@@ -12,9 +12,43 @@ info:
 
     # Digital Receipts Platform API
 
-    Kivra's digital receipt platform API, is a REST based API intended for Kivra partners and customers.
-    The API is designed to receive receipts in specific XML and JSON formats. The API grants accessibility and management
-    of digital receipts.
+    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users.
+    When a customer makes a purchase, your POS system sends the receipt data to Kivra, and the receipt
+    appears in the customer's Kivra inbox.
+
+    ## Overview
+
+    ### Key concepts
+
+    - **Partner**: Your organisation. You receive client credentials (client_id and client_secret) to authenticate with the API.
+    - **Chain**: A retail chain or brand (e.g., "ICA", "Systembolaget"). A partner can manage multiple chains.
+    - **Store**: A physical store location belonging to a chain. Receipts are always associated with a specific store.
+    - **Receipt**: The digital receipt sent to a Kivra user, identified by their SSN, email, phone, or card token.
+
+    ### Typical integration flow
+
+    ```
+    ┌──────────────────────────────────────────────────────────────────┐
+    │                        ONE-TIME SETUP                            │
+    ├──────────────────────────────────────────────────────────────────┤
+    │  1. Authenticate    POST /dr/v1/auth/token                       │
+    │                     → Returns partner access token               │
+    │                                                                  │
+    │  2. Create chain    POST /dr/v1/chains                           │
+    │                     → Returns chain_id                           │
+    │                                                                  │
+    │  3. Create store    POST /dr/v1/chains/{chain_id}/stores         │
+    │                     → Returns store_id                           │
+    └──────────────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────────────┐
+    │                      FOR EACH PURCHASE                           │
+    ├──────────────────────────────────────────────────────────────────┤
+    │  4. Send receipt    POST /dr/v1/receipts                         │
+    │                     Body contains store_id as service_id         │
+    │                     → Receipt delivered to customer's Kivra      │
+    └──────────────────────────────────────────────────────────────────┘
+    ```
 
     ## Getting started
 
