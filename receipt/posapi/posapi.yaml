@@ -40,6 +40,82 @@ info:
 
     </details>
 
+    <details><summary>Authentication and access tokens</summary>
+
+      ### Authentication and access tokens
+
+      The POS API uses OAuth 2.0 client credentials for authentication. After authenticating, you receive a JWT access token
+      that authorizes your API requests.
+
+      #### Token hierarchy
+
+      There are three levels of access tokens, each with different scopes:
+
+      | Token Level | Obtained From | Can Do |
+      |-------------|---------------|--------|
+      | **Partner** | Client credentials (client_id + client_secret) | Manage all chains and stores, send receipts for any store |
+      | **Chain** | Partner token + chain ID | Manage stores within the chain, send receipts for any store in the chain |
+      | **Store** | Partner or chain token + store ID | Send receipts for that specific store only |
+
+      #### Which token should I use?
+
+      **Using a partner token for everything is perfectly valid.** The token hierarchy exists to support different integration architectures:
+
+      - **Centralized integration**: Your backend system handles all communication with Kivra. Use your partner token for all operations.
+        The store is identified by the `service_id` field in the receipt payload.
+
+      - **Distributed integration**: Individual stores or POS terminals communicate directly with Kivra. Distribute chain or store tokens
+        to limit what each endpoint can access.
+
+      #### Example: Authenticate and send a receipt
+
+      **Step 1: Get a partner token**
+
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -d "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET"
+      ```
+
+      Response:
+      ```json
+      {
+        "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "token_type": "Bearer",
+        "expires_in": 86400
+      }
+      ```
+
+      **Step 2: Send a receipt using the token**
+
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/receipts \
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+        -H "Content-Type: application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0" \
+        -d @receipt.json
+      ```
+
+      The `service_id` field in your receipt JSON identifies which store the receipt belongs to.
+
+      #### Optional: Get scoped tokens
+
+      If your integration requires chain or store-level tokens:
+
+      ```bash
+      # Get chain token
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/chain/CHAIN_ID \
+        -H "Authorization: Bearer YOUR_PARTNER_TOKEN"
+
+      # Get store token
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/store/STORE_ID \
+        -H "Authorization: Bearer YOUR_PARTNER_OR_CHAIN_TOKEN"
+      ```
+
+      All tokens are JWTs with a limited validity period (typically 24 hours). Your integration should handle token refresh
+      before expiration.
+
+    </details>
+
     <details><summary>Creating digital receipts</summary>
 
       ### Digital receipts
