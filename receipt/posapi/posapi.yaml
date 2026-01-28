@@ -11,7 +11,14 @@ info:
     [Changelog - 2025-03-11](changelog/)
 
     ## Digital Receipts Platform API
-    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
+    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer 
+    makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
+
+    #### The API 
+    * is REST based
+    * is intended for Kivra partners and customers.
+    * supports receipts in both  XML and JSON formats.
+    * grants accessibility and management of digital receipts.
 
     #### Key concepts
     - **Partner** - Your organisation. You receive client credentials (client_id and client_secret) to authenticate with the API.
@@ -662,7 +669,7 @@ paths:
                     postalcode: "23456"
                     city: "Two Buying"
                     country: SWE
-                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
@@ -689,7 +696,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"            
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}:
     put:
       description: >
@@ -848,7 +855,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"   
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}/stores:
     get:
       description: >
@@ -899,7 +906,7 @@ paths:
                     postalcode: "23456"
                     city: "Two Buying"
                     country: SWE
-                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
@@ -926,7 +933,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"            
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}/stores/{storeID}:
     get:
       description: >
@@ -994,7 +1001,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"                      
+          $ref: "#/components/responses/InternalError"
   /dr/v1/stores:
     post:
       description: >
@@ -1160,7 +1167,7 @@ paths:
                   city: "One Buying"
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
           content:
@@ -1223,7 +1230,7 @@ paths:
                   city: "One Buying"
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
           content:
@@ -1839,7 +1846,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf: 
+              oneOf:
                 - $ref: '#/components/schemas/HumanPS'
                 - $ref: '#/components/schemas/AnimalPS'
             example:
@@ -1864,16 +1871,16 @@ paths:
                   context: store
               time_of_purchase: "2019-11-09T08:49:00+01:00"
               customer:
-                id: 
+                id:
                   birth_date: "19900805"
                 name: "Knapp, Lena"
-              expedition: 
+              expedition:
                 id: "T02 AAN631"
-                details: 
+                details:
                   - "Inköp på expedition T02 AAN631"
-              human: 
+              human:
                 high_cost:
-                  previous_period: 
+                  previous_period:
                     gross: 8982.64
                     net: 2350.0
                     start_date: "2021-07-12T08:00:00+02:00"
@@ -1895,7 +1902,7 @@ paths:
               amount_without_benefit: 5.38
               amount_paid_by_benefit: 58.27
               amount_to_pay: 5.38
-                
+
       parameters: []
       responses:
         "201":
@@ -2345,7 +2352,7 @@ components:
           type: string
           pattern: ^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$
           description: swedish personnummer 12 digits
-      additionalProperties: false                                          
+      additionalProperties: false
     
     customer_birth_date:
       type: object
@@ -2355,7 +2362,7 @@ components:
           type: string
           pattern: ^[12]{1}[90]{1}[0-9]{6}$
           description: birth date 10 digits for customers without Swedish ssn
-      additionalProperties: false     
+      additionalProperties: false
 
     customer_company_registration_number:
       type: object
@@ -2364,17 +2371,17 @@ components:
         company_registration_number:
           type: string
           description: swedish organisationsnummer or VAT when the customer is a company
-      additionalProperties: false    
+      additionalProperties: false
 
     total_vat:
       type: object
       description: vat total in any
       properties:
-        type: 
+        type:
           type: string
           enum:
             - vat
-        amount: 
+        amount:
           type: number
           minimum: 0
           description: the total vat amount, the sum of all sub_total amounts
@@ -2389,12 +2396,12 @@ components:
                 description: the vat amount
               taxable_amount:
                 type: number
-                description: amount including tax amount 
+                description: amount including tax amount
               net_amount:
-                type: number                
+                type: number
                 description: amount excluding tax amount
               tax_percentage:
-                type: number                
+                type: number
             required:
               - amount
               - tax_percentage
@@ -2404,11 +2411,11 @@ components:
       type: object
       description: total gross, the amount the customer would pay without discounts
       properties:
-        type: 
+        type:
           type: string
           enum:
             - gross
-        amount: 
+        amount:
           type: number
           minimum: 0
           description: the total gross amount
@@ -2417,11 +2424,11 @@ components:
       type: object
       description: total paid by the customer
       properties:
-        type: 
+        type:
           type: string
           enum:
             - paid
-        amount: 
+        amount:
           type: number
           description: the total paid amount
 
@@ -2597,7 +2604,7 @@ components:
                 id:
                   oneOf:
                     - $ref: "#/components/schemas/customer_ssn"
-                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_birth_date"
                     - $ref: "#/components/schemas/customer_company_registration_number"
             - type: object
               description: Defines customer information, like name, address, loyalty program.
@@ -2664,7 +2671,7 @@ components:
                   required:
                     - latitude
                     - longitude
-              required: 
+              required:
                 - id
                 - name
               additionalProperties: false
@@ -2688,7 +2695,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                      
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2708,7 +2715,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                                            
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2728,7 +2735,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                                            
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2781,9 +2788,9 @@ components:
           items:
             oneOf:
                 - $ref: "#/components/schemas/total_vat"
-                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_gross"
                 - $ref: "#/components/schemas/total_paid"
-            additionalProperties: false                              
+            additionalProperties: false
       required:
         - human
         - amount_with_benefit
@@ -2797,7 +2804,7 @@ components:
         - required:
             - time_of_purchase
         - required:
-            - customer            
+            - customer
         - required:
             - amount_without_benefit
         - required:
@@ -2971,7 +2978,7 @@ components:
                 id:
                   oneOf:
                     - $ref: "#/components/schemas/customer_ssn"
-                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_birth_date"
                     - $ref: "#/components/schemas/customer_company_registration_number"
             - type: object
               description: Defines customer information, like name, address, loyalty program.
@@ -3038,7 +3045,7 @@ components:
                   required:
                     - latitude
                     - longitude
-              required: 
+              required:
                 - id
                 - name
               additionalProperties: false
@@ -3087,9 +3094,9 @@ components:
           items:
             oneOf:
                 - $ref: "#/components/schemas/total_vat"
-                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_gross"
                 - $ref: "#/components/schemas/total_paid"
-            additionalProperties: false                    
+            additionalProperties: false
       required:
         - animal
       allOf:
@@ -3102,7 +3109,7 @@ components:
         - required:
             - time_of_purchase
         - required:
-            - customer            
+            - customer
         - required:
             - amount_without_benefit
         - required:
