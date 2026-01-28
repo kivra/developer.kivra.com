@@ -9,6 +9,12 @@
       rel="stylesheet"
     />
     <link href="../../assets/redoc-styles.css" rel="stylesheet" />
+    <style>
+      /* Add spacing before the first endpoint */
+      [data-section-id="operation/CreateReceipt"] {
+        margin-top: 60px !important;
+      }
+    </style>
 
     <link
       rel="shortcut icon"
@@ -18,7 +24,21 @@
     />
   </head>
   <body>
-    <redoc spec-url="posapi.yaml"></redoc>
-    <script src="https://cdn.redoc.ly/redoc/v2.5.1/bundles/redoc.standalone.js"> </script>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.redoc.ly/redoc/v2.5.1/bundles/redoc.standalone.js"></script>
+    <script>
+      Redoc.init('posapi.yaml', {
+        theme: {
+          spacing: {
+            sectionVertical: 5
+          },
+          typography: {
+            headings: {
+              lineHeight: '1.2em'
+            }
+          }
+        }
+      }, document.getElementById('redoc-container'));
+    </script>
   </body>
 </html>

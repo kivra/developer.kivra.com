@@ -10,7 +10,7 @@ info:
   description: |
     [Changelog - 2025-03-11](changelog/)
 
-    # Digital Receipts Platform API
+    ## Digital Receipts Platform API
     Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
 
     #### Key concepts
@@ -188,7 +188,7 @@ info:
 
       Try the receipt preview tool at [merchant-toolbox.kivra.com](https://merchant-toolbox.kivra.com/) to see exactly how your JSON payload will render in the Kivra web interface. 
       This tool helps you validate your receipt structure and troubleshoot formatting issues.
-    </details>    
+    </details>
 
 servers:
   - url: https://sender.sandbox-api.kivra.com
