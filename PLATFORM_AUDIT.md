@@ -21,7 +21,7 @@ The documentation uses a combination of:
 | Component | Status | Notes |
 |-----------|--------|-------|
 | Redoc | :large_green_circle: Active | Actively maintained by Redocly. v3.0.0 in preview. Easy CDN upgrade. |
-| MDwiki | :red_circle: Effectively EOL | Last feature release 2014. v0.7.0 (2024) was just security fixes. Built on Bootstrap 2.x and legacy jQuery. |
+| MDwiki | :red_circle: Effectively EOL | Last feature release 2014. v0.7.0 (2024) was just security fixes. Built on Bootstrap 3.0.0 and jQuery 1.8.3. |
 
 ## Recommendations
 
@@ -41,7 +41,7 @@ The posapi version (v2.5.1) is already nearly current.
 
 ### 2. MDwiki - Consider migration
 
-The wiki contains valuable receipt schema documentation but is running on 11-year-old software with outdated dependencies (Bootstrap 2.x, legacy jQuery).
+The wiki contains valuable receipt schema documentation but is running on 11-year-old software with outdated dependencies (Bootstrap 3.0.0, jQuery 1.8.3).
 
 **Modern alternatives:**
 - **Docsify** - Similar client-side philosophy, actively maintained
