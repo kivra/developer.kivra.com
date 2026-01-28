@@ -7,72 +7,27 @@ info:
     url: "../../assets/kivra-logo.svg"
     altText: Kivra logo
 
-  description: >
+  description: |
     [Changelog - 2025-03-11](changelog/)
 
     # Digital Receipts Platform API
+    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
 
-    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users.
-    When a customer makes a purchase, your POS system sends the receipt data to Kivra, and the receipt
-    appears in the customer's Kivra inbox.
+    #### Key concepts
+    - **Partner** - Your organisation. You receive client credentials (client_id and client_secret) to authenticate with the API.
+    - **Chain** - A retail chain or brand (e.g., "ICA", "Systembolaget"). A partner can manage multiple chains.
+    - **Store** - A physical store location belonging to a chain. Receipts are always associated with a specific store.
+    - **Receipt** - The digital receipt sent to a Kivra user, identified by their SSN, email, phone, or card token.
 
-    ## Overview
+    #### One-time setup
+    1. Authenticate with your credentials (POST /dr/v1/auth/token) to get an access token
+    2. Create a chain (POST /dr/v1/chains) to get a chain_id
+    3. Create a store (POST /dr/v1/chains/{chain_id}/stores) to get a store_id
 
-    ### Key concepts
-
-    - **Partner**: Your organisation. You receive client credentials (client_id and client_secret) to authenticate with the API.
-    - **Chain**: A retail chain or brand (e.g., "ICA", "Systembolaget"). A partner can manage multiple chains.
-    - **Store**: A physical store location belonging to a chain. Receipts are always associated with a specific store.
-    - **Receipt**: The digital receipt sent to a Kivra user, identified by their SSN, email, phone, or card token.
-
-    ### Typical integration flow
-
-    ```
-    ┌──────────────────────────────────────────────────────────────────┐
-    │                        ONE-TIME SETUP                            │
-    ├──────────────────────────────────────────────────────────────────┤
-    │  1. Authenticate    POST /dr/v1/auth/token                       │
-    │                     → Returns partner access token               │
-    │                                                                  │
-    │  2. Create chain    POST /dr/v1/chains                           │
-    │                     → Returns chain_id                           │
-    │                                                                  │
-    │  3. Create store    POST /dr/v1/chains/{chain_id}/stores         │
-    │                     → Returns store_id                           │
-    └──────────────────────────────────────────────────────────────────┘
-
-    ┌──────────────────────────────────────────────────────────────────┐
-    │                      FOR EACH PURCHASE                           │
-    ├──────────────────────────────────────────────────────────────────┤
-    │  4. Send receipt    POST /dr/v1/receipts                         │
-    │                     Body contains store_id as service_id         │
-    │                     → Receipt delivered to customer's Kivra      │
-    └──────────────────────────────────────────────────────────────────┘
-    ```
+    #### For each purchase
+    4. Send receipt (POST /dr/v1/receipts) with the store_id as service_id in the body
 
     ## Getting started
-
-    <details><summary>Setting up the first store</summary>
-
-      ### Setting up the first store
-
-      Receipt producers are regarded as partners i.e. they are free to set up digital receipts for as many organisations as they want.
-      In order to start creating digital receipts using the POS API, a test store needs to be set up.
-
-      Every store needs to be a part of a chain.
-
-      1. Use your company credential to fetch a partner token
-      2. Use your partner token to create a chain using the createChain method.
-
-      After your chain has been created you receive a chain_id. Now a store can be created and connected to this chain.
-
-      3. Use your partner token, or fetch it again if it is expired.
-      4. Create a store using the addStore method.
-      5. In the request body use the chain_id as owner id.
-
-      After the store has been successfully created you will receive a store_id.
-
-    </details>
 
     <details><summary>Authentication and access tokens</summary>
 
@@ -147,6 +102,28 @@ info:
 
       All tokens are JWTs with a limited validity period (typically 24 hours). Your integration should handle token refresh
       before expiration.
+
+    </details>
+
+    <details><summary>Setting up the first store</summary>
+
+      ### Setting up the first store
+
+      Receipt producers are regarded as partners i.e. they are free to set up digital receipts for as many organisations as they want.
+      In order to start creating digital receipts using the POS API, a test store needs to be set up.
+
+      Every store needs to be a part of a chain.
+
+      1. Use your company credential to fetch a partner token
+      2. Use your partner token to create a chain using the createChain method.
+
+      After your chain has been created you receive a chain_id. Now a store can be created and connected to this chain.
+
+      3. Use your partner token, or fetch it again if it is expired.
+      4. Create a store using the addStore method.
+      5. In the request body use the chain_id as owner id.
+
+      After the store has been successfully created you will receive a store_id.
 
     </details>
 
