@@ -34,6 +34,10 @@ info:
     #### For each purchase
     4. Send receipt (POST /dr/v1/receipts) with the store_id as service_id in the body
 
+    #### Resources
+    - [Receipt JSON schema documentation](/receipt/wiki/mdwiki.html#!index.md) - Detailed schema information for receipts and prescriptions
+    - [Merchant Toolbox](https://merchant-toolbox.kivra.com/) - Preview receipts, validate payloads, and see example data
+
     ## Getting started
 
     <details><summary>Authentication and access tokens</summary>
