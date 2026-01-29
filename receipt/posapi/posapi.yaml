@@ -1,7 +1,7 @@
 openapi: "3.0.1"
 
 info:
-  title: POS API
+  title: Digital Receipts Platform API (POS API)
   version: "1.4.5"
   x-logo:
     url: "../../assets/kivra-logo.svg"
@@ -10,7 +10,6 @@ info:
   description: |
     [Changelog - 2025-03-11](changelog/)
 
-    ## Digital Receipts Platform API
     Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer 
     makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
 
