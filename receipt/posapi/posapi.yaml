@@ -1,22 +1,121 @@
 openapi: "3.0.1"
 
 info:
-  title: POS API
+  title: Digital Receipts Platform API (POS API)
   version: "1.4.5"
   x-logo:
     url: "../../assets/kivra-logo.svg"
     altText: Kivra logo
 
-  description: >
+  description: |
     [Changelog - 2025-03-11](changelog/)
 
-    # Digital Receipts Platform API
+    Kivra's Digital Receipts Platform (DRP) API enables partners to send digital receipts to Kivra users. When a customer 
+    makes a purchase, your POS system sends the receipt data to Kivra, and the receipt appears in the customer's Kivra inbox.
 
-    Kivra's digital receipt platform API, is a REST based API intended for Kivra partners and customers.
-    The API is designed to receive receipts in specific XML and JSON formats. The API grants accessibility and management
-    of digital receipts.
+    #### The API 
+    * is REST based
+    * is intended for Kivra partners and customers.
+    * supports receipts in both  XML and JSON formats.
+    * grants accessibility and management of digital receipts.
 
-    ## Getting started
+    #### Key concepts
+    - **Partner** - Your organisation. You receive client credentials (client_id and client_secret) to authenticate with the API.
+    - **Chain** - A retail chain or brand (e.g., "ICA", "Systembolaget"). A partner can manage multiple chains.
+    - **Store** - A physical store location belonging to a chain. Receipts are always associated with a specific store.
+    - **Receipt** - The digital receipt sent to a Kivra user, identified by their SSN, email, phone, or card token.
+
+    #### One-time setup
+    1. Authenticate with your credentials (POST /dr/v1/auth/token) to get an access token
+    2. Create a chain (POST /dr/v1/chains) to get a chain_id
+    3. Create a store (POST /dr/v1/stores) to get a store_id
+
+    #### For each purchase
+    4. Send receipt (POST /dr/v1/receipts) with the store_id as service_id in the body
+
+    #### Resources
+    - [Receipt JSON schema documentation](/receipt/wiki/mdwiki.html#!index.md) - Detailed schema information for receipts and prescriptions
+    - [Merchant Toolbox](https://merchant-toolbox.kivra.com/) - Preview receipts, validate payloads, and see example data
+
+    #### Getting started
+
+    <details><summary>Authentication and access tokens</summary>
+
+      ### Authentication and access tokens
+
+      The POS API uses OAuth 2.0 client credentials for authentication. After authenticating, you receive a JWT access token
+      that authorizes your API requests.
+
+      #### Token hierarchy
+
+      There are three levels of access tokens, each with different scopes:
+
+      | Token Level | Obtained From | Can Do |
+      |-------------|---------------|--------|
+      | **Partner** | Client credentials (client_id + client_secret) | Manage all chains and stores, send receipts for any store |
+      | **Chain** | Partner token + chain ID | Manage stores within the chain, send receipts for any store in the chain |
+      | **Store** | Partner or chain token + store ID | Send receipts for that specific store only |
+
+      #### Which token should I use?
+
+      **Using a partner token for everything is perfectly valid.** The token hierarchy exists to support different integration architectures:
+
+      - **Centralized integration**: Your backend system handles all communication with Kivra. Use your partner token for all operations.
+        The store is identified by the `service_id` field in the receipt payload.
+
+      - **Distributed integration**: Individual stores or POS terminals communicate directly with Kivra. Distribute chain or store tokens
+        to limit what each endpoint can access.
+
+      #### Example: Authenticate and send a receipt
+
+      **Step 1: Get a partner token**
+
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -d "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET"
+      ```
+
+      Response:
+      ```json
+      {
+        "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "token_type": "Bearer",
+        "expires_in": 86400
+      }
+      ```
+
+      **Step 2: Send a receipt using the token**
+
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/receipts \
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+        -H "Content-Type: application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0" \
+        -d @receipt.json
+      ```
+
+      The `service_id` field in your receipt JSON identifies which store the receipt belongs to.
+
+      #### Optional: Get scoped tokens
+
+      If your integration requires chain or store-level tokens:
+
+      **Get chain token**
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/chain/CHAIN_ID \
+        -H "Authorization: Bearer YOUR_PARTNER_TOKEN"
+      ```
+
+      **Get store token**
+      ```bash
+      curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/store/STORE_ID \
+        -H "Authorization: Bearer YOUR_PARTNER_OR_CHAIN_TOKEN"
+      ```
+
+      All tokens are JWTs with a limited validity period (typically 24 hours). Your integration should handle token refresh
+      before expiration.
+
+    </details>
 
     <details><summary>Setting up the first store</summary>
 
@@ -101,7 +200,7 @@ info:
 
       Try the receipt preview tool at [merchant-toolbox.kivra.com](https://merchant-toolbox.kivra.com/) to see exactly how your JSON payload will render in the Kivra web interface. 
       This tool helps you validate your receipt structure and troubleshoot formatting issues.
-    </details>    
+    </details>
 
 servers:
   - url: https://sender.sandbox-api.kivra.com
@@ -575,7 +674,7 @@ paths:
                     postalcode: "23456"
                     city: "Two Buying"
                     country: SWE
-                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
@@ -602,7 +701,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"            
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}:
     put:
       description: >
@@ -761,7 +860,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"   
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}/stores:
     get:
       description: >
@@ -812,7 +911,7 @@ paths:
                     postalcode: "23456"
                     city: "Two Buying"
                     country: SWE
-                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6                            
+                  icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
                   logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
@@ -839,7 +938,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"            
+          $ref: "#/components/responses/InternalError"
   /dr/v1/chains/{chainID}/stores/{storeID}:
     get:
       description: >
@@ -907,7 +1006,7 @@ paths:
                     short_message: "not found"
                     long_message: "the requested resource could not be found"
         "500":
-          $ref: "#/components/responses/InternalError"                      
+          $ref: "#/components/responses/InternalError"
   /dr/v1/stores:
     post:
       description: >
@@ -1073,7 +1172,7 @@ paths:
                   city: "One Buying"
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
           content:
@@ -1136,7 +1235,7 @@ paths:
                   city: "One Buying"
                   country: SWE
                 icon_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
-                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6              
+                logo_url: https://test.url.net/api/v1/resources/156257243392d65d706e044b56b168c452809d68f6
         "401":
           description: Unauthorized
           content:
@@ -1752,7 +1851,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf: 
+              oneOf:
                 - $ref: '#/components/schemas/HumanPS'
                 - $ref: '#/components/schemas/AnimalPS'
             example:
@@ -1777,16 +1876,16 @@ paths:
                   context: store
               time_of_purchase: "2019-11-09T08:49:00+01:00"
               customer:
-                id: 
+                id:
                   birth_date: "19900805"
                 name: "Knapp, Lena"
-              expedition: 
+              expedition:
                 id: "T02 AAN631"
-                details: 
+                details:
                   - "Inköp på expedition T02 AAN631"
-              human: 
+              human:
                 high_cost:
-                  previous_period: 
+                  previous_period:
                     gross: 8982.64
                     net: 2350.0
                     start_date: "2021-07-12T08:00:00+02:00"
@@ -1808,7 +1907,7 @@ paths:
               amount_without_benefit: 5.38
               amount_paid_by_benefit: 58.27
               amount_to_pay: 5.38
-                
+
       parameters: []
       responses:
         "201":
@@ -2258,7 +2357,7 @@ components:
           type: string
           pattern: ^[12]{1}[90]{1}[0-9]{6}-?[0-9]{4}$
           description: swedish personnummer 12 digits
-      additionalProperties: false                                          
+      additionalProperties: false
     
     customer_birth_date:
       type: object
@@ -2268,7 +2367,7 @@ components:
           type: string
           pattern: ^[12]{1}[90]{1}[0-9]{6}$
           description: birth date 10 digits for customers without Swedish ssn
-      additionalProperties: false     
+      additionalProperties: false
 
     customer_company_registration_number:
       type: object
@@ -2277,17 +2376,17 @@ components:
         company_registration_number:
           type: string
           description: swedish organisationsnummer or VAT when the customer is a company
-      additionalProperties: false    
+      additionalProperties: false
 
     total_vat:
       type: object
       description: vat total in any
       properties:
-        type: 
+        type:
           type: string
           enum:
             - vat
-        amount: 
+        amount:
           type: number
           minimum: 0
           description: the total vat amount, the sum of all sub_total amounts
@@ -2302,12 +2401,12 @@ components:
                 description: the vat amount
               taxable_amount:
                 type: number
-                description: amount including tax amount 
+                description: amount including tax amount
               net_amount:
-                type: number                
+                type: number
                 description: amount excluding tax amount
               tax_percentage:
-                type: number                
+                type: number
             required:
               - amount
               - tax_percentage
@@ -2317,11 +2416,11 @@ components:
       type: object
       description: total gross, the amount the customer would pay without discounts
       properties:
-        type: 
+        type:
           type: string
           enum:
             - gross
-        amount: 
+        amount:
           type: number
           minimum: 0
           description: the total gross amount
@@ -2330,11 +2429,11 @@ components:
       type: object
       description: total paid by the customer
       properties:
-        type: 
+        type:
           type: string
           enum:
             - paid
-        amount: 
+        amount:
           type: number
           description: the total paid amount
 
@@ -2510,7 +2609,7 @@ components:
                 id:
                   oneOf:
                     - $ref: "#/components/schemas/customer_ssn"
-                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_birth_date"
                     - $ref: "#/components/schemas/customer_company_registration_number"
             - type: object
               description: Defines customer information, like name, address, loyalty program.
@@ -2577,7 +2676,7 @@ components:
                   required:
                     - latitude
                     - longitude
-              required: 
+              required:
                 - id
                 - name
               additionalProperties: false
@@ -2601,7 +2700,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                      
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2621,7 +2720,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                                            
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2641,7 +2740,7 @@ components:
                     end_date:
                       description: 'high cost period end date-time, ISO 8601 date/time format: YYYY-MM-DDThh:mm:ssTZD'
                       type: string
-                      format: date-time                                            
+                      format: date-time
                   required:
                     - gross
                     - net
@@ -2694,9 +2793,9 @@ components:
           items:
             oneOf:
                 - $ref: "#/components/schemas/total_vat"
-                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_gross"
                 - $ref: "#/components/schemas/total_paid"
-            additionalProperties: false                              
+            additionalProperties: false
       required:
         - human
         - amount_with_benefit
@@ -2710,7 +2809,7 @@ components:
         - required:
             - time_of_purchase
         - required:
-            - customer            
+            - customer
         - required:
             - amount_without_benefit
         - required:
@@ -2884,7 +2983,7 @@ components:
                 id:
                   oneOf:
                     - $ref: "#/components/schemas/customer_ssn"
-                    - $ref: "#/components/schemas/customer_birth_date"     
+                    - $ref: "#/components/schemas/customer_birth_date"
                     - $ref: "#/components/schemas/customer_company_registration_number"
             - type: object
               description: Defines customer information, like name, address, loyalty program.
@@ -2951,7 +3050,7 @@ components:
                   required:
                     - latitude
                     - longitude
-              required: 
+              required:
                 - id
                 - name
               additionalProperties: false
@@ -3000,9 +3099,9 @@ components:
           items:
             oneOf:
                 - $ref: "#/components/schemas/total_vat"
-                - $ref: "#/components/schemas/total_gross"     
+                - $ref: "#/components/schemas/total_gross"
                 - $ref: "#/components/schemas/total_paid"
-            additionalProperties: false                    
+            additionalProperties: false
       required:
         - animal
       allOf:
@@ -3015,7 +3114,7 @@ components:
         - required:
             - time_of_purchase
         - required:
-            - customer            
+            - customer
         - required:
             - amount_without_benefit
         - required:
