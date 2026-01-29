@@ -28,7 +28,7 @@ info:
     #### One-time setup
     1. Authenticate with your credentials (POST /dr/v1/auth/token) to get an access token
     2. Create a chain (POST /dr/v1/chains) to get a chain_id
-    3. Create a store (POST /dr/v1/chains/{chain_id}/stores) to get a store_id
+    3. Create a store (POST /dr/v1/stores) to get a store_id
 
     #### For each purchase
     4. Send receipt (POST /dr/v1/receipts) with the store_id as service_id in the body
