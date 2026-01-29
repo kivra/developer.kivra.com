@@ -100,12 +100,14 @@ info:
 
       If your integration requires chain or store-level tokens:
 
+      **Get chain token**
       ```bash
-      # Get chain token
       curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/chain/CHAIN_ID \
         -H "Authorization: Bearer YOUR_PARTNER_TOKEN"
+      ```
 
-      # Get store token
+      **Get store token**
+      ```bash
       curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/auth/token/store/STORE_ID \
         -H "Authorization: Bearer YOUR_PARTNER_OR_CHAIN_TOKEN"
       ```
