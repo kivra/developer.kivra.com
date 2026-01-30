@@ -1,0 +1,620 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id": "https://se.kivra.com/schemas/json/salaryslip/v1.0",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "document_metadata": {
+            "type": "object",
+            "description": "Metadata about the salary slip document creation and source.",
+            "additionalProperties": false,
+            "properties": {
+                "creation_timestamp": {
+                    "type": "string",
+		    "format": "datetime",
+                    "description": "Timestamp when this salary slip document was created in the source system. ISO 8601 format in UTC with no timezone offset (e.g., YYYY-MM-DDTHH:MM:SSZ).",
+                    "example": "2025-01-05T10:00:00Z"
+                },
+                "source_system": {
+                    "type": "string",
+                    "description": "Name or identifier of the payroll system that generated this salary slip.",
+                    "example": "Payroll System XYZ"
+                }
+            },
+            "required": [
+                "creation_timestamp",
+                "source_system"
+            ]
+        },
+        "employment": {
+            "type": "object",
+            "description": "Employment details for the employee.",
+            "additionalProperties": false,
+            "properties": {
+                "start_date": {
+                    "type": "string",
+		    "format": "date",
+                    "description": "Date when the employment started. YYYY-MM-DD",
+                    "example": "2025-01-01"
+   },
+                "type": {
+                    "type": "string",
+                    "description": "Type of employment.",
+                    "example": "full-time"
+                },
+                "weekly_hours": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Number of weekly working hours.",
+                    "example": "40.0"
+                },
+                "organizational_unit_identifier": {
+                    "type": "string",
+                    "description": "Identifier for the organizational unit or department.",
+                    "example": "DEPT-001"
+                },
+                "employer": {
+                    "type": "object",
+                    "description": "Information about the employer paying the salary.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "legal_name": {
+                            "type": "string",
+                            "description": "Legal name of the employer.",
+                            "example": "Tech Solutions AB"
+                        },
+                        "legal_identifiers": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "vat_number": {
+                                    "type": "string",
+                                    "description": "Employer VAT number.",
+                                    "example": "SE212000014201"
+                                },
+                                "org_number": {
+                                    "type": "string",
+                                    "description": "Employer organization identifier.",
+                                    "example": "212000-0142"
+                                }
+                            },
+                            "required": [
+                                "vat_number",
+                                "org_number"
+                            ]
+                        },
+                        "contact_information": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "address": {
+                                    "type": "object",
+                                    "description": "Physical address of the employer.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "street_address": {
+                                            "type": "string",
+                                            "description": "Street address of the employer.",
+                                            "example": "Storvägen 5"
+                                        },
+                                        "postal_code": {
+                                            "type": "string",
+                                            "description": "Postal code.",
+                                            "example": "164 40"
+                                        },
+                                        "city": {
+                                            "type": "string",
+                                            "description": "City name.",
+                                            "example": "Kista"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "description": "Country name.",
+                                            "example": "Sweden"
+                                        }
+                                    },
+                                    "required": [
+                                        "street_address",
+                                        "postal_code",
+                                        "city",
+                                        "country"
+                                    ]
+                                },
+                                "email_address": {
+                                    "type": "string",
+                                    "format": "email",
+                                    "description": "Email address of the employer.",
+                                    "example": "hr@techsolutions.se"
+                                },
+                                "telephone_number": {
+                                    "type": "string",
+				    "format": "telephone-number",
+				    "pattern": "^([0-9]|([+][1-9][0-9]{,2}))([0-9]|[ ]|-)*[0-9]$",
+                                    "description": "Telephone number of the employer. Spaces and dashes allowed, but no parentheses.",
+                                    "example": "+46 770-457 000"
+                                }
+                            },
+                            "required": [
+                                "address",
+                                "email_address",
+                                "telephone_number"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "legal_name",
+                        "legal_identifiers",
+                        "contact_information"
+                    ]
+                }
+            },
+            "required": [
+                "start_date",
+                "employer"
+            ]
+        },
+        "yearly_accumulated_gross_pay": {
+            "type": "object",
+            "description": "Total accumulated gross salary for the year to date.",
+            "additionalProperties": false,
+            "properties": {
+                "monetary_amount": {
+                    "type": "string",
+		    "format": "amount",
+                    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Total accumulated gross salary for the year to date.",
+                    "example": "140000.00"
+                },
+                "currency": {
+                    "type": "string",
+		    "format": "currency-code",
+		    "pattern": "^[A-Z]{3}$",
+                    "description": "ISO 4217 currency code (3 uppercase letters)",
+                    "example": "SEK"
+                }
+            },
+            "required": [
+                "monetary_amount",
+                "currency"
+            ]
+        },
+        "yearly_accumulated_taxes": {
+            "type": "object",
+            "description": "Total accumulated taxes deducted for the year to date.",
+            "additionalProperties": false,
+            "properties": {
+                "monetary_amount": {
+                    "type": "string",
+                    "format": "amount",
+                    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Total accumulated taxes deducted for the year to date.",
+                    "example": "30000.00"
+                },
+                "currency": {
+                    "type": "string",
+		    "format": "currency-code",
+		    "pattern": "^[A-Z]{3}$",
+                    "description": "ISO 4217 currency code (3 uppercase letters)",
+                    "example": "SEK"
+                }
+            },
+            "required": [
+                "monetary_amount",
+                "currency"
+            ]
+        },
+        "pay_period": {
+            "type": "object",
+            "description": "Information about the current pay period, including dates, salary, gross and net pay, and tax deducted.",
+            "additionalProperties": false,
+            "properties": {
+                "start_date": {
+                    "type": "string",
+		    "format": "date",
+                    "description": "Start date of the pay period. YYYY-MM-DD",
+                    "example": "2025-01-01"
+                },
+                "end_date": {
+                    "type": "string",
+		    "format": "date",
+                    "description": "End date of the pay period. YYYY-MM-DD",
+                    "example": "2025-01-31"
+                },
+                "payout_date": {
+                    "type": "string",
+		    "format": "date",
+                    "description": "Date when the salary will be paid out to the employee. YYYY-MM-DD",
+                    "example": "2025-02-25"
+                },
+                "total_hours_worked": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Total number of hours worked during the pay period.",
+                    "example": "160.0"
+                },
+                "overtime_hours": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                     "description": "Number of overtime hours worked during the pay period.",
+                    "example": "8.0"
+               },
+                "effective_tax_rate_percentage": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Effective tax rate as a percentage.",
+                    "example": "21.43"
+                },
+                "absences": {
+                    "type": "array",
+                    "description": "List of absences during this pay period.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "Type of absence.",
+                                "example": "sick leave"
+                            },
+                            "duration_in_hours": {
+                                "type": "string",
+				"format": "amount",
+				"pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                                "description": "Duration of the absence in hours.",
+                                "example": "8.0"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "duration_in_hours"
+                        ]
+                    }
+                },
+                "vacation_pay": {
+                    "type": "object",
+                    "description": "Vacation pay amount for this pay period.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "monetary_amount": {
+                            "type": "string",
+			    "format": "amount",
+			    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Vacation pay amount for this period.",
+                            "example": "1500.00"
+                        },
+                        "currency": {
+                            "type": "string",
+			    "format": "currency-code",
+			    "pattern": "^[A-Z]{3}$",
+                            "description": "ISO 4217 currency code (3 uppercase letters)",
+                            "example": "SEK"
+                        }
+                    },
+                    "required": [
+                        "monetary_amount",
+                        "currency"
+                    ]
+                },
+                "basic_contractual_salary": {
+                    "type": "object",
+                    "description": "Basic contractual salary for this pay period.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "monetary_amount": {
+                            "type": "string",
+			    "format": "amount",
+			    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Basic contractual salary for this pay period.",
+                            "example": "30000.00"
+                        },
+                        "currency": {
+                            "type": "string",
+			    "format": "currency-code",
+			    "pattern": "^[A-Z]{3}$",
+                            "description": "ISO 4217 currency code (3 uppercase letters)",
+                            "example": "SEK"
+                        }
+                    },
+                    "required": [
+                        "monetary_amount",
+                        "currency"
+                    ]
+                },
+                "gross_pay": {
+                    "type": "object",
+                    "description": "Total gross salary for this pay period before tax deductions.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "monetary_amount": {
+                            "type": "string",
+			    "format": "amount",
+			    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Total gross salary for this pay period before tax deductions.",
+                            "example": "32500.00"
+                        },
+                        "currency": {
+                            "type": "string",
+			    "format": "currency-code",
+			    "pattern": "^[A-Z]{3}$",
+                            "description": "ISO 4217 currency code (3 uppercase letters)",
+                            "example": "SEK"
+                        }
+                    },
+                    "required": [
+                        "monetary_amount",
+                        "currency"
+                    ]
+                },
+                "tax_deducted": {
+                    "type": "object",
+                    "description": "Total tax deducted from the gross pay for this pay period.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "monetary_amount": {
+                            "type": "string",
+                            "format": "amount",
+                            "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Total tax deducted from the gross pay for this period.",
+                            "example": "6962.50"
+                        },
+                        "currency": {
+                            "type": "string",
+			    "format": "currency-code",
+                            "pattern": "^[A-Z]{3}$",
+                            "description": "ISO 4217 currency code (3 uppercase letters)",
+                            "example": "SEK"
+                        }
+                    },
+                    "required": [
+                        "monetary_amount",
+                        "currency"
+                    ]
+                },
+                "additional_payments": {
+                    "type": "array",
+                    "description": "List of additional payments for this pay period.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "Type of additional payment.",
+                                "example": "overtime"
+                            },
+                            "monetary_amount": {
+                                "type": "string",
+				"format": "amount",
+				"pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                                "description": "Amount of the additional payment.",
+                                "example": "2000.00"
+                            },
+                            "currency": {
+                                "type": "string",
+				"format": "currency-code",
+				"pattern": "^[A-Z]{3}$",
+                                "description": "ISO 4217 currency code (3 uppercase letters)",
+                                "example": "SEK"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "monetary_amount",
+                            "currency"
+                        ]
+                    }
+                },
+                "net_pay": {
+                    "type": "object",
+                    "description": "Net salary to be paid out to the employee after all deductions.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "monetary_amount": {
+                            "type": "string",
+			    "format": "amount",
+			    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Net salary to be paid out to the employee after all deductions.",
+                            "example": "25537.50"
+                        },
+                        "currency": {
+                            "type": "string",
+			    "format": "currency-code",
+			    "pattern": "^[A-Z]{3}$",
+                            "description": "ISO 4217 currency code (3 uppercase letters)",
+                            "example": "SEK"
+                        }
+                    },
+                    "required": [
+                        "monetary_amount",
+                        "currency"
+                    ]
+                },
+                "employee_benefits": {
+                    "type": "array",
+                    "description": "Employee benefits provided by the employer.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "Type of benefit.",
+                                "example": "gym membership"
+                            },
+                            "monetary_amount": {
+                                "type": "string",
+				"format": "amount",
+				"pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+				"description": "Benefit amount.",
+				"example": "1500.00"
+                            },
+                            "currency": {
+                                "type": "string",
+				"format": "currency-code",
+				"pattern": "^[A-Z]{3}$",
+                                "description": "ISO 4217 currency code (3 uppercase letters)",
+                                "example": "SEK"
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "Full description of benefit.",
+                                "example": "Monthly gym allowance."
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "monetary_amount",
+                            "currency"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "start_date",
+                "end_date",
+                "payout_date",
+                "basic_contractual_salary",
+                "gross_pay",
+                "tax_deducted",
+                "net_pay"
+            ]
+        },
+        "tax_information": {
+            "type": "object",
+            "description": "Tax-related information for this pay period.",
+            "additionalProperties": false,
+            "properties": {
+                "tax_code": {
+                    "type": "object",
+                    "description": "Tax code information used for this employee.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "identifier": {
+                            "type": "string",
+                            "description": "Tax code identifier.",
+                            "example": "Tabell 30"
+                        },
+                        "schema": {
+                            "type": "string",
+                            "description": "Tax code schema or system.",
+                            "example": "Skatteverket Tax Table"
+                        }
+                    },
+		    "required": [
+                        "identifier",
+                        "schema"
+                    ]
+                },
+                "tax_deduction_details": {
+                    "type": "object",
+                    "description": "Details about tax deductions for this employee.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "is_main_income": {
+                            "type": "boolean",
+                            "description": "Whether this is the employee's main source of income.",
+                            "example": true
+                        },
+                        "details_provided_by": {
+                            "type": "string",
+                            "description": "Authority or organization providing the tax deduction details.",
+                            "example": "Skatteverket"
+                        }
+                    }
+                }
+            }
+        },
+        "recipient_account": {
+            "type": "object",
+            "description": "Bank account information where the salary will be paid.",
+            "additionalProperties": false,
+            "properties": {
+                "identifier": {
+                    "type": "string",
+                    "description": "Account identifier (e.g., IBAN or local account number).",
+                    "example": "SE4550000000050012345678"
+                },
+                "schema": {
+                    "type": "string",
+                    "description": "Schema or format of the account identifier (e.g., \"IBAN\", \"Account Number\", \"Bankgiro\", \"Plusgiro\").",
+                    "example": "IBAN"
+                },
+                "bank_name": {
+                    "type": "string",
+                    "description": "Name of the bank.",
+                    "example": "Bank of Sweden"
+                }
+            },
+            "required": [
+                "identifier"
+            ]
+        },
+        "holidays": {
+            "type": "object",
+            "description": "Holiday and vacation information for the employee.",
+            "additionalProperties": false,
+            "properties": {
+                "period": {
+                    "type": "object",
+                    "description": "The period covered by this holiday information.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "start_date": {
+                            "type": "string",
+			    "format": "date",
+                            "description": "Start date of the holiday period. YYYY-MM-DD",
+                            "example": "2024-04-01"
+                        },
+                        "end_date": {
+                            "type": "string",
+			    "format": "date",
+                            "description": "End date of the holiday period. YYYY-MM-DD",
+                            "example": "2025-03-31"
+                        }
+                    },
+		    "required": [
+			"start_date",
+			"end_date"
+		    ]
+                },
+                "total_days_entitled": {
+                    "type": "string",
+                            "format": "amount",
+                            "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                            "description": "Total number of vacation days the employee is entitled to.",
+                            "example": "25.0"
+                },
+                "days_saved_from_previous_years": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Number of vacation days saved from previous years.",
+                    "example": "3.0"
+                },
+                "days_used_in_period": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Number of vacation days used during this period.",
+                    "example": "0.0"
+                },
+                "days_remaining_in_period": {
+                    "type": "string",
+		    "format": "amount",
+		    "pattern": "^[-]?(0|[1-9][0-9]*)([.][0-9]{1,2})?$",
+                    "description": "Number of vacation days remaining after this period.",
+                    "example": "28.0"
+                }
+            }
+        }
+    },
+    "required": [
+        "document_metadata",
+        "employment",
+        "pay_period"
+    ]
+}
