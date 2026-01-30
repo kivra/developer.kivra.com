@@ -35,6 +35,7 @@ info:
 
     #### Resources
     - [Receipt JSON schema documentation](/receipt/wiki/mdwiki.html#!index.md) - Detailed schema information for receipts and prescriptions
+    - [Field requirements reference](/receipt/wiki/mdwiki.html#!receipt-doc/retail/field-requirements-reference.md) - Required vs optional fields
     - [Merchant Toolbox](https://merchant-toolbox.kivra.com/) - Preview receipts, validate payloads, and see example data
 
     #### Getting started
