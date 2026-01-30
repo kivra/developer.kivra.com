@@ -14,6 +14,7 @@ Latest version: v1.0.
 - [Schema changelog](receipt-doc/retail/schema-changelog.md)
 - [Short overview of schema and definition files content](receipt-doc/retail/retail-schema-content.md)
 - [The retail schema explained](receipt-doc/retail/retail-schema-description.md)
+- [Field requirements reference](receipt-doc/retail/field-requirements-reference.md)
 
 ---
 
