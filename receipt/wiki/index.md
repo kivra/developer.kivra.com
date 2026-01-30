@@ -32,6 +32,7 @@ Latest version: v1.0.
 - [Schema changelog](receipt-doc/prescription/schema-changelog.md)
 - [Short overview of schema and definition files content](receipt-doc/prescription/prescription-spec-schema-content.md)
 - [The prescription specification schema explained](receipt-doc/prescription/prescription-schema-description.md)
+- [Field requirements reference](receipt-doc/prescription/field-requirements-reference.md)
 
 ---
 
