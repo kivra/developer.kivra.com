@@ -6,6 +6,7 @@
 * [Example receipt overview](receipt-doc/retail/example-receipts.md)
 * [Receipt json schema content](receipt-doc/retail/retail-schema-content.md)
 * [Receipt json schema explained](receipt-doc/retail/retail-schema-description.md)
+* [Field requirements reference](receipt-doc/retail/field-requirements-reference.md)
 
 [Prescription specifications]()
 
