@@ -2235,6 +2235,10 @@ components:
           items:
             type: string
             enum: [article_number_pos,article_number_gtin]
+        retained_activated:
+          type: boolean
+          description: Whether retained receipts are activated for this chain
+          default: false
       required:
         - name
         - vat
@@ -2305,6 +2309,9 @@ components:
           items:
             type: string
             enum: [article_number_pos,article_number_gtin]
+        retained_activated:
+          type: boolean
+          description: Whether retained receipts are activated for this chain
 
     RegisterEMS:
       title: RegisterEMS
