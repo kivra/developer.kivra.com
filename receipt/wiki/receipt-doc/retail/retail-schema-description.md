@@ -6,6 +6,16 @@ The purpose of this document is to explain the structure of a digital receipt ba
 
 DRJSON is made to conform to the Swedish fiscal law for cash registers. For detailed information, see [digital-receipt-schema.json](../../../schemas/json/retail/v1.0.json).
 
+## Field Requirements
+
+Throughout this document, fields are marked with requirement indicators:
+
+- **Required** - Field must be present
+- **Optional** - Field may be omitted
+- **Conditional** - Field is required under certain conditions (explained in context)
+
+For a consolidated reference of all field requirements, see [Field Requirements Reference](field-requirements-reference.md).
+
 ## Recommended reading
 
 This document focuses on details in the digital receipt JSON structure. To simplify the understanding of the content of this document the following resources should be studied alongside:
@@ -42,36 +52,48 @@ This section covers the digital receipt schema and their corresponding POS data 
 
 Main properties of the digital receipt schema.
 
-```json
-{
-  "copy": "",
-  "business_unit": {},
-  "cashier": {},
-  "sales_recording_system": {},
-  "receipt_identifier": {},
-  "time_of_purchase": "",
-  "currency": "",
-  "totals": [],
-  "header_text": {},
-  "footer_text": {},
-  "items": [],
-  "retail_price_modifiers": [],
-  "payments": [],
-  "customer": {},
-  "customer_order": {},
-  "control_unit": {}
-}
-```
+| Property | Requirement | Description |
+|----------|-------------|-------------|
+| `copy` | Optional | Whether this is a copy of the receipt |
+| `business_unit` | **Required** | Merchant information |
+| `cashier` | Optional | Operator/cashier information |
+| `sales_recording_system` | **Required** | POS system information |
+| `receipt_identifier` | **Required** | Receipt sequence number and optional extended number |
+| `time_of_purchase` | **Required** | ISO 8601 timestamp |
+| `currency` | **Required** | ISO 4217 currency code |
+| `totals` | **Required** | Total amounts (net, gross, vat, paid, etc.) |
+| `header_text` | Optional | Text displayed at top of receipt |
+| `footer_text` | Optional | Text displayed at bottom of receipt |
+| `items` | **Required** | List of sold/returned items |
+| `retail_price_modifiers` | Optional | Receipt-level discounts |
+| `payments` | **Required** | Payment/tender information |
+| `customer` | Conditional | Customer identifier (see [Customer](#customer)) |
+| `customer_order` | Optional | Order reference for linked receipts |
+| `control_unit` | Conditional | Required when control unit is connected to POS |
 
 The coming sections will describe each property in more detail.
 
-### copy
+### copy (Optional)
 
-_copy_ (boolean), indicates if the digital receipt is a copy (value _true_) or an original (value _false_). _false_ is default if the _copy property_ is missing.
+_copy_ (boolean), indicates if the digital receipt is a copy (value _true_) or an original (value _false_). Defaults to _false_ if omitted.
 
-### business_unit
+### business_unit (Required)
 
 Information about the merchant.
+
+**Required fields within `business_unit`:**
+- `name` - Merchant/store name
+- `service_id` - Store ID from Kivra (42 characters)
+- `organization_number` - Swedish organisationsnummer
+- `contact` - Contact information object
+
+**Optional fields:**
+- `unit_id` - Internal shop/business unit ID
+- `geo_location` - Geographic coordinates (if provided, both `latitude` and `longitude` are required)
+
+**`contact.address` requirements:**
+- `locality` and `postal_code` are always required
+- Either `street_address` OR `post_box` must be provided (not both required)
 
 Example:
 
@@ -96,9 +118,9 @@ Example:
 - _service_id_: The id given to the store when it is created in the Kivra Digital Receipt Platform.
 - _organization_number_: The merchant [_organisationsnummer_](https://sv.wikipedia.org/wiki/Organisationsnummer)
 
-### cashier
+### cashier (Optional)
 
-Optional information about the operator.
+Information about the operator. All fields within `cashier` are optional.
 
 Example:
 
@@ -111,9 +133,16 @@ Example:
 }
 ```
 
-### sales_recording_system
+### sales_recording_system (Required)
 
-_sales_recording_system_ identifies the system (POS/ECR) creating the receipt. Any of _id/name_ can be used to identify the POS.
+Identifies the system (POS/ECR) creating the receipt.
+
+**Conditional requirement:** At least one of `id` or `name` must be provided.
+
+**Available fields:**
+- `id` - System identifier (required if `name` not provided)
+- `name` - System name (required if `id` not provided)
+- `serial_number` - Optional serial number
 
 Example:
 
@@ -127,9 +156,19 @@ Example:
 }
 ```
 
-### receipt_identifier
+### receipt_identifier (Required)
 
-According to the fiscal law for cash registers the receipt must have a _sequence_number_. The _sequence_number_ is a counter that is reset when it reaches a certain value making it non-unique.
+**Required fields:**
+- `sequence_number` - Receipt sequence number (required by Swedish fiscal law)
+
+**Optional fields:**
+- `extended_number` - Extended receipt identifier for unique identification
+
+**If `extended_number` is provided, the following are required:**
+- `extended_number.value` - The identifier value
+- `extended_number.context` - Uniqueness context: `store`, `chain`, or `global`
+
+The _sequence_number_ is a counter that is reset when it reaches a certain value making it non-unique.
 The _extended_number_ can be used as a unique receipt identifier within a given _context_.
 Supported contexts:
 
@@ -152,9 +191,11 @@ The _extended_number_ can be used as a receipt reference between related receipt
 }
 ```
 
-### currency
+### currency (Required)
 
-This property gives the currency code for all amounts in the receipt. If a payment is done in a foreign currency it is defined in the tender part. The currency must be given in [ISO-4217 format](https://en.wikipedia.org/wiki/ISO_4217).
+The currency code for all amounts in the receipt, in [ISO-4217 format](https://en.wikipedia.org/wiki/ISO_4217) (e.g., "SEK", "EUR", "USD").
+
+If a payment is done in a foreign currency, it is defined in the tender part.
 
 Example:
 
@@ -164,9 +205,13 @@ Example:
 }
 ```
 
-### totals
+### totals (Required)
 
-The totals sections gives totals of these types:
+An array of total amounts. Each total object requires:
+- `type` - The total type (see below)
+- `amount` - The amount value
+
+**Total types:**
 
 - _paid_: The amount the customer pays/hands over or is given in case of e.g. return of goods. The gross amount taking discount and rounding into account.
 - _net_: Total including discounts, excluding vat, of all products/services bought/returned.
@@ -306,9 +351,13 @@ Example return:
 }
 ```
 
-### header_text
+### header_text (Optional)
 
 Arbitrary text data that will be displayed at the top of the receipt.
+
+**If provided, the following are required:**
+- `type` - Must be `"array"`
+- `collection` - Array of strings
 
 Example:
 
@@ -324,9 +373,14 @@ Example:
 }
 ```
 
-### footer_text
+### footer_text (Optional)
 
 Arbitrary text data that will be displayed at the bottom of the receipt.
+
+**If provided, the following are required:**
+- `type` - Must be `"array"`
+- `collection` - Array of strings
+
 Example:
 
 ```json
@@ -338,9 +392,14 @@ Example:
 }
 ```
 
-### items
+### items (Required)
 
-Items is a collection of items sold, returned etc.
+An array of items sold, returned, etc. Must contain at least one item.
+
+**All items require:**
+- `type` - Item type: `sale`, `return`, `text`, or `deposit`
+- `sequence_number` - Unique sequence number (1, 2, 3, etc.)
+
 The following item types are defined:
 
 - _sale_: Properties to handle sold product/service
@@ -352,6 +411,19 @@ Each item type will be described in more detail below. For all details se the js
 Generic for all items is the _sequence_number_. It starts at "1" and is incremented by one for each item added.
 
 #### sale item
+
+**Required fields for sale items:**
+- `type` - Must be `"sale"`
+- `identifiers` - At least one identifier (see below)
+- `description` - Item description
+- `quantity` - Object with `value` and `unit` (both required)
+- `sequence_number` - Unique sequence number
+- `actual_sales_unit_price` - Final unit price after discounts
+- `extended_amount` - Total amount for this line item
+- `extended_gross_amount` - Total amount before discounts
+
+**Optional fields:**
+- `regular_sales_unit_price`, `unit_cost_price`, `tax_percentage`, `tax_amount`, `retail_price_modifiers`, `eligible_for_frequent_shopper_points`, etc.
 
 Example
 
@@ -420,6 +492,12 @@ Discount/price modifier:
 
 #### return item
 
+**Required fields for return items:**
+- Same as sale items, plus `type` must be `"return"`
+
+**Optional fields:**
+- `receipt_reference` - Reference to original sale receipt (if provided, both `value` and `context` are required)
+
 Example
 
 ```json
@@ -466,6 +544,15 @@ If _receipt_reference_ is missing the return receipt will be "standalone" withou
 #### deposit item
 
 Amount to get or pay connected to other items sold/returned.
+
+**Required fields for deposit items:**
+- `type` - Must be `"deposit"`
+- `amount` - The deposit amount
+- `sequence_number` - Unique sequence number
+
+**Optional fields:**
+- `unit_amount`, `quantity`, `refund`, `tax_percentage`, `item_link`, `text`, `sub_deposits`
+
 Example:
 
 ```json
@@ -520,7 +607,14 @@ Example of a deposit refund with different tax levels on the returned material.
 
 #### text only item
 
-Use when any text is needed in the item list. Example:
+Use when any text is needed in the item list.
+
+**Required fields for text items:**
+- `type` - Must be `"text"`
+- `text` - Object with `type` (must be `"array"`) and `collection` (array of strings)
+- `sequence_number` - Unique sequence number
+
+Example:
 
 ```json
 {
@@ -533,7 +627,15 @@ Use when any text is needed in the item list. Example:
 }
 ```
 
-### retail price modifier
+### retail_price_modifiers (Optional)
+
+Receipt-level price modifiers (discounts, surcharges). Can also be defined at the item level.
+
+**Required fields for each modifier:**
+- `amount` - The modifier amount
+
+**Optional fields:**
+- `percent`, `unit_amount`, `quantity`, `action` (default: `"subtract"`), `tax_percentage`, `item_links`, `description`
 
 One or more _retail_price_modifiers_ can be connected to a single item as shown above. It can also be connected to a collection of items or be a _generic price modifier_. Example:
 
@@ -573,7 +675,16 @@ The second modifier gives a quantity based discount on certains products bought.
 - _item_links_: Modifier is connected to the item(s) with _sequence_number_ equal to the values in _item_link_.
 - _description_: Any textual description if applicable.
 
-### Payments
+### payments (Required)
+
+An array of payment/tender objects. Must contain at least one payment.
+
+**Required fields for each payment:**
+- `tender` - Object with `type` field (see tender types below)
+- `amount` - The payment amount
+
+**Optional fields:**
+- `amount_applied_to_bill`, `foreign_currency_amount`, `rounding`, `refund`
 
 This section covers supported payment/tender types. All payments have following properties:
 
@@ -838,11 +949,22 @@ You can use _points_redeemed_ and/or _amount_redeemed_.
 }
 ```
 
-### Customer
+### customer (Conditional)
 
-Contains information about the customer. The customer property must contain one identifier unless a _greenbin receipt_. The contact part is optional.
+Contains information about the customer.
 
-NOTE! The customer property is not needed if a credit/debitcard token is used to identify the customer. In that case the token information is added to the [tender part](#tender-creditdebit).
+**When is `customer` required?**
+- Required when you need to identify the receipt recipient
+- **NOT required** if using a card token for identification (see [tender creditdebit](#tender-creditdebit))
+- **NOT required** for greenbin receipts (anonymous/retained receipts)
+
+**If `customer` is provided:**
+- `id` object is required with at least one identifier type
+
+**Optional fields:**
+- `contact` - Customer contact information (email, phone, address)
+
+NOTE: The customer property is not needed if a credit/debit card token is used to identify the customer. In that case the token information is added to the [tender part](#tender-creditdebit).
 
 Supported id types:
 
@@ -868,9 +990,13 @@ Example:
 }
 ```
 
-### Customer order
+### customer_order (Optional)
 
-One or more receipts can be connected via a order number/reference. This is common in the travel sector where you might get one receipt for the main booking/order and additional receipts for add on services and/or changes.
+One or more receipts can be connected via an order number/reference. This is common in the travel sector where you might get one receipt for the main booking/order and additional receipts for add-on services and/or changes.
+
+**Fields (use one or the other):**
+- `order_number` - For the main order/booking receipt
+- `order_reference` - For add-on/related receipts linking to an existing order
 The receipts will be connected based on:
 
 - Order number/reference
@@ -897,9 +1023,17 @@ Example: Receipt connected to _add on service_ on existing order/booking, using 
 }
 ```
 
-### Control unit
+### control_unit (Conditional)
 
-If a control unit is connected to the POS, information from this unit must be added to the receipt. Example:
+**When is `control_unit` required?**
+- Required when a control unit (Swedish: kontrollenhet) is connected to the POS system
+- Not required if no control unit is used
+
+**Required fields (when `control_unit` is provided):**
+- `id` - Control unit identifier
+- `code` - Control unit code/signature
+
+Example:
 
 ```json
 {
