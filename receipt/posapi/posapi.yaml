@@ -533,6 +533,11 @@ paths:
 
         It is only possible to create one chain per VAT number.
 
+        ### Validation rules
+
+        - A chain cannot have both `retained_activated` and `greenbin_activated` set to true
+        - The partner must have the respective feature activated before a chain can activate it
+
       operationId: AddChain
       summary: Add chain
       requestBody:
@@ -710,6 +715,11 @@ paths:
         ### Access scope
 
           - PARTNER
+
+        ### Validation rules
+
+        - A chain cannot have both `retained_activated` and `greenbin_activated` set to true
+        - The partner must have the respective feature activated before a chain can activate it
 
       operationId: UpdateChain
       summary: Update chain
@@ -2235,6 +2245,10 @@ components:
           items:
             type: string
             enum: [article_number_pos,article_number_gtin]
+        retained_activated:
+          type: boolean
+          description: Whether retained receipts are activated for this chain
+          default: false
       required:
         - name
         - vat
@@ -2305,6 +2319,9 @@ components:
           items:
             type: string
             enum: [article_number_pos,article_number_gtin]
+        retained_activated:
+          type: boolean
+          description: Whether retained receipts are activated for this chain
 
     RegisterEMS:
       title: RegisterEMS
