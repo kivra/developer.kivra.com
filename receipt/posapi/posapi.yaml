@@ -533,6 +533,11 @@ paths:
 
         It is only possible to create one chain per VAT number.
 
+        ### Validation rules
+
+        - A chain cannot have both `retained_activated` and `greenbin_activated` set to true
+        - The partner must have the respective feature activated before a chain can activate it
+
       operationId: AddChain
       summary: Add chain
       requestBody:
@@ -710,6 +715,11 @@ paths:
         ### Access scope
 
           - PARTNER
+
+        ### Validation rules
+
+        - A chain cannot have both `retained_activated` and `greenbin_activated` set to true
+        - The partner must have the respective feature activated before a chain can activate it
 
       operationId: UpdateChain
       summary: Update chain
