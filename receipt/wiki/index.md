@@ -14,6 +14,7 @@ Latest version: v1.0.
 - [Schema changelog](receipt-doc/retail/schema-changelog.md)
 - [Short overview of schema and definition files content](receipt-doc/retail/retail-schema-content.md)
 - [The retail schema explained](receipt-doc/retail/retail-schema-description.md)
+- [Field requirements reference](receipt-doc/retail/field-requirements-reference.md)
 
 ---
 
@@ -31,6 +32,7 @@ Latest version: v1.0.
 - [Schema changelog](receipt-doc/prescription/schema-changelog.md)
 - [Short overview of schema and definition files content](receipt-doc/prescription/prescription-spec-schema-content.md)
 - [The prescription specification schema explained](receipt-doc/prescription/prescription-schema-description.md)
+- [Field requirements reference](receipt-doc/prescription/field-requirements-reference.md)
 
 ---
 

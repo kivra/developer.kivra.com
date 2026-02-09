@@ -5,6 +5,16 @@ This document describes the different parts of Kivras prescription specification
 
 The specification is based on discussions with different pharmacies and data from the Swedish eHealth Agency.
 
+## Field Requirements
+
+Throughout this document, fields are marked with requirement indicators:
+
+- **Required** - Field must be present
+- **Optional** - Field may be omitted
+- **Conditional** - Field is required under certain conditions (explained in context)
+
+For a consolidated reference of all field requirements, see [Field Requirements Reference](field-requirements-reference.md).
+
 ## Scope
 
 This document focuses on the construction and content of the prescription specification. It does not cover:
