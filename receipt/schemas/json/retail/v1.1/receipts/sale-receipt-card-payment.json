@@ -40,17 +40,22 @@
       "sub_totals": [{
         "amount": 97.60,
         "tax_percentage": 25,
-        "taxable_amount": 488.00,
-        "net_amount": 390.40
+        "taxable_amount": 390.40,
+        "net_amount": 292.80
       }]
     },
     {
       "type": "gross",
-      "amount": 697.00
+      "amount": 488.00
     },
     {
       "type": "paid",
       "amount": 488.00
+    },
+    {
+      "type": "discount",
+      "amount": 125.30,
+      "refund": true
     }
   ],
   "footer_text": {
@@ -113,12 +118,12 @@
         "scheme": "payment_provider_scheme"
       },
       "bank_identification_number": "************3602",
-      "acquiring_institution_id_code": "315",
+      "acquiring_institution_id_code": "722660",
       "retrieval_reference_number": "000295749077",
       "card_acceptor_id": "10565281",
       "card_acceptor_terminal_id": "73200801",
       "card_acceptor_name": "BB Ludvika Ou",
-      "approval_code": "L99029",
+      "approval_code": "025965",
       "payment_slip": {
         "type": "array",
         "collection": [
@@ -174,7 +179,7 @@
   }],
   "customer": {
     "id": {
-      "civic_registration_number": "199909091999"
+      "civic_registration_number": "19990909-1999"
     }
   },
   "control_unit": {

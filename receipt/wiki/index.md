@@ -9,7 +9,7 @@ This Wiki contains information about how to create digital receipts and related 
 ## Receipt schemas
 
 The digital receipt retail schema is build on one schema and several schema definition files.
-Latest version: v1.0.
+Latest version: v1.1.
 
 - [Schema changelog](receipt-doc/retail/schema-changelog.md)
 - [Short overview of schema and definition files content](receipt-doc/retail/retail-schema-content.md)

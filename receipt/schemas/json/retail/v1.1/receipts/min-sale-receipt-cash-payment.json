@@ -1,0 +1,135 @@
+{
+    "business_unit": {
+        "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+        "organization_number": "556838-8200",
+        "name": "Kivra store AB",
+        "contact": {
+            "address": {
+                "street_address": "Engelbrektsgatan 20",
+                "locality": "Ludvika",
+                "postal_code": "77187"
+            },
+            "phone": "+460771584886"
+        }
+    },
+
+    "cashier": {
+        "id": "5",
+        "name": "Anna Andersson"
+    },
+    "sales_recording_system": {
+        "serial_number": "EA38329",
+        "name": "kassa 3"
+    },
+    "receipt_identifier": {
+        "sequence_number": 123456,
+        "extended_number": {
+            "value": "0123456123",
+            "type": "EAN8",
+            "context": "store"
+        }
+    },
+    "time_of_purchase": "2018-11-09T08:49:00+01:00",
+    "currency": "SEK",
+
+    "totals": [
+        {
+            "type": "net",
+            "amount": 280.0,
+            "refund": false
+        },
+        {
+            "type": "vat",
+            "amount": 70.0,
+            "refund": false,
+            "sub_totals": [
+                {
+                    "amount": 70.0,
+                    "taxable_amount": 350.0,
+                    "net_amount": 280.00,
+                    "tax_percentage": 25
+                }
+            ]
+        },
+        {
+            "type": "gross",
+            "amount": 395.0,
+            "refund": false
+        },
+        {
+            "type": "discount",
+            "amount": 45.0
+        },
+        {
+            "type": "rounding",
+            "amount": 0.0
+        },
+        {
+            "type": "paid",
+            "amount": 350.0,
+            "refund": false
+        }
+    ],
+
+    "header_text": {
+        "type": "array",
+        "collection": ["Öppettider: Mådag - Fredag 10-18 Lördag 10-15", "Another header text..."]
+    },
+    "footer_text": {
+        "type": "array",
+        "collection": ["Sommarerbjudande: Köp 3 par skor få det billigaste paret på köpet."]
+    },
+
+    "items": [
+        {
+            "type": "sale",
+            "identifiers": [
+                {
+                    "identifier_type": "pos",
+                    "value": "912042"
+                },
+                {
+                    "identifier_type": "gtin",
+                    "value": "1234567890"
+                }
+            ],
+            "description": "Skor 42 - Foder BR",
+            "quantity": {
+                "value": 1,
+                "unit": "ea"
+            },
+            "regular_sales_unit_price": 395,
+            "extended_gross_amount": 395,
+            "retail_price_modifiers": [
+                {
+                    "amount": 45
+                }
+            ],
+            "actual_sales_unit_price": 350,
+            "extended_amount": 350,
+            "tax_percentage": 25,
+            "sequence_number": 1
+        }
+    ],
+
+    "payments": [
+        {
+            "tender": {
+                "type": "cash"
+            },
+            "amount_applied_to_bill": 350.0,
+            "amount": 350.0
+        }
+    ],
+
+    "customer": {
+        "id": {
+            "phone": "+46 75 777 7777"
+        }
+    },
+
+    "control_unit": {
+        "id": "RIHTT102710007088",
+        "code": "BGXOV2QOHHILXHLPHHXRAYZEKGFNC2BD;"
+    }
+}

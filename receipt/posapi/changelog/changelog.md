@@ -1,5 +1,11 @@
 # POS API
 
+## Version 1.3.18
+
+### New
+
+Release of retail/v1.1
+
 ## Version 1.3.17 (2025-05-15)
 
 ### Fix

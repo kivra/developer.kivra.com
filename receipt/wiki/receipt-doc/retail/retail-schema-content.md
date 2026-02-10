@@ -4,13 +4,13 @@ The DR Retail JSON schema is based on the [JSON schema specification](https://js
 
 An "exploded schema" (schema and definitions files merged) is found here:
 
-- [Json schema and definition files](../../../schemas/json/retail/v1.0.json)
+- [Json schema and definition files](../../../schemas/json/retail/v1.1.json)
 
 ---
 
 ## Schema
 
-### [Digital receipt schema](../../../schemas/json/retail/v1.0/digital-receipt-schema.json)
+### [Digital receipt schema](../../../schemas/json/retail/v1.1/digital-receipt-schema.json)
 
 This is where it all starts. The schema contains all the properties needed to create a digital receipt. The property details is given in the referenced definition files.
 
@@ -41,7 +41,7 @@ This is where it all starts. The schema contains all the properties needed to cr
 
 This section gives an overview of the definition files and their content. For details see each definition file (JSON).
 
-### [Business definitions](../../../schemas/json/retail/v1.0/business-definitions.json)
+### [Business definitions](../../../schemas/json/retail/v1.1/business-definitions.json)
 
 Information about the receipt producer (merchant).
 
@@ -56,7 +56,7 @@ Information about the receipt producer (merchant).
   - internal shop id
   - service id
 
-### [Customer definitions](../../../schemas/json/retail/v1.0/customer-definitions.json)
+### [Customer definitions](../../../schemas/json/retail/v1.1/customer-definitions.json)
 
 Information about the customer, contact information and/or customer identifier.
 
@@ -65,14 +65,14 @@ Information about the customer, contact information and/or customer identifier.
 - identification
 - loyalty program
 
-### [Customer order definitions](../../../schemas/json/retail/v1.0/customer-order-definitions.json)
+### [Customer order definitions](../../../schemas/json/retail/v1.1/customer-order-definitions.json)
 
 If the receipt has a connection to a customer order/booking reference or similar.
 
 - customer order information
 - customer information
 
-### [Item definitions](../../../schemas/json/retail/v1.0/item-definitions.json)
+### [Item definitions](../../../schemas/json/retail/v1.1/item-definitions.json)
 
 Properties for each item. Items is one of sale/return/text/deposit
 
@@ -84,7 +84,7 @@ Properties for each item. Items is one of sale/return/text/deposit
 - item description
 - link to related items
 
-### [Monetary definitions](../../../schemas/json/retail/v1.0/monetary-definitions.json)
+### [Monetary definitions](../../../schemas/json/retail/v1.1/monetary-definitions.json)
 
 Information about
 
@@ -93,7 +93,7 @@ Information about
 - currencies
 - retail price modifiers
 
-### [Sales recording system definitions](../../../schemas/json/retail/v1.0/sales-recording-system-definitions.json)
+### [Sales recording system definitions](../../../schemas/json/retail/v1.1/sales-recording-system-definitions.json)
 
 Information related to the cash register:
 
@@ -104,7 +104,7 @@ Information related to the cash register:
   - extended number
   - barcode representation
 
-### [Service common definitions](../../../schemas/json/retail/v1.0/service-common-definitions.json)
+### [Service common definitions](../../../schemas/json/retail/v1.1/service-common-definitions.json)
 
 General receipt information referenced from other definition files/schemas:
 
@@ -114,7 +114,7 @@ General receipt information referenced from other definition files/schemas:
 - text types
 - quantity definitions
 
-### [Tender-definitions](../../../schemas/json/retail/v1.0/tender-definitions.json)
+### [Tender-definitions](../../../schemas/json/retail/v1.1/tender-definitions.json)
 
 Payment information:
 

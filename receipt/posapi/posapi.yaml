@@ -91,7 +91,7 @@ info:
       ```bash
       curl -X POST https://sender.sandbox-api.kivra.com/dr/v1/receipts \
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-        -H "Content-Type: application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0" \
+        -H "Content-Type: application/json;profile=https://se.receipts.kivra.com/schemas/json/retail/v1.1" \
         -d @receipt.json
       ```
 
@@ -230,7 +230,7 @@ paths:
 
         The Content-Type must be set according to the receipt format, one of:
 
-        * Content-Type: application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0
+        * Content-Type: application/json;profile=https://se.receipts.kivra.com/schemas/json/retail/v1.1
 
         * Content-Type: application/xml
 
@@ -252,7 +252,7 @@ paths:
 
         ### IMPORTANT NOTE:
 
-        For card payments, Kivra's SDRS scheme requires the following payment
+        For card payments, Kivra's JSON scheme requires the following payment
         terminal information according to <a href="https://en.wikipedia.org/wiki/ISO_8583">ISO standard 8583</a>
 
         * Bank Identification Number
@@ -261,7 +261,7 @@ paths:
 
         * Card Acceptor Terminal ID
 
-        * Merchant Identifier
+        * Card Acceptor ID
 
         * Approval Code
 
@@ -274,7 +274,7 @@ paths:
         description: Takes in a receipt object
         required: true
         content:
-          ? application/json;profile=https://se.digitalreceipts.net/schemas/json/retail/v1.0
+          ? application/json;profile=https://se.receipts.kivra.com/schemas/json/retail/v1.1
           : schema:
               type: object
             example:

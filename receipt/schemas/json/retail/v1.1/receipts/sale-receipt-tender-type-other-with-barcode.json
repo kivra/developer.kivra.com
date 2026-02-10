@@ -40,13 +40,13 @@
       "sub_totals": [{
         "amount": 97.60,
         "tax_percentage": 25,
-        "taxable_amount": 488.00,
-        "net_amount": 390.40
+        "taxable_amount": 390.40,
+        "net_amount": 292.80
       }]
     },
     {
       "type": "gross",
-      "amount": 697.00
+      "amount": 488.00
     },
     {
       "type": "paid",
@@ -107,66 +107,19 @@
   ],
   "payments": [{
     "tender": {
-      "type": "creditdebit",
-      "card_token": {
-        "value": "123455",
-        "scheme": "payment_provider_scheme"
-      },
-      "bank_identification_number": "************3602",
-      "acquiring_institution_id_code": "315",
-      "retrieval_reference_number": "000295749077",
-      "card_acceptor_id": "10565281",
-      "card_acceptor_terminal_id": "73200801",
-      "card_acceptor_name": "BB Ludvika Ou",
-      "approval_code": "L99029",
-      "payment_slip": {
+      "type": "other",
+      "type_name": "KLARNA",
+      "tender_details": {
         "type": "array",
         "collection": [
-          "BB Ludvika Ou",
-          "Sparakvittotgatan 20",
-          "S-77100 LUDVIKA",
-          "TEL +46-0771-584886",
-          "Org.nr: 123456-1111",
-          "Teller Sweden AB",
-          "Butiksnr: 10565281",
-          "Termid: 7320080100029574",
-          "2018-11-09 11:22",
-          "KÖP",
-          "SEK: 488,00",
-          "Varav moms: 139,40",
-          "TOTALT: 488-00",
-          "Personlig kod",
-          "**** **** **** 3602",
-          "",
-          "Bankkort VISA",
-          "Ca2 1 ___ TEL 315 L99029",
-          "Ref.nr: 000295749077",
-          "AID: A000000003101000",
-          "TVR: 0000000000",
-          "TSI: E800",
-          "SPARA KVITTOT",
-          "KUNDENS KOPIA",
-          "",
-          "Transaktionsinformation",
-          "Butiksnr: 58213559",
-          "          4368122",
-          "Term.id: 7320080100029574",
-          "2018-11-09 11:22",
-          "              KÖP",
-          "BELOPP: SEK187,00",
-          "",
-          "GODKÄNT",
-          "************8796",
-          "Bankkort VISA",
-          "Personlig kod",
-          "Ca1 7 000 SWE 415 826244",
-          "Ref.nr: 301005397477",
-          "AID A00000000041010",
-          "2018-11-09         09:49",
-          "TSI E800",
-          "TVR 0080001000",
-          "SemportNr: 4196"
-        ]
+          "Butiksnr:  8708",
+          "Fakturanr: 2260 6633 2099 9960",
+          "Kund Idnr: 12334454545"
+        ],
+        "barcode": {
+          "value": "$EPAY${\"Butiknr\": \"8708\",\"Faktnr\": \"2260663320999960\"}",
+          "type": "QRCode"
+        }
       }
     },
     "amount": 488.00,
@@ -174,7 +127,7 @@
   }],
   "customer": {
     "id": {
-      "civic_registration_number": "199909091999"
+      "civic_registration_number": "19990909-1999"
     }
   },
   "control_unit": {
