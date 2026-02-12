@@ -263,7 +263,11 @@ paths:
 
         * Card Acceptor ID
 
+        * Card Acceptor Name
+
         * Approval Code
+
+        * Acquiring institution identification code
 
 
         See [Digital receipt JSON schema explained](/receipt/wiki/mdwiki.html#!receipt-doc/retail/retail-schema-description.md#tender-creditdebit) for more details regarding card payments 
