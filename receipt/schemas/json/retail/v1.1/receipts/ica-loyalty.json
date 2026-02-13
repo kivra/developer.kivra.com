@@ -1,0 +1,258 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdcd",
+    "organization_number": "5556697-1734",
+    "name": "MAXI ICA STORMARKNAD",
+    "contact": {
+      "phone": "0243-246100"
+    }
+  },
+
+  "cashier": {
+    "id": "123"
+  },
+  "sales_recording_system": {
+    "id": "7959"
+  },
+
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "085679590950",
+      "type": "Interleaved2Of5",
+      "context": "chain"
+    }
+  },
+  "time_of_purchase": "2018-12-08T09:49:00+01:00",
+  "currency": "SEK",
+
+  "totals": [{
+      "type": "net",
+      "amount": 280.00
+    },
+    {
+      "type": "vat",
+      "amount": 100.27,
+      "sub_totals": [{
+        "amount": 91.08,
+        "taxable_amount": 758.77,
+        "net_amount": 667.69,
+        "tax_percentage": 12
+      }, {
+        "amount": 9.19,
+        "taxable_amount": 36.76,
+        "net_amount": 27.57,
+        "tax_percentage": 25
+      }]
+    },
+    {
+      "type": "gross",
+      "amount": 921.50
+    },
+    {
+      "type": "discount",
+      "amount": 25.70,
+      "sub_totals": [{
+        "amount": 20.90,
+        "text": {
+          "type": "array",
+          "collection": ["Rabatt ICA-kort"]
+        }
+      }]
+    },
+    {
+      "type": "paid",
+      "amount": 350.00
+    }
+  ],
+
+  "header_text": {
+    "type": "array",
+    "collection": [
+      "Öppet alla dagar 07-23"
+    ]
+  },
+
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "RABATTER KVAR att använda på följande produkter t o m 2018-12-09",
+      "",
+      "ICA Olivolja 250ml-2l            MAX 1 15%",
+      "HTH hudvård Kropp, 100 - 200 ml  MAX 2 10%",
+      "ICA Soltorkade tomater           MAX 1 20%",
+      "-------------------------------------------",
+      "",
+      "Välkommen åter!",
+      "SPARAK KVITTOT",
+      "Öppet köp på hem & fritidsartiklar under",
+      "obegränsad tid.",
+      "Återköp av varor gäller endast",
+      "vid obruten förpackning",
+      "1 års garanti - villkor se www.ica.se",
+      "SMINK, LÄKEMEDEL, OCH KYLVARAOR BYTES EJ"
+    ]
+  },
+
+  "items": [{
+      "type": "text",
+      "text": {
+        "type": "array",
+        "collection": ["SJÄLVBETJÄNINGSKUND"]
+      },
+      "sequence_number": 1
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "TODO-FAKE-ID"
+      }],
+      "description": "Babyplommontomat",
+      "quantity": {
+        "value": 2,
+        "entry_method": "scanned",
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 17.95,
+      "actual_sales_unit_price": 17.95,
+      "extended_amount": 35.90,
+      "extended_gross_amount": 35.90,
+      "tax_percentage": 25,
+      "sequence_number": 2
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "TODO-FAKE-ID"
+      }],
+      "entry_method": "scanned",
+      "description": "*Basilika Eko",
+      "quantity": {
+        "value": 1,
+        "entry_method": "scanned",
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 18.95,
+      "extended_discount_amount": 1.90,
+      "text": {
+        "type": "array",
+        "collection": ["Färska kryddor 2f35"]
+      },
+      "actual_sales_unit_price": 17.05,
+      "extended_amount": 17.05,
+      "extended_gross_amount": 18.95,
+      "tax_percentage": 25,
+      "sequence_number": 2
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "TODO-FAKE-ID"
+      }],
+      "description": "Herrgård 18mån 28%",
+      "quantity": {
+        "value": 0.416,
+        "entry_method": "scanned",
+        "unit": "kg",
+      },
+      "regular_sales_unit_price": 99.00,
+      "actual_sales_unit_price": 99.00,
+      "extended_amount": 41.18,
+      "extended_gross_amount": 41.18,
+      "tax_percentage": 25,
+      "sequence_number": 3
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "TODO-FAKE-ID"
+      }],
+      "description": "*Korriander ICAEko",
+      "quantity": {
+        "value": 1,
+        "entry_method": "scanned",
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 15.95,
+      "actual_sales_unit_price": 15.95,
+      "extended_amount": 15.95,
+      "extended_gross_amount": 15.95,
+      "tax_percentage": 25,
+      "sequence_number": 4
+    },
+    {
+      "type": "sale",
+      "identifiers": [{
+        "identifier_type": "pos",
+        "value": "TODO-FAKE-ID"
+      }],
+      "description": "*Laxfile",
+      "quantity": {
+        "value": 1,
+        "entry_method": "scanned",
+        "unit": "ea",
+      },
+      "regular_sales_unit_price": 89.90,
+      "extended_discount_amount": 20.00,
+      "text": {
+        "type": "array",
+        "collection": ["Laxfile 69.90"]
+      },
+      "actual_sales_unit_price": 17.05,
+      "extended_amount": 17.05,
+      "extended_gross_amount": 17.05,
+      "tax_percentage": 25,
+      "sequence_number": 2
+    }
+  ],
+  "payments": [{
+    "tender": {
+      "type": "creditdebit",
+      "acquiring_institution_id_code": "722660",
+      "retrieval_reference_number": "243842052399",
+      "card_acceptor_id": "14584030882",
+      "card_acceptor_terminal_id": "14584030",
+      "card_acceptor_name": "ICA Supermarket",
+      "approval_code": "025965",
+      "payment_slip": {
+        "type": "map",
+        "collection": {
+          "Term": "14584-030882",
+          "SWE": "722660",
+          "MASTERCARD": "************3602",
+          "": "08/12/2018 09:49",
+          "AID:": "A0000000041010",
+          "TVR": "0000001000",
+          "TSI": "E800",
+          "Ref": "243842052399 994",
+          "Rsp": "00 025965 Cal 5",
+          "": "Personlig kod",
+          "Bonus": "895.80",
+          "": "************3810",
+          "Köp": "895.80",
+          "Varav moms": "100,27",
+          "Totalt SEK": "895.80",
+          "": "Spara kvittot"
+        }
+      }
+    },
+    "amount_applied_to_bill": 895.80,
+    "amount": 895.80
+  }],
+  "customer": {
+    "id": {
+      "civic_registration_number": "19112222-3344"
+    },
+    "contact": {
+      "email": "your@email.com"
+    },
+    "loyalty": {
+      "program": "ica",
+      "customer_number": "5752 2102 1236 1196"
+    }
+  }
+}

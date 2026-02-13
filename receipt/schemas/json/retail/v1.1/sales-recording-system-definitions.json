@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "cashier": {
+      "title": "cashier name and id",
+      "description": "information about the cashier, optional",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "sales_recording_system": {
+      "title": "sales recording system information",
+      "description": "A sales recording system is any system where the sales is registered. Example POS",
+      "type": "object",
+      "oneOf": [{
+          "$ref": "#/definitions/pos_information"
+        }
+      ]
+    },
+
+    "pos_information": {
+      "title": "point of sales system",
+      "description": "information that somehow identifies the pos system",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "serial_number": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [{
+          "required": ["id"]
+        },
+        {
+          "required": ["name"]
+        }
+      ]
+    },
+
+    "extended_receipt_number_type": {
+      "type": "object",
+      "description": "a more complex receipt number if applicable, must be unique in given context",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "data that will be presented as a barcode on the receipt"
+        },
+        "type": {
+          "$ref": "service-common-definitions.json#/definitions/barcode_element"
+        },
+        "context": {
+          "type": "string",
+          "enum": ["store", "chain", "global"],
+          "description": "in what context is the value (receipt number) unique, note GLOBAL can only be used if a digital receipt provider receipt id is used"
+        }
+      },
+      "required": ["value", "context"]
+    },
+
+    "receipt_identifier": {
+      "title": "receipt identifier",
+      "description": "a receipt is often identified by a sequence number and/or an extended id (unique in some context) with or without a barcode representation.",
+      "type": "object",
+      "properties": {
+        "sequence_number": {
+          "type": "integer",
+          "description": "a sequence number as stipulated by the swedish tax authorities"
+        },
+        "extended_number": {
+          "$ref": "#/definitions/extended_receipt_number_type"
+        }
+      },
+      "required": ["sequence_number"],
+      "additionalProperties": false
+    }
+  }
+}

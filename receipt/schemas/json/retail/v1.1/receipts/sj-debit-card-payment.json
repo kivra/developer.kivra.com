@@ -1,0 +1,448 @@
+{
+  "business_unit": {
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce",
+    "organization_number": "5565772984",
+    "name": "LINKON AB",
+    "contact": {
+      "address": {
+        "street_address": "Engelbrektsgatan 20",
+        "locality": "Stockholm",
+        "postal_code": "11120"
+      },
+      "phone": "+46-08-7893300"
+    }
+  },
+
+  "sales_recording_system": {
+    "serial_number": "2425",
+    "name": "PAY02425"
+  },
+
+  "receipt_identifier": {
+    "sequence_number": 123456,
+    "extended_number": {
+      "value": "BLX4948Z",
+      "context": "chain"
+    }
+  },
+  "time_of_purchase": "2018-11-09T08:49:00+01:00",
+  "currency": "SEK",
+  "totals": [{
+    "type": "net",
+    "amount": 1937.68
+  }, {
+    "type": "vat",
+    "amount": 122.32,
+    "sub_totals": [{
+      "amount": 8.00,
+      "taxable_amount": 32.00,
+      "net_amount": 24.00,
+      "tax_percentage": 25
+    }, {
+      "amount": 114.32,
+      "taxable_amount": 1905.68,
+      "net_amount": 1791.36,
+      "tax_percentage": 6
+    }]
+  }, {
+    "type": "gross",
+    "amount": 2060.00,
+    "sub_totals": [{
+      "amount": 80.00,
+      "type": "bokningsavgifter"
+    }]
+  }, {
+    "type": "paid",
+    "amount": 2060.00
+  }],
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "Beställningsnummer: BLX4948Z"
+    ]
+  },
+  "items": [{
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-01-00"
+    }],
+    "description": "Sthlm Central - Göteborg C",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 639.00,
+    "actual_sales_unit_price": 639.00,
+    "actual_sales_unit_price": 639.00,
+    "extended_amount": 639.00,
+    "extended_gross_amount": 639.00,
+    "tax_percentage": 6,
+    "sequence_number": 1
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-01-01"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 26.00,
+    "actual_sales_unit_price": 26.00,
+    "actual_sales_unit_price": 26.00,
+    "extended_amount": 26.00,
+    "extended_gross_amount": 26.00,
+    "tax_percentage": 6,
+    "sequence_number": 2,
+    "item_link": 1
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": ["Sittplats", "Internet - Wi-Fi"]
+    },
+    "sequence_number": 3,
+    "item_link": 1
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-01-02"
+    }],
+    "description": "Flexibilitet - Kan ombokas",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 96.00,
+    "actual_sales_unit_price": 96.00,
+    "actual_sales_unit_price": 96.00,
+    "extended_amount": 96.00,
+    "extended_gross_amount": 69.00,
+    "tax_percentage": 6,
+    "sequence_number": 4,
+    "item_link": 1
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-01-03"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 4.00,
+    "actual_sales_unit_price": 4.00,
+    "actual_sales_unit_price": 4.00,
+    "extended_amount": 4.00,
+    "extended_gross_amount": 4.00,
+    "tax_percentage": 6,
+    "sequence_number": 5,
+    "item_link": 1
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-02-00"
+    }],
+    "description": "Sthlm Central - Göteborg C",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 639.00,
+    "actual_sales_unit_price": 639.00,
+    "actual_sales_unit_price": 639.00,
+    "extended_amount": 639.00,
+    "extended_gross_amount": 639.00,
+    "tax_percentage": 6,
+    "sequence_number": 6
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-02-01"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 26.00,
+    "actual_sales_unit_price": 26.00,
+    "actual_sales_unit_price": 26.00,
+    "extended_amount": 26.00,
+    "extended_gross_amount": 26.00,
+    "tax_percentage": 6,
+    "sequence_number": 7,
+    "item_link": 6
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": ["Sittplats", "Internet - Wi-Fi"]
+    },
+    "sequence_number": 8,
+    "item_link": 6
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-02-02"
+    }],
+    "description": "Flexibilitet - Kan ombokas",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 96.00,
+    "actual_sales_unit_price": 96.00,
+    "actual_sales_unit_price": 96.00,
+    "extended_amount": 96.00,
+    "extended_gross_amount": 96.00,
+    "tax_percentage": 6,
+    "sequence_number": 9,
+    "item_link": 6
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-02-03"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 4.00,
+    "actual_sales_unit_price": 4.00,
+    "extended_amount": 4.00,
+    "extended_gross_amount": 4.00,
+    "tax_percentage": 6,
+    "sequence_number": 10,
+    "item_link": 6
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-03-00"
+    }],
+    "description": "Göteborg C - Halmstad C",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 217.00,
+    "actual_sales_unit_price": 217.00,
+    "extended_amount": 217.00,
+    "extended_gross_amount": 217.00,
+    "tax_percentage": 6,
+    "sequence_number": 11
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-03-01"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 16.00,
+    "actual_sales_unit_price": 16.00,
+    "extended_amount": 16.00,
+    "extended_gross_amount": 16.00,
+    "tax_percentage": 6,
+    "sequence_number": 12,
+    "item_link": 11
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-03-02"
+    }],
+    "description": "Sittplats",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 28.00,
+    "actual_sales_unit_price": 28.00,
+    "extended_amount": 28.00,
+    "extended_gross_amount": 28.00,
+    "tax_percentage": 6,
+    "sequence_number": 13,
+    "item_link": 11
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-03-03"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 4.00,
+    "actual_sales_unit_price": 4.00,
+    "extended_amount": 4.00,
+    "extended_gross_amount": 4.00,
+    "tax_percentage": 6,
+    "sequence_number": 14,
+    "item_link": 11
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": ["Flexibilitet - Kan inte ombokas"]
+    },
+    "sequence_number": 15,
+    "item_link": 11
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-04-00"
+    }],
+    "description": "Göteborg C - Halmstad C",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 217.00,
+    "actual_sales_unit_price": 217.00,
+    "extended_amount": 217.00,
+    "extended_gross_amount": 217.00,
+    "tax_percentage": 6,
+    "sequence_number": 16
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-04-01"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 16.00,
+    "actual_sales_unit_price": 16.00,
+    "extended_amount": 16.00,
+    "extended_gross_amount": 16.00,
+    "tax_percentage": 6,
+    "sequence_number": 17,
+    "item_link": 16
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-04-02"
+    }],
+    "description": "Sittplats",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 28.00,
+    "actual_sales_unit_price": 28.00,
+    "extended_amount": 28.00,
+    "extended_gross_amount": 28.00,
+    "tax_percentage": 6,
+    "sequence_number": 18,
+    "item_link": 16
+  }, {
+    "type": "sale",
+    "identifiers": [{
+      "identifier_type": "pos",
+      "value": "BLX4948Z-03-03"
+    }],
+    "description": "Bokningsavgift",
+    "quantity": {
+      "value": 1,
+      "unit": "ea",
+    },
+    "regular_sales_unit_price": 4.00,
+    "actual_sales_unit_price": 4.00,
+    "extended_amount": 4.00,
+    "extended_gross_amount": 4.00,
+    "tax_percentage": 6,
+    "sequence_number": 19,
+    "item_link": 16
+  }, {
+    "type": "text",
+    "text": {
+      "type": "array",
+      "collection": ["Flexibilitet - Kan inte ombokas"]
+    },
+    "sequence_number": 20,
+    "item_link": 16
+  }],
+  "payments": [{
+    "tender": {
+      "type": "creditdebit",
+      "acquiring_institution_id_code": "415",
+      "retrieval_reference_number": "301005397477",
+      "card_acceptor_id": "58213559",
+      "card_acceptor_terminal_id": "73200801",
+      "card_acceptor_name": "SJ Travel Shop",
+      "approval_code": "826244",
+      "payment_slip": {
+        "type": "array",
+        "collection": [
+          "2018-10-11T10:01:00",
+          "Ref.nr: 000295749077",
+          "AID: A000000003101000",
+          "TVR: 0000000000",
+          "TSI: E800",
+          "SPARA KVITTOT",
+          "KUNDENS KOPIA",
+          "",
+          "Transaktionsinformation",
+          "Butiksnr: 58213559",
+          "          4368122",
+          "Term.id: 7320080100029574",
+          "2018-11-09 11:22",
+          "              KÖP",
+          "BELOPP: SEK187,00",
+          "",
+          "GODKÄNT",
+          "************8796",
+          "Bankkort VISA",
+          "Personlig kod",
+          "Ca1 7 000 SWE 415 826244",
+          "Ref.nr: 301005397477",
+          "AID A00000000041010",
+          "2018-10-11T10:01:00",
+          "TSI E800",
+          "TVR 0080001000",
+          "SemportNr: 4196"
+        ]
+      }
+    },
+    "amount": 2060.00,
+    "amount_applied_to_bill": 2060.00
+  }],
+  "customer": {
+    "id": {
+      "loyalty": {
+        "program": "sj_prio",
+        "customer_number": "5752 2102 1236 1196"
+      }
+    },
+    "contact": {
+      "email": "your@email.com",
+      "phone": "+46-111-111-1111"
+    }
+  },
+  "customer_order": {
+    "order_number": "BLX4948Z"
+  }
+}

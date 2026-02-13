@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "address": {
+      "type": "object",
+      "properties": {
+        "street_address": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["street_address", "city", "postal_code"]
+    },
+    "store_uuid": {
+        "properties": {
+            "type": { "enum": [ "unit_id" ] },
+            "label": {
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            }
+        },
+        "required": [ "type", "label" ],
+        "additionalProperties": false
+    },
+    "business_information": {
+      "type": "object",
+
+      "properties": {
+        "unit_id": {"type":  "string"},
+        "name": {"type":  "string"},
+        "organization_number" : {"type":  "string"},
+        "vat" : {"type":  "string"},
+        "longitude" : {"type":  "string"},
+        "latitude" : {"type":  "string"},
+
+      }
+    }
+
+  }
+
+  "type": "object",
+
+  "properties": {
+    "business_unit":  { "$ref": "#/definitions/business_information" },
+
+  }
+}

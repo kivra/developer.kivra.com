@@ -4,7 +4,7 @@
 
 The purpose of this document is to explain the structure of a digital receipt based on the Kivra DR Retail JSON Schema (DRJSON).
 
-DRJSON is made to conform to the Swedish fiscal law for cash registers. For detailed information, see [digital-receipt-schema.json](../../../schemas/json/retail/v1.0.json).
+DRJSON is made to conform to the Swedish fiscal law for cash registers. For detailed information, see [digital-receipt-schema.json](../../../schemas/json/retail/v1.1.json).
 
 ## Field Requirements
 
@@ -48,7 +48,7 @@ JSON Schema is a powerful tool for validating the structure of JSON data. [(Unde
 
 ## DRJSON
 
-This section covers the digital receipt schema and their corresponding POS data terms where relevant. For more information see the documentation in the [JSON schema specification](../../../schemas/json/retail/v1.0.json).
+This section covers the digital receipt schema and their corresponding POS data terms where relevant. For more information see the documentation in the [JSON schema specification](../../../schemas/json/retail/v1.1.json).
 
 Main properties of the digital receipt schema.
 
@@ -470,8 +470,8 @@ Item description:
 Item quantity:
 
 - _value_: The quantity sold
-- _unit_: In what unit is the quantity given? Default is _ea_ (each), supported types, [see schema](../../../schemas/json/retail/v1.0.json).
-- _entry_method_: How is the item registered? Default is _scanned_, supported methods, [see schema](../../../schemas/json/retail/v1.0.json).
+- _unit_: In what unit is the quantity given? Default is _ea_ (each), supported types, [see schema](../../../schemas/json/retail/v1.1.json).
+- _entry_method_: How is the item registered? Default is _scanned_, supported methods, [see schema](../../../schemas/json/retail/v1.1.json).
 
 Amounts:
 
@@ -488,7 +488,7 @@ VAT:
 
 Discount/price modifier:
 
-- _retail_price_modifiers_: In it's simplest form the _retail_price_modifier_ is a discount amount given. For all details, [see schema](../../../schemas/json/retail/v1.0.json).
+- _retail_price_modifiers_: In it's simplest form the _retail_price_modifier_ is a discount amount given. For all details, [see schema](../../../schemas/json/retail/v1.1.json).
 
 #### return item
 
@@ -728,12 +728,16 @@ Additional properties:
 - _card_token_: If a card token is used to identify the customer. Use `"scheme": "par"` for PAR token.
 - _payment_slip_: Information from the card terminal represented as an array of strings.
 
-If possible, the follwowing [ISO 8583](https://en.wikipedia.org/wiki/ISO_8583) fields should be added to the tender:
+If possible, the following [ISO 8583](https://en.wikipedia.org/wiki/ISO_8583) fields should be added to the tender:
 
-- _bank_identification_number_: Masked card number
-- _retrieval_reference_number_: Field 37
-- _card_acceptor_terminal_id_: Field 41
-- _merchant_identifier_: Field 42
+- _bank_identification_number_: Masked card number (ISO 8583 field 56)
+- _acquiring_institution_id_code_: Acquiring institution identification code (ISO 8583 field 32)
+- _retrieval_reference_number_: Retrieval Reference Number (ISO 8583 field 37)
+- _card_acceptor_id_: Card Acceptor Identification Code (ISO 8583 field 42)
+- _card_acceptor_terminal_id_: Card Acceptor Terminal ID (ISO 8583 field 41)
+- _card_acceptor_name_: Card Acceptor Name/Location (ISO 8583 field 43)
+- _approval_code_: Approval Code (ISO 8583 field 38)
+- _merchant_identifier_: Field 42 (Deprecated, use _card_acceptor_id_ instead)
 
 Example, card payment.
 
@@ -771,11 +775,13 @@ Example, card payment.
             ""
           ]
         },
-        "approval_code": "123456",
         "bank_identification_number": "527500**********",
+        "acquiring_institution_id_code": "722660",
         "retrieval_reference_number": "996933866525",
+        "card_acceptor_id": "8056101",
         "card_acceptor_terminal_id": "13848718",
-        "merchant_identifier": "8056101"
+        "card_acceptor_name": "MyStore",
+        "approval_code": "123456"
       }
     }
   ]
@@ -973,7 +979,7 @@ Supported id types:
 - _phone_
 - _loyalty_
 
-[See schema](../../../schemas/json/retail/v1.0.json) for more details.
+[See schema](../../../schemas/json/retail/v1.1.json) for more details.
 
 Example:
 

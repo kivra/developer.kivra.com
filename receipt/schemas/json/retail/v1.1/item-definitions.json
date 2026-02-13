@@ -1,0 +1,303 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "item_identifier": {
+      "title": "Item identifier",
+      "description": "A list of supported identifier types, pos: Point of Sales, srs: Sales Recording System",
+      "type": "object",
+      "properties": {
+        "identifier_type": {
+          "type": "string",
+          "enum": ["pos", "gtin", "srs"]
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": ["identifier_type", "value"]
+    },
+
+    "item_common_type": {
+      "title": "Common item properties",
+      "description": "Common item properties for ordering and navigation",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "sequence_number": {
+          "description": "All items must have a unique sequence number 1,2,3 etc. Used for internal references. Also see item_link",
+          "type": "integer"
+        },
+        "item_link": {
+          "description": "A reference to an other items sequence_number if a relation exists",
+          "type": "integer"
+        },
+        "text": {
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        }
+      },
+      "required": ["sequence_number"]
+    },
+
+    "amount_currency": {
+      "type": "object",
+      "properties": {
+        "unit_cost_price": {
+          "type": "number",
+          "description": "The unit cost of the item to the mechant at the time of the Transaction."
+        },
+        "regular_sales_unit_price": {
+          "type": "number",
+          "description": "The per-unit price for the item/service before any discounts or surcharges have been applied."
+        },
+        "extended_gross_amount": {
+          "type": "number",
+          "description": "The amount this item sells for excluding discounts. It is the regular_sales_unit_price times the quantity"
+        },
+        "actual_sales_unit_price": {
+          "type": "number",
+          "description": "The amount a single item sold for taking into account discounts and surcharges. The amount charged the customer (extended_amount) takes into account this number times quantity"
+        },
+        "extended_amount": {
+          "type": "number",
+          "description": "The actual amount this item sells for. It is the actual_sales_unit_price times the quantity taking into account any retail price modifiers"
+        },
+        "retail_price_modifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "monetary-definitions.json#/definitions/retail_price_modifier_item"
+          }
+        },
+        "extended_discount_amount": {
+          "type": "number",
+          "description": "The total discount applied to this item"
+        },
+        "tax_percentage": {
+          "type": "number"
+        },
+        "tax_amount": {
+          "description": "tax amount based on extended amount and tex percentage",
+          "type": "number"
+        },
+        "foreign_currency": {
+          "$ref": "monetary-definitions.json#/definitions/foreign_currency"
+        }
+      },
+      "required": ["actual_sales_unit_price", "extended_amount", "extended_gross_amount"]
+    },
+
+    "amount_loyalty": {
+      "title": "",
+      "description": "Amount in loyalty program points",
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "number",
+          "description": "cost for goods/service as number of loyalty points"
+        }
+      },
+      "required": ["points"]
+    },
+
+    "item_element_type": {
+      "title": "Item definition",
+      "description": "Item and/or service description",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item_identifier"
+          }
+        },
+        "serial_number": {
+          "description": "Product serial number",
+          "type": "string"
+        },
+        "lot_number": {
+          "description": "Specifies a specific product batch/lot",
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "service-common-definitions.json#/definitions/quantity_element"
+        },
+        "entry_method": {
+          "$ref": "service-common-definitions.json#/definitions/entry_method_elment"
+        },
+        "eligible_for_frequent_shopper_points": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if item bought is eligible for bonus"
+        }
+      },
+      "required": ["identifiers", "description", "quantity"]
+    },
+
+    "sale_item_type": {
+      "title": "",
+      "description": "Item sold by the merchant",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["sale"]
+        }
+      },
+      "required": ["type"]
+    },
+
+    "return_item_type": {
+      "title": "",
+      "description": "Item returned to the merchant",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["return"]
+        },
+        "receipt_reference": {
+          "$ref": "sales-recording-system-definitions.json#/definitions/extended_receipt_number_type"
+        }
+      },
+      "required": ["type"]
+    },
+
+    "return_item": {
+      "description": "Defines data needed to handle returned product/service",
+      "allOf": [{
+          "$ref": "#/definitions/return_item_type"
+        },
+        {
+          "$ref": "#/definitions/item_element_type"
+        },
+        {
+          "$ref": "#/definitions/item_common_type"
+        }
+      ],
+      "oneOf": [{
+        "$ref": "#/definitions/amount_currency"
+      }, {
+        "$ref": "#/definitions/amount_loyalty"
+      }]
+    },
+
+    "sale_item": {
+      "description": "Defines data needed to handle sold product/service",
+      "allOf": [{
+          "$ref": "#/definitions/sale_item_type"
+        },
+        {
+          "$ref": "#/definitions/item_element_type"
+        },
+        {
+          "$ref": "#/definitions/item_common_type"
+        }
+      ],
+      "oneOf": [{
+        "$ref": "#/definitions/amount_currency"
+      }, {
+        "$ref": "#/definitions/amount_loyalty"
+      }]
+    },
+
+    "text_item_type": {
+      "title": "",
+      "description": "Text only item, example: product warranty text linked to item purchased",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["text"]
+        },
+        "text": {
+          "$ref": "service-common-definitions.json#/definitions/text_arr"
+        }
+      },
+      "required": ["type", "text"]
+    },
+
+    "text_item": {
+      "allOf": [{
+          "$ref": "#/definitions/text_item_type"
+        },
+        {
+          "$ref": "#/definitions/item_common_type"
+        }
+      ]
+    },
+
+    "sub_deposits_vat": {
+      "title": "VAT sub deposit",
+      "description": "A desposit can be devided into different VATs",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refund": {
+          "type": "boolean",
+          "default": false,
+          "description": "true if amount to customer, a deposit return"
+        },
+        "tax_percentage": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["amount", "tax_percentage"]
+    },
+
+    "deposit_item": {
+      "title": "",
+      "description": "Deposit to get or pay connected to items sold/returned",
+      "type": "object",
+      "allOf": [{
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["deposit"]
+            },
+            "description": {
+              "type": "string"
+            },
+            "unit_amount": {
+              "type": "number",
+              "description": "The unit cost/refund for goods/service deposit."
+            },
+            "amount": {
+              "type": "number",
+              "description": "Total cost/refund for goods/service deposit, unit_amount * quantity"
+            },
+            "quantity": {
+              "type": "integer",
+              "description": "Number of times deposit is applied"
+            },
+            "refund": {
+              "type": "boolean",
+              "description": "True if amount goes to customer, false otherwise"
+            },
+            "tax_percentage": {
+              "type": "number",
+              "description": "Tax on deposit is not always the same as the goods/service connected"
+            },
+            "sub_deposits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/sub_deposits_vat"
+              }
+            }
+          },
+          "required": ["type", "refund", "amount", "unit_amount", "quantity"]
+        },
+        {
+          "$ref": "#/definitions/item_common_type"
+        }
+      ]
+    }
+  }
+}

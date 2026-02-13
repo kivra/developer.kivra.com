@@ -1,0 +1,295 @@
+{
+  "business_unit": {
+    "contact": {
+      "address": {
+        "country_name": "Sverige",
+        "locality": "Köpstad",
+        "postal_code": "11100",
+        "street_address": "Stortorget 278"
+      },
+      "phone": "46771584886"
+    },
+    "name": "My Superstore",
+    "organization_number": "1122334444",
+    "service_id": "15594097555922f97bfeb148d6b9a6ef76f76ebdce"
+  },
+  "cashier": {
+    "id": "Olle"
+  },
+  "control_unit": {
+    "code": "66262",
+    "id": "RIHTT103801065896"
+  },
+  "currency": "SEK",
+  "customer": {
+    "id": {
+      "civic_registration_number": "192210228884"
+    }
+  },
+  "items": [{
+      "sequence_number": 1,
+      "type": "sale",
+      "identifiers": [{
+          "value": "608794",
+          "identifier_type": "pos"
+        },
+        {
+          "value": "010300",
+          "identifier_type": "pos",
+          "identifier_sub_type": "mainGroup",
+          "identifier_qualifier": "bil-mc"
+        },
+        {
+          "value": "010303",
+          "identifier_type": "pos",
+          "identifier_sub_type": "articleGroup",
+          "identifier_qualifier": "säkerhetsdetaljer"
+        }
+      ],
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+        "entry_method": "scanned"
+      },
+      "tax_percentage": 25,
+      "description": "Bogserlina med krokar",
+      "extended_amount": 138,
+      "extended_gross_amount": 148,
+      "regular_sales_unit_price": 79,
+      "retail_price_modifiers": [{
+          "action": "subtract",
+          "amount": 10.0
+        },
+        {
+          "action": "add",
+          "amount": 10.0,
+          "description": {
+            "type": "array",
+            "collection": ["custom fee"]
+          }
+        }
+      ],
+      "actual_sales_unit_price": 69
+    },
+    {
+      "sequence_number": 2,
+      "type": "sale",
+      "identifiers": [{
+          "value": "923048",
+          "identifier_type": "pos"
+        },
+        {
+          "value": "070700",
+          "identifier_type": "pos",
+          "identifier_sub_type": "mainGroup",
+          "identifier_qualifier": "kontor-teknik"
+        },
+        {
+          "value": "0870773",
+          "identifier_type": "pos",
+          "identifier_sub_type": "articleGroup",
+          "identifier_qualifier": "hörlurar"
+        }
+      ],
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+        "entry_method": "scanned"
+      },
+      "tax_percentage": 25,
+      "description": "Headset hörlurar - SLR",
+      "extended_amount": 49,
+      "extended_gross_amount": 49,
+      "regular_sales_unit_price": 49,
+      "actual_sales_unit_price": 49
+    },
+    {
+      "sequence_number": 3,
+      "type": "sale",
+      "identifiers": [{
+          "value": "912042",
+          "identifier_type": "pos"
+        },
+        {
+          "value": "020100",
+          "identifier_type": "pos",
+          "identifier_sub_type": "mainGroup",
+          "identifier_qualifier": "verktyg"
+        },
+        {
+          "value": "020101",
+          "identifier_type": "pos",
+          "identifier_sub_type": "articleGroup",
+          "identifier_qualifier": "skor-stövlar"
+        }
+      ],
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+        "entry_method": "scanned"
+      },
+      "tax_percentage": 25,
+      "description": "Stövel 42 - Fodrad BR",
+      "extended_amount": 395,
+      "extended_gross_amount": 395,
+      "regular_sales_unit_price": 395,
+      "actual_sales_unit_price": 395
+    },
+    {
+      "sequence_number": 4,
+      "type": "sale",
+      "identifiers": [{
+          "value": "608003",
+          "identifier_type": "pos"
+        },
+        {
+          "value": "040000",
+          "identifier_type": "pos",
+          "identifier_sub_type": "mainGroup",
+          "identifier_qualifier": "hem"
+        },
+        {
+          "value": "040003",
+          "identifier_type": "pos",
+          "identifier_sub_type": "articleGroup",
+          "identifier_qualifier": "övrigt"
+        }
+      ],
+      "quantity": {
+        "value": 1,
+        "unit": "ea",
+        "entry_method": "scanned"
+      },
+      "tax_percentage": 25,
+      "description": "Plastpåse",
+      "extended_amount": 1.5,
+      "extended_gross_amount": 1.5,
+      "regular_sales_unit_price": 0,
+      "actual_sales_unit_price": 1.5
+    }
+  ],
+  "payments": [{
+      "amount": 503,
+      "amount_applied_to_bill": 503,
+      "tender": {
+        "type": "giftcard",
+        "card_number": "xxxxxxx1234",
+        "expiration_date": "2012-12-31",
+        "current_balance": 503
+      }
+    },
+    {
+      "amount": 488,
+      "amount_applied_to_bill": 488,
+      "tender": {
+        "type": "voucher",
+        "tender_details": {
+          "type": "array",
+          "collection": [
+            "Voucher TypeCode: AdvancePayment",
+            "Description: Some voucher description",
+            "FaceValueAmount Currency: SEK",
+            "FaceValueAmount: 500.00",
+            "SerialNumber: v-1234-001",
+            "ExpirationDate: 2018-11-09",
+            "UnspentAmount: 500.00",
+            "VoucherAmountInChange: 100.00",
+            "IssuingStoreNumberID TypeCode: Distributor",
+            "IssuingStoreNumberID: 123"
+          ]
+        }
+      }
+    },
+    {
+      "amount": 55.5,
+      "amount_applied_to_bill": 55,
+      "rounding": 0.5,
+      "tender": {
+        "type": "cash"
+      }
+    },
+    {
+      "amount": 55.5,
+      "amount_applied_to_bill": 55,
+      "rounding": 0.5,
+      "tender": {
+        "type": "house_account"
+      }
+    }
+  ],
+  "receipt_identifier": {
+    "extended_number": {
+      "value": "02890093672714",
+      "type": "Interleaved2Of5",
+      "context": "store"
+    },
+    "sequence_number": 123789798712300
+  },
+  "sales_recording_system": {
+    "serial_number": "EA38329",
+    "id": "65252"
+  },
+  "header_text": {
+    "type": "array",
+    "collection": [
+      "Öppettider: Måndag - Fredag 10-18, Lördag 10-15"
+    ]
+  },
+  "footer_text": {
+    "type": "array",
+    "collection": [
+      "Spara kvittot, gäller som garanti.",
+      "Öppet köp 30 dagar."
+    ]
+  },
+  "time_of_purchase": "2017-12-02T11:49:00+01:00",
+  "totals": [{
+      "amount": 11,
+      "type": "discount",
+      "sub_totals": [{
+          "amount": 10,
+          "text": {
+            "type": "array",
+            "collection": [
+              "Ngn form av rabatt"
+            ]
+          }
+        },
+        {
+          "amount": 1,
+          "text": {
+            "type": "array",
+            "collection": [
+              "En krona rabatt på allt"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "amount": 112.7,
+      "type": "vat",
+      "sub_totals": [{
+          "amount": 111.7,
+          "tax_percentage": 25,
+          "taxable_amount": 446.8,
+          "net_amount": 349.30
+        },
+        {
+          "amount": 1,
+          "tax_percentage": 10,
+          "taxable_amount": 10,
+          "net_amount": 9
+        }
+      ]
+    },
+    {
+      "amount": 558.5,
+      "type": "net"
+    },
+    {
+      "amount": 558,
+      "type": "paid"
+    }
+  ]
+}
