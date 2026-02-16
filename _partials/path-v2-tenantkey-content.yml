@@ -396,107 +396,113 @@
                 summary: "Salary slip with structured metadata"
                 value:
                   ssn: "191212121212"
-                  subject: "Salary Specification - January 2025"
-                  generated_at: "2025-01-31"
+                  subject: "Salary Slip - January 2026"
                   type: "salaryslip"
+                  generated_at: "2025-01-31"
                   parts:
-                    - name: salaryslip.pdf
+                    - name: document.pdf
                       data: REVBREJFRUY=
                       content_type: application/pdf
                       responsive_part:
-                        name: salaryslip.html
-                        data: PGgxPlNhbGFyeSBTcGVjaWZpY2F0aW9uIC0gSmFudWFyeSAyMDI1PC9oMT4=
+                        name: document.html
+                        data: PGgxPmNvbnRlbnQgMTwvaDE+CjxwPmNvbnRlbnQgMTwvcD4=
                         content_type: text/html
                   salaryslip:
                     document_metadata:
                       creation_timestamp: "2025-01-31T10:00:00Z"
-                      source_system: "Payroll System XYZ"
+                      source_system: "Advanced Payroll System v2.0"
                     employment:
-                      start_date: "2020-01-01"
-                      type: "full-time"
-                      weekly_hours: "40.0"
-                      organizational_unit_identifier: "DEPT-001"
-                    yearly_accumulated_gross_pay:
-                      monetary_amount: "140000.00"
-                      currency: "SEK"
-                    yearly_accumulated_taxes:
-                      monetary_amount: "30000.00"
-                      currency: "SEK"
-                    pay_period:
                       start_date: "2025-01-01"
-                      end_date: "2025-01-31"
-                      payout_date: "2025-02-25"
-                      total_hours_worked: "160.0"
-                      overtime_hours: "8.0"
-                      effective_tax_rate_percentage: "21.43"
-                      absences:
-                        - type: "sick leave"
-                          duration_in_hours: "8.0"
-                      vacation_pay:
-                        monetary_amount: "1500.00"
-                        currency: "SEK"
-                      basic_contractual_salary:
-                        monetaryAmount: "30000.00"
-                        currency: "SEK"
-                      gross_pay:
-                        monetary_amount: "32500.00"
-                        currency: "SEK"
-                      tax_deducted:
-                        monetary_amount: "6962.50"
-                        currency: "SEK"
-                      additional_payments:
-                        - type: "overtime"
-                          monetary_amount: "2000.00"
-                          currency: "SEK"
-                        - type: "bonus"
-                          monetary_amount: "500.00"
-                          currency: "SEK"
-                      net_pay:
-                        monetary_amount: "25537.50"
-                        currency: "SEK"
-                      tax_information:
-                        tax_code:
-                          identifier: "Tabell 30"
-                          scheme: "Skatteverket Tax Table"
-                        tax_deduction_details:
-                          is_main_income: true
-                          details_provided_by: "Skatteverket"
-                      employee_benefits:
-                        healthcare:
-                          type: "private"
-                          coverage: "family"
-                          employerContribution:
-                            monetary_amount: "500.00"
-                            currency: "SEK"
-                        pension_contribution:
-                          percentage_of_gross_salary: "4.5"
-                          employer_paid_to: "Insurance Co X"
-                      recipient_account:
-                        account_identifiers:
-                          - identifier: "SE4550000000050012345678"
-                            schema: "IBAN"
-                            bankName: "Bank of Sweden"
-                      holidays:
-                        period:
-                          start_date: "2024-04-01"
-                          end_date: "2025-03-31"
-                        total_days_entitled: "25.0"
-                        days_saved_from_previous_years: "3.0"
-                        days_used_in_period: "5.0"
-                        days_remaining_in_period: "23.0"
+                      type: "Full-time"
+                      weekly_hours: "40.0"
+                      organizational_unit_identifier: "DEPT-IT-001"
                       employer:
-                        legal_name: "Tech Solutions AB"
+                        legal_name: "Advanced Tech Solutions AB"
                         legal_identifiers:
-                          - identifier: "556789-0123"
-                            schema: "SE-ORGNR"
+                          vat_number: "SE556789012301"
+                          org_number: "556789-0123"
                         contact_information:
                           address:
                             street_address: "Storvägen 5"
                             postal_code: "164 40"
                             city: "Kista"
                             country: "Sweden"
-                          email_address: "hr@techsolutions.se"
+                          email_address: "hr@advancedtechsolutions.se"
                           telephone_number: "+46707070707"
+                    pay_period:
+                      start_date: "2026-01-01"
+                      end_date: "2026-01-31"
+                      payout_date: "2026-02-25"
+                      total_hours_worked: "176.0"
+                      overtime_hours: "8.0"
+                      basic_contractual_salary:
+                        monetary_amount: "30500"
+                        currency: "SEK"
+                      gross_pay:
+                        monetary_amount: "35500"
+                        currency: "SEK"
+                      tax_deducted:
+                        monetary_amount: "7810"
+                        currency: "SEK"
+                      net_pay:
+                        monetary_amount: "27690"
+                        currency: "SEK"
+                      effective_tax_rate_percentage: "22.00"
+                      vacation_pay:
+                        monetary_amount: "1500"
+                        currency: "SEK"
+                      additional_payments:
+                        - type: "Overtime compensation"
+                          monetary_amount: "2000"
+                          currency: "SEK"
+                        - type: "Performance bonus"
+                          monetary_amount: "3000"
+                          currency: "SEK"
+                      absences:
+                        - type: "Sick leave"
+                          duration_in_hours: "16.0"
+                      employee_benefits:
+                        - type: "Healthcare"
+                          monetary_amount: "500"
+                          currency: "SEK"
+                          description: "Company healthcare insurance - Full coverage"
+                        - type: "Meal vouchers"
+                          monetary_amount: "330"
+                          currency: "SEK"
+                          description: "Meal vouchers - 15 SEK per day for 22 working days"
+                        - type: "Pension contribution"
+                          monetary_amount: "2485"
+                          currency: "SEK"
+                          description: "Employer pension contribution (7.00% of gross salary) to Pension Fund AB"
+                        - type: "Gym membership"
+                          monetary_amount: "200"
+                          currency: "SEK"
+                          description: "Company-sponsored gym membership"
+                    tax_information:
+                      tax_code:
+                        identifier: "30"
+                        schema: "Swedish Tax Code"
+                      tax_deduction_details:
+                        is_main_income: true
+                        details_provided_by: "employer"
+                    recipient_account:
+                      identifier: "SE1234567890123456789012"
+                      schema: "IBAN"
+                      bank_name: "Bank AB"
+                    holidays:
+                      period:
+                        start_date: "2025-01-01"
+                        end_date: "2026-12-31"
+                      total_days_entitled: "25"
+                      days_saved_from_previous_years: "0"
+                      days_used_in_period: "5"
+                      days_remaining_in_period: "20"
+                    yearly_accumulated_gross_pay:
+                      monetary_amount: "35500"
+                      currency: "SEK"
+                    yearly_accumulated_taxes:
+                      monetary_amount: "7810"
+                      currency: "SEK"
               creditnotice to user:
                 value:
                   ssn: "191212121212"
