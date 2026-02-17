@@ -150,7 +150,6 @@
                 }
             },
             "required": [
-                "start_date",
                 "employer"
             ]
         },
@@ -477,7 +476,6 @@
                 "start_date",
                 "end_date",
                 "payout_date",
-                "basic_contractual_salary",
                 "gross_pay",
                 "tax_deducted",
                 "net_pay"
