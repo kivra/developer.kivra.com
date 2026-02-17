@@ -11,7 +11,7 @@
             "properties": {
                 "creation_timestamp": {
                     "type": "string",
-		    "format": "datetime",
+		    "format": "date-time",
                     "description": "Timestamp when this salary slip document was created in the source system. ISO 8601 format in UTC with no timezone offset (e.g., YYYY-MM-DDTHH:MM:SSZ).",
                     "example": "2025-01-05T10:00:00Z"
                 },
