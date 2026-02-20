@@ -220,6 +220,21 @@ Each total in the array requires:
 
 Additional fields vary by tender type (see [Retail Schema Explained](retail-schema-description.md#payments)).
 
+#### payments[].tender (creditdebit) — ISO 8583 fields
+
+| Field | Requirement | Notes |
+|-------|-------------|-------|
+| `bank_identification_number` | Optional | Masked card number (ISO 8583 field 56) |
+| `acquiring_institution_id_code` | Optional | Acquiring institution ID (ISO 8583 field 32) |
+| `retrieval_reference_number` | Optional | Retrieval reference (ISO 8583 field 37) |
+| `card_acceptor_id` | Optional | Card acceptor ID (ISO 8583 field 42) |
+| `card_acceptor_terminal_id` | Optional | Terminal ID (ISO 8583 field 41) |
+| `card_acceptor_name` | Optional | Card acceptor name/location (ISO 8583 field 43) |
+| `approval_code` | Optional | Approval code (ISO 8583 field 38) |
+| `merchant_identifier` | Optional | **Deprecated** — use `card_acceptor_id` instead |
+| `card_token` | Conditional | See [Customer Identification](#customer-identification) |
+| `payment_slip` | Optional | Card terminal information |
+
 ---
 
 ### customer
@@ -317,4 +332,4 @@ Use the [Merchant Toolbox](https://merchant-toolbox.kivra.com/) to:
 - Validate your JSON against the schema
 - See example receipts
 
-For the full JSON Schema, see [v1.0.json](../../../schemas/json/retail/v1.0.json).
+For the full JSON Schema, see [v1.1.json](../../../schemas/json/retail/v1.1.json).
