@@ -33,7 +33,7 @@ For detailed explanations of each field, see [Retail Schema Explained](retail-sc
 | `items` | **Required** | Array of items |
 | `retail_price_modifiers` | Optional | Receipt-level discounts |
 | `payments` | **Required** | Array of payments |
-| `customer` | Conditional | See [Customer Identification](#customer-identification) |
+| `customer` | Conditional | See [Customer Identification](#Customer_Identification) |
 | `customer_order` | Optional | Order linking |
 | `control_unit` | Conditional | Required if control unit connected |
 
@@ -232,7 +232,7 @@ Additional fields vary by tender type (see [Retail Schema Explained](retail-sche
 | `card_acceptor_name` | Optional | Card acceptor name/location (ISO 8583 field 43) |
 | `approval_code` | Optional | Approval code (ISO 8583 field 38) |
 | `merchant_identifier` | Optional | **Deprecated** — use `card_acceptor_id` instead |
-| `card_token` | Conditional | See [Customer Identification](#customer-identification) |
+| `card_token` | Conditional | See [Customer Identification](#Customer_Identification) |
 | `payment_slip` | Optional | Card terminal information |
 
 ---
