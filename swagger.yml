@@ -2683,14 +2683,14 @@ components:
             The type of a content may influence how the user interacts with the content and how the user is notified about the content.
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
-            - `"letter.salary"`: indicating that the content is a salary specification. This type support the retained functionality.
-            - `"salaryslip"`: indicating that the content is a salary slip with structured metadata. A valid `salaryslip` object needs to be provided. This type includes detailed payment information, employer details, benefits, holidays, and tax information.
-            - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type support the retained functionality.
+            - `"letter.salary"`: indicating that the content is a salary specification. This type supports the `retain` functionality.
+            - `"salaryslip"`: indicating that the content is a salary slip with structured metadata. A valid `salaryslip` object needs to be provided. The data includes detailed payment information, employer details, benefits, holidays, and tax information. This type supports the `retain` functionality.
+            - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type supports the `retain` functionality.
             - `"letter.form"`: indicating that the content contains a form.
-            - `"letter.signed"`: indicates that the content contains a signed document. This type support the retained functionality.
+            - `"letter.signed"`: indicates that the content contains a signed document. This type supports the `retain` functionality.
             - `"invite.research"`: for invitations to participate in surveys and polls.
             - `"invite.gift"`: for invitations to collect a gift.
-            - `"invite.sign"`: for invitations to sign a document. This type support the retained functionality.
+            - `"invite.sign"`: for invitations to sign a document. This type supports the `retain` functionality.
             - `"invite.voucher"`: for invitations to use a voucher
             - `"invite.kyc"`: for invitations to complete KYC (Know Your Customer) process.
             - `"invoice"`: |
@@ -2721,7 +2721,8 @@ components:
         retain:
           description: |
             Boolean denoting if Kivra should try and retain this Content if it can’t be delivered. Default `false`.
-            Please note that retain can only be used with content types `letter.creditnotice`, `letter.salary`, `letter.signed`
+            Please note that retain can only be used with content types
+            `letter.creditnotice`, `letter.salary`, `letter.signed`, `salaryslip`,
             and `invite.sign`, otherwise an error with status code `422` will be returned.
           type: boolean
           writeOnly: true
