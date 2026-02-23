@@ -34,6 +34,7 @@
                 "start_date": {
                     "type": "string",
 		    "format": "date",
+                    "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                     "description": "Date when the employment started. YYYY-MM-DD",
                     "example": "2025-01-01"
    },
@@ -211,18 +212,21 @@
                 "start_date": {
                     "type": "string",
 		    "format": "date",
+                    "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                     "description": "Start date of the pay period. YYYY-MM-DD",
                     "example": "2025-01-01"
                 },
                 "end_date": {
                     "type": "string",
 		    "format": "date",
+                    "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                     "description": "End date of the pay period. YYYY-MM-DD",
                     "example": "2025-01-31"
                 },
                 "payout_date": {
                     "type": "string",
 		    "format": "date",
+                    "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                     "description": "Date when the salary will be paid out to the employee. YYYY-MM-DD",
                     "example": "2025-02-25"
                 },
@@ -564,12 +568,14 @@
                         "start_date": {
                             "type": "string",
 			    "format": "date",
+                            "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                             "description": "Start date of the holiday period. YYYY-MM-DD",
                             "example": "2024-04-01"
                         },
                         "end_date": {
                             "type": "string",
 			    "format": "date",
+                            "pattern": "^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
                             "description": "End date of the holiday period. YYYY-MM-DD",
                             "example": "2025-03-31"
                         }
