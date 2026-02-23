@@ -2684,6 +2684,8 @@ components:
             Allowed values are:
             - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
             - `"letter.salary"`: indicating that the content is a salary specification. This type supports the `retain` functionality.
+              *Note: `letter.salary` will be deprecated from October 1st 2026.
+              Use the new `salaryslip` type instead.*
             - `"salaryslip"`: indicating that the content is a salary slip with structured metadata. A valid `salaryslip` object needs to be provided. The data includes detailed payment information, employer details, benefits, holidays, and tax information. This type supports the `retain` functionality.
             - `"letter.creditnotice"`: indicating that the content is a creditnotice. This type supports the `retain` functionality.
             - `"letter.form"`: indicating that the content contains a form.
@@ -3272,6 +3274,7 @@ components:
               - `"letter"`: indicating that the content is an information letter. This is the default type for all non-payable content.
               - `"invoice"`: indicating that the content contains payment information. This value can only be used when a "payment" object is provided and the "payable" attribute is set to true. This is the default type for all payable content.
               - `"letter.salary"`: indicating that the content is a salary specification.
+                *Note: `letter.salary` will be deprecated from October 1st 2026.*
               - `"letter.creditnotice"`: indicating that the content is a creditnotice.
               - `"invite.research"`: indicating that the content is an invitation to participate in a survey or poll.
               - `"invite.kyc"`: indicating that the content is an invitation to complete a KYC (Know Your Customer) process.
