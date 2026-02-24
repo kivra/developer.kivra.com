@@ -540,6 +540,7 @@ paths:
 
         ### Validation rules
 
+        - Either `vat` or `external_id` (or both) must be provided
         - A chain cannot have both `retained_activated` and `greenbin_activated` set to true
         - The partner must have the respective feature activated before a chain can activate it
 
@@ -552,18 +553,31 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AddChain"
-            example:
-              name: Demo chain
-              vat: "SE555555555501"
-              address:
-                street1: Gatan 1
-                postalcode: "13254"
-                city: "onebuying"
-                country: SWE
-              icon:
-                data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-                content_type: "image/png"
-              item_display_fields: ["article_number_pos"]
+            examples:
+              with_vat:
+                summary: Create chain with VAT
+                value:
+                  name: Demo chain
+                  vat: "SE555555555501"
+                  address:
+                    street1: Gatan 1
+                    postalcode: "13254"
+                    city: "onebuying"
+                    country: SWE
+                  icon:
+                    data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+                    content_type: "image/png"
+                  item_display_fields: ["article_number_pos"]
+              with_external_id:
+                summary: Create chain with external_id
+                value:
+                  name: Demo chain
+                  external_id: "abc123def45"
+                  address:
+                    street1: Gatan 1
+                    postalcode: "13254"
+                    city: "onebuying"
+                    country: SWE
       responses:
         "200":
           description: Chain already exists
@@ -2183,13 +2197,17 @@ components:
       title: AddChain
       type: object
       properties:
+        external_id:
+          type: string
+          description: External identifier for the chain, unique per partner
+          pattern: "^([a-z0-9]{5,})$"
         name:
           type: string
-          description: The name of the store
+          description: The name of the chain
           minLength: 1
         vat:
           type: string
-          description: The VAT number of the store
+          description: The VAT number of the chain
           pattern: ^((SE)?[0-9]{12})$"
         phone:
           type: string
@@ -2256,11 +2274,19 @@ components:
           default: false
       required:
         - name
-        - vat
+      anyOf:
+        - required:
+            - vat
+        - required:
+            - external_id
     UpdateChain:
       title: UpdateChain
       type: object
       properties:
+        external_id:
+          type: string
+          description: External identifier for the chain, unique per partner
+          pattern: "^([a-z0-9]{5,})$"
         name:
           type: string
           description: The name of the chain
