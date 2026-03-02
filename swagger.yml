@@ -5892,85 +5892,134 @@ webhooks:
                   example: "2025-04-24T13:45:10Z"
                 type:
                   type: string
-                  enum: ["payment_callback", "payment_callback_retry"]
+                  enum: 
+                    - "payment_callback"
+                    - "payment_callback_retry"
+                    - "invoice_declined"
+                    - "invoice_declined_retry"
                   description: Type of notification - original webhook or a retry
                 data:
-                  type: object
-                  required:
-                    - content_key
-                    - payment_type
-                    - payment_event
-                    - event_time
-                    - amount
-                    - currency
-                  properties:
-                    content_key:
-                      type: string
-                      description: Key of the content associated with this payment
-                      example: "1691677075a9813e08f783496382b0bff743ec34ae"
-                    due_date:
-                      type: string
-                      format: date
-                      description: Date when the payment was due
-                      example: "2025-05-01"
-                    pay_date:
-                      type: string
-                      format: date
-                      description: Date when the payment was made
-                      example: "2025-04-24"
-                    destination_account_type:
-                      type: string
-                      enum: ["bankgiro", "plusgiro"]
-                      description: Type of destination account
-                    destination_account:
-                      type: string
-                      description: Destination account number
-                      example: "12345-6789"
-                    remittance_type:
-                      type: string
-                      enum: ["SE_OCR", "TENANT_REF"]
-                      description: Type of remittance information
-                    remittance_string:
-                      type: string
-                      description: Reference string used for the payment
-                      example: "426523791"
-                    option_title:
-                      type: string
-                      description: Title of the payment option if multiple options were available
-                      example: "Full payment"
-                    option_id:
-                      type: string
-                      description: Identifier of the selected payment option
-                      example: "option_1"
-                    payment_type:
-                      type: string
-                      enum: ["instant", "bank", "autogiro"]
-                      description: Type of payment method used
-                    payment_event:
-                      type: string
-                      enum: ["settled", "scheduled", "failed"]
-                      description: The payment event that triggered this webhook
-                    event_time:
-                      type: string
-                      format: date-time
-                      description: Time when the payment event occurred
-                      example: "2025-04-24T13:44:58Z"
-                    swish_alias:
-                      type: string
-                      description: Swish alias used for the payment, if applicable
-                      example: "1234567890"
-                    swish_payment_reference:
-                      type: string
-                      description: Swish payment reference, if applicable
-                      example: "652ED6A2BCDE4BA8AD11D7334E9567B7"
-                    amount:
-                      type: string
-                      description: Payment amount as a string
-                      example: "123.50"
-                    currency:
-                      type: string
-                      description: Currency code for the payment
-                      example: "SEK"
+                  oneOf:
+                    - type: object
+                      description: |
+                        The data sent when the payload type field has the
+                        value `payment_callback` or `payment_callback_retry`.
+                      required:
+                        - content_key
+                        - payment_type
+                        - payment_event
+                        - event_time
+                        - amount
+                        - currency
+                      properties:
+                        content_key:
+                          type: string
+                          description: Key of the content associated with this payment
+                          example: "1691677075a9813e08f783496382b0bff743ec34ae"
+                        due_date:
+                          type: string
+                          format: date
+                          description: Date when the payment was due
+                          example: "2025-05-01"
+                        pay_date:
+                          type: string
+                          format: date
+                          description: Date when the payment was made
+                          example: "2025-04-24"
+                        destination_account_type:
+                          type: string
+                          enum: ["bankgiro", "plusgiro"]
+                          description: Type of destination account
+                        destination_account:
+                          type: string
+                          description: Destination account number
+                          example: "12345-6789"
+                        remittance_type:
+                          type: string
+                          enum: ["SE_OCR", "TENANT_REF"]
+                          description: Type of remittance information
+                        remittance_string:
+                          type: string
+                          description: Reference string used for the payment
+                          example: "426523791"
+                        option_title:
+                          type: string
+                          description: Title of the payment option if multiple options were available
+                          example: "Full payment"
+                        option_id:
+                          type: string
+                          description: Identifier of the selected payment option
+                          example: "option_1"
+                        payment_type:
+                          type: string
+                          enum: ["instant", "bank", "autogiro"]
+                          description: Type of payment method used
+                        payment_event:
+                          type: string
+                          enum: ["settled", "scheduled", "failed"]
+                          description: The payment event that triggered this webhook
+                        event_time:
+                          type: string
+                          format: date-time
+                          description: Time when the payment event occurred
+                          example: "2025-04-24T13:44:58Z"
+                        swish_alias:
+                          type: string
+                          description: Swish alias used for the payment, if applicable
+                          example: "1234567890"
+                        swish_payment_reference:
+                          type: string
+                          description: Swish payment reference, if applicable
+                          example: "652ED6A2BCDE4BA8AD11D7334E9567B7"
+                        amount:
+                          type: string
+                          description: Payment amount as a string
+                          example: "123.50"
+                        currency:
+                          type: string
+                          description: Currency code for the payment
+                          example: "SEK"
+                    - type: object
+                      description: |
+                        The data sent when the payload type field has the value
+                        `invoice_declined` or `invoice_declined_retry`. In all
+                        cases below where some information is specified as
+                        coming from the invoice, it more precisely comes from
+                        the first fixed option of the invoice.
+                      required:
+                        - content_key
+                        - due_date
+                        - remittance_type
+                        - remittance_string
+                        - event_time
+                        - content_type
+                      properties:
+                        content_key:
+                          type: string
+                          description: The Kivra key for the invoice that was declined.
+                          example: "1708693835ca2a6459d02d4c7fb50b19acaffcb624"
+                        due_date:
+                          type: string
+                          format: date
+                          description: Due date from the invoice.
+                          example: "2025-05-01"
+                        remittance_type:
+                          type: string
+                          enum: ["SE_OCR", "TENANT_REF"]
+                          description: Type of remittance information.
+                        remittance_string:
+                          type: string
+                          description: Reference string from the invoice.
+                          example: "426523791"
+                        event_time:
+                          type: string
+                          format: date-time
+                          description: Time when the declining event occurred.
+                          example: "2025-04-24T13:44:58Z"
+                        content_type:
+                          type: string
+                          description: The type of the content that was declined.
+                          enum: ["invoice.renewal", "invoice.donation"]
       responses:
         200:
           description: >
