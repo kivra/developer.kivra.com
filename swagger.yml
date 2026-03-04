@@ -5900,6 +5900,7 @@ webhooks:
                 data:
                   oneOf:
                     - type: object
+                      title: payment_callback
                       description: |
                         The data sent when the payload type field has the
                         value `payment_callback` or `payment_callback_retry`.
@@ -5979,6 +5980,7 @@ webhooks:
                           description: Currency code for the payment
                           example: "SEK"
                     - type: object
+                      title: invoice_declined
                       description: |
                         The data sent when the payload type field has the value
                         `invoice_declined` or `invoice_declined_retry`. In all
