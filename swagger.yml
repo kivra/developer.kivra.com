@@ -5894,9 +5894,8 @@ webhooks:
                   type: string
                   enum: 
                     - "payment_callback"
-                    - "payment_callback_retry"
                     - "invoice_declined"
-                    - "invoice_declined_retry"
+                    - "payment_callback_retry (deprecated, use the same type as for the original webhook with the knowledge that it can be a retry)"
                   description: Type of notification - original webhook or a retry
                 data:
                   oneOf:
