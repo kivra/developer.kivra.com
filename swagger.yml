@@ -1340,9 +1340,9 @@ paths:
             The registered letter response does not exist.
 
   # ##############################################
-  # POST /v1/tenant/{tenantKey}/ticket/event
+  # POST /v2/tenant/{tenantKey}/ticket/event
   # ##############################################
-  /v1/tenant/{tenantKey}/ticket/event:
+  /v2/tenant/{tenantKey}/ticket/event:
     post:
       tags:
         - "Tenant API - Tickets (BETA)"
