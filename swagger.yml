@@ -3766,6 +3766,14 @@ components:
             A valid VAT-identifier, Swedish format: `SE[xxxxxxxxxx]01`
           type: string
           example: SE556840226601
+        expiration_days:
+          type: integer
+          minimum: 7
+          maximum: 180
+          description: |
+            Number of days an agreement will be available for signing, 
+            before expiring. The expiration_days must be between 7 and 180 days
+          example: 60
         original:
           type: object
           properties:
