@@ -95,6 +95,7 @@ introText: |
     | 2025-11-05 | Removed BETA from Invite KYC |
     | 2025-11-07 | Company invoices (accounting.*) added with BETA tag |
     | 2025-12-10 | Removed LEGACY endpoints to list users |
+    | 2026-03-06 | Added expiration_days to agreement |
 
     # Terminology
 
@@ -470,7 +471,7 @@ introText: |
 
     This is the inital state of the agreement after a successful create. During user actions on the agreement the state remains as `active`. The states that an active agreement can transition to are referred to as *terminal* states, meaning it's the end of the agreement lifecycle.
 
-    If an agreement do not transition to a terminal state within 30 days from its creation, it will expire and it will be removed from all our services.
+    If an agreement do not transition to a terminal state before the expiration_days (default is 30 but can be set to any value between 7 and 180) from its creation, it will expire and it will be removed from all our services.
 
     ### State generating
 
@@ -489,6 +490,10 @@ introText: |
     ### State revoked
 
     This state can be triggered by a tenant who owns the agreement. If the agreement is *active*, the tenant can choose to revoke the agreement at any time. When an agreement has been revoked, it is forever under the terminal state revoked and can never transition back to an active state or be acted upon by any party. No one can sign a revoked agreement and the agreement along with all data and files relating to the agreement will be completely removed from all our services within `30` days after the date it was created.
+
+    ### State expired
+
+    If an agreement is not signed by all parties before the expiration_days (7-180 days, default 30), the agreement will become expired and can no longer be signed.
 
     ## Agreement verification and covenant file
 
@@ -509,7 +514,7 @@ introText: |
     1. The tenant posts an agreement providing the PDF document to be signed and the list of parties, and gets back an `agreement id`. Parties are specified by their role, a SSN number and an email. The agreement is made available by Kivra to the parties.
     2. The tenant uses the document ID to check the agreement status. The agreement can also be revoked by the tenant, as long as it has not reached the `completed` state.
     3. Once the document has become `completed`, the tenant can download the `covenant file` via the API and save it, while parties have different options based on whether they are users of Kivra or not: for Kivra user the covenant file will be automatically transferred to the Kivra mailbox; for non Kivra user, parties have `30` days to either become a Kivra user and get the covenant file in the Kivra mailbox, or download the covenant file from the signature service for personal storage.
-    4. The agreement is removed from all our services `30` days after creation in case the agreement does not reach the completed state. The agreement and covenant file are removed from all our services `30` days after the agreement reached the completed state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
+    4. The agreement and covenant file are removed from all our services `30` days after reaching a terminal state (`expired`, `completed` or `revoked) state. Once the agreement and covenant file have been removed, there will be no option for recovering them, only the verification option will be available. So it is important that both tenant and signers make sure that they have saved and safely stored the covenant file.
 
     ![Agreement Typical Flow](https://www.lucidchart.com/publicSegments/view/30bd1625-75d2-4ece-bb1d-5e3ccee93010/image.png)
 
@@ -615,6 +620,8 @@ introText: |
     |40044 |Invalid OCR | The OCR did not pass validation |
     |40045 |Invalid option id | The option does not exist |
     |40047 |Invalid PDF |The supplied agreement PDF was invalid. Please check that the file is a valid PDF |
+    |40048 |Invalid Label |The supplied labels does not match the required format |
+    |40049 |Invalid Value For Expiration Days |Must be an integer within the allowed range, representing the number of days an agreement will remain in the system before it expires |
     |40050 |Form Response Error | Error processing form response |
     |40098 |Invalid barcode data | The barcode could not be created due to invalid barcode type |
     |40100 |Unauthorized |Supplied credentials was invalid |
