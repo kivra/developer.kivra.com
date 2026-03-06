@@ -2200,7 +2200,7 @@ components:
         external_id:
           type: string
           description: External identifier for the chain, unique per partner
-          pattern: "^(?i)([a-z0-9-]{5,})$"
+          pattern: "^.{5,128}$"
         name:
           type: string
           description: The name of the chain
@@ -2286,7 +2286,7 @@ components:
         external_id:
           type: string
           description: External identifier for the chain, unique per partner
-          pattern: "^(?i)([a-z0-9-]{5,})$"
+          pattern: "^.{5,128}$"
         name:
           type: string
           description: The name of the chain
